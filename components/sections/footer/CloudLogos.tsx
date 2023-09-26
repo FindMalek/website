@@ -3,7 +3,7 @@ import { AiFillInstagram, AiFillLinkedin, AiFillFacebook, AiFillGithub, AiFillBe
 
 export default function CloudLogos() {
     return (
-        <div className='flex space-x-2 pt-2'>
+        <div className='flex space-x-5 pt-2'>
             <Link href="https://www.instagram.com/findmalek" target='_blank'>
                 <AiFillInstagram className='h-5 w-5' />
             </Link>
@@ -16,7 +16,7 @@ export default function CloudLogos() {
             <Link href="https://github.com/FindMalek" target='_blank'>
                 <AiFillGithub className='h-5 w-5' />
             </Link>
-            <Link href="https://www.behance.net/malekpyF" target='_blank'>
+            <Link href="https://www.behance.net/malekpy" target='_blank'>
                 <AiFillBehanceSquare className='h-5 w-5' />
             </Link>
         </div>

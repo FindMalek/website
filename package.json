@@ -1,6 +1,6 @@
 {
   "name": "findservices",
-  "version": "0.1.2",
+  "version": "0.1.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev",

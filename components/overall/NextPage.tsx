@@ -6,17 +6,17 @@ import { motion } from "framer-motion";
 export default function NextPage({ href, name }: { href: string, name: string }) {
     const arrowVariants = {
         leftToRight: {
-            x: ["10%", "100%", "10%"], // Bounce from 0% to 100% to 0% on the x-axis
+            x: ["10%", "100%", "10%"],
             transition: {
-                duration: 1, // Duration of each bounce
-                ease: "easeInOut", // Easing function for smooth animation
-                repeat: Infinity, // Repeat the animation infinitely
+                duration: 1,
+                ease: "easeInOut",
+                repeat: Infinity,
             },
         },
     };
     return (
         <div className="mt-10">
-            <Link href={href} className="leading-6 text-lg font-normal text-white">
+            <Link href={href} className="leading-6 text-lg font-normal dark:text-white">
                 {name}
                 <motion.span
                     aria-hidden="true"
