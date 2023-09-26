@@ -4,7 +4,7 @@ import Footer from "@/components/sections/footer/Footer"
 export default function Herosection() {
   return (
     <>
-      <h1 className="text-4xl font-bold text-left dark:text-white">I'm Malek.</h1>
+      <h1 className="text-4xl font-bold text-left dark:text-white">I'm Malek Gara-Hellal.</h1>
       <p className="text-lg font-light pt-6 text-left dark:text-white">
         Welcome to my digital domain! I'm a web developer who transforms ideas into immersive online experiences. With a keen eye for minimalistic design and a penchant for precision, I breathe life into websites that seamlessly blend form and function.
       </p>

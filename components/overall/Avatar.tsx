@@ -37,7 +37,7 @@ export function Avatar({
         alt="Malek Gara-Hellal avatar, a black and white picture of his face."
         sizes={large ? "4rem" : "2.25rem"}
         className={clsx(
-          "rounded-full bg-zinc-100 object-cover dark:bg-zinc-800",
+          "rounded-full bg-cyan-800 object-cover dark:bg-cyan-400",
           large ? "h-16 w-16" : "h-9 w-9"
         )}
         priority
