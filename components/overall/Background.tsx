@@ -1,9 +1,14 @@
+import { Old_Standard_TT } from "next/font/google";
+
+const purplePurse = Old_Standard_TT({ weight: ["400", "700"], subsets: ["latin"] });
+
 export default function Background() {
   return (
     <div className="fixed -z-50 isolate overflow-hidden dark:bg-gray-900 top-0 left-0 w-full h-full">
       <svg
         className="absolute inset-0 -z-10 h-full w-full stroke-gray-900/10 dark:stroke-white/10 [mask-image:radial-gradient(110%_120%_at_top_right,white,transparent)]"
-        aria-hidden="true">
+        aria-hidden="true"
+      >
         <defs>
           <pattern
             id="983e3e4c-de6d-4c3f-8d64-b9761d1534cc"
@@ -11,7 +16,8 @@ export default function Background() {
             height={100}
             x="50%"
             y={-1}
-            patternUnits="userSpaceOnUse">
+            patternUnits="userSpaceOnUse"
+          >
             <path d="M.5 200V.5H200" fill="none" />
           </pattern>
         </defs>
@@ -34,9 +40,15 @@ export default function Background() {
           fill="url(#983e3e4c-de6d-4c3f-8d64-b9761d1534cc)"
         />
       </svg>
+      <div className={purplePurse.className}>
+        <h1 className="absolute -left-10 -bottom-24 -z-40 text-[200px] font-bold text-gray-700/10 dark:text-gray-700/10">
+          FindServices.
+        </h1>
+      </div>
       <div
         className="absolute left-[calc(50%-4rem)] top-10 -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)]"
-        aria-hidden="true">
+        aria-hidden="true"
+      >
         <div
           className="aspect-[1108/502] w-[69.25rem] bg-gradient-to-r from-[#02ff84] to-[#00a6ff] opacity-20"
           style={{
