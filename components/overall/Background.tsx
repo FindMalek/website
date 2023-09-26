@@ -1,8 +1,32 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Old_Standard_TT } from "next/font/google";
 
-const purplePurse = Old_Standard_TT({ weight: ["400", "700"], subsets: ["latin"] });
+const purplePurse = Old_Standard_TT({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
 
 export default function Background() {
+  const pageName = usePathname();
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    if (pageName === "/") {
+      setName("FindServices.");
+    } else if (pageName === "/about") {
+      setName("About Me.");
+    } else if (pageName === "/projects") {
+      setName("Projects.");
+    } else if (pageName === "/contact") {
+      setName("Contact Me.");
+    } else {
+      setName("404 Not Found.");
+    }
+  }, [name, pageName]);
+
   return (
     <div className="fixed -z-50 isolate overflow-hidden dark:bg-gray-900 top-0 left-0 w-full h-full">
       <svg
@@ -41,10 +65,14 @@ export default function Background() {
         />
       </svg>
       <div className={purplePurse.className}>
-        <h1 className="absolute -left-10 -bottom-24 -z-40 text-[200px] font-bold text-gray-700/10 dark:text-gray-700/10">
-          FindServices.
+        <h1
+          className="absolute -left-10 -bottom-24 -z-40 text-[200px] font-bold text-gray-700/10 dark:text-gray-700/10"
+          style={{ userSelect: "none" }}
+        >
+          {name}
         </h1>
       </div>
+
       <div
         className="absolute left-[calc(50%-4rem)] top-10 -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)]"
         aria-hidden="true"
