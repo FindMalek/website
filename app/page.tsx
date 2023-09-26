@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import Herosection from "@/components/sections/home/Herosection";
+
 export const metadata: Metadata = {
   title: "Home | FindServices",
   description:
@@ -9,7 +11,7 @@ export const metadata: Metadata = {
 export default function About() {
   return (
     <>
-      <h1 className="text-4xl font-bold text-center text-white">Hello, this is the Home page</h1>
+      <Herosection />
     </>
   );
 }
