@@ -28,7 +28,7 @@ export default function Background() {
   }, [name, pageName]);
 
   return (
-    <div className="fixed -z-50 isolate overflow-hidden dark:bg-gray-900 top-0 left-0 w-full h-full">
+    <div className="fixed -z-50 isolate overflow-hidden dark:bg-gray-950 top-0 left-0 w-full h-full">
       <svg
         className="absolute inset-0 -z-10 h-full w-full stroke-gray-900/10 dark:stroke-white/10 [mask-image:radial-gradient(110%_120%_at_top_right,white,transparent)]"
         aria-hidden="true"
@@ -66,7 +66,7 @@ export default function Background() {
       </svg>
       <div className={purplePurse.className}>
         <h1
-          className="absolute -left-10 -bottom-24 -z-40 text-[200px] font-bold text-gray-700/10 dark:text-gray-700/10"
+          className="fixed -left-10 -bottom-24 -z-40 text-[200px] font-bold text-gray-700/10 dark:text-gray-700/10"
           style={{ userSelect: "none" }}
         >
           {name}
