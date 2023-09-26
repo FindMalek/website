@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={poppins.className}>
         <Header />
-        <div className="mx-auto max-w-4xl pl-12 pb-24 pt-10 sm:pb-32">
+        <div className="mx-auto max-w-4xl pl-12">
           {children}
         </div>
         <Background />

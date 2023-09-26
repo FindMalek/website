@@ -1,8 +1,8 @@
 export default function Background() {
   return (
-    <div className="fixed -z-50 isolate overflow-hidden bg-gray-900 top-0 left-0 w-full h-full">
+    <div className="fixed -z-50 isolate overflow-hidden dark:bg-gray-900 top-0 left-0 w-full h-full">
       <svg
-        className="absolute inset-0 -z-10 h-full w-full stroke-white/10 [mask-image:radial-gradient(110%_120%_at_top_right,white,transparent)]"
+        className="absolute inset-0 -z-10 h-full w-full stroke-gray-900/10 dark:stroke-white/10 [mask-image:radial-gradient(110%_120%_at_top_right,white,transparent)]"
         aria-hidden="true">
         <defs>
           <pattern
