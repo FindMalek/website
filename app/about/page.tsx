@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 
+import Header from "@/components/overall/Header";
+import Footer from "@/components/sections/footer/Footer";
+
+import HorizentalContent from "@/components/sections/about/HorizentalContent";
+
 export const metadata: Metadata = {
   title: "About | FindServices",
   description:
@@ -9,7 +14,11 @@ export const metadata: Metadata = {
 export default function About() {
   return (
     <>
-      <h1 className="text-4xl font-bold text-center text-white">Hello, this is the About page</h1>
+      <Header name="About Me." />
+
+      <HorizentalContent name="My Story" />
+
+      <Footer name="Let's Continue to Projects" href="/projects" />
     </>
   );
 }

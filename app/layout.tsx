@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 
-
 import Header from "@/components/navigation/Header";
 import Background from "@/components/overall/Background";
 

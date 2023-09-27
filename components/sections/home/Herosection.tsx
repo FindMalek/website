@@ -1,13 +1,11 @@
 import Link from "next/link";
-
 import Header from "@/components/overall/Header";
-import Footer from "@/components/sections/footer/Footer";
 
 export default function Herosection() {
   return (
     <>
       <Header name="I'm Malek Gara-Hellal." />
-      
+
       <p className="text-base font-light pt-6 text-left dark:text-white">
         The person you need for web development, graphic design, and code
         artistry. I don't just build websites; I craft immersive online
@@ -52,8 +50,6 @@ export default function Herosection() {
         </Link>
         .
       </p>
-
-      <Footer name="See More About Me" href="/about" />
     </>
   );
 }
