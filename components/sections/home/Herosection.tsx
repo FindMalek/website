@@ -1,22 +1,57 @@
-import Link from "next/link"
-import Footer from "@/components/sections/footer/Footer"
+import Link from "next/link";
+import Footer from "@/components/sections/footer/Footer";
 
 export default function Herosection() {
   return (
     <>
-      <h1 className="text-4xl font-bold text-left dark:text-white">I&apos;m Malek Gara-Hellal.</h1>
+      <h1 className="text-4xl font-bold text-left dark:text-white">
+        I'm Malek Gara-Hellal.
+      </h1>
       <p className="text-base font-light pt-6 text-left dark:text-white">
-        Welcome to my digital domain! I&apos;m a web developer who transforms ideas into immersive online experiences. With a keen eye for minimalistic design and a penchant for precision, I breathe life into websites that seamlessly blend form and function.
+        The person you need for web development, graphic design, and code
+        artistry. I don't just build websites; I craft immersive online
+        experiences that blend aesthetics and functionality. Explore my{" "}
+        <Link
+          href="/projects"
+          className="font-semibold dark:text-cyan-100 hover:text-cyan-600 hover:underline hover:underline-offset-1"
+        >
+          PROJECTS
+        </Link>{" "}
+        to follow my creative journey.
       </p>
       <p className="text-base font-light pt-4 text-left dark:text-white">
-        My work is a testament to the power of simplicity, where user-centric design takes center stage. When I&apos;m not crafting digital wonders, I&apos;m constantly honing my skills through diligent research and reading{" "}
-        <Link href="/about#my-reads" className="font-medium hover:text-cyan-600 hover:underline hover:underline-offset-1">BOOKS</Link>.
-        And when the world fades away, you&apos;ll find me immersed in the emotive rhythms of Metal and Sad Music, drawing inspiration from their depths.
+        Devoted to minimalistic design, I find beauty in simplicity and
+        precision. Beyond coding and digital craftsmanship, I'm immersed in
+        Metal and Pop Music, drawing inspiration for my next masterpiece. Check
+        out my favorite{" "}
+        <Link
+          href="/about#my-playlists"
+          className="font-semibold dark:text-cyan-100 hover:text-cyan-600 hover:underline hover:underline-offset-1"
+        >
+          PLAYLISTS
+        </Link>{" "}
+        and discover my handpicked{" "}
+        <Link
+          href="/about#my-books"
+          className="font-semibold dark:text-cyan-100 hover:text-cyan-600 hover:underline hover:underline-offset-1"
+        >
+          BOOKS
+        </Link>{" "}
+        for inspiration.
       </p>
+
       <p className="text-base font-light pt-4 text-left dark:text-white">
-        Ready to turn your vision into a stunning online reality? Feel free to{" "}
-        <Link href="/contact" className="font-medium hover:text-cyan-600 hover:underline hover:underline-offset-1">CONTACT ME</Link>.
+        Ready to collaborate and create something extraordinary together? Don't
+        hesitate to{" "}
+        <Link
+          href="/contact"
+          className="font-semibold dark:text-cyan-100 hover:text-cyan-600 hover:underline hover:underline-offset-1"
+        >
+          CONTACT ME
+        </Link>
+        .
       </p>
+
       <Footer name="See More About Me" href="/about" />
     </>
   );
