@@ -15,7 +15,7 @@ export default function NextPage({ href, name }: { href: string, name: string })
         },
     };
     return (
-        <div className="mt-10">
+        <div className="mt-10 mb-10 md:mb-0">
             <Link href={href} className="leading-6 text-lg font-normal dark:text-white">
                 {name}
                 <motion.span
