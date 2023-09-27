@@ -1,4 +1,5 @@
 import { Popover } from "@headlessui/react";
+import { IconType } from "react-icons";
 
 export type NavItemProps = {
   href: string;
@@ -16,3 +17,16 @@ export type clampProps = {
 };
 
 export type AvatarContainerProps = React.ComponentProps<"div">;
+
+export type HorizontalContentProps = {
+  name: string;
+  sub: {
+    is: boolean;
+    name: string;
+  }
+  description: string;
+  linkText: string;
+  href: string;
+  target: string;
+  icon: IconType;
+}
