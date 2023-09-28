@@ -58,9 +58,30 @@ export type RegisterHeadingType = (args: {
   offsetRem: number;
 }) => void;
 
-export type projects = {
-  href: string;
+type Tech = {
   name: string;
-  description: string;
   icon: IconType;
+};
+
+type Display = {
+  type: string; // Image or Gif
+  src: string;
+  alt: string;
+  height: number;
+  width: number;
+}
+
+export type projects = {
+  name: string;
+  description: string; // Short description
+  icon: IconType;
+  display?: Display; // Display href: A local file. Could be an Image or a Gif
+  details: {
+    about: string; // Long description
+    tech: Tech[]; // Tech stack
+    duration: number; // Duration of the project in weeks
+    delivary: string; // Delivered : Month, Year
+    href?: string; // Link to the hosted project (Vercel or Domain Name)
+    github?: string; // Link to the github repo
+  };
 };
