@@ -1,5 +1,6 @@
 import { Popover } from "@headlessui/react";
 import { IconType } from "react-icons";
+import { StoreApi } from "zustand";
 
 export type NavItemProps = {
   href: string;
@@ -23,10 +24,43 @@ export type HorizontalContentProps = {
   sub: {
     is: boolean;
     name: string;
-  }
+  };
   description: string;
   linkText: string;
   href: string;
   target: string;
   icon: IconType;
-}
+};
+
+export type Section = {
+  id: string;
+  headingRef: React.RefObject<HTMLElement>;
+  offsetRem: number;
+};
+
+export type State = {
+  sections: Section[];
+  visibleSections: Section[];
+  setVisibleSections: (visibleSections: Section[]) => void;
+  registerHeading: (args: { id: string; ref: any; offsetRem: number }) => void;
+};
+
+export type Store = StoreApi<{
+  sections: Section[];
+  visibleSections: Section[];
+  setVisibleSections: (visibleSections: Section[]) => void;
+  registerHeading: (args: { id: string; ref: any; offsetRem: number }) => void;
+}>;
+
+export type RegisterHeadingType = (args: {
+  id: string;
+  ref: React.RefObject<any>;
+  offsetRem: number;
+}) => void;
+
+export type projects = {
+  href: string;
+  name: string;
+  description: string;
+  icon: IconType;
+};

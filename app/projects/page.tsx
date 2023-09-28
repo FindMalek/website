@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
 
+import Header from "@/components/overall/Header";
+import Footer from "@/components/sections/footer/Footer";
+
+import { GridProjects } from "@/components/sections/projects/GridProjects";
+
 export const metadata: Metadata = {
   title: "Projects | FindServices",
   description:
     "FindServices | Find services near you, anywhere in the world. This is me Malek Gara-Hellal and I am a full-stack developer.",
 };
 
-export default function Projects() {
+export default function Projects({ pageProps }: { pageProps: any }) {
   return (
     <>
-      <h1 className="text-4xl font-bold text-center text-white">Hello, this is the Project page</h1>
+      <Header name="Projects." />
+
+      <GridProjects {...pageProps} />
+
+      <Footer name="Convinced yet to contact me ?" href="/contact" />
     </>
   );
 }
