@@ -11,12 +11,12 @@ export const metadata: Metadata = {
     "FindServices | Find services near you, anywhere in the world. This is me Malek Gara-Hellal and I am a full-stack developer.",
 };
 
-export default function Projects({ pageProps }: { pageProps: any }) {
+export default function Projects() {
   return (
     <>
       <Header name="Projects." />
 
-      <GridProjects {...pageProps} />
+      <GridProjects />
 
       <Footer name="Convinced yet to contact me ?" href="/contact" />
     </>
