@@ -24,7 +24,7 @@ export default function ResourcePattern({
         />
       </div>
       <motion.div
-        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#b1efe7] to-[#eadffb] opacity-0 transition duration-300 group-hover:opacity-50 dark:from-[#171c55] dark:to-[#154a4e]"
+        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#adf5d7] to-[#95fafa] opacity-0 transition duration-300 group-hover:opacity-50 dark:from-[#171c55] dark:to-[#154a4e]"
         style={style}
       />
       <motion.div

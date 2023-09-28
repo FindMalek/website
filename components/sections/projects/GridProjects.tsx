@@ -17,6 +17,20 @@ const projects = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique quis tempor at, consequat a velit. Morbi euismod...",
     icon: UserIcon,
   },
+  {
+    href: "#",
+    name: "Project Name",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique quis tempor at, consequat a velit. Morbi euismod...",
+    icon: UserIcon,
+  },
+  {
+    href: "#",
+    name: "Project Name",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique quis tempor at, consequat a velit. Morbi euismod...",
+    icon: UserIcon,
+  },
 ];
 
 export function GridProjects() {
