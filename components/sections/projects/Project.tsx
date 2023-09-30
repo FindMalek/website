@@ -33,9 +33,7 @@ export default function Project({ project }: { project: projects }) {
         project.display && (
           <div
             style={{
-              paddingBottom: `${
-                (project.display?.height)
-              }%`,
+              paddingBottom: `${project.display?.height}%`,
             }}
           >
             <ProjectPattern mouseX={mouseX} mouseY={mouseY} />
@@ -56,7 +54,7 @@ export default function Project({ project }: { project: projects }) {
           <span className="absolute inset-0 rounded-2xl" />
           {project.name}
         </h3>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2">
           {project.description}
         </p>
       </div>
