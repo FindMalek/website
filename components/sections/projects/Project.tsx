@@ -27,15 +27,21 @@ export default function Project({ project }: { project: projects }) {
     <div
       key={project.name}
       onMouseMove={onMouseMove}
-      className="group relative rounded-2xl bg-zinc-50 dark:bg-gray-950/70 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5"
+      className="group relative mt-4 rounded-2xl bg-zinc-50 dark:bg-gray-950/70 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5"
     >
       {project.display ? (
         project.display && (
-          <div className="aspect-w-16 aspect-h-9">
+          <div
+            style={{
+              paddingBottom: `${
+                (project.display?.height)
+              }%`,
+            }}
+          >
             <ProjectPattern mouseX={mouseX} mouseY={mouseY} />
             <Image
               {...project.display}
-              className="absolute inset-0 w-full h-full rounded-2xl transition duration-300 [mask-image:linear-gradient(black,transparent)] dark:[mask-image:linear-gradient(white,transparent)] group-hover:opacity-20"
+              className="absolute inset-0 rounded-2xl transition duration-300 [mask-image:linear-gradient(black,transparent)] dark:[mask-image:linear-gradient(white,transparent)] group-hover:opacity-20"
             />
           </div>
         )
