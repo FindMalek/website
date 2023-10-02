@@ -219,7 +219,7 @@ const projects = [
 export function GridProjects() {
   return (
     <div className="my-16 xl:max-w-none">
-      <div className="mt-4 pt-10 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+      <div className="mt-4 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
         <div>
           {projects.slice(0, Math.ceil(projects.length / 2)).map((project) => (
             <Project key={project.name} project={project} />
