@@ -71,7 +71,7 @@ type Display = {
   width: number;
 }
 
-export type projects = {
+export type Project = {
   name: string;
   description: string; // Short description
   icon: IconType;

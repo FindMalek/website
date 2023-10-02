@@ -15,6 +15,8 @@ import { MdProductionQuantityLimits } from "react-icons/md";
 import { BsFillHouseAddFill } from "react-icons/bs";
 import { PiShirtFoldedFill } from "react-icons/pi";
 
+import { VitalBurstIcon } from "@/components/overall/Icons";
+
 import Project from "@/components/sections/projects/Project";
 
 const projects = [
@@ -50,6 +52,13 @@ const projects = [
     description:
       "Online portfolio of Mahmoud Beznaiguia, a digital marketer skilled in SEO, social media, email marketing, and more. View examples of his work and contact him to help your business succeed online.",
     icon: GrStatusUnknownSmall,
+    display: {
+      type: "gif",
+      src: "/assets/gif/digi-ar.gif",
+      alt: "Digital Army Display GIF for the Website.",
+      height: 5,
+      width: 500,
+    },
     details: {
       about:
         "Digital Army is a digital marketing agency based in Tunisia. It was founded by Mahmoud Beznaiguia, a digital marketer skilled in SEO, social media, email marketing, and more. View examples of his work and contact him to help your business succeed online.",
@@ -131,7 +140,7 @@ const projects = [
     name: "Vital Burst",
     description:
       "Vital Burst is an E-Commerce website for Supplements and Vitamins. I was responsible for the whole website development. It is build with Supliful.",
-    icon: GrStatusUnknownSmall,
+    icon: VitalBurstIcon,
     details: {
       about:
         "At Vital Burst, we offer the best supplement for the Bodybuilding Community, with a wide range of products from the best brands. We are committed to providing you with the best products and services, so you can achieve your goals and live a healthy life.",
@@ -186,7 +195,7 @@ const projects = [
     name: "Tarkhan",
     description:
       "Tarkhan is your destination for timeless elegance. Discover our curated collection of bespoke clothing and accessories designed to elevate your style. With a focus on quality craftsmanship and personalized tailoring, we create pieces that reflect your individuality and make a lasting impression.",
-    icon: PiShirtFoldedFill ,
+    icon: PiShirtFoldedFill,
     details: {
       about:
         "At Tarkhan, we believe that clothing is more than just fabric and threads; it's an expression of your personality. Our journey began with a passion for redefining classic styles and making them accessible to all. Today, we continue to blend tradition with modernity, offering a range of clothing that suits your unique taste. We take pride in our commitment to quality, craftsmanship, and customer satisfaction. Welcome to Tarkhan, where elegance meets individuality.",
