@@ -69,7 +69,7 @@ type Display = {
   alt: string;
   height: number;
   width: number;
-}
+};
 
 export type Project = {
   name: string;
