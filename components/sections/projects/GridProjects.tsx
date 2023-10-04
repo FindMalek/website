@@ -56,7 +56,7 @@ const projects = [
       type: "gif",
       src: "/assets/gif/digi-ar.gif",
       alt: "Digital Army Display GIF for the Website.",
-      height: 5,
+      height: 5 + 5,
       width: 500,
     },
 

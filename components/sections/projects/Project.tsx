@@ -4,6 +4,7 @@ import { useMotionValue } from "framer-motion";
 import { Project } from "@/lib/types";
 
 import ProjectPattern from "@/components/sections/projects/ProjectPattern";
+import SidebarContent from "@/components/sections/projects/SidebarContent";
 
 import {
   Sheet,
@@ -49,7 +50,7 @@ export default function Project({ project }: { project: Project }) {
             <ProjectPattern mouseX={mouseX} mouseY={mouseY} />
             <Image
               {...project.display}
-              className="absolute inset-0 rounded-2xl transition duration-300 [mask-image:linear-gradient(black,transparent)] dark:[mask-image:linear-gradient(white,transparent)] group-hover:opacity-20"
+              className="absolute inset-0 rounded-2xl transition duration-300 [mask-image:linear-gradient(white,transparent)] dark:[mask-image:linear-gradient(black,transparent)] group-hover:opacity-30"
             />
           </div>
         )
@@ -58,7 +59,7 @@ export default function Project({ project }: { project: Project }) {
       )}
       <Sheet key="left">
         <SheetTrigger
-          className="text-left rounded-2xl px-4 pb-4 pt-16"
+          className="text-left rounded-2xl px-4 pb-4 pt-10"
           style={{
             paddingBottom: project.display?.height,
           }}>
@@ -75,29 +76,29 @@ export default function Project({ project }: { project: Project }) {
 
         <SheetContent
           side="left"
-          className="bg-gray-950/80 w-full md:min-w-[500px] lg:min-w-[800px]">
+          className="overflow-auto bg-gray-100/70 dark:bg-gray-950/70 w-full md:min-w-[500px] lg:min-w-[800px]">
           <SheetHeader className="pb-4">
-            <SheetTitle className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
-              <project.icon className="h-6 w-6 fill-zinc-600/40 stroke-zinc-700  dark:fill-white dark:stroke-zinc-400" />
-              {project.name}
-            </SheetTitle>
-            <SheetDescription className="text-sm text-left  text-gray-500">
-              {project.description}
-            </SheetDescription>
+            <SheetClose className="text-left text-sm font-semibold text-black/70 hover:text-black hover:underline hover:underline-offset-1 dark:text-white/70 dark:hover:text-white">
+              Back To Projects.
+            </SheetClose>
           </SheetHeader>
           <Separator orientation="horizontal" />
-          <div className="max-w-2xl mx-auto space-y-8">
-            {project.display && (
-              <div className="relative h-96 rounded-lg overflow-hidden">
-                <Image
-                  src={project.display.src}
-                  alt={project.display.alt}
-                  layout="fill"
-                  objectFit="cover"
-                />
-              </div>
-            )}
-          </div>
+
+          <SheetTitle className="mt-4 text-3xl font-semibold leading-7 text-gray-900 dark:text-white">
+            <project.icon className="inline-block h-8 w-8 mr-2 fill-current dark:text-white" />
+            {project.name}
+          </SheetTitle>
+          <SheetDescription className="py-2 pb-8 text-sm text-left text-gray-500">
+            {project.description}
+          </SheetDescription>
+
+          <SidebarContent project={project} />
+
+          <SheetFooter className="flex justify-end">
+            <SheetClose className="px-4 py-2 text-sm font-semibold text-gray-900 transition-colors duration-300 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800">
+              Open Project (Icon)
+            </SheetClose>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
     </div>
