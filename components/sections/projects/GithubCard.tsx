@@ -17,8 +17,8 @@ export default function GithubCard({ github }: { github: Github }) {
       <HoverCardTrigger asChild>
         <Link href={github.href} target="_blank">
           <Button variant="link">
-            <BiLogoGithub className="mr-2 h-4 w-4 opacity-70" />
-            Github
+            <BiLogoGithub className="md:mr-2 h-6 w-6 opacity-90" />
+            <p className="hidden md:block">Github</p>
           </Button>
         </Link>
       </HoverCardTrigger>

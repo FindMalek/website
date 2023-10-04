@@ -140,7 +140,7 @@ const reads = [
       name: "Robert Greene",
     },
     description:
-      "The 48 Laws of Power is a non-fiction book by American author Robert Greene. The book is a bestseller, selling over 1.2 million copies in the United States, and is popular with prison inmates and celebrities.",
+      "The 48 Laws of Power is a non-fiction book by American author Robert Greene. The book is a bestseller, selling over 1.2 million copies in the United States, and is popular with prison inmates and celebrities. Greene initially formulated some of the ideas in The 48 Laws of Power while working as a writer in Hollywood and concluding that today's power elite shared similar traits with powerful figures throughout history.",
     linkText: "View Book",
     href: "https://www.goodreads.com/book/show/1303.The_48_Laws_of_Power",
     target: "_blank",
@@ -195,7 +195,7 @@ const playlists = [
       name: "MALEK",
     },
     description:
-      "A power metal playlist exploring Great Wars and Great History through epic tracks and powerful vocals. Cover: Sabaton",
+      "A power metal playlist exploring Great Wars and Great History through epic tracks and powerful vocals, featuring Sabaton, Powerwolf, and more. Cover: Sabaton. It is updated regularly, so it won't be long till you hear the newest stuff.",
     linkText: "View Playlist",
     href: "https://open.spotify.com/playlist/2lbgWON6x5EVK2kI5v6FQv?si=230dd860b4a34414",
     target: "_blank",

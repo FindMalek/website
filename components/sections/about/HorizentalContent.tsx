@@ -13,7 +13,7 @@ export default function HorizentalContent({
       <ul className="mx-auto grid gap-8 py-20">
         {content.map((item) => (
           <li key={item.name} className="relative flex gap-x-6 -mt-5">
-            <div className="before:absolute before:left-[9px] before:top-[0.25rem] before:h-[106%] before:w-[2px] before:bg-black dark:before:bg-white">
+            <div className="before:absolute before:left-[9px] before:top-[0.25rem] before:h-[110%] before:w-[2px] before:bg-black dark:before:bg-white">
               <svg
                 height="20"
                 width="20"

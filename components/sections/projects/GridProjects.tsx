@@ -43,9 +43,23 @@ const projects = [
           icon: BiLogoSpotify,
         },
       ],
-      duration: 57,
-      delivary: "On going",
     },
+    accordion: [
+      {
+        question: "How to install Syncify?",
+        answer: "You can install Syncify from the Releases Page.",
+      },
+      {
+        question: "How to use Syncify?",
+        answer:
+          "You can use Syncify by following the instructions on the README.md file.",
+      },
+      {
+        question: "How to contribute to Syncify?",
+        answer:
+          "You can contribute to Syncify by forking the repository and creating a pull request, or by creating an issue on the Issues Page.",
+      },
+    ],
     github: {
       name: "Syncify",
       description:
@@ -67,7 +81,6 @@ const projects = [
       height: 5 + 5,
       width: 500,
     },
-
     details: {
       about:
         "Digital Army is a digital marketing agency based in Tunisia. It was founded by Mahmoud Beznaiguia, a digital marketer skilled in SEO, social media, email marketing, and more. View examples of his work and contact him to help your business succeed online.",
@@ -89,10 +102,26 @@ const projects = [
           icon: BiLogoNodejs,
         },
       ],
-      duration: 3,
-      delivary: "23, September 2023",
       website: "https://digi-ar.vercel.app/",
     },
+    accordion: [
+      {
+        question:
+          "Can you create a website like the one you created for Digital Army?",
+        answer:
+          "Absolutely! I specialize in creating custom websites tailored to your unique needs and preferences. Feel free to share your requirements, and we can discuss the details to ensure your website matches your vision.",
+      },
+      {
+        question: "How long does it take to develop a website?",
+        answer:
+          "The timeline for website development depends on various factors, such as the complexity of the project, the number of features required, and the availability of content. Typically, a simple website can be completed within a few weeks, while more complex projects may take a few months. I'll provide you with a detailed project timeline during our initial consultation.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
+      },
+    ],
     github: {
       name: "Digi-Ar",
       description: "Digital Army, a digital marketing agency based in Tunisia.",
@@ -120,10 +149,27 @@ const projects = [
           icon: SiJson,
         },
       ],
-      duration: 10,
-      delivary: "11, August 2023",
       website: "https://lilypharma.myshopify.com/",
     },
+    accordion: [
+      {
+        question:
+          "Can you create an e-commerce website like the one you created for Lily Pharma?",
+        answer:
+          "Yes, I have experience in designing and developing e-commerce websites, and I can create one tailored to Lily Pharma's needs. Please provide details about your products, preferred features, and any specific design elements you have in mind so we can get started on your project.",
+      },
+      {
+        question:
+          "How long does it typically take to build an e-commerce website?",
+        answer:
+          "The timeline for developing an e-commerce website can vary depending on the complexity of your shop and the number of products you plan to sell. Generally, it can take several weeks to a few months. To provide a more accurate estimate, please share your project details, and we can discuss the timeline in more detail.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
+      },
+    ],
   },
   {
     name: "Promolab",
@@ -155,10 +201,27 @@ const projects = [
           icon: BiLogoNodejs,
         },
       ],
-      duration: 10,
-      delivary: "On going",
       website: "https://promolab.vercel.app/",
     },
+    accordion: [
+      {
+        question:
+          "Can you create an e-commerce website like the one you created for Promolab?",
+        answer:
+          "Yes, I have experience in designing and developing e-commerce websites, and I can create one tailored to Promolab needs. Please provide details about your products, preferred features, and any specific design elements you have in mind so we can get started on your project.",
+      },
+      {
+        question:
+          "How long does it typically take to build an e-commerce website?",
+        answer:
+          "The timeline for developing an e-commerce website can vary depending on the complexity of your shop and the number of products you plan to sell. Generally, it can take several weeks to a few months. To provide a more accurate estimate, please share your project details, and we can discuss the timeline in more detail.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
+      },
+    ],
   },
   {
     name: "Vital Burst",
@@ -178,10 +241,14 @@ const projects = [
           icon: SiAdobeillustrator,
         },
       ],
-      duration: 2,
-      delivary: "On going",
       website: "https://vitalburst.shopfront.live/",
     },
+    accordion: [
+      {
+        question: "Placeholder",
+        answer: "Placeholder",
+      },
+    ],
   },
   {
     name: "Ikrili",
@@ -213,11 +280,15 @@ const projects = [
           icon: BiLogoNodejs,
         },
       ],
-      duration: 2,
-      delivary: "On going",
       website:
         "https://www.figma.com/file/BkhNVRUYwEDwD4bk4WBWQU/Ikrili?type=design&node-id=0%3A1&mode=design&t=BLDRwk0UQp1Cwb6U-1",
     },
+    accordion: [
+      {
+        question: "Placeholder",
+        answer: "Placeholder",
+      },
+    ],
   },
   {
     name: "Tarkhan",
@@ -237,10 +308,14 @@ const projects = [
           icon: SiJson,
         },
       ],
-      duration: 3,
-      delivary: "25, Septembre 2023",
       website: "https://tarkhan.fr/",
     },
+    accordion: [
+      {
+        question: "Placeholder",
+        answer: "Placeholder",
+      },
+    ],
   },
 ];
 

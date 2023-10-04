@@ -1,11 +1,17 @@
 import Image from "next/image";
 import { Project } from "@/lib/types";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/Accordion";
 import { Badge } from "@/components/ui/Badge";
 
 export default function SidebarContent({ project }: { project: Project }) {
   return (
-    <div>
+    <div className="px-0 md:px-8">
       {project.display && (
         <Image
           src={project.display.src}
@@ -16,20 +22,42 @@ export default function SidebarContent({ project }: { project: Project }) {
         />
       )}
 
-      <div className="grid py-4 grid-rows-6 gap-4">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            About
-          </h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {project.details.about}
-          </p>
+      <div className="py-4">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+          About
+        </h3>
+        <p className="mt-1 text-base text-gray-500 dark:text-gray-400">
+          {project.details.about}
+        </p>
+      </div>
+
+      <div className="py-4">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+          Technologies
+        </h3>
+        <div className="mt-1 text-base">
+          {project.details.tech.map((tech) => (
+            <Badge key={tech.name} variant="outline" className="py-1 pr-4 m-2">
+              <tech.icon className="m-1 h-4 w-4" />
+              {tech.name}
+            </Badge>
+          ))}
         </div>
+      </div>
+
+      <div className="py-4">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+          Frequently Asked Questions (FAQs)
+        </h3>
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Technologies
-          </h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400"></p>
+          <Accordion type="single" collapsible className="w-full mt-1">
+            {project.accordion.map((item) => (
+              <AccordionItem key={item.question} value={item.answer}>
+                <AccordionTrigger>{item.question}</AccordionTrigger>
+                <AccordionContent>{item.answer}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
     </div>

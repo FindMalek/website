@@ -38,7 +38,8 @@ export default function Project({ project }: { project: Project }) {
   }
 
   return (
-    <div
+    <section
+      id={project.name}
       key={project.name}
       onMouseMove={onMouseMove}
       className="group relative mt-4 rounded-2xl bg-zinc-50 dark:bg-gray-950/70 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5">
@@ -85,7 +86,7 @@ export default function Project({ project }: { project: Project }) {
           </SheetHeader>
           <Separator orientation="horizontal" />
 
-          <SheetTitle className="mt-4 flex items-center">
+          <SheetTitle className="mt-4 flex items-cente px-0 md:px-8">
             <div className="flex items-center text-3xl font-semibold leading-7 text-gray-900 dark:text-white">
               <project.icon className="h-8 w-8 mr-2 fill-current dark:text-white" />
               {project.name}
@@ -94,7 +95,7 @@ export default function Project({ project }: { project: Project }) {
               {project.github && <GithubCard github={project.github} />}
             </div>
           </SheetTitle>
-          <SheetDescription className="py-2 pb-8 text-sm text-left text-gray-500">
+          <SheetDescription className="py-2 px-0 md:px-8 pb-8 text-sm text-left text-gray-500">
             {project.description}
           </SheetDescription>
 
@@ -107,6 +108,6 @@ export default function Project({ project }: { project: Project }) {
           </SheetFooter>
         </SheetContent>
       </Sheet>
-    </div>
+    </section>
   );
 }
