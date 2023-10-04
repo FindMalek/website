@@ -31,7 +31,7 @@ export default function Herosection() {
         </Link>{" "}
         and discover my handpicked{" "}
         <Link
-          href="/about#my-books"
+          href="/about#my-reads"
           className="font-semibold dark:text-cyan-100 hover:text-cyan-600 hover:underline hover:underline-offset-1"
         >
           BOOKS
