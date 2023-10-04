@@ -6,6 +6,7 @@ import {
   BiLogoReact,
   BiLogoTailwindCss,
   BiLogoShopify,
+  BiLogoNodejs,
 } from "react-icons/bi";
 import { SiFfmpeg, SiJson, SiAdobeillustrator } from "react-icons/si";
 import { GrStatusUnknownSmall } from "react-icons/gr";
@@ -44,7 +45,14 @@ const projects = [
       ],
       duration: 57,
       delivary: "On going",
-      github: "https://github.com/FindMalek/Syncify",
+    },
+    github: {
+      name: "Syncify",
+      description:
+        "Syncify is an open-source application. It allows you to download your Spotify Playlists, Albums and Tracks with full meta-data.",
+      date: "Created on September 2021",
+      href: "https://github.com/FindMalek/Syncify",
+      iconSrc: "https://github.com/spotify.png",
     },
   },
   {
@@ -76,11 +84,22 @@ const projects = [
           name: "TailwindCSS",
           icon: BiLogoTailwindCss,
         },
+        {
+          name: "NodeJS",
+          icon: BiLogoNodejs,
+        },
       ],
       duration: 3,
       delivary: "23, September 2023",
-      github: "https://github.com/FindMalek/Digi.ar",
       website: "https://digi-ar.vercel.app/",
+    },
+    github: {
+      name: "Digi-Ar",
+      description: "Digital Army, a digital marketing agency based in Tunisia.",
+      date: "Created on Febraury 2023",
+      href: "https://github.com/FindMalek/Digi.ar",
+      iconSrc:
+        "https://digi-ar.vercel.app/_next/image?url=%2Flogos%2Flogo-black.webp&w=48&q=75",
     },
   },
   {
@@ -130,6 +149,10 @@ const projects = [
         {
           name: "Supabase",
           icon: RiSupabaseFill,
+        },
+        {
+          name: "NodeJS",
+          icon: BiLogoNodejs,
         },
       ],
       duration: 10,
@@ -184,6 +207,10 @@ const projects = [
         {
           name: "Supabase",
           icon: RiSupabaseFill,
+        },
+        {
+          name: "NodeJS",
+          icon: BiLogoNodejs,
         },
       ],
       duration: 2,

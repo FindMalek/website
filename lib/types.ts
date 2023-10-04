@@ -71,6 +71,14 @@ type Display = {
   width: number;
 };
 
+export type Github = {
+  name: string;
+  description: string;
+  href: string;
+  date: string;
+  iconSrc: string;
+};
+
 export type Project = {
   name: string;
   description: string; // Short description
@@ -82,6 +90,6 @@ export type Project = {
     duration: number; // Duration of the project in weeks
     delivary: string; // Delivered : Month, Year
     href?: string; // Link to the hosted project (Vercel or Domain Name)
-    github?: string; // Link to the github repo
   };
+  github?: Github;
 };

@@ -5,6 +5,7 @@ import { Project } from "@/lib/types";
 
 import ProjectPattern from "@/components/sections/projects/ProjectPattern";
 import SidebarContent from "@/components/sections/projects/SidebarContent";
+import GithubCard from "@/components/sections/projects/GithubCard";
 
 import {
   Sheet,
@@ -84,9 +85,14 @@ export default function Project({ project }: { project: Project }) {
           </SheetHeader>
           <Separator orientation="horizontal" />
 
-          <SheetTitle className="mt-4 text-3xl font-semibold leading-7 text-gray-900 dark:text-white">
-            <project.icon className="inline-block h-8 w-8 mr-2 fill-current dark:text-white" />
-            {project.name}
+          <SheetTitle className="mt-4 flex items-center">
+            <div className="flex items-center text-3xl font-semibold leading-7 text-gray-900 dark:text-white">
+              <project.icon className="h-8 w-8 mr-2 fill-current dark:text-white" />
+              {project.name}
+            </div>
+            <div className="ml-auto font-normal">
+              {project.github && <GithubCard github={project.github} />}
+            </div>
           </SheetTitle>
           <SheetDescription className="py-2 pb-8 text-sm text-left text-gray-500">
             {project.description}
