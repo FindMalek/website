@@ -7,14 +7,21 @@ import {
   BiLogoTailwindCss,
   BiLogoShopify,
   BiLogoNodejs,
+  BiLogoDiscordAlt,
 } from "react-icons/bi";
-import { SiFfmpeg, SiJson, SiAdobeillustrator } from "react-icons/si";
+import {
+  SiFfmpeg,
+  SiJson,
+  SiAdobeillustrator,
+  SiPlanetscale,
+} from "react-icons/si";
 import { GrStatusUnknownSmall } from "react-icons/gr";
 import { TbBrandNextjs } from "react-icons/tb";
 import { RiSupabaseFill } from "react-icons/ri";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { BsFillHouseAddFill } from "react-icons/bs";
 import { PiShirtFoldedFill } from "react-icons/pi";
+import { AiFillRedditCircle, AiFillYoutube } from "react-icons/ai";
 
 import { VitalBurstIcon } from "@/components/overall/Icons";
 
@@ -47,12 +54,13 @@ const projects = [
     accordion: [
       {
         question: "How to install Syncify?",
-        answer: "You can install Syncify from the Releases Page.",
+        answer:
+          "You can install Syncify from the Releases Page. First download the latest version of Syncify for your operating system. Then, follow the instructions on the README.md file.",
       },
       {
         question: "How to use Syncify?",
         answer:
-          "You can use Syncify by following the instructions on the README.md file.",
+          "You can use Syncify by following the instructions on the README.md file. Put the environment variables in a .env file, then run the main.py file.",
       },
       {
         question: "How to contribute to Syncify?",
@@ -245,8 +253,19 @@ const projects = [
     },
     accordion: [
       {
-        question: "Placeholder",
-        answer: "Placeholder",
+        question: "What kind of products do you sell?",
+        answer:
+          "We sell supplements and vitamins for the Bodybuilding Community.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
+      },
+      {
+        question: "I need help with my order. Who can I contact?",
+        answer:
+          "You can contact us by filling the form on the 'Contact' page on our website.",
       },
     ],
   },
@@ -285,8 +304,19 @@ const projects = [
     },
     accordion: [
       {
-        question: "Placeholder",
-        answer: "Placeholder",
+        question: "Do you create Mobile Applications?",
+        answer:
+          "Currently, I'm partner with a Mobile Developer Agency called 'Chinka Studio'. We can create a Mobile Application for you. Please contact me for more information.",
+      },
+      {
+        question: "Do you offer a discount for students?",
+        answer:
+          "Yes, I offer a 10% discount for students, with innovative idea and also offers to partner with me.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
       },
     ],
   },
@@ -312,8 +342,188 @@ const projects = [
     },
     accordion: [
       {
-        question: "Placeholder",
-        answer: "Placeholder",
+        question: "Can you help me with my Shopify store?",
+        answer:
+          "Yes, I have experience in Shopify and Liquid. I can help you with your Shopify store. Please contact me for more information.",
+      },
+      {
+        question: "Do you offer a discount for students?",
+        answer:
+          "Yes, I offer a 10% discount for students, with innovative idea and also offers to partner with me.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
+      },
+    ],
+  },
+  {
+    name: "Breadit",
+    description: "A Reddit Clone made with NextJS, ReactJS and TailwindCSS.",
+    icon: AiFillRedditCircle,
+    details: {
+      about:
+        "Breadit is a Reddit Clone. It is build with NextJS, ReactJS and TailwindCSS. I watch Josh course on Youtube to create this project.",
+      tech: [
+        {
+          name: "NextJS",
+          icon: TbBrandNextjs,
+        },
+        {
+          name: "ReactJS",
+          icon: BiLogoReact,
+        },
+        {
+          name: "TailwindCSS",
+          icon: BiLogoTailwindCss,
+        },
+        {
+          name: "PlanetScale",
+          icon: SiPlanetscale,
+        },
+      ],
+      website: "https://breadit-findmalek.vercel.app/",
+    },
+    accordion: [
+      {
+        question: "What did you learn from this project?",
+        answer:
+          "I learned how to create a Reddit Clone with NextJS, ReactJS and TailwindCSS.",
+      },
+      {
+        question: "Do you offer a discount for students?",
+        answer:
+          "Yes, I offer a 10% discount for students, with innovative idea and also offers to partner with me.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
+      },
+    ],
+    github: {
+      name: "Breadit",
+      iconSrc: "https://github.com/reddit.png",
+      description: "A Reddit Clone made with NextJS, ReactJS and TailwindCSS.",
+      date: "Created on June 2023",
+      href: "https://github.com/FindMalek/Breadit",
+    },
+  },
+  {
+    name: "LazyTube",
+    description:
+      "LazyTube is a Discord Bot, notifies you when your favorite Youtube Creators upload a new video.",
+    icon: AiFillYoutube,
+    details: {
+      about:
+        "LazyTube is a project to help you track your YouTube Watch Time. It is build with Python, Youtube API and Discord API. This Discord Bot would notify you in your Discord Server everytime when one of your Youtube Creators upload a new video and offer you to download it or put it on Watch later.",
+      tech: [
+        {
+          name: "Python",
+          icon: BiLogoPython,
+        },
+        {
+          name: "Youtube API",
+          icon: AiFillYoutube,
+        },
+        {
+          name: "Discord API",
+          icon: BiLogoDiscordAlt,
+        },
+      ],
+    },
+    accordion: [
+      {
+        question: "Can I use LazyTube on my Discord Server ?",
+        answer:
+          "Yes, you can use LazyTube on your Discord Server. You can invite it from the link below.",
+      },
+      {
+        question: "Can you create other Discord Bots that automates tasks ?",
+        answer:
+          "Yes, I can create other Discord Bots that automates tasks. Please contact me for more information.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
+      },
+    ],
+    github: {
+      name: "LazyTube",
+      iconSrc: "https://github.com/youtube.png",
+      description:
+        "LazyTube is a Discord Bot, notifies you when your favorite Youtube Creators upload a new video.",
+      date: "Created on September 2020",
+      href: "https://github.com/FindMalek/LazyTube",
+    },
+  },
+  {
+    name: "Move U",
+    description:
+      "Move U is a Fitness GYM, located in Tunisia, I manage their Social Media Accounts.",
+    icon: GrStatusUnknownSmall,
+    details: {
+      about:
+        "Move U is a Fitness GYM, I created their Graphic Design work, I create their Social Media Posts and I manage their Social Media Accounts.",
+      tech: [
+        {
+          name: "Adobe Illustrator",
+          icon: SiAdobeillustrator,
+        },
+      ],
+      website: "https://www.instagram.com/moveu.tn/",
+    },
+    accordion: [
+      {
+        question: "Can you create a website for Move U ?",
+        answer:
+          "Yes, I can create a website for Move U. Please contact me for more information.",
+      },
+      {
+        question:
+          "I need a Community Manager and a Graphic Designer, can you help me ?",
+        answer: "Yes, I can help you. Please contact me for more information.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
+      },
+    ],
+  },
+  {
+    name: "FitForme",
+    description:
+      "FitForme is a Fitness GYM, located in Tunisia, I manage their Social Media Accounts.",
+    icon: GrStatusUnknownSmall,
+    details: {
+      about:
+        "FitForme is a Fitness GYM, I created their Graphic Design work, I create their Social Media Posts and I manage their Social Media Accounts.",
+      tech: [
+        {
+          name: "Adobe Illustrator",
+          icon: SiAdobeillustrator,
+        },
+      ],
+      website: "https://www.instagram.com/fitforme_123",
+    },
+    accordion: [
+      {
+        question: "Can you create a website for FitForme ?",
+        answer:
+          "Yes, I can create a website for FitForme. Please contact me for more information.",
+      },
+      {
+        question:
+          "I need a Community Manager and a Graphic Designer, can you help me ?",
+        answer: "Yes, I can help you. Please contact me for more information.",
+      },
+      {
+        question: "How can I request a quote or get in touch with you?",
+        answer:
+          "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
       },
     ],
   },
