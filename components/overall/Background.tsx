@@ -2,12 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Old_Standard_TT } from "next/font/google";
-
-const purplePurse = Old_Standard_TT({
-  weight: ["700"],
-  subsets: ["latin"],
-});
+import { purplePurse } from "@/lib/fonts";
 
 export default function Background() {
   const pageName = usePathname();

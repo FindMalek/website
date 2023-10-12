@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { useMotionValue } from "framer-motion";
 import { Project } from "@/lib/types";
@@ -18,6 +19,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/Sheet";
 import { Separator } from "@/components/ui/Separator";
+import { Button } from "@/components/ui/Button";
 
 export default function Project({ project }: { project: Project }) {
   let mouseX = useMotionValue(0);
@@ -42,13 +44,15 @@ export default function Project({ project }: { project: Project }) {
       id={project.name}
       key={project.name}
       onMouseMove={onMouseMove}
-      className="group relative mt-4 rounded-2xl bg-zinc-50 dark:bg-gray-950/70 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5">
+      className="group relative mt-4 rounded-2xl bg-zinc-50 dark:bg-gray-950/70 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/2.5 dark:hover:shadow-black/5"
+    >
       {project.display ? (
         project.display && (
           <div
             style={{
               paddingBottom: `${project.display?.height}%`,
-            }}>
+            }}
+          >
             <ProjectPattern mouseX={mouseX} mouseY={mouseY} />
             <Image
               {...project.display}
@@ -64,7 +68,8 @@ export default function Project({ project }: { project: Project }) {
           className="text-left rounded-2xl px-4 pb-4 pt-10"
           style={{
             paddingBottom: project.display?.height,
-          }}>
+          }}
+        >
           <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-zinc-700/20 group-hover:ring-cyan-600/90 dark:ring-white/10" />
           <project.icon className="h-5 w-5 fill-zinc-600/40 stroke-zinc-700 transition-colors duration-300 group-hover:fill-zinc-900 dark:group-hover:stroke-1 dark:fill-white/80 dark:stroke-zinc-400 dark:group-hover:fill-cyan-300 dark:group-hover:stroke-gray-50/20" />
           <h4 className="mt-4 text-sm font-semibold leading-7 text-zinc-900 dark:text-white">
@@ -78,7 +83,8 @@ export default function Project({ project }: { project: Project }) {
 
         <SheetContent
           side="left"
-          className="overflow-auto bg-gray-100/70 dark:bg-gray-950/70 w-full md:min-w-[500px] lg:min-w-[800px]">
+          className="overflow-auto bg-gray-100/70 dark:bg-gray-950/70 w-full md:min-w-[500px] lg:min-w-[800px]"
+        >
           <SheetHeader className="pb-4">
             <SheetClose className="text-left text-sm font-semibold text-black/70 hover:text-black hover:underline hover:underline-offset-1 dark:text-white/70 dark:hover:text-white">
               Back To Projects.
@@ -101,10 +107,15 @@ export default function Project({ project }: { project: Project }) {
 
           <SidebarContent project={project} />
 
-          <SheetFooter className="flex justify-end">
-            <SheetClose className="px-4 py-2 text-sm font-semibold text-gray-900 transition-colors duration-300 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800">
-              Open Project (Icon)
-            </SheetClose>
+          <SheetFooter>
+            <Link
+              target="_blank"
+              href={project.details.href || project.github?.href || "/404"}
+            >
+              <Button className="px-4 py-2 text-sm font-semibold text-gray-900 transition-colors duration-300 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800">
+                Open Project
+              </Button>
+            </Link>
           </SheetFooter>
         </SheetContent>
       </Sheet>
