@@ -30,7 +30,7 @@
         "./components/*"
       ],
       "@/lib/*": [
-        "./lib/*"
+        "lib/*"
       ],
       "@/images/*": [
         "./public/assets/images/*"

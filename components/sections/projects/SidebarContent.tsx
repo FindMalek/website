@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import { Project } from "@/lib/types";
 
 import {
@@ -24,7 +25,7 @@ export default function SidebarContent({ project }: { project: Project }) {
 
       <div className="py-4">
         <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-          About
+          About.
         </h3>
         <p className="mt-1 text-base text-gray-500 dark:text-gray-400">
           {project.details.about}
@@ -33,7 +34,7 @@ export default function SidebarContent({ project }: { project: Project }) {
 
       <div className="py-4">
         <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-          Technologies
+          Technologies.
         </h3>
         <div className="mt-1 text-base">
           {project.details.tech.map((tech) => (
@@ -47,13 +48,13 @@ export default function SidebarContent({ project }: { project: Project }) {
 
       <div className="py-4">
         <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-          Frequently Asked Questions (FAQs)
+          Frequently Asked Questions.
         </h3>
         <div>
           <Accordion type="single" collapsible className="w-full mt-1">
             {project.accordion.map((item) => (
               <AccordionItem key={item.question} value={item.answer}>
-                <AccordionTrigger>{item.question}</AccordionTrigger>
+                <AccordionTrigger className="text-left">{item.question}</AccordionTrigger>
                 <AccordionContent>{item.answer}</AccordionContent>
               </AccordionItem>
             ))}

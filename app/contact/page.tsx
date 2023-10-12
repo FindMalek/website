@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 
+import Header from "@/components/overall/Header";
+import Footer from "@/components/sections/footer/Footer";
+
+import Description from "@/components/sections/contact/Descritpion";
+import ContactForm from "@/components/sections/contact/ContactForm";
+
 export const metadata: Metadata = {
   title: "Contact | FindServices",
   description:
@@ -7,10 +13,14 @@ export const metadata: Metadata = {
 };
 
 export default function Contact() {
-    return (
-      <>
-        <h1 className="text-4xl font-bold text-center text-white">Hello, this is the Contact page</h1>
-      </>
-    );
-  }
-  
+  return (
+    <>
+      <Header name="Contact." />
+
+      <Description />
+      <ContactForm />
+
+      <Footer name="Go back home." href="/" />
+    </>
+  );
+}
