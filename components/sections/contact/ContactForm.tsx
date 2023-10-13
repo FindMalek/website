@@ -64,11 +64,10 @@ export default function ContactForm() {
           });
           form.reset();
         } else {
-          console.log(response);
           toast({
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
-            description: "There was a problem with your request.",
+            description: response.statusText,
             action: (
               <ToastAction altText="Try again">
                 <Link href="/contact">Try again</Link>
@@ -78,11 +77,10 @@ export default function ContactForm() {
         }
       })
       .catch((error) => {
-        console.error("Error sending email:", error);
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
-          description: "There was a problem with your Internet Connection.",
+          description: error,
           action: (
             <ToastAction altText="Try again">
               <Link href="/contact">Try again</Link>

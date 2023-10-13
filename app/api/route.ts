@@ -3,6 +3,16 @@ import nodemailer from "nodemailer";
 export async function POST(req: Request) {
   const body = await req.json();
 
+  if (
+    !process.env.SENDER_EMAIL ||
+    !process.env.SENDER_PASSWORD ||
+    !process.env.MAIN_EMAIL
+  ) {
+    return new Response("500", {
+      status: 500,
+    });
+  }
+
   const mailTransporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
