@@ -48,7 +48,7 @@ export default function CloudLogos() {
         </Link>
       </div>
 
-      <div className="md:hidden fixed z-50 bottom-0 left-0 right-0 bg-cyan-950/50 p-4 flex space-x-16 justify-center">
+      <div className="md:hidden fixed z-50 bottom-0 left-0 right-0 bg-cyan-100/80 dark:bg-cyan-800/80 p-3 flex space-x-16 justify-center">
         <Link
           href="https://www.instagram.com/findmalek"
           target="_blank"

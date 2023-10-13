@@ -74,7 +74,7 @@ type Display = {
 type Accordion = {
   question: string;
   answer: string;
-}
+};
 
 export type Github = {
   name: string;
@@ -96,4 +96,11 @@ export type Project = {
     tech: Tech[]; // Tech stack
     href?: string; // Link to the hosted project (Vercel or Domain Name)
   };
+};
+
+export type Email = {
+  name: string;
+  phoneNumber: string | number;
+  email: string;
+  message: string;
 };

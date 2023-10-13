@@ -20,7 +20,7 @@ export default function Contact() {
       <Description />
       <ContactForm />
 
-      <Footer name="Go back home." href="/" />
+      <Footer name="Go Back to the Landing Page." href="/" />
     </>
   );
 }

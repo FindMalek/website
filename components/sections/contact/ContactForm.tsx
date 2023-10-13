@@ -3,6 +3,9 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import nodemailer from "nodemailer";
+
+import Link from "next/link";
 
 import {
   Form,
@@ -14,6 +17,7 @@ import {
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
+import { ToastAction } from "@/components/ui/Toast";
 
 import { toast } from "@/lib/use-toast";
 
@@ -40,19 +44,48 @@ export default function ContactForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     // @ts-ignore: Random Z Error
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      message: "",
-    },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    toast({
-      title: "Message Received",
-      description: `Thank you, ${values.name}! Your message has been received. We will get back to you soon at ${values.email}.`,
-    });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await fetch("/api/", {
+      method: "POST",
+      body: JSON.stringify(values),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          toast({
+            title: "Message Received",
+            description: `Thank you, ${values.name}! Your message has been received. We will get back to you soon at ${values.email}.`,
+          });
+        } else {
+          console.log(response);
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "There was a problem with your request.",
+            action: (
+              <ToastAction altText="Try again">
+                <Link href="/contact">Try again</Link>
+              </ToastAction>
+            ),
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error sending email:", error);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with your Internet Connection.",
+          action: (
+            <ToastAction altText="Try again">
+              <Link href="/contact">Try again</Link>
+            </ToastAction>
+          ),
+        });
+      });
   }
+
   return (
     <div className="max-w-[600px] py-8">
       <Form {...form}>
