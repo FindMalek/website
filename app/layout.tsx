@@ -1,5 +1,7 @@
 import "@/styles/globals.css";
 
+import { Analytics } from '@vercel/analytics/react';
+
 import Header from "@/components/navigation/Header";
 import Background from "@/components/overall/Background";
 
@@ -31,6 +33,7 @@ export default function RootLayout({
         <Toaster />
         
         <Background />
+        <Analytics />
       </body>
     </html>
   );
