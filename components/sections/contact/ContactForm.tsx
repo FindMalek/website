@@ -44,6 +44,12 @@ export default function ContactForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     // @ts-ignore: Random Z Error
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+      phoneNumber: "",
+    },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -57,6 +63,7 @@ export default function ContactForm() {
             title: "Message Received",
             description: `Thank you, ${values.name}! Your message has been received. We will get back to you soon at ${values.email}.`,
           });
+          form.reset();
         } else {
           console.log(response);
           toast({
