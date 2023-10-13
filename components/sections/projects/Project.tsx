@@ -108,14 +108,15 @@ export default function Project({ project }: { project: Project }) {
           <SidebarContent project={project} />
 
           <SheetFooter>
-            <Link
-              target="_blank"
-              href={project.details.href || project.github?.href || "/404"}
-            >
-              <Button className="px-4 py-2 text-sm font-semibold text-gray-900 transition-colors duration-300 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800">
+            <Button className="w-full mt-4 py-6 text-sm font-semibold text-gray-50 transition-colors duration-300 bg-cyan-800/70 rounded-lg hover:bg-cyan-950/70 dark:bg-cyan-950/70 dark:text-white dark:hover:bg-cyan-800/70">
+              <Link
+                target="_blank"
+                href={project.details.href || project.github?.href || "/404"}
+                className="w-full px-4 py-2"
+              >
                 Open Project
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>

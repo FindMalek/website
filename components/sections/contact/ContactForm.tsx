@@ -148,7 +148,7 @@ export default function ContactForm() {
           />
           <Button
             type="submit"
-            className="block w-full bg-cyan-800/40 dark:bg-cyan-600/40 font-semibold text-white hover:text-black dark:hover:text-white shadow-sm hover:bg-cyan-950/20 dark:hover:bg-cyan-600/60"
+            className="block w-full transition-colors bg-cyan-800/40 dark:bg-cyan-600/40 font-semibold text-white hover:text-black dark:hover:text-white shadow-sm hover:bg-cyan-950/20 dark:hover:bg-cyan-600/60"
           >
             Let's talk
           </Button>
