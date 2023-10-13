@@ -81,4 +81,4 @@ To maintain a structured development process, I use specific commit types and em
 
    Marks a new version or release of the project, specifying the version number.
 
-Feel free to explore my portfolio and see these commit types in action! If you have any questions or want to collaborate, don't hesitate to [CONTACT ME].
+Feel free to explore my portfolio and see these commit types in action! If you have any questions or want to collaborate, don't hesitate to malekgarahellalbus@gmail.com.
