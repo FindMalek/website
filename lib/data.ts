@@ -228,6 +228,15 @@ const projects = [
           "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
       },
     ],
+    github: {
+      name: "Promolab",
+      description:
+        "Promolab is a dynamic web solutions provider, specializing in crafting engaging websites and web applications. We blend creativity and innovation to deliver digital solutions that stand out in the online landscape.",
+      date: "Created on July 2023",
+      href: "https://github.com/FindMalek/Promolab",
+      iconSrc:
+        "https://promolab.vercel.app/_next/image?url=%2Fpromolab_logo.webp&w=256&q=75",
+    },
   },
   {
     name: "Vital Burst",
@@ -297,8 +306,7 @@ const projects = [
           icon: BiLogoNodejs,
         },
       ],
-      href:
-        "https://www.figma.com/file/BkhNVRUYwEDwD4bk4WBWQU/Ikrili?type=design&node-id=0%3A1&mode=design&t=BLDRwk0UQp1Cwb6U-1",
+      href: "https://www.figma.com/file/BkhNVRUYwEDwD4bk4WBWQU/Ikrili?type=design&node-id=0%3A1&mode=design&t=BLDRwk0UQp1Cwb6U-1",
     },
     accordion: [
       {
@@ -317,6 +325,15 @@ const projects = [
           "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
       },
     ],
+    github: {
+      name: "Ikrili",
+      description:
+        "Find the Perfect Student Accommodation Near Your University.",
+      date: "Created on August 2023",
+      href: "https://github.com/FindMalek/Ikrili",
+      iconSrc:
+        "https://ikrili-fawn.vercel.app/_next/image?url=%2Ffavicon.ico&w=48&q=75",
+    },
   },
   {
     name: "Tarkhan",
@@ -355,6 +372,15 @@ const projects = [
           "It's easy to get started! Simply visit the 'Contact' page on my website, where you'll find a contact form. Fill in your details, including a brief description of your project or any questions you have. I'll get back to you promptly with the information you need and can provide a personalized quote based on your requirements.",
       },
     ],
+    github: {
+      name: "Tarkhan",
+      iconSrc:
+        "https://tarkhan.fr/cdn/shop/files/TARKHAN_LOGO_OK_1-removebg-preview.png?v=1696584170&width=500",
+      description:
+        "Découvrez nos chemises inédites et uniques, conçues pour s'adapter à toutes les morphologies.",
+      date: "Created on August 2023",
+      href: "https://github.com/FindMalek/Tarkhan",
+    },
   },
   {
     name: "Breadit",
