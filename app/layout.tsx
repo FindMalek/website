@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "FindServices | Malek Gara-Hellal - Web Developer, Graphic Designer, and Writer.",
   description:
     "FindServices | Find services near you, anywhere in the world. This is me Malek Gara-Hellal and I am a full-stack developer. I am also a graphic designer and a writer.",
-  applicationName: "https://findservices.tech",
+  applicationName: "https://findservices.tech"
 };
 
 export default function RootLayout({
@@ -29,6 +29,10 @@ export default function RootLayout({
         name="google-site-verification"
         content="DUd_5XyOU-5LOWSU2CiGLn0U2oEzgGAFJioIy5vl_2o"
       />
+      <meta property="og:image" content="/thumbnail.png" />
+      <meta property="og:image:width" content="1280" />
+      <meta property="og:image:height" content="720" />
+
       <body className={poppins.className}>
         <Header />
 
