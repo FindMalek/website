@@ -19,14 +19,14 @@ export default function CloudLogos() {
           <BiLogoInstagram className="h-5 w-5" />
         </Link>
         <Link
-          href="https://www.linkedin.com/in/malek-gara-hellal-a2936221a/"
+          href="https://www.linkedin.com/in/findmalek"
           target="_blank"
           aria-label="LinkedIn"
         >
           <BiLogoLinkedin className="h-5 w-5" />
         </Link>
         <Link
-          href="https://www.facebook.com/malekgh.py/"
+          href="https://www.facebook.com/foundmalek/"
           target="_blank"
           aria-label="Facebook"
         >
