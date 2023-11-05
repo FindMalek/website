@@ -5,11 +5,11 @@ export default function HorizentalContent({
   sectionId,
   content,
 }: {
-  sectionId: string;
+  sectionId?: string;
   content: HorizontalContentProps[];
 }) {
   return (
-    <section id={sectionId}>
+    <section id={sectionId || "NULL"}>
       <ul className="mx-auto grid gap-8 py-20">
         {content.map((item) => (
           <li key={item.name} className="relative flex gap-x-6 -mt-5">

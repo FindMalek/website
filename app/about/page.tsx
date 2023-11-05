@@ -223,14 +223,14 @@ export default function About() {
 
       <HorizentalContent sectionId="overall" content={overall} />
 
-      <Subtitle name="My Ventures." />
-      <HorizentalContent sectionId="my-ventures" content={ventures} />
+      <Subtitle name="My Ventures." sectionId="my-ventures" />
+      <HorizentalContent content={ventures} />
 
-      <Subtitle name="My Reads." />
-      <HorizentalContent sectionId="my-reads" content={reads} />
+      <Subtitle name="My Reads." sectionId="my-reads" />
+      <HorizentalContent content={reads} />
 
-      <Subtitle name="My Playlists." />
-      <HorizentalContent sectionId="my-playlists" content={playlists} />
+      <Subtitle name="My Playlists." sectionId="my-playlists" />
+      <HorizentalContent content={playlists} />
 
       <Footer name="Let's Continue to Projects" href="/projects" />
     </>

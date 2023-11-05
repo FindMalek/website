@@ -80,6 +80,7 @@ const projects = [
     description:
       "Online portfolio of Mahmoud Beznaiguia, a digital marketer skilled in SEO, social media, email marketing, and more. View examples of his work and contact him to help your business succeed online.",
     icon: GrStatusUnknownSmall,
+    /**
     display: {
       type: "gif",
       src: "/assets/gif/digi-ar.gif",
@@ -87,6 +88,7 @@ const projects = [
       height: 5 + 5,
       width: 500,
     },
+    */
     details: {
       about:
         "Digital Army is a digital marketing agency based in Tunisia. It was founded by Mahmoud Beznaiguia, a digital marketer skilled in SEO, social media, email marketing, and more. View examples of his work and contact him to help your business succeed online.",
