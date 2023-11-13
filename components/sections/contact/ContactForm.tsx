@@ -4,6 +4,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useState } from "react";
 import Link from "next/link";
 
 import {
@@ -17,6 +18,8 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
 import { ToastAction } from "@/components/ui/Toast";
+
+import { Loader2 } from "lucide-react";
 
 import { toast } from "@/lib/use-toast";
 
@@ -40,6 +43,7 @@ const formSchema = z.object({
 });
 
 export default function ContactForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     // @ts-ignore: Random Z Error
     resolver: zodResolver(formSchema),
@@ -52,42 +56,59 @@ export default function ContactForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await fetch("/api/", {
-      method: "POST",
-      body: JSON.stringify(values),
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          toast({
-            title: "Message Received",
-            description: `Thank you, ${values.name}! Your message has been received. We will get back to you soon at ${values.email}.`,
-          });
-          form.reset();
-        } else {
+    setIsLoading(true);
+
+    try {
+      await fetch("/api/", {
+        method: "POST",
+        body: JSON.stringify(values),
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            toast({
+              title: "Message Received",
+              description: `Thank you, ${values.name}! Your message has been received. We will get back to you soon at ${values.email}.`,
+            });
+            form.reset();
+          } else {
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: response.statusText,
+              action: (
+                <ToastAction altText="Try again">
+                  <Link href="/contact">Try again</Link>
+                </ToastAction>
+              ),
+            });
+          }
+        })
+        .catch((error) => {
           toast({
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
-            description: response.statusText,
+            description: error,
             action: (
               <ToastAction altText="Try again">
                 <Link href="/contact">Try again</Link>
               </ToastAction>
             ),
           });
-        }
-      })
-      .catch((error) => {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: error,
-          action: (
-            <ToastAction altText="Try again">
-              <Link href="/contact">Try again</Link>
-            </ToastAction>
-          ),
         });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error.message,
+        action: (
+          <ToastAction altText="Try again">
+            <Link href="/contact">Try again</Link>
+          </ToastAction>
+        ),
       });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -144,12 +165,22 @@ export default function ContactForm() {
               </FormItem>
             )}
           />
-          <Button
-            type="submit"
-            className="block w-full transition-colors bg-cyan-800/40 dark:bg-cyan-600/40 font-semibold text-white hover:text-black dark:hover:text-white shadow-sm hover:bg-cyan-950/20 dark:hover:bg-cyan-600/60"
-          >
-            Let's talk
-          </Button>
+          {isLoading ? (
+            <Button
+              disabled={true}
+              className="flex justify-center items-center w-full transition-colors bg-cyan-800/40 dark:bg-cyan-600/40 font-semibold text-white hover:text-black dark:hover:text-white shadow-sm hover:bg-cyan-950/20 dark:hover:bg-cyan-600/60"
+            >
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait ...
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="block w-full transition-colors bg-cyan-800/40 dark:bg-cyan-600/40 font-semibold text-white hover:text-black dark:hover:text-white shadow-sm hover:bg-cyan-950/20 dark:hover:bg-cyan-600/60"
+            >
+              Let's talk
+            </Button>
+          )}
         </form>
       </Form>
     </div>
