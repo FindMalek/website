@@ -30,7 +30,7 @@ const overall = [
       name: "",
     },
     description:
-      "The power of first impressions cannot be underestimated, and the gateway to capitalizing on them lies in exceptional website design. An outstanding website transcends mere aesthetics and extends its influence to encompass seamless functionality and user-friendly navigation. Drawing upon my expertise as a seasoned programmer, I possess the unique ability to tackle intricate technical challenges while crafting websites that exude sleekness and visual allure. Moreover, my extensive knowledge of recognized technical standards is complemented by my proficiency in modern building practices, ensuring that every aspect of your website is finely tuned to perfection.",
+      "The GitHub repository serves as a testament to my consistent commitment and expertise in various technologies, including Python, NodeJs, ReactJs, MySQL, Supabase, HTML, CSS, JavaScript, TypeScript, NextJs, Tailwind CSS, Java, Linux, Git, and GitHub. A tech enthusiast, I tackle challenges with precision, ensuring websites are not only functionally robust but also visually appealing, adhering to modern standards and practices.",
     linkText: "View GitHub",
     href: "https://github.com/FindMalek",
     target: "_blank",
@@ -43,7 +43,7 @@ const overall = [
       name: "",
     },
     description:
-      "While I may not fit the conventional mold of a product manager, my diverse skill set in research, product design, and product coordination empowers me to drive the growth of a product from its inception. As an exceptional analytical thinker, I possess the ability to uphold the product's vision throughout its entire journey, effectively bridging the technical and product aspects. By leveraging my expertise, I can navigate the path from 0 to 1, ensuring the product's success at every stage.",
+      "As a passionate advocate for open-source projects, I actively contribute and make most of my work public to benefit the community. My skills in research, product design, and coordination empower me to guide products from inception to success. With a unique blend of technical and product insight, I navigate the entire product journey, ensuring its vision remains intact and successful at every stage.",
     linkText: "View Product",
     href: "/projects",
     target: "_self",
@@ -56,7 +56,7 @@ const overall = [
       name: "",
     },
     description:
-      "Despite not fitting the typical designer stereotype, my exceptional visual abilities enable me to excel as a presenter, effectively conveying design concepts to stakeholders and design teams. I possess a remarkable aptitude for conceptualization, allowing me to envision and bring forth stunning creations. Additionally, my expertise lies in fine-tuning stylesheets and crafting seamless user experiences that flow effortlessly.",
+      "Breaking away from the typical designer stereotype, I leverage exceptional visual abilities to communicate design concepts effectively. Whether presenting to stakeholders or collaborating with design teams, my aptitude for conceptualization shines through. Fine-tuning stylesheets and creating seamless user experiences are my forte, ensuring designs not only align with branding but also embody current trends.",
     linkText: "View Behance",
     href: "https://www.behance.net/malekpy",
     target: "_blank",
