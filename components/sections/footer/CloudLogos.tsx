@@ -64,7 +64,7 @@ export default function CloudLogos() {
           <BiLogoLinkedin className="h-5 w-5" />
         </Link>
         <Link
-          href="https://www.facebook.com/malekgh.py/"
+          href="https://www.facebook.com/foundmalek/"
           target="_blank"
           aria-label="Facebook"
         >
