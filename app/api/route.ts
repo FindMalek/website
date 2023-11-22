@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   });
 
   const mailOptions = {
-    from: process.env.SENDER_EMAIL,
+    from: `FindServices Mailer <` + process.env.SENDER_EMAIL + `>`,
     to: process.env.MAIN_EMAIL,
     subject: `[FindServices] - Contact Form Submission: ${body.name}`,
     text: `
