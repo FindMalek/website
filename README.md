@@ -7,12 +7,13 @@ The person for web development, graphic design, and creative entrepreneurship. I
    <p align="left">
       <a href="https://github.com/FindMalek">
          <img alt="GitHub Streak" title="Check out my GitHub Streak" src="https://custom-icon-badges.demolab.com/badge/dynamic/json?logo=fire&logoColor=white&color=212121&label=streak&query=%24.currentStreak.length&suffix=%20days&url=https%3A%2F%2Fstreak-stats.demolab.com%2F%3Fuser%3DFindMalek%26type%3Djson&style=for-the-badge&labelColor=181717"/>
-        <img alt="Profile Views" title="Github Profile Views" src="https://komarev.com/ghpvc/?username=findmalek&color=A5a5a5&style=for-the-badge&label=VIEWS&logo=eye&logoColor=white"/>
       </a>
       <a href="https://github.com/FindMalek?tab=followers">
          <img alt="followers" title="Follow me on Github" src="https://custom-icon-badges.demolab.com/github/followers/FindMalek?color=236ad3&labelColor=1155ba&style=for-the-badge&logo=person-add&label=Follow&logoColor=white"/></a>
       <a href="https://github.com/FindMalek?tab=repositories&sort=stargazers">
          <img alt="total stars" title="Total stars on GitHub" src="https://custom-icon-badges.demolab.com/github/stars/FindMalek?color=C79600&style=for-the-badge&labelColor=C79600&logo=star"/></a>
+      <a href="https://github.com/FindMalek">
+         <img alt="Profile Views" title="Github Profile Views" src="https://komarev.com/ghpvc/?username=findmalek&color=A5a5a5&style=for-the-badge&label=VIEWS&logo=eye&logoColor=white"/></a>
    </p>
 
 ---
@@ -46,7 +47,6 @@ The person for web development, graphic design, and creative entrepreneurship. I
 
 #
 
-<details>
  <summary><h3>👨‍💻 Embarking on a Digital Odyssey: My Coding Journey</h3></summary>
  
    My coding adventure began not in a classroom, but in the vibrant world of apps and online resources. Along with my friend, [Mouhib Ben Nasser](https://github.com/meowhib), we dove headfirst into Python programming. Our journey was fueled by curiosity and a shared drive to explore the digital landscape.
@@ -59,7 +59,12 @@ The person for web development, graphic design, and creative entrepreneurship. I
 
    As I forge ahead in this digital odyssey, the journey is as rewarding as the destination. It's a continuous process of learning, growing, and transforming every challenge into an opportunity for triumph.
 
-[website]: https://www.findservices.tech
-[linkedin]: https://www.linkedin.com/in/findmalek
-[facebook]: https://www.facebook.com/foundmalek/
+#
 
+### 🫂 Social Media Accounts
+
+[Portfolio](https://www.findservices.tech)
+
+[LinkedIn](https://www.linkedin.com/in/findmalek)
+
+[Facebook](https://www.facebook.com/foundmalek/)
