@@ -19,7 +19,24 @@ import HorizentalContent from "@/components/sections/about/HorizentalContent";
 export const metadata: Metadata = {
   title: "About | FindServices",
   description:
-    "FindServices | Find services near you, anywhere in the world. This is me Malek Gara-Hellal and I am a full-stack developer.",
+    "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
+  openGraph: {
+    title:
+      "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
+    description:
+      "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
+    url: "https://www.findservices.tech/",
+    siteName: "FindMalek",
+    type: "website",
+    images: ["https://www.findservices.tech/thumbnail.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title:
+      "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
+    description:
+      "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
+  },
 };
 
 const overall = [
@@ -92,15 +109,15 @@ const ventures = [
     icon: BiCalendar,
   },
   {
-    name: "FindServices.",
+    name: "FindMalek.",
     sub: {
       is: true,
       name: "Founder",
     },
     description:
-      "FindServices is my portoflio website. It's a platform that showcases my work and my skills. It's also a platform that I use to share my thoughts and my ideas. I am a full-stack developer and I am currently working on this website.",
+      "FindMalek is my portoflio website. It's a platform that showcases my work and my skills. It's also a platform that I use to share my thoughts and my ideas. I am a full-stack developer and I am currently working on this website.",
     linkText: "2023",
-    href: "/projects#findservices",
+    href: "/projects#FindMalek",
     target: "_self",
     icon: BiCalendar,
   },

@@ -15,12 +15,12 @@ export const metadata: Metadata = {
   title:
     "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
   description:
-    "FindMalek | This is me Malek Gara-Hellal and I am a full-stack developer. I am also a graphic designer and a writer.",
+    "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
   openGraph: {
     title:
       "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
     description:
-      "FindMalek | This is me Malek Gara-Hellal and I am a full-stack developer. I am also a graphic designer and a writer.",
+    "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
     url: "https://www.findservices.tech/",
     siteName: "FindMalek",
     type: "website",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title:
       "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
     description:
-      "FindMalek | This is me Malek Gara-Hellal and I am a full-stack developer. I am also a graphic designer and a writer.",
+    "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
   },
 };
 
