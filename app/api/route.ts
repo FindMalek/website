@@ -22,11 +22,11 @@ export async function POST(req: Request) {
   });
 
   const mailOptions = {
-    from: `FindServices Mailer <` + process.env.SENDER_EMAIL + `>`,
+    from: `FindMalek Mailer <` + process.env.SENDER_EMAIL + `>`,
     to: process.env.MAIN_EMAIL,
-    subject: `[FindServices] - Contact Form Submission: ${body.name}`,
+    subject: `[FindMalek] - Contact Form Submission: ${body.name}`,
     text: `
-      -- Contact Form Submission > FindServices
+      -- Contact Form Submission > FindMalek
   
       - Name: ${body.name}
       - Email: ${body.email}

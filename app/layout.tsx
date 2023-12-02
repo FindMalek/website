@@ -10,12 +10,29 @@ import { Toaster } from "@/components/ui/Toaster";
 import type { Metadata } from "next";
 import { poppins } from "@/lib/fonts";
 
+// TODO: Change this description
 export const metadata: Metadata = {
   title:
-    "FindServices | Malek Gara-Hellal - Web Developer, Graphic Designer, and Writer.",
+    "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
   description:
-    "FindServices | Find services near you, anywhere in the world. This is me Malek Gara-Hellal and I am a full-stack developer. I am also a graphic designer and a writer.",
-  applicationName: "https://findservices.tech"
+    "FindMalek | This is me Malek Gara-Hellal and I am a full-stack developer. I am also a graphic designer and a writer.",
+  openGraph: {
+    title:
+      "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
+    description:
+      "FindMalek | This is me Malek Gara-Hellal and I am a full-stack developer. I am also a graphic designer and a writer.",
+    url: "https://www.findservices.tech/",
+    siteName: "FindMalek",
+    type: "website",
+    images: ["https://www.findservices.tech/thumbnail.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title:
+      "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
+    description:
+      "FindMalek | This is me Malek Gara-Hellal and I am a full-stack developer. I am also a graphic designer and a writer.",
+  },
 };
 
 export default function RootLayout({

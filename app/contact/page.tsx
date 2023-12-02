@@ -7,9 +7,9 @@ import Description from "@/components/sections/contact/Descritpion";
 import ContactForm from "@/components/sections/contact/ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact | FindServices",
+  title: "Contact | FindMalek",
   description:
-    "FindServices | Find services near you, anywhere in the world. This is me Malek Gara-Hellal and I am a full-stack developer.",
+    "FindMalek | Find services near you, anywhere in the world. This is me Malek Gara-Hellal and I am a full-stack developer.",
 };
 
 export default function Contact() {

@@ -555,13 +555,13 @@ const projects = [
     ],
   },
   {
-    name: "FindServices",
+    name: "FindMalek",
     description:
       "My personal website, where I offer my services, showcase my work and share my knowledge.",
     icon: GrStatusUnknownSmall,
     details: {
       about:
-        "FindServices is very modern and clean, prototyped with Figma and build with NextJS, ReactJS and TailwindCSS. I created this website to offer my services, showcase my work and share my knowledge.",
+        "FindMalek is very modern and clean, prototyped with Figma and build with NextJS, ReactJS and TailwindCSS. I created this website to offer my services, showcase my work and share my knowledge.",
       tech: [
         {
           name: "NextJS",
@@ -585,9 +585,9 @@ const projects = [
     accordion: [
       {
         question:
-          "Can you create a website like the one you created for FindServices ?",
+          "Can you create a website like the one you created for FindMalek ?",
         answer:
-          "Yes, I can create a website like the one I created for FindServices. Please contact me for more information.",
+          "Yes, I can create a website like the one I created for FindMalek. Please contact me for more information.",
       },
       {
         question: "Do you offer a discount for students?",
@@ -601,13 +601,13 @@ const projects = [
       },
     ],
     github: {
-      name: "FindServices",
+      name: "FindMalek",
       description:
-        "FindServices Portfolio: Next.js, React, Shadcn, Tailwind. Explore my work! 💻",
+        "FindMalek Portfolio: Next.js, React, Shadcn, Tailwind. Explore my work! 💻",
       date: "Created on September 2023",
-      href: "https://github.com/FindMalek/FindServices  ",
+      href: "https://github.com/FindMalek/FindMalek  ",
       iconSrc:
-        "https://findservices.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffavicon.f7227b70.ico&w=64&q=75",
+        "https://FindMalek.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffavicon.f7227b70.ico&w=64&q=75",
     },
   },
   {

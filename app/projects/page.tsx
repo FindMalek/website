@@ -6,9 +6,9 @@ import Footer from "@/components/sections/footer/Footer";
 import { GridProjects } from "@/components/sections/projects/GridProjects";
 
 export const metadata: Metadata = {
-  title: "Projects | FindServices",
+  title: "Projects | FindMalek",
   description:
-    "FindServices | Find services near you, anywhere in the world. This is me Malek Gara-Hellal and I am a full-stack developer.",
+    "FindMalek | Find services near you, anywhere in the world. This is me Malek Gara-Hellal and I am a full-stack developer.",
 };
 
 export default function Projects() {
