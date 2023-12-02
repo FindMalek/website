@@ -1,4 +1,4 @@
-# 💫 Malek Gara-Hellal
+# 💫 [Malek Gara-Hellal](https://www.findservices.tech)
 
 **`FindMalek (Developer - Entrepreneur - Graphic Designer)`**
 
@@ -63,8 +63,15 @@ The person for web development, graphic design, and creative entrepreneurship. I
 
 ### 🫂 Social Media Accounts
 
-[Portfolio](https://www.findservices.tech)
+   <a target="_blank" href="https://www.findservices.tech">
+   <img align="left" alt="Portfolio" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ie10/ie10-original.svg" />Portfolio</a>
 
-[LinkedIn](https://www.linkedin.com/in/findmalek)
+   <br/>
 
-[Facebook](https://www.facebook.com/foundmalek/)
+   <a target="_blank" href="https://www.linkedin.com/in/findmalek">
+   <img align="left" alt="Linked In" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" />Linked In</a>
+
+   <br />
+
+   <a target="_blank" href="https://www.facebook.com/foundmalek/">
+   <img align="left" alt="Facebook" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" />Facebook</a>
