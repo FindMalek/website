@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 
-import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import Header from "@/components/navigation/Header";
 import Background from "@/components/overall/Background";
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title:
       "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
     description:
-    "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
+      "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
     url: "https://www.findservices.tech/",
     siteName: "FindMalek",
     type: "website",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title:
       "FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
     description:
-    "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
+      "The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization.",
   },
 };
 
@@ -59,7 +59,7 @@ export default function RootLayout({
         <Toaster />
 
         <Background />
-        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
