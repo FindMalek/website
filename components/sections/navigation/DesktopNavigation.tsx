@@ -3,9 +3,9 @@ import Link from "next/link";
 
 import { usePathname } from "next/navigation";
 
-import { NavItemProps, DesktopNavigationProps } from "@/lib/types";
+import { NavItemType, DesktopNavigationType } from "@/types/navigation";
 
-function NavItem({ href, children }: NavItemProps) {
+function NavItem({ href, children }: NavItemType) {
 	let isActive = usePathname() === href;
 
 	return (
@@ -27,7 +27,7 @@ function NavItem({ href, children }: NavItemProps) {
 	);
 }
 
-export default function DesktopNavigation(props: DesktopNavigationProps) {
+export default function DesktopNavigation(props: DesktopNavigationType) {
 	return (
 		<nav {...props}>
 			<ul className="flex rounded-full bg-white/50 px-3 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-900/15 dark:shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-900/70 dark:text-zinc-200 dark:ring-white/10">
