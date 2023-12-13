@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import Herosection from "@/components/sections/home/Herosection";
-import Footer from "@/components/sections/footer/Footer";
+import Herosection from "@/components/sections/display/Hero";
+import Footer from "@/components/sections/display/Footer";
 
 export const metadata: Metadata = {
   title: "Home | FindMalek",

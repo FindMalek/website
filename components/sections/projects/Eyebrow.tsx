@@ -1,4 +1,4 @@
-import { Tag } from "@/components/sections/projects/Tag";
+import { Tag } from "@/components/overall/Tag";
 
 export default function Eyebrow({
   tag,

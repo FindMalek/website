@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github } from "@/lib/types";
+import { GithubType } from "@/types/project";
 
 import { Button } from "@/components/ui/Button";
 import {
@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 
 import { BiCalendar, BiLogoGithub } from "react-icons/bi";
 
-export default function GithubCard({ github }: { github: Github }) {
+export default function GithubCard({ github }: { github: GithubType }) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
