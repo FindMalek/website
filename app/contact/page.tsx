@@ -7,18 +7,21 @@ import Description from "@/components/sections/display/Descritpion";
 import ContactForm from "@/components/sections/form/ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact | FindMalek",
+	title: "Contact | FindMalek",
 };
 
 export default function Contact() {
-  return (
-    <>
-      <Header name="Contact." />
+	return (
+		<>
+			<Header name="Contact." />
 
-      <Description />
-      <ContactForm />
+			<Description />
+			<ContactForm />
 
-      <Footer name="Go Back to the Landing Page." href="/" />
-    </>
-  );
+			<Footer
+				name="Start over again ?"
+				href="/"
+			/>
+		</>
+	);
 }

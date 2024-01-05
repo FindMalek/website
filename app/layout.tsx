@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 import Header from "@/components/sections/navigation/Header";
 import Background from "@/components/overall/Background";
@@ -10,7 +11,7 @@ import { Toaster } from "@/components/ui/Toaster";
 import type { Metadata } from "next";
 import { poppins } from "@/data/fonts";
 
-// TODO: Change this description
+
 export const metadata: Metadata = {
 	title:
 		"FindMalek | Malek Gara-Hellal - Web Developer, Entrepreneur and Graphic Designer.",
@@ -60,6 +61,7 @@ export default function RootLayout({
 				<Background />
 
 				<SpeedInsights />
+				<Analytics mode={"production"} />
 			</body>
 		</html>
 	);

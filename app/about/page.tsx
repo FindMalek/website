@@ -243,7 +243,7 @@ export default function About() {
 			<HorizentalContent content={playlists} />
 
 			<Footer
-				name="Let's Continue to Projects"
+				name="Have a look at my projects"
 				href="/projects"
 			/>
 		</>
