@@ -1,8 +1,8 @@
-# 💫 [Malek Gara-Hellal](https://www.findservices.tech)
+# 💫 [Malek Gara-Hellal](https://www.findmalek.com)
 
 **`FindMalek (Developer - Entrepreneur - Graphic Designer)`**
 
-The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization. Explore my <a href="https://www.findservices.tech/projects">PROJECTS</a> to join me on my creative journey, and discover my <a href="https://www.findservices.tech/about#my-ventures">VENTURES</a> where I bring business ideas to life.
+The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization. Explore my <a href="https://www.findmalek.tech/projects">PROJECTS</a> to join me on my creative journey, and discover my <a href="https://www.findmalek.tech/about#my-ventures">VENTURES</a> where I bring business ideas to life.
 
    <p align="left">
       <a href="https://github.com/FindMalek">
@@ -63,7 +63,7 @@ The person for web development, graphic design, and creative entrepreneurship. I
 
 ### 🫂 Social Media Accounts
 
-   <a target="_blank" href="https://www.findservices.tech">
+   <a target="_blank" href="https://www.findmalek.tech">
    <img align="left" alt="Portfolio" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ie10/ie10-original.svg" />Portfolio</a>
 
    <br/>
