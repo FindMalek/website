@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/private/",
     },
-    sitemap: "https://www.findservices.tech/sitemap.xml",
+    sitemap: "https://www.findmalek.com/sitemap.xml",
   };
 }
