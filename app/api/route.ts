@@ -20,14 +20,18 @@ export async function POST(req: Request) {
     });
   }
 
-  if (
-    !process.env.SENDER_EMAIL ||
-    !process.env.SENDER_PASSWORD ||
-    !process.env.MAIN_EMAIL
-  ) {
-    return new Response("500", {
-      status: 500,
-    });
+  if (body.token !== process.env.NEXT_PUBLIC_JWT_SECRET) {
+    return new Response(
+      JSON.stringify({
+        message: "Invalid token",
+      }),
+      {
+        status: 401,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   }
 
   const mailTransporter = nodemailer.createTransport({

@@ -61,7 +61,10 @@ export default function ContactForm() {
     try {
       await fetch("/api/", {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          token: process.env.NEXT_PUBLIC_JWT_SECRET,
+        }),
       })
         .then((response) => {
           if (response.status === 200) {
@@ -69,7 +72,7 @@ export default function ContactForm() {
               title: "Message Received",
               description: `Thank you, ${values.name}! Your message has been received. We will get back to you soon at ${values.email}.`,
             });
-           form.reset();
+            form.reset();
           } else {
             toast({
               variant: "destructive",
