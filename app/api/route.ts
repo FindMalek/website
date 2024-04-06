@@ -1,31 +1,48 @@
 import nodemailer from "nodemailer";
+import { ratelimit } from "@/lib/limiter";
 
 export async function POST(req: Request) {
-	const body = await req.json();
+  const body = await req.json();
+  const ip =
+    (req.headers.get("x-forwarded-for") ||
+      req.headers.get("cf-connecting-ip")) ??
+    "Unknown IP";
 
-	if (
-		!process.env.SENDER_EMAIL ||
-		!process.env.SENDER_PASSWORD ||
-		!process.env.MAIN_EMAIL
-	) {
-		return new Response("500", {
-			status: 500,
-		});
-	}
+  const { success, reset } = await ratelimit.limit(ip);
 
-	const mailTransporter = nodemailer.createTransport({
-		service: "gmail",
-		auth: {
-			user: process.env.SENDER_EMAIL,
-			pass: process.env.SENDER_PASSWORD,
-		},
-	});
+  if (!success) {
+    console.log(`Rate limit exceeded for IP: ${ip}`);
+    return new Response("429", {
+      status: 429,
+      headers: {
+        ["Retry-After"]: `Are you spamming my endpoint ? guess what I got your IP: ${ip} and I will hack you now :)`,
+      },
+    });
+  }
 
-	const mailOptions = {
-		from: `FindMalek Mailer <` + process.env.SENDER_EMAIL + `>`,
-		to: process.env.MAIN_EMAIL,
-		subject: `[FindMalek] - Contact Form Submission: ${body.name}`,
-		html: `
+  if (
+    !process.env.SENDER_EMAIL ||
+    !process.env.SENDER_PASSWORD ||
+    !process.env.MAIN_EMAIL
+  ) {
+    return new Response("500", {
+      status: 500,
+    });
+  }
+
+  const mailTransporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.SENDER_EMAIL,
+      pass: process.env.SENDER_PASSWORD,
+    },
+  });
+
+  const mailOptions = {
+    from: `FindMalek Mailer <` + process.env.SENDER_EMAIL + `>`,
+    to: process.env.MAIN_EMAIL,
+    subject: `[FindMalek] - Contact Form Submission: ${body.name}`,
+    html: `
       <html>
         <head>
           <style>
@@ -87,12 +104,33 @@ export async function POST(req: Request) {
         </body>
       </html>
     `,
-	};
+  };
 
-	try {
-		await mailTransporter.sendMail(mailOptions);
-		return new Response("200");
-	} catch (error) {
-		return new Response("500");
-	}
+  try {
+    await mailTransporter.sendMail(mailOptions);
+    return new Response(
+      JSON.stringify({
+        message: "Email sent successfully",
+        reset,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        message: "An error occurred while sending the email",
+        error,
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 }

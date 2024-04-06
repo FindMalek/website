@@ -20,6 +20,8 @@
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "@upstash/ratelimit": "^1.0.3",
+    "@upstash/redis": "^1.29.0",
     "@vercel/analytics": "^1.1.1",
     "@vercel/speed-insights": "^1.0.0",
     "autoprefixer": "^10.4.16",

@@ -38,6 +38,12 @@ dependencies:
   '@radix-ui/react-toast':
     specifier: ^1.1.5
     version: 1.1.5(@types/react@18.2.22)(react-dom@18.2.0)(react@18.2.0)
+  '@upstash/ratelimit':
+    specifier: ^1.0.3
+    version: 1.0.3
+  '@upstash/redis':
+    specifier: ^1.29.0
+    version: 1.29.0
   '@vercel/analytics':
     specifier: ^1.1.1
     version: 1.1.1
@@ -1136,6 +1142,25 @@ packages:
   /@types/scheduler@0.16.3:
     resolution: {integrity: sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==}
 
+  /@upstash/core-analytics@0.0.7:
+    resolution: {integrity: sha512-lC2j5efqb1haX/fpTGaPUx1rue1WUkOZBVHDzCB7eMIVsRdFFp4xiHtyH/G9omiR1zj39fU5SCTWFiKJH3KOpw==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      '@upstash/redis': 1.29.0
+    dev: false
+
+  /@upstash/ratelimit@1.0.3:
+    resolution: {integrity: sha512-uaws/6Ar28TICm61wfIbL4Ba91WYtIfl6HMj0PNJ0H/nm0SSXwVbCxPEiX9aXa41gMlVWujaJcOreqIuO8/mqg==}
+    dependencies:
+      '@upstash/core-analytics': 0.0.7
+    dev: false
+
+  /@upstash/redis@1.29.0:
+    resolution: {integrity: sha512-kbO5fgMAeUzErnA/SOtaSbAa0dguYhhBT4MZHJ1O8gVl4iK754aC9+rIYY5hsp4nlxeCGfnIDkWpof991c9jjA==}
+    dependencies:
+      crypto-js: 4.2.0
+    dev: false
+
   /@vercel/analytics@1.1.1:
     resolution: {integrity: sha512-+NqgNmSabg3IFfxYhrWCfB/H+RCUOCR5ExRudNG2+pcRehq628DJB5e1u1xqwpLtn4pAYii4D98w7kofORAGQA==}
     dependencies:
@@ -1745,6 +1770,10 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    dev: false
 
   /cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
