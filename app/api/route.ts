@@ -102,6 +102,7 @@ export async function POST(req: Request) {
             <div class="footer">
               <p>
 			 	This email was sent by FindMalek Mailer. If you have any questions. 
+        Sent from IP: ${ip}
 			  </p>
             </div>
           </div>
