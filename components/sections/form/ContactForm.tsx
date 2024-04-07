@@ -4,8 +4,9 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -43,6 +44,7 @@ const formSchema = z.object({
 });
 
 export default function ContactForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     // @ts-ignore: Random Z Error
@@ -76,12 +78,16 @@ export default function ContactForm() {
           } else {
             toast({
               variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: response.statusText,
+              title: "Hey, are you a robot?",
+              description: "You're moving so fast, it's hard to keep up! Let's slow down a bit and try again later. Don't worry, we still love you whether you're human or bot!",
               action: (
-                <ToastAction altText="Try again">
-                  <Link href="/contact">Try again</Link>
-                </ToastAction>
+                <ToastAction
+                  onClick={
+                    () => router.refresh()
+                  }
+                  altText="Try again" >
+                  Wait for a bit.
+                </ ToastAction>
               ),
             });
           }

@@ -3,5 +3,5 @@ import { Ratelimit } from "@upstash/ratelimit";
 
 export const ratelimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(1, "30 s"),
+  limiter: Ratelimit.slidingWindow(2, "5m"),
 });

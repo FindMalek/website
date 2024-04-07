@@ -3,22 +3,7 @@ import { ratelimit } from "@/lib/limiter";
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const ip =
-    (req.headers.get("x-forwarded-for") ||
-      req.headers.get("cf-connecting-ip")) ??
-    "Unknown IP";
-
-  const { success, reset } = await ratelimit.limit(ip);
-
-  if (!success) {
-    console.log(`Rate limit exceeded for IP: ${ip}`);
-    return new Response("429", {
-      status: 429,
-      headers: {
-        ["Retry-After"]: `Are you spamming my endpoint ? guess what I got your IP: ${ip} and I will hack you now :)`,
-      },
-    });
-  }
+  const ip = req.headers.get("x-forwarded-for")!;
 
   if (body.token !== process.env.NEXT_PUBLIC_JWT_SECRET) {
     return new Response(
@@ -30,7 +15,22 @@ export async function POST(req: Request) {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
+    );
+  }
+
+  const { success, reset } = await ratelimit.limit(ip);
+  if (!success) {
+    return new Response(
+      JSON.stringify({
+        message: "Too many requests",
+      }),
+      {
+        status: 429,
+        headers: {
+          ["Retry-After"]: `Are you spamming my endpoint ? guess what I got your IP: ${ip} and I will hack you now :)`,
+        },
+      },
     );
   }
 
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
   const mailOptions = {
     from: `FindMalek Mailer <` + process.env.SENDER_EMAIL + `>`,
-    to: process.env.MAIN_EMAIL,
+    to: process.env.MAIN_EMAIL + ', ' + body.email,
     subject: `[FindMalek] - Contact Form Submission: ${body.name}`,
     html: `
       <html>
@@ -122,7 +122,7 @@ export async function POST(req: Request) {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   } catch (error) {
     return new Response(
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 }
