@@ -20,20 +20,28 @@ The person for web development, graphic design, and creative entrepreneurship. I
 
 ### 🧰 Languages and Tools
 
-<img align="left" alt="React" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" />
-<img align="left" alt="Next JS" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" />
-<img align="left" alt="Tailwind CSS" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" />
-<img align="left" alt="TypeScript" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-plain.svg" />
-<img align="left" alt="PostreSQL" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-plain.svg" />
-<img align="left" alt="NodeJS" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" />
-<img align="left" alt="HTML" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-plain.svg" />
-<img align="left" alt="CSS" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-plain.svg" />
-<img align="left" alt="JavaScript" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-plain.svg" />
-<img align="left" alt="Git" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" />
-<img align="left" alt="GitHub" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" />
-<img align="left" alt="Linux" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" />
-<img align="left" alt="Python" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-plain.svg" />
-<img align="left" alt="Java" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"/>
+<img align="left" alt="React" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=react" />
+<img align="left" alt="Next JS" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=nextjs" />
+<img align="left" alt="TypeScript" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=ts" />
+<img align="left" alt="Tailwind CSS" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=tailwind" />
+<img align="left" alt="Prisma" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=prisma" />
+<img align="left" alt="Supabase" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=supabase" />
+<img align="left" alt="PostreSQL" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=postgres" />
+<img align="left" alt="NodeJS" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=nodejs" />
+<img align="left" alt="HTML" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=html" />
+<img align="left" alt="CSS" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=css" />
+<img align="left" alt="JavaScript" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=js" />
+<img align="left" alt="Git" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=git" />
+<img align="left" alt="GitHub" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=github" />
+<img align="left" alt="Linux" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=linux" />
+<img align="left" alt="Bash" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=bash"/>
+<img align="left" alt="Python" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=py" />
+<img align="left" alt="Java" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=java"/>
+<img align="left" alt="C" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=c"/>
+<img align="left" alt="Markdown" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=md" />
+<img align="left" alt="Figma" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=figma"/>
+
+<br />
 
 <br />
 
@@ -63,15 +71,14 @@ The person for web development, graphic design, and creative entrepreneurship. I
 
 ### 🫂 Social Media Accounts
 
-   <a target="_blank" href="https://www.findmalek.tech">
-   <img align="left" alt="Portfolio" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ie10/ie10-original.svg" />Portfolio</a>
-
-   <br/>
-
+   <a target="_blank" href="https://www.findmalek.com">
+   <img align="left" alt="Portfolio" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=vercel" />
+   </a>
+   
    <a target="_blank" href="https://www.linkedin.com/in/findmalek">
-   <img align="left" alt="Linked In" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" />Linked In</a>
+   <img align="left" alt="LinkedIn" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=linkedin" />
+   </a>
 
-   <br />
-
-   <a target="_blank" href="https://www.facebook.com/foundmalek/">
-   <img align="left" alt="Facebook" width="30px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" />Facebook</a>
+   <a target="_blank" href="https://www.instagram.com/findmalek">
+   <img align="left" alt="Instagram" width="30px" style="padding-right:10px;" src="https://skillicons.dev/icons?i=instagram" />
+   </a>
