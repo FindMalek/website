@@ -51,7 +51,7 @@ The person for web development, graphic design, and creative entrepreneurship. I
 
 ![Malek's GitHub stats](https://github-readme-stats.vercel.app/api?username=findmalek&show_icons=true&theme=prussian)
 
-![GitHub Streak](https://streak-stats.demolab.com?user=FindMalek&theme=prussian)
+![GitHub Streak](https://streak-stats.demolab.com?user=findmalek&theme=prussian)
 
 #
 
