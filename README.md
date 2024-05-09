@@ -6,7 +6,7 @@ The person for web development, graphic design, and creative entrepreneurship. I
 
    <p align="left">
       <a href="https://github.com/FindMalek">
-         <img alt="GitHub Streak" title="Check out my GitHub Streak" src="https://custom-icon-badges.demolab.com/badge/dynamic/json?logo=fire&logoColor=white&color=212121&label=streak&query=%24.currentStreak.length&suffix=%20days&url=https%3A%2F%2Fstreak-stats.demolab.com%2F%3Fuser%3DFindMalek%26type%3Djson&style=for-the-badge&labelColor=181717"/>
+         <img alt="GitHub Streak" title="Check out my GitHub Streak" src="https://custom-icon-badges.demolab.com/badge/dynamic/json?logo=fire&logoColor=white&color=212121&label=streak&query=%24.currentStreak.length&suffix=%20days&url=https%3A%2F%2Fstreak-stats.demolab.com%2F%3Fuser%3Dfindmalek%26type%3Djson&style=for-the-badge&labelColor=181717"/>
       </a>
       <a href="https://github.com/FindMalek?tab=followers">
          <img alt="followers" title="Follow me on Github" src="https://custom-icon-badges.demolab.com/github/followers/FindMalek?color=236ad3&labelColor=1155ba&style=for-the-badge&logo=person-add&label=Follow&logoColor=white"/></a>
