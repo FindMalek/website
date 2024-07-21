@@ -30,7 +30,7 @@ const findmalek = {
 				icon: BiLogoNodejs,
 			},
 		],
-		href: "https://www.findservices.tech/",
+		href: "https://www.findmalek.com/",
 	},
 	accordion: [
 		{

@@ -13,9 +13,9 @@ import promolab from "@/data/projects/promolab";
 import tarkhan from "@/data/projects/tarkhan";
 import lazytube from "@/data/projects/lazytube";
 import ikrili from "@/data/projects/ikrili";
-import breadit from "@/data/projects/breadit";
-import moveu from "@/data/projects/moveu";
-import fitforme from "@/data/projects/fitforme";
+import chatmater from "@/data/projects/chatmater";
+import fn03 from "@/data/projects/fn03";
+import walletLabels from "@/data/projects/wallet-labels";
 
 export default [
 	uniswaphooks,
@@ -26,13 +26,12 @@ export default [
 	spammerJs,
 	syncify,
 	vitalBurst,
-	// --- //
+	chatmater,
 	findmalek,
 	tarkhan,
 	promolab,
 	lazytube,
 	ikrili,
-	breadit,
-	moveu,
-	fitforme,
+	fn03,
+	walletLabels,
 ];
