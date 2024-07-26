@@ -57,7 +57,7 @@ The person for web development, graphic design, and creative entrepreneurship. I
 
  <summary><h3>👨‍💻 Embarking on a Digital Odyssey: My Coding Journey</h3></summary>
  
-   My coding adventure began not in a classroom, but in the vibrant world of apps and online resources. Along with my friend, [Mouhib Ben Nasser](https://github.com/meowhib), we dove headfirst into Python programming. Our journey was fueled by curiosity and a shared drive to explore the digital landscape.
+   My coding adventure began not in a classroom, but in the vibrant world of apps and online resources. I dove headfirst into Python programming. My journey was fueled by curiosity and a shared drive to explore the digital landscape.
 
    The discovery of coding felt like unlocking a secret world. It was here that I created [Syncify](https://github.com/FindMalek/Syncify), a project intertwining my love for music with the elegance of code. This was more than just a program; it was a symphony of digital notes and rhythms.
 
