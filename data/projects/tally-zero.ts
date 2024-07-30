@@ -2,13 +2,13 @@ import { ProjectType } from "@/types/project";
 
 import { BiLogoReact, BiLogoTailwindCss, BiLogoNodejs } from "react-icons/bi";
 import { TbBrandNextjs } from "react-icons/tb";
-import { FaRobot } from "react-icons/fa6";
+import { TbCircleLetterT } from "react-icons/tb";
 
 const tallyZero = {
   name: "Tally Zero",
   description:
     "Tally Zero is a decentralized governance platform that offers a range of features to enable secure, transparent, and decentralized voting on blockchain proposals.",
-  icon: FaRobot,
+  icon: TbCircleLetterT,
   details: {
     about:
       "Tally Zero is a decentralized governance platform that offers a range of features to enable secure, transparent, and decentralized voting on blockchain proposals. It includes decentralized voting, wallet integration, IPFS deployment, proposal browsing and voting, cross-chain support, and is open source for community-driven development and improvement.",
