@@ -18,6 +18,7 @@ import fn03 from "@/data/projects/fn03";
 import walletLabels from "@/data/projects/wallet-labels";
 import findplate from "@/data/projects/findplate";
 import tallyZero from "@/data/projects/tally-zero";
+import stelify from "@/data/projects/stelify";
 
 export default [
 	uniswaphooks,
@@ -38,4 +39,5 @@ export default [
 	walletLabels,
 	findplate,
 	tallyZero,
+	stelify,
 ];
