@@ -16,6 +16,8 @@ import ikrili from "@/data/projects/ikrili";
 import chatmater from "@/data/projects/chatmater";
 import fn03 from "@/data/projects/fn03";
 import walletLabels from "@/data/projects/wallet-labels";
+import findplate from "@/data/projects/findplate";
+import tallyZero from "@/data/projects/tally-zero";
 
 export default [
 	uniswaphooks,
@@ -34,4 +36,6 @@ export default [
 	ikrili,
 	fn03,
 	walletLabels,
+	findplate,
+	tallyZero,
 ];
