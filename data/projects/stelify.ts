@@ -54,13 +54,6 @@ const stelify = {
         "You can reach out to us by sending an email to 'hi@findmalek.com' or head to the contact page",
     },
   ],
-  github: {
-    name: "Stelify",
-    description:
-      "Stelify is a project dedicated to Tunisians, showcasing all their analytics and fostering a better community for artists. Built with a focus on UI and using FindPlate as the starting point.",
-    date: "Created on May 2024",
-    iconSrc: "https://stelify.vercel.app/favicon.ico",
-  },
 };
 
 export default stelify as ProjectType;

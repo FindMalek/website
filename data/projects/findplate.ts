@@ -55,13 +55,6 @@ const findplate = {
         "You can contribute to FindPlate by visiting our GitHub repository and following the contribution guidelines provided there.",
     },
   ],
-  github: {
-    name: "FindPlate",
-    description:
-      "Speed up your project setup by 65% with FindPlate, your complete Next.js starter kit for SaaS, AI tools, and more. Turn your ideas into revenue quickly.",
-    date: "Created on April 2024",
-    iconSrc: "https://plate.findmalek.com/_next/image?url=%2Ffavicons%2Fandroid-chrome-192x192.png&w=32&q=75",
-  },
 };
 
 export default findplate as ProjectType;
