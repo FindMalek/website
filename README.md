@@ -1,6 +1,6 @@
 # 💫 [Malek Gara-Hellal](https://www.findmalek.com)
 
-**`FindMalek (Developer - Entrepreneur - Graphic Designer)`**
+**`FindMalek (Developer - Entrepreneur)`**
 
 The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization. Explore my <a href="https://www.findmalek.com/projects">PROJECTS</a> to join me on my creative journey, and discover my <a href="https://www.findmalek.com/about#my-ventures">VENTURES</a> where I bring business ideas to life.
 
