@@ -1,8 +1,9 @@
+![](/public/thumbnail.png)
 # 💫 [Malek Gara-Hellal](https://www.findmalek.com)
 
 **`FindMalek (Developer - Entrepreneur)`**
 
-The person for web development, graphic design, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization. Explore my <a href="https://www.findmalek.com/projects">PROJECTS</a> to join me on my creative journey, and discover my <a href="https://www.findmalek.com/about#my-ventures">VENTURES</a> where I bring business ideas to life.
+The person for web development, design engineer, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization. Explore my <a href="https://www.findmalek.com/projects">PROJECTS</a> to join me on my creative journey, and discover my <a href="https://www.findmalek.com/about#my-ventures">VENTURES</a> where I bring business ideas to life.
 
    <p align="left">
       <a href="https://github.com/FindMalek">
@@ -54,22 +55,6 @@ The person for web development, graphic design, and creative entrepreneurship. I
 ![findmalek's Stats](https://github-readme-stats.vercel.app/api?username=findmalek&theme=prussian&show_icons=true&hide_border=false&count_private=true)
 
 ![findmalek's Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=findmalek&theme=prussian&show_icons=true&hide_border=false&layout=compact)
-
-#
-
- <summary><h3>👨‍💻 Embarking on a Digital Odyssey: My Coding Journey</h3></summary>
- 
-   My coding adventure began not in a classroom, but in the vibrant world of apps and online resources. I dove headfirst into Python programming. My journey was fueled by curiosity and a shared drive to explore the digital landscape.
-
-   The discovery of coding felt like unlocking a secret world. It was here that I created [Syncify](https://github.com/FindMalek/Syncify), a project intertwining my love for music with the elegance of code. This was more than just a program; it was a symphony of digital notes and rhythms.
-
-   This path led me beyond the realms of coding into entrepreneurship. The transition from coding for fun to creating with purpose was exhilarating. Every project, every line of code, pushed me beyond my comfort zones, teaching me resilience and adaptability.
-
-   I live by a simple yet powerful philosophy: "A good day to make greatness, today." This mantra reminds me that each day is an opportunity to create, to grow, and to overcome.
-
-   As I forge ahead in this digital odyssey, the journey is as rewarding as the destination. It's a continuous process of learning, growing, and transforming every challenge into an opportunity for triumph.
-
-#
 
 ### 🫂 Social Media Accounts
 
