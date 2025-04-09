@@ -8,7 +8,7 @@ import { PAGES } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 
 import { Icons } from "@/components/shared/icons"
-import { HyperText } from "@/components/ui/hyper-text"
+import { HyperText } from "@/components/x/hyper-text"
 
 export function NextPage() {
   const pathname = usePathname()

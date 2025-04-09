@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import { ThemeProvider } from "@/components/layout/theme-provider"
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { TooltipProvider } from "@/components/x/tooltip"
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient()
