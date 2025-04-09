@@ -1,6 +1,6 @@
 export default async function sitemap() {
   try {
-    const currentDate = new Date().toISOString();
+    const currentDate = new Date().toISOString()
 
     return [
       {
@@ -10,16 +10,28 @@ export default async function sitemap() {
         priority: 1,
       },
       {
+        url: "https://www.findmalek.com/about",
+        lastModified: currentDate,
+        changeFrequency: "yearly",
+        priority: 0.8,
+      },
+      {
+        url: "https://www.findmalek.com/work",
+        lastModified: currentDate,
+        changeFrequency: "weekly",
+        priority: 0.9,
+      },
+      {
         url: "https://www.findmalek.com/projects",
         lastModified: currentDate,
         changeFrequency: "weekly",
         priority: 0.9,
       },
       {
-        url: "https://www.findmalek.com/about",
+        url: "https://www.findmalek.com/stack",
         lastModified: currentDate,
-        changeFrequency: "yearly",
-        priority: 0.8,
+        changeFrequency: "weekly",
+        priority: 0.9,
       },
       {
         url: "https://www.findmalek.com/contact",
@@ -27,8 +39,8 @@ export default async function sitemap() {
         changeFrequency: "yearly",
         priority: 0.7,
       },
-    ];
+    ]
   } catch (error) {
-    console.error("Error generating sitemap:", error);
+    console.error("Error generating sitemap:", error)
   }
 }

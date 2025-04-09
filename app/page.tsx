@@ -1,17 +1,7 @@
-import type { Metadata } from "next";
-
-import Herosection from "@/components/sections/display/Hero";
-import Footer from "@/components/sections/display/Footer";
-
-export const metadata: Metadata = {
-  title: "Home | FindMalek",
-};
-
-export default function About() {
+export default function Home() {
   return (
-    <>
-      <Herosection />
-      <Footer name="See more about me" href="/about" />
-    </>
-  );
+    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
+      WIP
+    </div>
+  )
 }
