@@ -16,6 +16,7 @@ export const siteConfig: SiteConfig = {
     facebook: "https://go.findmalek.com/fb",
     instagram: "https://go.findmalek.com/ig",
     linkedin: "https://go.findmalek.com/li",
+    spotify: "https://go.findmalek.com/sp",
   },
   author: {
     name: "Malek Gara-Hellal",

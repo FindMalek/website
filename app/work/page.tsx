@@ -5,6 +5,7 @@ import { PageHeading } from "@/components/shared/page-heading"
 export const metadata: Metadata = {
   title: "Work",
 }
+
 export default function Work() {
   return (
     <div className="w-full px-4 pt-20">
