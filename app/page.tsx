@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { LineShadowText } from "@/components/x/line-shadow-text"
+import { LineShadowText } from "@/components/ui/line-shadow-text"
 
 export default function Home() {
   return (

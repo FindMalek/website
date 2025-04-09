@@ -9,7 +9,7 @@ import { siteConfig } from "@/config/site"
 
 import { Icons } from "@/components/shared/icons"
 import { SectionHeading } from "@/components/shared/section-heading"
-import { Button } from "@/components/x/button"
+import { Button } from "@/components/ui/button"
 
 export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
   const [displayCount, setDisplayCount] = useState(8)

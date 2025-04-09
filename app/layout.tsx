@@ -13,7 +13,7 @@ import { Header } from "@/components/layout/header"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator"
 import { NextPage } from "@/components/shared/next-page"
-import { Toaster } from "@/components/x/sonner"
+import { Toaster } from "@/components/ui/sonner"
 
 interface RootLayoutProps {
   children: React.ReactNode
