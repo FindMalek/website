@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 
 import { Analytics } from "@/components/layout/analytics"
 import { Background } from "@/components/layout/background"
+import { Footer } from "@/components/layout/footer"
 import { Header } from "@/components/layout/header"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator"
@@ -77,14 +78,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
         suppressHydrationWarning
         className={cn(
           "bg-background min-h-screen font-sans antialiased",
-          "mx-auto w-full",
-          "sm:max-w-sm md:max-w-xl xl:max-w-3xl",
+          "mx-auto flex w-full flex-col",
+          "sm:max-w-lg md:max-w-2xl xl:max-w-3xl",
           poppins
         )}
       >
         <LayoutWrapper>
           <Header />
-          {children}
+          <main className="flex-1">{children}</main>
+          <Footer />
           <Background />
           <Analytics />
           <Toaster />

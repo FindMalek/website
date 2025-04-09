@@ -5,9 +5,11 @@ export type SiteConfig = {
   description: string
   url: string
   links: {
-    twitter?: string
-    github?: string
-    discord?: string
+    twitter: string
+    github: string
+    facebook: string
+    instagram: string
+    linkedin: string
   }
   images: {
     default: string

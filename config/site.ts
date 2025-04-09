@@ -11,14 +11,17 @@ export const siteConfig: SiteConfig = {
     logo: "https://www.findmalek.com/author.jpg",
   },
   links: {
-    twitter: "https://twitter.com/foundmalek",
-    github: "https://github.com/findmalek",
+    twitter: "https://go.findmalek.com/x",
+    github: "https://go.findmalek.com/gh",
+    facebook: "https://go.findmalek.com/fb",
+    instagram: "https://go.findmalek.com/ig",
+    linkedin: "https://go.findmalek.com/li",
   },
   author: {
     name: "Malek Gara-Hellal",
     url: "https://www.findmalek.com",
     email: "hi@findmalek.com",
-    github: "https://github.com/findmalek",
+    github: "https://go.findmalek.com/gh",
   },
   keywords: [
     "Web Development",

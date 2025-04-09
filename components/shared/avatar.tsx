@@ -53,7 +53,7 @@ export function Avatar({
           "bg-cyan-800 dark:bg-cyan-400",
           "object-cover",
           large
-            ? "size-12 sm:size-12 md:size-12 lg:size-16 xl:size-16"
+            ? "size-12 sm:size-12 md:size-16 xl:size-16"
             : "size-9 sm:size-9 md:size-9 lg:size-10 xl:size-10"
         )}
         width={300}

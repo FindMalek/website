@@ -1,5 +1,14 @@
 import Image, { ImageProps } from "next/image"
 import {
+  SiDiscord,
+  SiFacebook,
+  SiGithub,
+  SiGoogle,
+  SiInstagram,
+  SiPrisma,
+  SiX,
+} from "@icons-pack/react-simple-icons"
+import {
   AlertTriangle,
   ArrowDown,
   ArrowRight,
@@ -51,6 +60,7 @@ import {
   Moon,
   MoreHorizontal,
   MoreVertical,
+  MoveRight,
   PencilIcon,
   PhoneIcon,
   Pizza,
@@ -75,6 +85,7 @@ import {
   X,
   ZapIcon,
 } from "lucide-react"
+import { SiLinkedin } from "react-icons/si"
 
 export type Icon = LucideIcon
 
@@ -180,4 +191,13 @@ export const Icons = {
   dashboard: LayoutDashboardIcon,
   lifecycle: ListIcon,
   arrowUpCircle: ArrowUpCircleIcon,
+  discord: SiDiscord,
+  github: SiGithub,
+  google: SiGoogle,
+  prisma: SiPrisma,
+  x: SiX,
+  linkedin: SiLinkedin,
+  facebook: SiFacebook,
+  instagram: SiInstagram,
+  moveRight: MoveRight,
 }

@@ -22,7 +22,7 @@ export function HeaderAvatar({ isHomePage, avatarRef }: HeaderAvatarProps) {
         ref={avatarRef}
         className="order-last mt-[calc(theme(spacing.16)-theme(spacing.3))]"
       />
-      <div className="sticky top-0 order-last mx-auto -mb-3 w-full px-2 pt-3 sm:max-w-sm  sm:px-0 md:max-w-xl xl:max-w-3xl">
+      <div className="sticky top-0 order-last mx-auto -mb-3 w-full px-2 pt-3 sm:max-w-lg sm:px-3 md:max-w-2xl xl:max-w-3xl">
         <div className="relative">
           <AvatarContainer
             className="origin-left transition-opacity"

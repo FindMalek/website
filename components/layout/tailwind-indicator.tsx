@@ -1,7 +1,5 @@
 import { env } from "@/env"
 
-import { ModeToggle } from "@/components/shared/mode-toggle"
-
 export function TailwindIndicator() {
   if (env.NODE_ENV === "production") return null
 
@@ -17,7 +15,6 @@ export function TailwindIndicator() {
         <div className="hidden xl:block 2xl:hidden">xl</div>
         <div className="hidden 2xl:block">2xl</div>
       </div>
-      <ModeToggle />
     </div>
   )
 }
