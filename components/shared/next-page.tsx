@@ -13,7 +13,6 @@ import { HyperText } from "@/components/ui/hyper-text"
 export function NextPage() {
   const pathname = usePathname()
 
-  // Determine the next page based on current path
   const getNextPage = () => {
     switch (pathname) {
       case PAGES.HOME.path:
@@ -36,7 +35,7 @@ export function NextPage() {
   const nextPage = getNextPage()
 
   return (
-    <div className="mb-16 mt-10 md:mb-0">
+    <div className="mb-16 mt-10 px-4 md:mb-0">
       <Link
         href={nextPage.path}
         className="flex items-center gap-2 text-lg font-normal leading-6 dark:text-white"

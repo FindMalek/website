@@ -3,7 +3,6 @@ import Link from "next/link"
 
 import { AvatarContainerType } from "@/types"
 
-import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
 export function AvatarContainer({ className, ...props }: AvatarContainerType) {
@@ -32,11 +31,6 @@ export function Avatar({
   className?: string
   style?: React.CSSProperties
 }) {
-  const imageUrl =
-    process.env.NODE_ENV === "development"
-      ? "/author.jpg"
-      : siteConfig.images.logo
-
   return (
     <Link
       href="/"
@@ -45,7 +39,7 @@ export function Avatar({
       style={style}
     >
       <Image
-        src={imageUrl}
+        src={"/author.jpg"}
         alt="Malek Gara-Hellal avatar"
         sizes={large ? "4rem" : "2.25rem"}
         className={cn(
