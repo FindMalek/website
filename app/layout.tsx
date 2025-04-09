@@ -2,11 +2,12 @@ import "@/styles/globals.css"
 
 import type { Metadata, Viewport } from "next"
 
-import { fonts } from "@/config/fonts"
+import { poppins } from "@/config/fonts"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
 import { Analytics } from "@/components/layout/analytics"
+import { Background } from "@/components/layout/background"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator"
 import { Toaster } from "@/components/ui/sonner"
@@ -75,11 +76,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         suppressHydrationWarning
         className={cn(
           "bg-background min-h-screen font-sans antialiased",
-          fonts
+          poppins
         )}
       >
         <LayoutWrapper>
           {children}
+          <Background />
           <Analytics />
           <Toaster />
           <TailwindIndicator />
