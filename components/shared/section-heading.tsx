@@ -8,7 +8,7 @@ interface Direct {
 
 interface SectionHeadingProps {
   title: string
-  description: string
+  description?: string
   direct?: Direct
 }
 
@@ -21,7 +21,7 @@ export function SectionHeading({
     <div className="mb-6 flex items-center justify-between">
       <div>
         <h2 className="mb-2 text-3xl font-bold">{title}</h2>
-        <p className="text-slate-300">{description}</p>
+        {description && <p className="text-slate-300">{description}</p>}
       </div>
       {direct && (
         <Link

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 
+import { AboutBooks } from "@/components/app/about-books"
 import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
 import { PageHeading } from "@/components/shared/page-heading"
@@ -21,6 +22,7 @@ export default async function About() {
       />
       <AboutOverview />
       <AboutMusic playlists={playlists.items} />
+      <AboutBooks />
     </div>
   )
 }

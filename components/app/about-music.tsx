@@ -66,7 +66,7 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
         <div className="mt-4 flex justify-center">
           <Button
             variant="secondary"
-            className="w-full text-white hover:bg-slate-700/50 hover:text-white"
+            className="w-full"
             onClick={handleShowMore}
           >
             Show more
