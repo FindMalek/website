@@ -28,8 +28,8 @@ export function Header() {
         <div
           ref={headerRef}
           className={cn(
-            "sticky top-0 z-10 mx-auto h-14 w-full pt-4",
-            "sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl"
+            "sticky top-0 z-10 w-full pt-4",
+            "mx-auto sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl"
           )}
         >
           <div
@@ -46,7 +46,7 @@ export function Header() {
               )}
             >
               <div className="flex items-center justify-between">
-                <div className="pointer-events-auto">
+                <div className="pointer-events-auto fixed left-4">
                   {!isHomePage && (
                     <HeaderAvatar
                       isHomePage={isHomePage}

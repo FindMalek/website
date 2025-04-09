@@ -8,7 +8,6 @@ export function useHeaderAnimation(isHomePage: boolean) {
   const avatarRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const downDelay = avatarRef.current?.offsetTop ?? 0
     const upDelay = 64
 
     function setProperty(property: string, value: string) {
@@ -20,6 +19,8 @@ export function useHeaderAnimation(isHomePage: boolean) {
     }
 
     function updateHeaderStyles() {
+      const downDelay = avatarRef.current?.offsetTop ?? 0
+
       const { top, height } = headerRef.current?.getBoundingClientRect() ?? {
         top: 0,
         height: 0,
@@ -61,8 +62,19 @@ export function useHeaderAnimation(isHomePage: boolean) {
 
     function updateAvatarStyles() {
       if (!isHomePage) {
+        // Reset avatar styles when not on homepage
+        setProperty("--avatar-image-transform", "translate3d(0, 0, 0) scale(1)")
+        setProperty(
+          "--avatar-border-transform",
+          "translate3d(0, 0, 0) scale(1)"
+        )
+        setProperty("--avatar-border-opacity", "0")
+        setProperty("--header-top", "0px")
+        setProperty("--avatar-top", "0px")
         return
       }
+
+      const downDelay = avatarRef.current?.offsetTop ?? 0
 
       const fromScale = 1
       const toScale = 36 / 64
@@ -96,13 +108,41 @@ export function useHeaderAnimation(isHomePage: boolean) {
       isInitial.current = false
     }
 
+    // Reset all properties when component mounts or isHomePage changes
+    function resetProperties() {
+      // Clear all CSS custom properties
+      removeProperty("--header-position")
+      removeProperty("--content-offset")
+      removeProperty("--header-height")
+      removeProperty("--header-mb")
+      removeProperty("--header-inner-position")
+      removeProperty("--header-top")
+      removeProperty("--avatar-top")
+      removeProperty("--avatar-image-transform")
+      removeProperty("--avatar-border-transform")
+      removeProperty("--avatar-border-opacity")
+
+      isInitial.current = true
+    }
+
+    // Special handler for resize events that does a complete reset and update
+    function handleResize() {
+      resetProperties()
+      // Add a small delay to ensure the DOM has updated
+      setTimeout(updateStyles, 0)
+    }
+
+    resetProperties()
     updateStyles()
+
     window.addEventListener("scroll", updateStyles, { passive: true })
-    window.addEventListener("resize", updateStyles)
+    window.addEventListener("resize", handleResize)
 
     return () => {
       window.removeEventListener("scroll", updateStyles)
-      window.removeEventListener("resize", updateStyles)
+      window.removeEventListener("resize", handleResize)
+      // Clean up all properties on unmount
+      resetProperties()
     }
   }, [isHomePage])
 

@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
+    template: `%s | Malek Gara-Hellal`,
   },
   description: siteConfig.description,
   keywords: siteConfig.keywords,

@@ -4,7 +4,7 @@ import { LineShadowText } from "@/components/ui/line-shadow-text"
 
 export default function Home() {
   return (
-    <div className="w-full px-4 pt-20">
+    <div className="pt-30 w-full px-4">
       <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:leading-snug xl:text-4xl">
         Full Stack Developer and{" "}
         <LineShadowText className="dark:text-primary italic">
