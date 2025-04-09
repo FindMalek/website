@@ -1,3 +1,5 @@
+import { Popover } from "@headlessui/react"
+
 export type SiteConfig = {
   name: string
   description: string
@@ -20,3 +22,14 @@ export type SiteConfig = {
   }
   keywords: string[]
 }
+
+export type AvatarContainerType = React.ComponentProps<"div">
+
+export type NavItemType = {
+  href: string
+  children: React.ReactNode
+}
+
+export type MobileNavigationType = React.ComponentProps<typeof Popover>
+
+export type DesktopNavigationType = React.ComponentPropsWithoutRef<"nav">

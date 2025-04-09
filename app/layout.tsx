@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 
 import { Analytics } from "@/components/layout/analytics"
 import { Background } from "@/components/layout/background"
+import { Header } from "@/components/layout/header"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator"
 import { Toaster } from "@/components/ui/sonner"
@@ -76,10 +77,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
         suppressHydrationWarning
         className={cn(
           "bg-background min-h-screen font-sans antialiased",
+          "mx-auto w-full",
+          "sm:max-w-sm md:max-w-xl xl:max-w-3xl",
           poppins
         )}
       >
         <LayoutWrapper>
+          <Header />
           {children}
           <Background />
           <Analytics />

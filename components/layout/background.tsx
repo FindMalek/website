@@ -7,22 +7,32 @@ import { motion } from "motion/react"
 import { PAGES } from "@/config/consts"
 import { purplePurse } from "@/config/fonts"
 
-function generateSquares(count: number, width: number, height: number) {
+function generateSquares(
+  count: number,
+  width: number,
+  height: number
+): Array<{ id: number; pos: [number, number] }> {
   return Array.from({ length: count }, (_, i) => ({
     id: i,
     pos: [
       Math.floor((Math.random() * width) / 100),
       Math.floor((Math.random() * height) / 100),
-    ],
+    ] as [number, number],
   }))
 }
 
 export function Background() {
   const pathname = usePathname()
   const [pageLabel, setPageLabel] = useState("")
-  const [squares, setSquares] = useState(() =>
-    generateSquares(20, window.innerWidth, window.innerHeight)
-  )
+  const [squares, setSquares] = useState<
+    Array<{ id: number; pos: [number, number] }>
+  >([])
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+    setSquares(generateSquares(20, window.innerWidth, window.innerHeight))
+  }, [])
 
   useEffect(() => {
     const currentPage = Object.values(PAGES).find(
@@ -32,6 +42,8 @@ export function Background() {
   }, [pathname])
 
   const updateSquarePosition = (id: number) => {
+    if (typeof window === "undefined") return
+
     setSquares((currentSquares) =>
       currentSquares.map((sq) =>
         sq.id === id
@@ -72,26 +84,27 @@ export function Background() {
           fill="url(#983e3e4c-de6d-4c3f-8d64-b9761d1534cc)"
         />
         <svg x={-1} y={-1} className="overflow-visible">
-          {squares.map(({ pos: [x, y], id }, index) => (
-            <motion.rect
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.3 }}
-              transition={{
-                duration: 8,
-                repeat: 1,
-                delay: index * 0.2,
-                repeatType: "reverse",
-              }}
-              onAnimationComplete={() => updateSquarePosition(id)}
-              key={`${x}-${y}-${index}`}
-              width={99}
-              height={99}
-              x={x * 100 + 1}
-              y={y * 100 + 1}
-              fill="currentColor"
-              strokeWidth="0"
-            />
-          ))}
+          {isMounted &&
+            squares.map(({ pos: [x, y], id }, index) => (
+              <motion.rect
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.3 }}
+                transition={{
+                  duration: 8,
+                  repeat: 1,
+                  delay: index * 0.2,
+                  repeatType: "reverse",
+                }}
+                onAnimationComplete={() => updateSquarePosition(id)}
+                key={`${x}-${y}-${index}`}
+                width={99}
+                height={99}
+                x={x * 100 + 1}
+                y={y * 100 + 1}
+                fill="currentColor"
+                strokeWidth="0"
+              />
+            ))}
         </svg>
       </svg>
       <div className={purplePurse.className}>
