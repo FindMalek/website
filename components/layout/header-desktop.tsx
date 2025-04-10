@@ -7,7 +7,9 @@ import { NAV_ITEMS } from "@/config/consts"
 import { cn } from "@/lib/utils"
 
 function NavItem({ href, children }: NavItemType) {
-  const isActive = usePathname() === href
+  const pathname = usePathname()
+  const isActive =
+    pathname === href || (href !== "/" && pathname?.startsWith(`${href}/`))
 
   return (
     <li>

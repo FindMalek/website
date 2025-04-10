@@ -21,26 +21,35 @@ export default function Work() {
         title="Work"
         heading="I've been fortunate to work with some amazing companies and people."
       >
-        <div className="flex flex-row gap-4 pt-4">
+        <div className="flex flex-col gap-2 pt-4 sm:flex-row sm:gap-4">
           <Link
             href={siteConfig.links.linkedin}
             target="_blank"
-            className={cn(buttonVariants({ variant: "secondary" }))}
+            className={cn(
+              buttonVariants({ variant: "secondary", size: "sm" }),
+              "w-full sm:w-auto"
+            )}
           >
-            <Icons.linkedin className="size-4" />
+            <Icons.linkedin className="mr-2 size-4" />
             Follow me on LinkedIn
           </Link>
           <Link
             href={siteConfig.links.resume}
             target="_blank"
-            className={cn(buttonVariants({ variant: "secondary" }))}
+            className={cn(
+              buttonVariants({ variant: "secondary", size: "sm" }),
+              "w-full sm:w-auto"
+            )}
           >
-            <Icons.file className="size-4" />
+            <Icons.file className="mr-2 size-4" />
             Resume
           </Link>
           <Link
             href={"/contact?subject=Work"}
-            className={cn(buttonVariants({ variant: "default" }))}
+            className={cn(
+              buttonVariants({ variant: "default", size: "sm" }),
+              "w-full sm:w-auto"
+            )}
           >
             Let&apos;s talk about work
           </Link>

@@ -60,11 +60,11 @@ export function WorkCard({ work }: { work: WorkRo }) {
     <Link
       href={href}
       onMouseMove={onMouseMove}
-      className="border-foreground/20 hover:border-primary/30 hover:bg-muted/50 group relative rounded-2xl border-[1.15px] p-6 transition-all duration-300"
+      className="border-foreground/20 hover:border-primary/30 hover:bg-muted/50 group relative rounded-2xl border-[1.15px] p-4 transition-all duration-300 sm:p-6"
     >
       <WorkCardPattern mousePosition={mousePosition} />
-      <div className="flex items-start gap-4">
-        <div className="border-border size-12 overflow-hidden rounded-lg border">
+      <div className="items-left flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
+        <div className="border-border size-10 overflow-hidden rounded-lg border sm:size-12">
           <Image
             src={logo}
             alt={`${company} logo`}
@@ -74,11 +74,13 @@ export function WorkCard({ work }: { work: WorkRo }) {
           />
         </div>
 
-        <div className="flex flex-1 flex-col">
-          <h3 className="text-xl font-semibold">{position}</h3>
-          <p className="text-muted-foreground text-lg">{company}</p>
-          <p className="text-muted-foreground mt-4">{overview}</p>
-          <div className="text-muted-foreground mt-4 flex items-center gap-2 text-sm">
+        <div className="mt-2 flex flex-1 flex-col text-left sm:mt-0 sm:text-left">
+          <h3 className="text-lg font-semibold sm:text-xl">{position}</h3>
+          <p className="text-muted-foreground text-base sm:text-lg">
+            {company}
+          </p>
+          <p className="text-muted-foreground mt-3 sm:mt-4">{overview}</p>
+          <div className="text-muted-foreground justify-left items-left mt-3 flex flex-wrap gap-2 text-xs sm:mt-4 sm:justify-start sm:text-sm">
             <span>{convertWorkType(type)}</span>
             <span>•</span>
             <span>{`${startDate} - ${endDate}`}</span>

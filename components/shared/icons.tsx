@@ -12,6 +12,7 @@ import {
 import {
   AlertTriangle,
   ArrowDown,
+  ArrowLeft,
   ArrowRight,
   ArrowUp,
   ArrowUpCircleIcon,
@@ -204,4 +205,5 @@ export const Icons = {
   moveRight: MoveRight,
   spotify: SiSpotify,
   file: FileBoxIcon,
+  arrowLeft: ArrowLeft,
 }
