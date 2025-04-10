@@ -69,10 +69,12 @@
   },
   "devDependencies": {
     "@content-collections/core": "^0.8.2",
+    "@content-collections/markdown": "^0.1.4",
     "@content-collections/next": "^0.2.6",
     "@eslint/eslintrc": "^3",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

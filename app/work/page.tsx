@@ -5,6 +5,7 @@ import { allWorks } from "content-collections"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
+import { WorkCard } from "@/components/app/work-card"
 import { Icons } from "@/components/shared/icons"
 import { PageHeading } from "@/components/shared/page-heading"
 import { buttonVariants } from "@/components/ui/button"
@@ -45,16 +46,11 @@ export default function Work() {
           </Link>
         </div>
       </PageHeading>
-      <ul>
+      <div className="mx-auto mt-8 grid max-w-4xl gap-4 ">
         {allWorks.map((post) => (
-          <li key={post._meta.path}>
-            <a href={`/posts/${post._meta.path}`}>
-              <h3>{post.title}</h3>
-              <p>{post.summary}</p>
-            </a>
-          </li>
+          <WorkCard key={post._meta.path} work={post} />
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
