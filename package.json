@@ -68,6 +68,8 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@content-collections/core": "^0.8.2",
+    "@content-collections/next": "^0.2.6",
     "@eslint/eslintrc": "^3",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@tailwindcss/postcss": "^4",

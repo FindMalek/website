@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { allWorks } from "content-collections"
 
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
@@ -19,7 +20,6 @@ export default function Work() {
         title="Work"
         heading="I've been fortunate to work with some amazing companies and people."
       >
-        {" "}
         <div className="flex flex-row gap-4 pt-4">
           <Link
             href={siteConfig.links.linkedin}
@@ -45,6 +45,16 @@ export default function Work() {
           </Link>
         </div>
       </PageHeading>
+      <ul>
+        {allWorks.map((post) => (
+          <li key={post._meta.path}>
+            <a href={`/posts/${post._meta.path}`}>
+              <h3>{post.title}</h3>
+              <p>{post.summary}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
