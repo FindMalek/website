@@ -59,8 +59,8 @@ export function AboutOverview() {
             acquired by Tunisian Design in 2023.
           </p>
           <p className="text-lg">
-            I&apos;m an active contributor to open-source projects and have designed
-            several websites available on my{" "}
+            I&apos;m an active contributor to open-source projects and have
+            designed several websites available on my{" "}
             <Link
               href={siteConfig.links.github}
               target="_blank"

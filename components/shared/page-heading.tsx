@@ -7,6 +7,7 @@ interface PageHeadingProps {
   headingClassName?: string
   titleClassName?: string
   bgClassName?: string
+  children?: React.ReactNode
 }
 
 export function PageHeading({
@@ -16,6 +17,7 @@ export function PageHeading({
   headingClassName,
   titleClassName,
   bgClassName,
+  children,
 }: PageHeadingProps) {
   return (
     <section className={cn("w-full py-16 md:py-24", bgClassName)}>
@@ -36,6 +38,7 @@ export function PageHeading({
           </h1>
         </div>
       </div>
+      {children}
     </section>
   )
 }

@@ -13,6 +13,7 @@ export type SiteConfig = {
     instagram: string
     linkedin: string
     spotify: string
+    resume: string
   }
   images: {
     default: string

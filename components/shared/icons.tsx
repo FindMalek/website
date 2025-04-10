@@ -39,6 +39,7 @@ import {
   DatabaseZapIcon,
   DollarSign,
   File,
+  FileBoxIcon,
   FileText,
   Folder,
   GlobeIcon,
@@ -202,4 +203,5 @@ export const Icons = {
   instagram: SiInstagram,
   moveRight: MoveRight,
   spotify: SiSpotify,
+  file: FileBoxIcon,
 }
