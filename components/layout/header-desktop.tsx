@@ -14,7 +14,7 @@ function NavItem({ href, children }: NavItemType) {
       <Link
         href={href}
         className={cn(
-          "relative block px-2 py-1.5 transition",
+          "relative block px-2 py-1.5 text-base transition",
           isActive
             ? "text-cyan-900 dark:text-cyan-400"
             : "hover:text-cyan-900 dark:hover:text-cyan-400"

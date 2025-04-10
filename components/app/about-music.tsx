@@ -26,7 +26,7 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
         direct={{
           href: siteConfig.links.spotify,
           text: "View profile",
-          icon: <Icons.spotify className="size-4" />,
+          icon: <Icons.spotify className="size-6" />,
         }}
       />
 

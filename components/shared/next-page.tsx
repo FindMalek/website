@@ -38,7 +38,7 @@ export function NextPage() {
     <div className="mb-16 mt-10 px-4 md:mb-0">
       <Link
         href={nextPage.path}
-        className="flex items-center gap-2 text-lg font-normal leading-6 dark:text-white"
+        className="flex items-center gap-2 text-lg font-normal leading-6"
       >
         <HyperText className="text-base" duration={200} delay={1000}>
           {nextPage.text}
