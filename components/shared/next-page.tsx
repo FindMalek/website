@@ -8,7 +8,6 @@ import { PAGES } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 
 import { Icons } from "@/components/shared/icons"
-import { HyperText } from "@/components/ui/hyper-text"
 
 export function NextPage() {
   const pathname = usePathname()
@@ -38,11 +37,10 @@ export function NextPage() {
     <div className="mb-16 mt-10 px-4 md:mb-0">
       <Link
         href={nextPage.path}
-        className="flex items-center gap-2 text-lg font-normal leading-6"
+        className="flex items-center gap-2 text-lg font-normal leading-6 pb-2"
       >
-        <HyperText className="text-base" duration={200} delay={1000}>
-          {nextPage.text}
-        </HyperText>
+        <span className="text-base pb-2">{nextPage.text}</span>
+
         <motion.span
           className="inline-flex"
           animate={{
