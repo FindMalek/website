@@ -3,6 +3,7 @@ import { z } from "zod"
 import { workType } from "@/types/enum"
 
 export const workSchema = z.object({
+  id: z.number(),
   logo: z.string(),
   logoClassName: z.string().optional(),
   company: z.string().min(1),

@@ -15,6 +15,8 @@ export const metadata: Metadata = {
 }
 
 export default function Work() {
+  const orderedWorks = allWorks.sort((a, b) => a.id - b.id)
+
   return (
     <div className="w-full px-4 pt-20">
       <PageHeading
@@ -56,7 +58,7 @@ export default function Work() {
         </div>
       </PageHeading>
       <div className="mx-auto mt-8 grid max-w-4xl gap-4 ">
-        {allWorks.map((post) => (
+        {orderedWorks.map((post) => (
           <WorkCard key={post._meta.path} work={post} />
         ))}
       </div>

@@ -37,9 +37,9 @@ export function NextPage() {
     <div className="mb-16 mt-10 px-4 md:mb-0">
       <Link
         href={nextPage.path}
-        className="flex items-center gap-2 text-lg font-normal leading-6 pb-2"
+        className="flex items-center gap-2 pb-2 text-lg font-normal leading-6"
       >
-        <span className="text-base pb-2">{nextPage.text}</span>
+        <span className="pb-2 text-base">{nextPage.text}</span>
 
         <motion.span
           className="inline-flex"
