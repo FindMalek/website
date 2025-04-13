@@ -13,18 +13,18 @@ export function NextPage() {
   const pathname = usePathname()
 
   const getNextPage = () => {
-    switch (pathname) {
-      case PAGES.HOME.path:
+    switch (true) {
+      case pathname === PAGES.HOME.path:
         return PAGES.ABOUT
-      case PAGES.ABOUT.path:
+      case pathname.startsWith(PAGES.ABOUT.path):
         return PAGES.WORK
-      case PAGES.WORK.path:
+      case pathname.startsWith(PAGES.WORK.path):
         return PAGES.PROJECTS
-      case PAGES.PROJECTS.path:
+      case pathname.startsWith(PAGES.PROJECTS.path):
         return PAGES.STACK
-      case PAGES.STACK.path:
+      case pathname.startsWith(PAGES.STACK.path):
         return PAGES.CONTACT
-      case PAGES.CONTACT.path:
+      case pathname.startsWith(PAGES.CONTACT.path):
         return PAGES.HOME
       default:
         return PAGES.HOME

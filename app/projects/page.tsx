@@ -12,9 +12,10 @@ import { buttonVariants } from "@/components/ui/button"
 
 export const metadata: Metadata = {
   title: "Projects",
+  description: "I love shipping products and open source software.",
 }
 
-export default function Projects() {
+export default function ProjectsPage() {
   const orderedProjects = allProjects.sort((a, b) => a.id - b.id)
 
   return (
