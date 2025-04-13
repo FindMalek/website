@@ -39,3 +39,11 @@ export type NavItemType = {
 export type MobileNavigationType = React.ComponentProps<typeof Popover>
 
 export type DesktopNavigationType = React.ComponentPropsWithoutRef<"nav">
+
+export interface Client {
+  name: string
+  logo?: string
+  color?: string
+  textColor?: string
+  href?: string
+}

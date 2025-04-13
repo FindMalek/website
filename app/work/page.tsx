@@ -2,10 +2,12 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { allWorks } from "content-collections"
 
+import { CLIENTS } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
 import { WorkCard } from "@/components/app/work-card"
+import { ClientShowcase } from "@/components/app/work-client-showcase"
 import { Icons } from "@/components/shared/icons"
 import { PageHeading } from "@/components/shared/page-heading"
 import { buttonVariants } from "@/components/ui/button"
@@ -61,6 +63,13 @@ export default function Work() {
         {orderedWorks.map((post) => (
           <WorkCard key={post._meta.path} work={post} />
         ))}
+      </div>
+
+      <div className="mx-auto mt-8 grid max-w-4xl gap-4 pb-4 pt-16">
+        <h2 className="text-muted-foreground text-center text-lg font-medium">
+          I&apos;ve also worked with some amazing companies and people.
+        </h2>
+        <ClientShowcase clients={CLIENTS} />
       </div>
     </div>
   )

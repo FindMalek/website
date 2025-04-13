@@ -1,3 +1,5 @@
+import type { Client } from "@/types"
+
 export const PAGES = {
   HOME: {
     path: "/",
@@ -75,5 +77,54 @@ export const BOOKS = [
     image: "/books/the-brothers-karamazov.jpg",
     title: "The Brothers Karamazov",
     author: "Fyodor Dostoevsky",
+  },
+]
+
+export const CLIENTS: Client[] = [
+  {
+    name: "Real Reach",
+    logo: "/clients/real-reach.png",
+  },
+  {
+    name: "OpenStatus",
+    logo: "/clients/open-status.png",
+    href: "https://www.openstatus.dev",
+  },
+  {
+    name: "Ultrabeam",
+    logo: "/clients/ultabeam.png",
+    href: "https://www.ultrabeam.app",
+  },
+  {
+    name: "Lead Insight",
+    logo: "/clients/leadinsight.svg",
+    href: "https://lead-insight.vercel.app",
+  },
+  {
+    name: "Waste Not",
+    logo: "/clients/waste-not.ico",
+    href: "https://waste-not.findmalek.com/",
+  },
+  {
+    name: "Thryve",
+    logo: "/clients/thryve.png",
+  },
+  {
+    name: "Magic UI",
+    logo: "/clients/magic-ui.png",
+    href: "https://magicui.design",
+  },
+  {
+    name: "Karhba Go",
+    logo: "/clients/karhba-go.ico",
+  },
+  {
+    name: "StageUp",
+    logo: "/clients/stageup.ico",
+    href: "https://stage-up.vercel.app/",
+  },
+  {
+    name: "Luna",
+    logo: "/clients/waste-not.ico",
   },
 ]
