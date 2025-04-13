@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { workType } from "@/types/enum"
+import { projectStatus, workType } from "@/types/enum"
 
 export const workSchema = z.object({
   id: z.number(),
@@ -18,3 +18,15 @@ export const workSchema = z.object({
 })
 
 export type WorkRo = z.infer<typeof workSchema>
+
+export const projectSchema = z.object({
+  id: z.number(),
+  image: z.string(),
+  name: z.string().min(1),
+  overview: z.string().min(1),
+  status: projectStatus,
+  link: z.string().url().optional(),
+  href: z.string(),
+})
+
+export type ProjectRo = z.infer<typeof projectSchema>

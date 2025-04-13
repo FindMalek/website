@@ -1,7 +1,7 @@
 import { defineCollection, defineConfig } from "@content-collections/core"
 import { compileMarkdown } from "@content-collections/markdown"
 
-import { workSchema } from "@/config/schemas"
+import { projectSchema, workSchema } from "@/config/schemas"
 
 const work = defineCollection({
   name: "work",
@@ -21,10 +21,7 @@ const projects = defineCollection({
   name: "projects",
   directory: "../data/projects",
   include: "**/*.md",
-  schema: (z) => ({
-    title: z.string(),
-    summary: z.string(),
-  }),
+  schema: () => projectSchema.shape,
   transform: async (document, context) => {
     const html = await compileMarkdown(context, document)
     return {

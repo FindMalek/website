@@ -59,6 +59,7 @@ export default function Work() {
           </Link>
         </div>
       </PageHeading>
+
       <div className="mx-auto mt-8 grid max-w-4xl gap-4 ">
         {orderedWorks.map((post) => (
           <WorkCard key={post._meta.path} work={post} />

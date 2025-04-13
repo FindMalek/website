@@ -17,7 +17,7 @@ export function ClientShowcase({ clients }: ClientShowcaseProps) {
       {clients.map((client, index) => (
         <Link href={client.href || "#"} key={index} target="_blank">
           <Badge
-            variant="outline"
+            variant="secondary"
             className={cn(
               "flex items-center gap-2 px-4 py-2",
               "transition-shadow duration-200 hover:shadow-sm"
