@@ -23,6 +23,8 @@ export const convertProjectStatus = (status: ProjectStatus) => {
       return "Archived"
     case "draft":
       return "Draft"
+    case "on-hold":
+      return "On Hold"
   }
 }
 
@@ -38,5 +40,7 @@ export const convertProjectStatusColor = (status: ProjectStatus) => {
       return "bg-red-100 text-red-800 hover:bg-red-200"
     case "draft":
       return "bg-gray-100 text-gray-800 hover:bg-gray-200"
+    case "on-hold":
+      return "bg-orange-100 text-orange-800 hover:bg-orange-200"
   }
 }

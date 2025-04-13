@@ -9,5 +9,6 @@ export const projectStatus = z.enum([
   "inactive",
   "archived",
   "draft",
+  "on-hold",
 ])
 export type ProjectStatus = z.infer<typeof projectStatus>
