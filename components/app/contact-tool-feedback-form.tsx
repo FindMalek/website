@@ -4,8 +4,8 @@ import type React from "react"
 import { useState } from "react"
 import { useChat } from "@ai-sdk/react"
 import type { ToolInvocation } from "ai"
-import { Check, Loader2, MessageSquare } from "lucide-react"
 
+import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -58,7 +58,7 @@ export function ContactToolFeedbackForm({ toolCall }: FeedbackFormProps) {
     return (
       <div className="bg-muted/30 space-y-2 rounded-lg border p-4">
         <div className="flex items-center space-x-2 text-green-600">
-          <Check className="h-5 w-5" />
+          <Icons.check className="h-5 w-5" />
           <p className="font-medium">Feedback submitted!</p>
         </div>
         <p className="text-muted-foreground text-sm">
@@ -116,12 +116,12 @@ export function ContactToolFeedbackForm({ toolCall }: FeedbackFormProps) {
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             Submitting...
           </>
         ) : (
           <>
-            <MessageSquare className="mr-2 h-4 w-4" />
+            <Icons.send className="mr-2 h-4 w-4" />
             Submit Feedback
           </>
         )}

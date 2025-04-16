@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { useChat } from "@ai-sdk/react"
 import type { ToolInvocation } from "ai"
-import { Calendar, Check, Loader2 } from "lucide-react"
 
+import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 
 interface MeetingSchedulerProps {
@@ -52,7 +52,7 @@ export function ContactToolMeetingScheduler({
     return (
       <div className="bg-muted/30 space-y-2 rounded-lg border p-4">
         <div className="flex items-center space-x-2 text-green-600">
-          <Check className="h-5 w-5" />
+          <Icons.check className="h-5 w-5" />
           <p className="font-medium">Meeting scheduled!</p>
         </div>
         <p className="text-muted-foreground text-sm">
@@ -77,12 +77,12 @@ export function ContactToolMeetingScheduler({
       >
         {isLoading ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             Scheduling...
           </>
         ) : (
           <>
-            <Calendar className="mr-2 h-4 w-4" />
+            <Icons.calendar className="mr-2 h-4 w-4" />
             Schedule Meeting
           </>
         )}

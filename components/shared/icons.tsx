@@ -24,6 +24,7 @@ import {
   BookImageIcon,
   BookOpenText,
   Brain,
+  Calculator,
   Calendar,
   CalendarSearchIcon,
   Check,
@@ -72,6 +73,7 @@ import {
   PuzzleIcon,
   SaveIcon,
   Search,
+  Send,
   Settings,
   Shield,
   Sparkles,
@@ -219,4 +221,7 @@ export const Icons = {
   arrowLeft: ArrowLeft,
   star: Star,
   externalLink: ExternalLinkIcon,
+  send: Send,
+  calculator: Calculator,
+  download: Download,
 }

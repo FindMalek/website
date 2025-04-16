@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { useChat } from "@ai-sdk/react"
 import type { ToolInvocation } from "ai"
-import { Download, FileText, Loader2 } from "lucide-react"
 
+import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 
 interface ResumeGeneratorProps {
@@ -61,7 +61,7 @@ export function ContactToolResumeGenerator({ toolCall }: ResumeGeneratorProps) {
           className="w-full"
           onClick={() => window.open(resumeUrl, "_blank")}
         >
-          <Download className="mr-2 h-4 w-4" />
+          <Icons.download className="mr-2 h-4 w-4" />
           Download Resume
         </Button>
       ) : (
@@ -72,12 +72,12 @@ export function ContactToolResumeGenerator({ toolCall }: ResumeGeneratorProps) {
         >
           {isGenerating ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               Generating...
             </>
           ) : (
             <>
-              <FileText className="mr-2 h-4 w-4" />
+              <Icons.file className="mr-2 h-4 w-4" />
               Generate Resume
             </>
           )}

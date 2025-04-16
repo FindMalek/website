@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { useChat } from "@ai-sdk/react"
 import type { ToolInvocation } from "ai"
-import { Calculator, Check, Loader2 } from "lucide-react"
 
+import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
@@ -106,7 +106,7 @@ export function ContactToolPricingEstimator({
       {estimate !== null ? (
         <div className="space-y-2">
           <div className="flex items-center space-x-2 text-green-600">
-            <Check className="h-5 w-5" />
+            <Icons.check className="h-5 w-5" />
             <p className="font-medium">Estimate Generated</p>
           </div>
           <div className="bg-background rounded-md p-4 text-center">
@@ -174,12 +174,12 @@ export function ContactToolPricingEstimator({
           >
             {isCalculating ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 Calculating...
               </>
             ) : (
               <>
-                <Calculator className="mr-2 h-4 w-4" />
+                <Icons.calculator className="mr-2 h-4 w-4" />
                 Calculate Estimate
               </>
             )}

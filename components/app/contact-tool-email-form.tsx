@@ -4,8 +4,8 @@ import type React from "react"
 import { useState } from "react"
 import { useChat } from "@ai-sdk/react"
 import type { ToolInvocation } from "ai"
-import { Check, Loader2 } from "lucide-react"
 
+import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -82,7 +82,7 @@ export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
     return (
       <div className="bg-muted/30 space-y-2 rounded-lg border p-4">
         <div className="flex items-center space-x-2 text-green-600">
-          <Check className="h-5 w-5" />
+          <Icons.check className="h-5 w-5" />
           <p className="font-medium">Email sent successfully!</p>
         </div>
         <p className="text-muted-foreground text-sm">
@@ -138,7 +138,7 @@ export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
       <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             Sending...
           </>
         ) : (
