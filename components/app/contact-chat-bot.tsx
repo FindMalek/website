@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { useChat } from "ai/react"
+import { useChat } from "@ai-sdk/react"
 import { Loader2, Send } from "lucide-react"
 
 import { ContactChatMessage } from "@/components/app/contact-chat-message"

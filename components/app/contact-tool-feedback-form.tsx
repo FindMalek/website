@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import type { ToolInvocation } from "ai"
-import { useChat } from "ai/react"
+import { useChat } from "@ai-sdk/react"
 import { Check, Loader2, MessageSquare } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
