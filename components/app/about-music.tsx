@@ -37,8 +37,10 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
             href={playlist.external_urls.spotify}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative aspect-square overflow-hidden rounded-lg bg-slate-800"
+            className="group relative aspect-square overflow-hidden rounded-lg bg-secondary"
           >
+            {/* This is for Vercel crazy image optimization pricing */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={playlist.images[0]?.url || "/placeholder.svg"}
               alt={playlist.name}
@@ -46,7 +48,7 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
               height={300}
               className="h-full w-full object-cover transition-transform group-hover:scale-105"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 p-2 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-secondary-foreground/80 p-2 opacity-0 transition-opacity group-hover:opacity-100">
               <Button
                 variant="secondary"
                 size="sm"
@@ -54,7 +56,7 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
               >
                 Play
               </Button>
-              <span className="line-clamp-2 text-center text-sm font-medium text-white">
+              <span className="line-clamp-2 text-center text-sm font-medium text-secondary">
                 {playlist.name}
               </span>
             </div>
