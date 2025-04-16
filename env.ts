@@ -8,6 +8,7 @@ export const env = createEnv({
     SPOTIFY_CLIENT_SECRET: z.string().min(1),
     SPOTIFY_USER_ID: z.string().min(1),
     SPOTIFY_REDIRECT_URI: z.string().url().optional(),
+    GITHUB_TOKEN: z.string().min(1).startsWith("github_pat_"),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -19,5 +20,6 @@ export const env = createEnv({
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     SPOTIFY_USER_ID: process.env.SPOTIFY_USER_ID,
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
+    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
   },
 })

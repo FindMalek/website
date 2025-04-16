@@ -22,15 +22,15 @@ export function ProjectOpenSourceCard({
       href={project.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-foreground block no-underline"
+      className="text-foreground block h-full no-underline"
     >
-      <Card className="bg-secondary/30 border-foreground/20 hover:border-primary/30 hover:bg-muted/50 w-full max-w-md border transition-all duration-300 hover:shadow-md">
+      <Card className="bg-secondary/30 border-foreground/20 hover:border-primary/30 hover:bg-muted/50 group h-full w-full max-w-md border transition-all duration-300 hover:shadow-md">
         <CardHeader className="px-4 md:px-5">
           <h3 className="flex items-center text-base font-semibold md:text-lg">
             {project.name}
           </h3>
         </CardHeader>
-        <CardContent className="space-y-3 px-4 md:px-5">
+        <CardContent className="-mt-6 space-y-3 px-4 md:px-5">
           <p className="text-muted-foreground line-clamp-2 text-sm">
             {project.description}
           </p>
@@ -45,7 +45,7 @@ export function ProjectOpenSourceCard({
               </div>
             )}
             <div className="flex items-center gap-1">
-              <Icons.star className="h-3.5 w-3.5 fill-amber-400 stroke-amber-400 md:h-4 md:w-4" />
+              <Icons.star className="h-3.5 w-3.5 fill-amber-400/90 stroke-amber-400 transition-all duration-300 group-hover:rotate-[8deg] group-hover:scale-110 group-hover:fill-amber-400 md:h-4 md:w-4" />
               <span className="font-medium">{formattedStars}</span>
             </div>
           </div>

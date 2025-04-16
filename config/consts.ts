@@ -1,4 +1,4 @@
-import type { Client, OpenSourceProject } from "@/types"
+import type { Client } from "@/types"
 
 export const PAGES = {
   HOME: {
@@ -136,23 +136,26 @@ export const CLIENTS: Client[] = [
   },
 ]
 
-export const OPEN_SOURCE_PROJECTS: OpenSourceProject[] = [
-  {
-    name: "shadcn/ui",
-    description:
-      "Beautifully designed components built with Radix UI and Tailwind CSS. Open source and free for everyone.",
-    stars: 15243,
-    language: "TypeScript",
-    languageColor: "#3178c6",
-    url: "https://github.com/shadcn/ui",
-  },
-  {
-    name: "shadcn/ui",
-    description:
-      "Beautifully designed components built with Radix UI and Tailwind CSS. Open source and free for everyone.",
-    stars: 15243,
-    language: "TypeScript",
-    languageColor: "#3178c6",
-    url: "https://github.com/shadcn/ui",
-  },
+export const REPOSITORIES = [
+  "https://github.com/findmalek/findmalek",
+  "https://github.com/undrstnd-labs/education",
+  "https://github.com/undrstnd-labs/developers",
+  "https://github.com/FindMalek/lead-insight",
+  "https://github.com/FindMalek/event-duration-calculator",
+  "https://github.com/FindMalek/muslim-fasting",
+  "https://github.com/FindMalek/findauth",
 ]
+
+export const LANGUAGES_COLORS = {
+  TypeScript: "#3178c6",
+  JavaScript: "#f1e05a",
+  Python: "#3572A5",
+  Ruby: "#701516",
+  Java: "#b07219",
+  "C#": "#178600",
+  "C++": "#f34b7d",
+  C: "#555555",
+  Go: "#00ADD8",
+  Rust: "#dea584",
+  Swift: "#ffac45",
+}
