@@ -1,4 +1,4 @@
-import type { Client } from "@/types"
+import type { Client, OpenSourceProject } from "@/types"
 
 export const PAGES = {
   HOME: {
@@ -133,5 +133,26 @@ export const CLIENTS: Client[] = [
     name: "Kachouri",
     href: "https://www.kachouri-getraenke-service.de",
     logo: "/clients/kachouri.svg",
+  },
+]
+
+export const OPEN_SOURCE_PROJECTS: OpenSourceProject[] = [
+  {
+    name: "shadcn/ui",
+    description:
+      "Beautifully designed components built with Radix UI and Tailwind CSS. Open source and free for everyone.",
+    stars: 15243,
+    language: "TypeScript",
+    languageColor: "#3178c6",
+    url: "https://github.com/shadcn/ui",
+  },
+  {
+    name: "shadcn/ui",
+    description:
+      "Beautifully designed components built with Radix UI and Tailwind CSS. Open source and free for everyone.",
+    stars: 15243,
+    language: "TypeScript",
+    languageColor: "#3178c6",
+    url: "https://github.com/shadcn/ui",
   },
 ]

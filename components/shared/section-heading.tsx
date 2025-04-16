@@ -13,15 +13,17 @@ interface SectionHeadingProps {
   title: string
   description?: string
   direct?: Direct
+  className?: string
 }
 
 export function SectionHeading({
   title,
   description,
   direct,
+  className,
 }: SectionHeadingProps) {
   return (
-    <div className="mb-6 flex items-center justify-between">
+    <div className={cn("mb-6 flex items-center justify-between", className)}>
       <div>
         <h2 className="mb-2 text-3xl font-bold">{title}</h2>
         {description && (

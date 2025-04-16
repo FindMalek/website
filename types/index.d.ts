@@ -47,3 +47,12 @@ export interface Client {
   textColor?: string
   href?: string
 }
+
+export interface OpenSourceProject {
+  name: string
+  description: string
+  stars: number
+  language: string
+  languageColor: string
+  url: string
+}

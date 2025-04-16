@@ -2,12 +2,15 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { allProjects } from "content-collections"
 
+import { OPEN_SOURCE_PROJECTS } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
 import { ProjectCard } from "@/components/app/project-card"
+import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { Icons } from "@/components/shared/icons"
 import { PageHeading } from "@/components/shared/page-heading"
+import { SectionHeading } from "@/components/shared/section-heading"
 import { buttonVariants } from "@/components/ui/button"
 
 export const metadata: Metadata = {
@@ -53,6 +56,17 @@ export default function ProjectsPage() {
       <div className="mx-auto mt-8 grid max-w-4xl gap-4">
         {orderedProjects.map((project) => (
           <ProjectCard key={project._meta.path} project={project} />
+        ))}
+      </div>
+
+      <SectionHeading
+        title="Open Source"
+        description="I love building things for the open source community. I create and maintain a number of projects — I hope you find them useful!"
+        className="mt-16"
+      />
+      <div className="grid gap-4 md:grid-cols-2">
+        {OPEN_SOURCE_PROJECTS.map((project) => (
+          <ProjectOpenSourceCard key={project.name} project={project} />
         ))}
       </div>
     </div>

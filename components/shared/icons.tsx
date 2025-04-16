@@ -75,6 +75,7 @@ import {
   Shield,
   Sparkles,
   SquareTerminal,
+  Star,
   Stethoscope,
   SunMedium,
   ToggleRightIcon,
@@ -206,4 +207,5 @@ export const Icons = {
   spotify: SiSpotify,
   file: FileBoxIcon,
   arrowLeft: ArrowLeft,
+  star: Star,
 }
