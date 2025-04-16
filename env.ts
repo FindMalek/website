@@ -12,6 +12,7 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
+    NEXT_PUBLIC_LOGO_DEV_TOKEN: z.string().min(1).startsWith("pk_"),
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
@@ -21,5 +22,6 @@ export const env = createEnv({
     SPOTIFY_USER_ID: process.env.SPOTIFY_USER_ID,
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+    NEXT_PUBLIC_LOGO_DEV_TOKEN: process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN,
   },
 })

@@ -56,3 +56,15 @@ export interface OpenSourceProject {
   languageColor: string
   url: string
 }
+
+export interface StackItem {
+  title: string
+  description: string
+  imageUrl: string
+  url: string
+}
+
+export interface StackSection {
+  title: string
+  items: StackItem[]
+}

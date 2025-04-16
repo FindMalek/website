@@ -39,6 +39,7 @@ import {
   CreditCard,
   DatabaseZapIcon,
   DollarSign,
+  ExternalLinkIcon,
   File,
   FileBoxIcon,
   FileText,
@@ -208,4 +209,5 @@ export const Icons = {
   file: FileBoxIcon,
   arrowLeft: ArrowLeft,
   star: Star,
+  externalLink: ExternalLinkIcon,
 }
