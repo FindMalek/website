@@ -102,7 +102,6 @@ export const CLIENTS: Client[] = [
   },
   {
     name: "Waste Not",
-    logo: "/clients/waste-not.ico",
     href: "https://waste-not.findmalek.com/",
   },
   {
@@ -125,6 +124,14 @@ export const CLIENTS: Client[] = [
   },
   {
     name: "Luna",
-    logo: "/clients/waste-not.ico",
+  },
+  {
+    name: "MotionEMR",
+    href: "https://motionemr.com",
+  },
+  {
+    name: "Kachouri",
+    href: "https://www.kachouri-getraenke-service.de",
+    logo: "/clients/kachouri.svg",
   },
 ]

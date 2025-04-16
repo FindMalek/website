@@ -67,7 +67,7 @@ export default function Work() {
       </div>
 
       <div className="mx-auto mt-8 grid max-w-4xl gap-4 pb-4 pt-16">
-        <h2 className="text-muted-foreground text-center text-lg font-medium">
+        <h2 className="text-muted-foreground/80 text-center text-base font-medium">
           I&apos;ve also worked with some amazing companies and people.
         </h2>
         <ClientShowcase clients={CLIENTS} />
