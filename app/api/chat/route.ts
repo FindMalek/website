@@ -31,22 +31,34 @@ export async function POST(req: Request) {
       generatePricing: {
         description: "Generate a pricing estimate for a project",
         parameters: z.object({
-          projectType: z.string().describe("The type of project (website, ecommerce, webapp, etc.)"),
-          features: z.array(z.string()).describe("List of features required for the project"),
+          projectType: z
+            .string()
+            .describe("The type of project (website, ecommerce, webapp, etc.)"),
+          features: z
+            .array(z.string())
+            .describe("List of features required for the project"),
           timeline: z.string().describe("Expected timeline for the project"),
         }),
       },
       generateResume: {
         description: "Generate and download a resume PDF",
         parameters: z.object({
-          skills: z.array(z.string()).optional().describe("List of skills to highlight"),
-          experience: z.string().optional().describe("Brief description of experience"),
+          skills: z
+            .array(z.string())
+            .optional()
+            .describe("List of skills to highlight"),
+          experience: z
+            .string()
+            .optional()
+            .describe("Brief description of experience"),
         }),
       },
       submitFeedback: {
         description: "Submit feedback about the service",
         parameters: z.object({
-          feedbackType: z.string().describe("Type of feedback (general, suggestion, complaint)"),
+          feedbackType: z
+            .string()
+            .describe("Type of feedback (general, suggestion, complaint)"),
         }),
       },
     },

@@ -101,7 +101,16 @@ function LogoIcon({
   className?: string
   props?: ImageProps
 }) {
-  return <Image src="/author.jpg" alt="Logo" className={className} {...props} />
+  return (
+    <Image
+      src="/author.jpg"
+      alt="Logo"
+      width={100}
+      height={100}
+      className={className}
+      {...props}
+    />
+  )
 }
 
 export const Icons = {

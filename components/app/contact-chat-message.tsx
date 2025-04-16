@@ -1,7 +1,6 @@
 "use client"
 
-import type { Message } from "ai"
-import { Bot, User } from "lucide-react"
+import type { Message, ToolInvocation } from "ai"
 
 import { cn } from "@/lib/utils"
 
@@ -10,23 +9,13 @@ import { ContactToolFeedbackForm } from "@/components/app/contact-tool-feedback-
 import { ContactToolMeetingScheduler } from "@/components/app/contact-tool-meeting-scheduler"
 import { ContactToolPricingEstimator } from "@/components/app/contact-tool-pricing-estimator"
 import { ContactToolResumeGenerator } from "@/components/app/contact-tool-resume-generator"
+import { Icons } from "@/components/shared/icons"
 
 interface ChatMessageProps {
   message: Message
 }
 
 type ToolInvocationState = "partial-call" | "call" | "result"
-
-interface BaseToolInvocation {
-  toolCallId: string
-  toolName: string
-  args: Record<string, unknown>
-}
-
-interface ToolInvocationResult extends BaseToolInvocation {
-  state: "result"
-  result: Record<string, unknown>
-}
 
 interface ToolInvocationUIPart {
   type: "tool-invocation"
@@ -42,44 +31,38 @@ interface ToolInvocationUIPart {
 export function ContactChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user"
 
+  // Function to render tool calls
   const renderToolCall = (part: ToolInvocationUIPart) => {
-    const { toolName, state } = part.toolInvocation
+    const { toolName, state, toolCallId, args, result } = part.toolInvocation
 
-    if (state === "result" && part.toolInvocation.result) {
-      const resultToolCall: ToolInvocationResult = {
-        state: "result",
-        toolCallId: part.toolInvocation.toolCallId,
-        toolName: part.toolInvocation.toolName,
-        args: part.toolInvocation.args,
-        result: part.toolInvocation.result,
-      }
-
-      switch (toolName) {
-        case "saveEmail":
-          return <ContactToolEmailForm toolCall={resultToolCall} />
-        case "scheduleMeeting":
-          return <ContactToolMeetingScheduler toolCall={resultToolCall} />
-        case "generatePricing":
-          return <ContactToolPricingEstimator toolCall={resultToolCall} />
-        case "generateResume":
-          return <ContactToolResumeGenerator toolCall={resultToolCall} />
-        case "submitFeedback":
-          return <ContactToolFeedbackForm toolCall={resultToolCall} />
-        default:
-          return (
-            <div className="text-muted-foreground text-sm">
-              Tool {toolName} completed
-            </div>
-          )
-      }
+    // Create a compatible tool call to pass to components
+    const toolCall: ToolInvocation = {
+      toolCallId,
+      toolName,
+      args,
+      state: "result",
+      result: result || {},
     }
 
-    return (
-      <div className="text-muted-foreground text-sm">
-        {state === "call" && `Processing ${toolName}...`}
-        {state === "partial-call" && `Preparing ${toolName}...`}
-      </div>
-    )
+    switch (toolName) {
+      case "saveEmail":
+        return <ContactToolEmailForm toolCall={toolCall} />
+      case "scheduleMeeting":
+        return <ContactToolMeetingScheduler toolCall={toolCall} />
+      case "generatePricing":
+        return <ContactToolPricingEstimator toolCall={toolCall} />
+      case "generateResume":
+        return <ContactToolResumeGenerator toolCall={toolCall} />
+      case "submitFeedback":
+        return <ContactToolFeedbackForm toolCall={toolCall} />
+      default:
+        return (
+          <div className="text-muted-foreground text-sm">
+            {state === "call" && `Processing ${toolName}...`}
+            {state === "result" && `${toolName} completed`}
+          </div>
+        )
+    }
   }
 
   return (
@@ -95,7 +78,11 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
           isUser ? "bg-background" : "bg-primary text-primary-foreground"
         )}
       >
-        {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+        {isUser ? (
+          <Icons.user className="size-5" />
+        ) : (
+          <Icons.logo className="size-8 rounded-md" />
+        )}
       </div>
       <div
         className={cn(
@@ -103,14 +90,16 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
           isUser && "items-end"
         )}
       >
-        <div
-          className={cn(
-            "rounded-lg px-3 py-2 text-sm",
-            isUser ? "bg-primary text-primary-foreground" : "bg-muted"
-          )}
-        >
-          {message.content}
-        </div>
+        {message.content.length > 0 && (
+          <div
+            className={cn(
+              "rounded-lg px-3 py-2 text-sm",
+              isUser ? "bg-primary text-primary-foreground" : "bg-muted"
+            )}
+          >
+            {message.content}
+          </div>
+        )}
 
         {message.parts?.map((part, index) => {
           if (part.type === "tool-invocation") {

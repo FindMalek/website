@@ -46,7 +46,7 @@ export function ContactChatBot() {
   }
 
   return (
-    <Card className="flex h-[600px] w-full flex-col overflow-hidden rounded-lg border bg-background/20 backdrop-blur-sm">
+    <Card className="bg-background/40 flex h-[600px] w-full flex-col overflow-hidden rounded-lg border backdrop-blur-sm">
       <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message) => (
           <ContactChatMessage key={message.id} message={message} />

@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import type { ToolInvocation } from "ai"
 import { useChat } from "@ai-sdk/react"
+import type { ToolInvocation } from "ai"
 import { Calendar, Check, Loader2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
