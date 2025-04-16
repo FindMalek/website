@@ -6,14 +6,14 @@
 
 ## Projects Page
 
-- [ ] Create an open-source section using the GitHub API to load the number of stars for each project.
-- [ ] Hardcode the projects in the `consts.ts` file.
+- [x] Create an open-source section using the GitHub API to load the number of stars for each project.
+- [x] Hardcode the projects in the `consts.ts` file.
 
 ## Stack Page
 
-- [ ] Create a component for each section.
-- [ ] Ensure the section title is under a `Separator` component.
-- [ ] Add padding between each component.
+- [x] Create a component for each section.
+- [x] Ensure the section title is under a `Separator` component.
+- [x] Add padding between each component.
 
 ## Contact Page
 
@@ -24,3 +24,7 @@
 - [ ] Create a component to generate pricing estimations (Chat AI SDK).
 - [ ] Tool call to generate and download a resume PDF.
 - [ ] Tool call to integrate a feedback form for visitors.
+
+## Nested pages
+
+- [ ] Fix the '404' background to suppor the page 'name'

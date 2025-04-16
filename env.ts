@@ -9,6 +9,7 @@ export const env = createEnv({
     SPOTIFY_USER_ID: z.string().min(1),
     SPOTIFY_REDIRECT_URI: z.string().url().optional(),
     GITHUB_TOKEN: z.string().min(1).startsWith("github_pat_"),
+    GROQ_API_KEY: z.string().min(1).startsWith("gsk_"),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -23,5 +24,6 @@ export const env = createEnv({
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
     NEXT_PUBLIC_LOGO_DEV_TOKEN: process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN,
+    GROQ_API_KEY: process.env.GROQ_API_KEY,
   },
 })
