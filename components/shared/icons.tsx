@@ -40,6 +40,7 @@ import {
   CreditCard,
   DatabaseZapIcon,
   DollarSign,
+  Download,
   ExternalLinkIcon,
   File,
   FileBoxIcon,
