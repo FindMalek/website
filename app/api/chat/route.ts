@@ -2,7 +2,7 @@ import { groq } from "@ai-sdk/groq"
 import { streamText } from "ai"
 import { z } from "zod"
 
-export const maxDuration = 300
+export const maxDuration = 20
 
 export async function POST(req: Request) {
   const { messages } = await req.json()

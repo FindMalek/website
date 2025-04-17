@@ -1,15 +1,12 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useChat } from "@ai-sdk/react"
 import type { ToolInvocation } from "ai"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 
 interface EmailFormProps {
   toolCall: ToolInvocation
@@ -18,13 +15,39 @@ interface EmailFormProps {
 export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
-  const [message, setMessage] = useState("")
+  const [askingPurpose, setAskingPurpose] = useState(true)
+  const [askingDetails, setAskingDetails] = useState(false)
+  const [askingConfirmation, setAskingConfirmation] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const { addToolResult, messages } = useChat()
+  const [message, setMessage] = useState("")
+  const { addToolResult, messages, setInput, handleSubmit: chatSubmit } = useChat()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // Start by asking what they want to contact about
+  useEffect(() => {
+    if (askingPurpose) {
+      setInput("What would you like to contact me about?")
+      chatSubmit()
+    }
+  }, [askingPurpose, setInput, chatSubmit])
+
+  const moveToDetailsStep = () => {
+    setAskingPurpose(false)
+    setAskingDetails(true)
+    
+    // Extract the purpose from the conversation
+    const userMessages = messages.filter(msg => msg.role === "user")
+    if (userMessages.length > 0) {
+      setMessage(userMessages[userMessages.length - 1].content)
+    }
+  }
+
+  const moveToConfirmationStep = () => {
+    setAskingDetails(false)
+    setAskingConfirmation(true)
+  }
+
+  const handleSubmit = async () => {
     setIsSubmitting(true)
 
     try {
@@ -94,57 +117,94 @@ export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-muted/30 space-y-4 rounded-lg border p-4"
-    >
+    <div className="bg-muted/30 space-y-4 rounded-lg border p-4">
       <h3 className="font-medium">Contact Information</h3>
 
-      <div className="space-y-2">
-        <Label htmlFor="name">Name</Label>
-        <Input
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Your name"
-          required
-        />
-      </div>
+      {askingPurpose && (
+        <div className="space-y-4">
+          <p className="text-muted-foreground text-sm">
+            Please share what you would like to contact me about.
+          </p>
+          <Button onClick={moveToDetailsStep} className="w-full">
+            <Icons.arrowRight className="mr-2 h-4 w-4" />
+            Continue
+          </Button>
+        </div>
+      )}
 
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="your.email@example.com"
-          required
-        />
-      </div>
+      {askingDetails && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <p className="text-sm">Your Name</p>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <p className="text-sm">Your Email</p>
+            <Input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your.email@example.com"
+              required
+            />
+          </div>
+          <Button 
+            onClick={moveToConfirmationStep} 
+            disabled={!email || !name}
+            className="w-full"
+          >
+            <Icons.arrowRight className="mr-2 h-4 w-4" />
+            Continue
+          </Button>
+        </div>
+      )}
 
-      <div className="space-y-2">
-        <Label htmlFor="message">Message</Label>
-        <Textarea
-          id="message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Your message..."
-          rows={3}
-          required
-        />
-      </div>
-
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? (
-          <>
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            Sending...
-          </>
-        ) : (
-          "Send Message"
-        )}
-      </Button>
-    </form>
+      {askingConfirmation && (
+        <div className="space-y-4">
+          <div className="bg-background rounded-md p-3">
+            <p className="text-sm font-medium">Message:</p>
+            <p className="text-muted-foreground text-sm mt-1">{message}</p>
+            <div className="mt-3">
+              <p className="text-sm font-medium">From:</p>
+              <p className="text-muted-foreground text-sm">{name} ({email})</p>
+            </div>
+          </div>
+          <p className="text-muted-foreground text-sm">
+            Would you like to send this message?
+          </p>
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline" 
+              className="flex-1"
+              onClick={() => setAskingDetails(true)}
+            >
+              Edit Details
+            </Button>
+            <Button 
+              onClick={handleSubmit} 
+              disabled={isSubmitting}
+              className="flex-1"
+            >
+              {isSubmitting ? (
+                <>
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Icons.send className="mr-2 h-4 w-4" />
+                  Send Message
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
