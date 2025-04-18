@@ -194,4 +194,4 @@ export const FEATURE_OPTIONS: FeatureOption[] = [
   { id: "seo", label: "SEO Optimization", value: 600 },
 ]
 
-export const MAX_MESSAGES_ALLOWED = 12
+export const MAX_MESSAGES_ALLOWED = 20

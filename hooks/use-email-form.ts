@@ -7,8 +7,9 @@ import { emailFormSchema, type EmailFormValues } from "@/config/schemas"
 import { createToolResult, stringifyToolResult } from "@/lib/tool-helpers"
 import { getGlobalChatContext } from "@/hooks/use-chat-with-tools"
 
+import { sendContactEmailIntroduction } from "@/actions/resend"
+
 interface EmailFormState {
-  askingPurpose: boolean
   askingDetails: boolean
   askingConfirmation: boolean
   isSubmitting: boolean
@@ -17,8 +18,7 @@ interface EmailFormState {
 
 export function useEmailForm(toolCall: ToolInvocation) {
   const [state, setState] = useState<EmailFormState>({
-    askingPurpose: true,
-    askingDetails: false,
+    askingDetails: true,
     askingConfirmation: false,
     isSubmitting: false,
     isSubmitted: false,
@@ -44,49 +44,10 @@ export function useEmailForm(toolCall: ToolInvocation) {
     setState((prev) => ({ ...prev, [key]: value }))
   }
 
-  // Ask about the purpose
-  const askForPurpose = () => {
-    if (state.askingPurpose) {
-      try {
-        // Use addToolResult with a proper result to avoid the "partial-call" error
-        addToolResult({
-          toolCallId: toolCall.toolCallId,
-          result: stringifyToolResult(
-            createToolResult(true, {
-              status: "ready",
-              message: "What would you like to contact me about?",
-            })
-          ),
-        })
-      } catch (error) {
-        console.error("Error in askForPurpose:", error)
-        // Fallback - try to handle degraded state gracefully
-        updateState("askingPurpose", false)
-        updateState("askingDetails", true)
-      }
-    }
-  }
-
-  // Move to details step
-  const moveToDetailsStep = () => {
-    try {
-      updateState("askingPurpose", false)
-      updateState("askingDetails", true)
-
-      // Extract the purpose from the conversation
-      const userMessages = messages.filter((msg) => msg.role === "user")
-      if (userMessages.length > 0) {
-        form.setValue("message", userMessages[userMessages.length - 1].content)
-      }
-    } catch (error) {
-      console.error("Error in moveToDetailsStep:", error)
-    }
-  }
-
   // Move to confirmation step
   const moveToConfirmationStep = async () => {
     try {
-      const isValid = await form.trigger(["name", "email"])
+      const isValid = await form.trigger(["name", "email", "message"])
       if (isValid) {
         updateState("askingDetails", false)
         updateState("askingConfirmation", true)
@@ -104,27 +65,15 @@ export function useEmailForm(toolCall: ToolInvocation) {
       // Get the conversation history
       const conversationHistory = messages.map((msg) => ({
         role: msg.role,
-        content: msg.content,
+        message: msg.content,
       }))
 
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: values.email,
-          name: values.name,
-          message: values.message,
-          conversation: conversationHistory,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to send email")
-      }
-
-      const result = await response.json()
+      const result = await sendContactEmailIntroduction(
+        values.email,
+        values.name,
+        values.message,
+        conversationHistory
+      )
 
       updateState("isSubmitted", true)
 
@@ -160,8 +109,6 @@ export function useEmailForm(toolCall: ToolInvocation) {
     form,
     state,
     updateState,
-    askForPurpose,
-    moveToDetailsStep,
     moveToConfirmationStep,
     submitEmail,
   }

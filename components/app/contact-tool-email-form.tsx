@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import type { ToolInvocation } from "ai"
 
 import { type EmailFormValues } from "@/config/schemas"
@@ -17,25 +16,15 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 
 interface EmailFormProps {
   toolCall: ToolInvocation
 }
 
 export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
-  const {
-    form,
-    state,
-    updateState,
-    askForPurpose,
-    moveToDetailsStep,
-    moveToConfirmationStep,
-    submitEmail,
-  } = useEmailForm(toolCall)
-
-  useEffect(() => {
-    askForPurpose()
-  }, [askForPurpose])
+  const { form, state, moveToConfirmationStep, submitEmail } =
+    useEmailForm(toolCall)
 
   const onSubmit = (values: EmailFormValues) => {
     submitEmail(values)
@@ -57,20 +46,8 @@ export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
   }
 
   return (
-    <div className="bg-muted/30 space-y-4 rounded-lg border p-4">
+    <div className="bg-muted/30 w-full space-y-4 rounded-lg border p-4">
       <h3 className="font-medium">Contact Information</h3>
-
-      {state.askingPurpose && (
-        <div className="space-y-4">
-          <p className="text-muted-foreground text-sm">
-            Please share what you would like to contact me about.
-          </p>
-          <Button onClick={moveToDetailsStep} className="w-full">
-            <Icons.arrowRight className="mr-2 h-4 w-4" />
-            Continue
-          </Button>
-        </div>
-      )}
 
       {state.askingDetails && (
         <Form {...form}>
@@ -105,6 +82,23 @@ export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your Message</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="What would you like to contact me about?"
+                      className="min-h-[100px] text-sm"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button onClick={() => moveToConfirmationStep()} className="w-full">
               <Icons.arrowRight className="mr-2 h-4 w-4" />
               Continue
@@ -131,33 +125,23 @@ export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
             <p className="text-muted-foreground text-sm">
               Would you like to send this message?
             </p>
-            <div className="flex space-x-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="flex-1"
-                onClick={() => updateState("askingDetails", true)}
-              >
-                Edit Details
-              </Button>
-              <Button
-                type="submit"
-                disabled={state.isSubmitting}
-                className="flex-1"
-              >
-                {state.isSubmitting ? (
-                  <>
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Icons.send className="mr-2 h-4 w-4" />
-                    Send Message
-                  </>
-                )}
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              disabled={state.isSubmitting}
+              className="w-full"
+            >
+              {state.isSubmitting ? (
+                <>
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Icons.send className="mr-2 h-4 w-4" />
+                  Send Message
+                </>
+              )}
+            </Button>
           </form>
         </Form>
       )}

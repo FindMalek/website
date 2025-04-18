@@ -107,3 +107,15 @@ export interface ChatMessage {
   parts?: MessagePart[]
   [key: string]: unknown
 }
+
+export interface ConversationHistory {
+  role: string
+  message: string
+}
+
+export interface ContactEmailIntroductionProps {
+  userName: string
+  userEmail: string
+  contactPurpose: string
+  conversation: ConversationHistory[]
+}
