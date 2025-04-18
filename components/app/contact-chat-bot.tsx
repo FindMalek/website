@@ -37,7 +37,8 @@ export function ContactChatBot() {
     input,
     handleInputChange,
     inputRef,
-    handleFormSubmit,
+    handleFormSubmit: (e: React.FormEvent) =>
+      handleFormSubmit(e as React.FormEvent<HTMLFormElement>),
     handleKeyDown,
   }
 

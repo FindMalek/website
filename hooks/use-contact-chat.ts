@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useRef, useState } from "react"
 
 import { useChatWithTools } from "@/hooks/use-chat-with-tools"
@@ -6,177 +8,120 @@ export function useContactChat() {
   const chatContext = useChatWithTools()
   const {
     messages,
+    error,
     input,
     handleInputChange,
+    handleSubmit,
     isLoading,
-    setInput,
-    error,
-    cancelToolCall,
-    append,
+    stop,
   } = chatContext
 
-  const isRetryingRef = useRef(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  const [hasError, setHasError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
   const [showSuggestions, setShowSuggestions] = useState(true)
   const [isCancelling, setIsCancelling] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  // Function to handle message retry after error
-  const handleRetry = () => {
-    if (!isRetryingRef.current && input.trim()) {
-      // Mark that we're retrying to prevent multiple retries
-      isRetryingRef.current = true
+  // Keep input focused across all situations
+  useEffect(() => {
+    // Small delay to ensure DOM is ready and any operations are complete
+    const focusTimer = setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus()
+      }
+    }, 100)
 
-      // Get the current input value and submit it
-      const currentInput = input.trim()
+    return () => clearTimeout(focusTimer)
+  }, [messages, isLoading, isCancelling])
 
-      // Reset retry flag after some time, regardless of the outcome
+  // Handle form submission
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    // If currently cancelling, don't submit
+    if (isCancelling) return
+
+    // If we're loading (streaming a response) and user sends a message,
+    // interrupt the current stream and cancel any pending tool calls
+    if (isLoading) {
+      setIsCancelling(true)
+
+      // First stop the streaming response
+      stop()
+
+      // Then cancel any pending tool calls and reset context
+      chatContext.cancelToolCall()
+
+      // Reset cancelling state after a short delay
       setTimeout(() => {
-        isRetryingRef.current = false
-      }, 3000)
+        setIsCancelling(false)
+        // Focus the input after cancellation
+        inputRef.current?.focus()
+      }, 500)
 
-      // Submit the message
-      submitMessage(currentInput).catch((err) => {
-        console.error("Error retrying message:", err)
-      })
+      return
+    }
+
+    // Only submit if input is not empty
+    if (input.trim()) {
+      handleSubmit(e)
+      // Hide suggestions after first user message
+      setShowSuggestions(false)
     }
   }
 
-  useEffect(() => {
-    if (error) {
-      console.error("Chat error:", error)
-
-      // Check if error is about tool invocation without result
-      if (error.message?.includes("ToolInvocation must have a result")) {
-        setHasError(true)
-        setErrorMessage(
-          "Previous action wasn't completed. Please try sending your message again."
-        )
-
-        // Auto-retry after a delay if we're not already retrying
-        if (!isRetryingRef.current) {
-          console.log("Setting up auto-retry...")
-          setTimeout(() => {
-            handleRetry()
-          }, 2000)
-        }
-      } else {
-        // General error
-        setHasError(true)
-        setErrorMessage(
-          error.message ||
-            "An error occurred with the chat service. Please try again."
-        )
-      }
-    } else {
-      setHasError(false)
-      setErrorMessage("")
-    }
-  }, [error, input]) // Only depend on error and input, not on retrying state
-
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [messages, isLoading])
-
+  // Monitor for scrolling to bottom on new messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion)
-    setShowSuggestions(false)
+  // Scroll to bottom whenever messages change
+  if (typeof window !== "undefined" && messages.length > 0) {
+    setTimeout(scrollToBottom, 100)
   }
 
-  // Create a new submission function that doesn't rely on the form event
-  const submitMessage = async (messageText: string) => {
-    if (!messageText.trim()) return
-
-    try {
-      // Create a user message manually
-      await append({
-        role: "user",
-        content: messageText,
-      })
-
-      // Clear the input field
-      setInput("")
-
-      // Focus the input for the next message
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 0)
-    } catch (err) {
-      console.error("Error submitting message:", err)
-      setHasError(true)
-      setErrorMessage(
-        "Failed to send message. Please try again or reload the page."
-      )
-    }
-  }
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setShowSuggestions(false)
-
-    const currentInput = input.trim()
-    if (!currentInput) return
-
-    try {
-      // Always cancel any pending tool calls to be safe
-      setIsCancelling(true)
-
-      try {
-        // Try to cancel tool calls
-        cancelToolCall()
-
-        // Small delay to ensure cancellation is processed
-        await new Promise((resolve) => setTimeout(resolve, 500))
-      } catch (cancelError) {
-        console.error("Error during tool call cancellation:", cancelError)
-      } finally {
-        setIsCancelling(false)
-      }
-
-      // Now submit the new message
-      await submitMessage(currentInput)
-    } catch (err) {
-      console.error("Error in form submission:", err)
-      setHasError(true)
-      setErrorMessage(
-        "Failed to send message. Please try again or reload the page."
-      )
-    }
-  }
-
+  // Handle keydown events
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !e.shiftKey && input.trim()) {
+    // Submit form on Shift+Enter
+    if (e.key === "Enter" && e.shiftKey) {
       e.preventDefault()
-      handleFormSubmit(e)
+      const form = e.currentTarget.form
+      if (form) {
+        const fakeEvent = {
+          preventDefault: () => {},
+        } as React.FormEvent<HTMLFormElement>
+        handleFormSubmit(fakeEvent)
+      }
+    }
+  }
+
+  // Handle suggestion clicks
+  const handleSuggestionClick = (suggestion: string) => {
+    if (inputRef.current) {
+      inputRef.current.value = suggestion
+      const event = {
+        target: inputRef.current,
+      } as React.ChangeEvent<HTMLInputElement>
+      handleInputChange(event)
+
+      // Focus the input after selecting a suggestion
+      inputRef.current.focus()
     }
   }
 
   return {
     chatContext,
     messages,
+    hasError: !!error,
+    errorMessage: error?.message || "Something went wrong",
+    isLoading,
+    isCancelling,
+    showSuggestions,
+    handleSuggestionClick,
+    messagesEndRef,
     input,
     handleInputChange,
-    isLoading,
-    hasError,
-    errorMessage,
-    showSuggestions,
-    isCancelling,
     inputRef,
-    messagesEndRef,
-    handleSuggestionClick,
     handleFormSubmit,
     handleKeyDown,
-    submitMessage,
   }
 }

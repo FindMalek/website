@@ -67,9 +67,39 @@ export function formatDate(date: Date) {
 }
 
 export function sanitizeMessages(messages: ChatMessage[]): ChatMessage[] {
-  return messages.map((message) => {
+  // First pass: detect context reset messages
+  const hasContextReset = messages.some(
+    (msg) =>
+      msg.role === "system" &&
+      typeof msg.content === "string" &&
+      msg.content.includes("previous conversation thread has been reset")
+  )
+
+  // Filter out system messages used for context resets
+  const filteredMessages = messages.filter(
+    (msg) =>
+      !(
+        msg.role === "system" &&
+        typeof msg.content === "string" &&
+        msg.content.includes("previous conversation thread has been reset")
+      )
+  )
+
+  return filteredMessages.map((message) => {
     // Skip user messages
     if (message.role === "user") {
+      return message
+    }
+
+    // Check for context reset messages from assistant
+    const isContextResetMessage =
+      message.role === "assistant" &&
+      typeof message.content === "string" &&
+      (message.content.includes("Let's start fresh") ||
+        message.content.includes("I understand you want to change the topic"))
+
+    // Keep context reset messages as they are important signals
+    if (isContextResetMessage) {
       return message
     }
 
@@ -117,10 +147,12 @@ export function sanitizeMessages(messages: ChatMessage[]): ChatMessage[] {
     if (hasPendingToolCall(message)) {
       console.log("Found pending tool call, sanitizing message")
 
-      // Create a clean version of the message
+      // Create a clean version of the message with better context reset hints for the model
       return {
         role: message.role,
-        content: "I'm ready to help you with something else.",
+        content: hasContextReset
+          ? "Let's start with a completely new topic. How can I help you now?"
+          : "I'm ready to help you with something else.",
         id: message.id,
       }
     }

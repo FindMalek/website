@@ -53,9 +53,9 @@ export function useChatWithTools() {
   }
 
   /**
-   * Cancels any pending tool calls
-   * Instead of trying to add results to existing tool calls,
-   * this creates a new assistant message that replaces the pending tool call
+   * Cancels any pending tool calls and resets the conversation context
+   * Creates a new assistant message that clearly ends the previous topic
+   * and signals to the model to stop using tools from that context
    */
   const cancelToolCall = () => {
     try {
@@ -70,70 +70,54 @@ export function useChatWithTools() {
         return
       }
 
-      if (
-        !lastMessage.toolCalls ||
-        !Array.isArray(lastMessage.toolCalls) ||
-        lastMessage.toolCalls.length === 0
-      ) {
-        console.warn("No tool calls found in the last message")
-        return
+      // Check if there are any pending tool calls
+      const hasPendingToolCalls =
+        lastMessage.toolCalls?.some((toolCall) => toolCall.state === "call") ??
+        false
+
+      // Even if no pending tool calls, we'll add a context reset message
+      // to ensure the conversation moves to a new topic
+
+      // Create a context reset message that clearly indicates topic change
+      const resetMsg: Message = {
+        id: `context-reset-${Date.now()}`,
+        role: "assistant",
+        content:
+          "I understand you want to change the topic. Let's start fresh. How can I help you now?",
       }
 
-      // Find all pending tool calls
-      const pendingToolCalls = lastMessage.toolCalls.filter(
-        (toolCall) => toolCall.state === "call"
+      // Add the reset message to clearly change context
+      chatState.append(resetMsg)
+
+      // Log the context reset
+      console.log(
+        hasPendingToolCalls
+          ? "Cancelled pending tool calls and reset context"
+          : "Reset conversation context"
       )
 
-      if (pendingToolCalls.length === 0) {
-        console.warn("No pending tool calls to cancel")
-        return
+      // Add a user-invisible system message that tells the model to stop using tools
+      // from the previous context (this will be filtered out by sanitizeMessages)
+      const systemHint: Message = {
+        id: `system-hint-${Date.now()}`,
+        role: "system",
+        content:
+          "The previous conversation thread has been reset. Previous tool calls were cancelled. Treat this as a new conversation context.",
       }
 
-      console.log(`Cancelling ${pendingToolCalls.length} pending tool calls`)
-
-      // IMPORTANT: Instead of trying to add results to each tool call,
-      // we'll create a new assistant message that replaces the pending one
-      // This ensures clean message history for the next user message
-      try {
-        // Create a transitional message
-        const transitionMsg: Message = {
-          id: `transition-${Date.now()}`,
-          role: "assistant",
-          content: "Let's move on. What else can I help you with?",
-        }
-
-        // Add the new message - this will appear in the chat
-        chatState.append(transitionMsg)
-
-        console.log(
-          "Successfully added transition message for cancelled tool calls"
-        )
-      } catch (error) {
-        console.error("Error adding transition message:", error)
-
-        // As a fallback, try to add results to each tool call
-        try {
-          pendingToolCalls.forEach((toolCall) => {
-            if (toolCall.toolCallId) {
-              chatState.addToolResult({
-                toolCallId: toolCall.toolCallId,
-                result: {
-                  status: "cancelled",
-                  message: "User cancelled this action",
-                  timestamp: new Date().toISOString(),
-                },
-              })
-            }
-          })
-        } catch (fallbackError) {
-          console.error(
-            "Fallback error when cancelling tool calls:",
-            fallbackError
-          )
-        }
-      }
+      // Add the system hint
+      chatState.append(systemHint)
     } catch (error) {
-      console.error("General error in cancelToolCall:", error)
+      console.error("Error in cancelToolCall:", error)
+
+      // Fallback reset message if error occurs
+      const fallbackMsg: Message = {
+        id: `fallback-reset-${Date.now()}`,
+        role: "assistant",
+        content: "Let's start a new conversation. How can I help you?",
+      }
+
+      chatState.append(fallbackMsg)
     }
   }
 
