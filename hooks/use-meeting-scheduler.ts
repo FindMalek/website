@@ -34,11 +34,7 @@ export function useMeetingScheduler(toolCall: ToolInvocation) {
   })
 
   // Get the global chat context
-  const {
-    addToolResult,
-    setInput,
-    handleSubmit: chatSubmit,
-  } = getGlobalChatContext()
+  const { addToolResult } = getGlobalChatContext()
 
   // Helper function to update a single property in state
   const updateState = <K extends keyof MeetingState>(
@@ -46,16 +42,6 @@ export function useMeetingScheduler(toolCall: ToolInvocation) {
     value: MeetingState[K]
   ) => {
     setState((prev) => ({ ...prev, [key]: value }))
-  }
-
-  // Ask when they're available
-  const askForAvailability = () => {
-    if (state.askingAvailability) {
-      setInput("When are you available for a meeting?")
-      chatSubmit()
-      updateState("askingAvailability", false)
-      updateState("showingCalendar", true)
-    }
   }
 
   // Generate time slots for the selected date
@@ -116,7 +102,6 @@ export function useMeetingScheduler(toolCall: ToolInvocation) {
     form,
     state,
     updateState,
-    askForAvailability,
     generateTimeSlots,
     scheduleMeeting,
   }

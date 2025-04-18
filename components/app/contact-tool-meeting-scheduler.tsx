@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import type { ToolInvocation } from "ai"
 
 import { type MeetingSchedulerValues } from "@/config/schemas"
@@ -34,17 +33,8 @@ interface MeetingSchedulerProps {
 export function ContactToolMeetingScheduler({
   toolCall,
 }: MeetingSchedulerProps) {
-  const {
-    form,
-    state,
-    askForAvailability,
-    generateTimeSlots,
-    scheduleMeeting,
-  } = useMeetingScheduler(toolCall)
-
-  useEffect(() => {
-    askForAvailability()
-  }, [askForAvailability])
+  const { form, state, generateTimeSlots, scheduleMeeting } =
+    useMeetingScheduler(toolCall)
 
   const timeSlots = generateTimeSlots()
   const onSubmit = (values: MeetingSchedulerValues) => {
