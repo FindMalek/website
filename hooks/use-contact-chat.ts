@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 
+import { MAX_MESSAGES_ALLOWED } from "@/config/consts"
 import { useChatWithTools } from "@/hooks/use-chat-with-tools"
 
 export function useContactChat() {
@@ -21,21 +22,27 @@ export function useContactChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  // Check if message limit has been reached
+  const isMessageLimitReached = messages.length >= MAX_MESSAGES_ALLOWED
+
   // Keep input focused across all situations
   useEffect(() => {
     // Small delay to ensure DOM is ready and any operations are complete
     const focusTimer = setTimeout(() => {
-      if (inputRef.current) {
+      if (inputRef.current && !isMessageLimitReached) {
         inputRef.current.focus()
       }
     }, 100)
 
     return () => clearTimeout(focusTimer)
-  }, [messages, isLoading, isCancelling])
+  }, [messages, isLoading, isCancelling, isMessageLimitReached])
 
   // Handle form submission
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    // If message limit reached, don't allow new submissions
+    if (isMessageLimitReached) return
 
     // If currently cancelling, don't submit
     if (isCancelling) return
@@ -123,5 +130,6 @@ export function useContactChat() {
     inputRef,
     handleFormSubmit,
     handleKeyDown,
+    isMessageLimitReached,
   }
 }

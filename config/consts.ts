@@ -193,3 +193,5 @@ export const FEATURE_OPTIONS: FeatureOption[] = [
   { id: "responsive", label: "Responsive Design", value: 500 },
   { id: "seo", label: "SEO Optimization", value: 600 },
 ]
+
+export const MAX_MESSAGES_ALLOWED = 12

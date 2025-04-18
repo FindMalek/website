@@ -27,6 +27,7 @@ export function ContactChatBot() {
     inputRef,
     handleFormSubmit,
     handleKeyDown,
+    isMessageLimitReached,
   } = useContactChat()
 
   useEffect(() => {
@@ -57,18 +58,20 @@ export function ContactChatBot() {
         )}
       </div>
 
-      <div className="flex-shrink-0 border-t p-4">
-        {hasError && (
-          <div className="mb-2 flex justify-center">
-            <ContactChatBotErrorMessage message={errorMessage} />
-          </div>
-        )}
-        <ContactChatInput
-          chatContext={chatContextForInput}
-          isLoading={isLoading}
-          isCancelling={isCancelling}
-        />
-      </div>
+      {!isMessageLimitReached && (
+        <div className="flex-shrink-0 border-t p-4">
+          {hasError && (
+            <div className="mb-2 flex justify-center">
+              <ContactChatBotErrorMessage message={errorMessage} />
+            </div>
+          )}
+          <ContactChatInput
+            chatContext={chatContextForInput}
+            isLoading={isLoading}
+            isCancelling={isCancelling}
+          />
+        </div>
+      )}
     </Card>
   )
 }

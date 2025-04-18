@@ -1,6 +1,7 @@
 "use client"
 
 import type { Message, ToolInvocation } from "ai"
+import ReactMarkdown from "react-markdown"
 
 import { ToolName } from "@/types/enum"
 
@@ -109,11 +110,17 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
         {message.content.length > 0 && (
           <div
             className={cn(
-              "rounded-lg px-3 py-2 text-sm",
-              isUser ? "bg-primary text-primary-foreground" : "bg-muted"
+              "prose prose-sm max-w-none rounded-lg px-3 py-2 text-sm",
+              isUser
+                ? "bg-primary text-primary-foreground prose-invert"
+                : "bg-muted prose-gray dark:prose-invert"
             )}
           >
-            {message.content}
+            {isUser ? (
+              message.content
+            ) : (
+              <ReactMarkdown>{message.content}</ReactMarkdown>
+            )}
           </div>
         )}
 

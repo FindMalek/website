@@ -157,6 +157,9 @@ importers:
       react-icons:
         specifier: ^5.5.0
         version: 5.5.0(react@19.1.0)
+      react-markdown:
+        specifier: ^10.1.0
+        version: 10.1.0(@types/react@19.1.0)(react@19.1.0)
       react-resizable-panels:
         specifier: ^2.1.7
         version: 2.1.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2382,6 +2385,12 @@ packages:
         integrity: sha512-xFdR6tkm0MWvBfO8xXCSsinYxHcqkQUlcHeSpMC2ukzOb6lwQAfDmW+Qt0AvlGd8HpsS28qKsB+oPeJn9I39jg==,
       }
 
+  "@types/estree-jsx@1.0.5":
+    resolution:
+      {
+        integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==,
+      }
+
   "@types/estree@1.0.7":
     resolution:
       {
@@ -2436,6 +2445,12 @@ packages:
     resolution:
       {
         integrity: sha512-UaicktuQI+9UKyA4njtDOGBD/67t8YEBt2xdfqu8+gP9hqPUPsiXlNPcpS2gVdjmis5GKPG3fCxbQLVgxsQZ8w==,
+      }
+
+  "@types/unist@2.0.11":
+    resolution:
+      {
+        integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==,
       }
 
   "@types/unist@3.0.3":
@@ -2943,6 +2958,12 @@ packages:
     resolution:
       {
         integrity: sha512-shx7oQ0Awen/BRIdkjkvz54PnEEI/EjwXDSIZp86/KKdbafHh1Df/RYGBhn4hbe2+uKC9FnT5UCEdyPz3ai9hQ==,
+      }
+
+  character-reference-invalid@2.0.1:
+    resolution:
+      {
+        integrity: sha512-iBZ4F4wRbyORVsu0jPV7gXkOsGYjGHPmAyv+HiHG8gi5PtC9KI2j1+v8/tlibRvjoWX027ypmG/n0HtO5t7unw==,
       }
 
   class-variance-authority@0.7.1:
@@ -3596,6 +3617,12 @@ packages:
       }
     engines: { node: ">=4.0" }
 
+  estree-util-is-identifier-name@3.0.0:
+    resolution:
+      {
+        integrity: sha512-hFtqIDZTIUZ9BXLb8y4pYGyk6+wekIivNVTcmvk8NoOh+VeRn5y6cEHzbURrWbfp1fIqdVipilzj+lfaadNZmg==,
+      }
+
   esutils@2.0.3:
     resolution:
       {
@@ -3934,6 +3961,12 @@ packages:
         integrity: sha512-OguPdidb+fbHQSU4Q4ZiLKnzWo8Wwsf5bZfbvu7//a9oTYoqD/fWpe96NuHkoS9h0ccGOTe0C4NGXdtS0iObOw==,
       }
 
+  hast-util-to-jsx-runtime@2.3.6:
+    resolution:
+      {
+        integrity: sha512-zl6s8LwNyo1P9uw+XJGvZtdFF1GdAkOg8ujOw+4Pyb76874fLps4ueHXDhXWdk6YHQ6OgUtinliG7RsYvCbbBg==,
+      }
+
   hast-util-to-parse5@8.0.0:
     resolution:
       {
@@ -3958,6 +3991,12 @@ packages:
         integrity: sha512-qY60FjREgVZL03vJU6IfMV4GDjGBIoOyvuFdpBDIX9yTlDw0TjxVBQp+P8NvpdIXNJvfWBTNul7fsAQJq2FNpg==,
       }
     engines: { node: ">=14" }
+
+  html-url-attributes@3.0.1:
+    resolution:
+      {
+        integrity: sha512-ol6UPyBWqsrO6EJySPz2O7ZSr856WDrEzM5zMqp+FJJLGMW35cLYmmZnl0vztAZxRUoNZJFTCohfjuIJ8I4QBQ==,
+      }
 
   html-void-elements@3.0.0:
     resolution:
@@ -3992,6 +4031,12 @@ packages:
       }
     engines: { node: ">=0.8.19" }
 
+  inline-style-parser@0.2.4:
+    resolution:
+      {
+        integrity: sha512-0aO8FkhNZlj/ZIbNi7Lxxr12obT7cL1moPfE4tg1LkX7LlLfC6DeX4l2ZEud1ukP9jNQyNnfzQVqwbwmAATY4Q==,
+      }
+
   input-otp@1.4.2:
     resolution:
       {
@@ -4014,6 +4059,18 @@ packages:
         integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==,
       }
     engines: { node: ">=12" }
+
+  is-alphabetical@2.0.1:
+    resolution:
+      {
+        integrity: sha512-FWyyY60MeTNyeSRpkM2Iry0G9hpr7/9kD40mD/cGQEuilcZYS4okz8SN2Q6rLCJ8gbCt6fN+rC+6tMGS99LaxQ==,
+      }
+
+  is-alphanumerical@2.0.1:
+    resolution:
+      {
+        integrity: sha512-hmbYhX/9MUMF5uh7tOXyK/n0ZvWpad5caBA17GsC6vyuCqaWliRG5K1qS9inmUhEMaOBIW7/whAnSwveW/LtZw==,
+      }
 
   is-array-buffer@3.0.5:
     resolution:
@@ -4083,6 +4140,12 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
+  is-decimal@2.0.1:
+    resolution:
+      {
+        integrity: sha512-AAB9hiomQs5DXWcRB1rqsxGUstbRroFOPPVAomNk/3XHR5JyEZChOyTWe2oayKnsSsr/kcGqF+z6yuH6HHpN0A==,
+      }
+
   is-extendable@0.1.1:
     resolution:
       {
@@ -4117,6 +4180,12 @@ packages:
         integrity: sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==,
       }
     engines: { node: ">=0.10.0" }
+
+  is-hexadecimal@2.0.1:
+    resolution:
+      {
+        integrity: sha512-DgZQp241c8oO6cA1SbTEWiXeoxV42vlcJxgH+B3hi1AiqqKruZR3ZGF8In3fj4+/y/7rHvlOZLZtgJ/4ttYGZg==,
+      }
 
   is-map@2.0.3:
     resolution:
@@ -4482,6 +4551,12 @@ packages:
         integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==,
       }
 
+  longest-streak@3.1.0:
+    resolution:
+      {
+        integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==,
+      }
+
   loose-envify@1.4.0:
     resolution:
       {
@@ -4510,10 +4585,40 @@ packages:
         integrity: sha512-uZhTV/8NBuw0WHkPTrCqDOl0zVe1BIng5ZtHoDk49ME1qqcjYmmLmOf0gELgcRMxN4w2iuIeVso5/6QymSrgmA==,
       }
 
+  mdast-util-mdx-expression@2.0.1:
+    resolution:
+      {
+        integrity: sha512-J6f+9hUp+ldTZqKRSg7Vw5V6MqjATc+3E4gf3CFNcuZNWD8XdyI6zQ8GqH7f8169MM6P7hMBRDVGnn7oHB9kXQ==,
+      }
+
+  mdast-util-mdx-jsx@3.2.0:
+    resolution:
+      {
+        integrity: sha512-lj/z8v0r6ZtsN/cGNNtemmmfoLAFZnjMbNyLzBafjzikOM+glrjNHPlf6lQDOTccj9n5b0PPihEBbhneMyGs1Q==,
+      }
+
+  mdast-util-mdxjs-esm@2.0.1:
+    resolution:
+      {
+        integrity: sha512-EcmOpxsZ96CvlP03NghtH1EsLtr0n9Tm4lPUJUBccV9RwUOneqSycg19n5HGzCf+10LozMRSObtVr3ee1WoHtg==,
+      }
+
+  mdast-util-phrasing@4.1.0:
+    resolution:
+      {
+        integrity: sha512-TqICwyvJJpBwvGAMZjj4J2n0X8QWp21b9l0o7eXyVJ25YNWYbJDVIyD1bZXE6WtV6RmKJVYmQAKWa0zWOABz2w==,
+      }
+
   mdast-util-to-hast@13.2.0:
     resolution:
       {
         integrity: sha512-QGYKEuUsYT9ykKBCMOEDLsU5JRObWQusAolFMeko/tYPufNkRffBAQjIE+99jbA87xv6FgmjLtwjh9wBWajwAA==,
+      }
+
+  mdast-util-to-markdown@2.1.2:
+    resolution:
+      {
+        integrity: sha512-xj68wMTvGXVOKonmog6LwyJKrYXZPvlwabaryTjLh9LuvovB/KAH+kvi8Gjj+7rJjsFi23nkUxRQv1KqSroMqA==,
       }
 
   mdast-util-to-string@4.0.0:
@@ -4867,6 +4972,12 @@ packages:
       }
     engines: { node: ">=6" }
 
+  parse-entities@4.0.2:
+    resolution:
+      {
+        integrity: sha512-GG2AQYWoLgL877gQIKeRPGO1xF9+eG1ujIb5soS5gPvLQ1y2o8FL90w2QWNdf9I361Mpp7726c+lj3U0qK1uGw==,
+      }
+
   parse5@7.2.1:
     resolution:
       {
@@ -5119,6 +5230,15 @@ packages:
       {
         integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==,
       }
+
+  react-markdown@10.1.0:
+    resolution:
+      {
+        integrity: sha512-qKxVopLT/TyA6BX3Ue5NwabOsAzm0Q7kAPwq6L+wWDwisYs7R8vZ0nRXqq6rkueboxpkjvLGU9fWifiX/ZZFxQ==,
+      }
+    peerDependencies:
+      "@types/react": ">=18"
+      react: ">=18"
 
   react-promise-suspense@0.3.4:
     resolution:
@@ -5564,6 +5684,18 @@ packages:
         integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==,
       }
     engines: { node: ">=8" }
+
+  style-to-js@1.1.16:
+    resolution:
+      {
+        integrity: sha512-/Q6ld50hKYPH3d/r6nr117TZkHR0w0kGGIVfpG9N6D8NymRPM9RqCUv4pRpJ62E5DqOYx2AFpbZMyCPnjQCnOw==,
+      }
+
+  style-to-object@1.0.8:
+    resolution:
+      {
+        integrity: sha512-xT47I/Eo0rwJmaXC4oilDGDWLohVhR6o/xAQcPQN8q6QBuZVL8qMYL85kLmST5cPjAorwvqIA4qXTRQoYHaL6g==,
+      }
 
   styled-jsx@5.1.6:
     resolution:
@@ -7356,6 +7488,10 @@ snapshots:
 
   "@types/diff-match-patch@1.0.36": {}
 
+  "@types/estree-jsx@1.0.5":
+    dependencies:
+      "@types/estree": 1.0.7
+
   "@types/estree@1.0.7": {}
 
   "@types/hast@3.0.4":
@@ -7383,6 +7519,8 @@ snapshots:
   "@types/react@19.1.0":
     dependencies:
       csstype: 3.1.3
+
+  "@types/unist@2.0.11": {}
 
   "@types/unist@3.0.3": {}
 
@@ -7693,6 +7831,8 @@ snapshots:
   character-entities-legacy@3.0.0: {}
 
   character-entities@2.0.2: {}
+
+  character-reference-invalid@2.0.1: {}
 
   class-variance-authority@0.7.1:
     dependencies:
@@ -8242,6 +8382,8 @@ snapshots:
 
   estraverse@5.3.0: {}
 
+  estree-util-is-identifier-name@3.0.0: {}
+
   esutils@2.0.3: {}
 
   eventemitter3@4.0.7: {}
@@ -8461,6 +8603,26 @@ snapshots:
       stringify-entities: 4.0.4
       zwitch: 2.0.4
 
+  hast-util-to-jsx-runtime@2.3.6:
+    dependencies:
+      "@types/estree": 1.0.7
+      "@types/hast": 3.0.4
+      "@types/unist": 3.0.3
+      comma-separated-tokens: 2.0.3
+      devlop: 1.1.0
+      estree-util-is-identifier-name: 3.0.0
+      hast-util-whitespace: 3.0.0
+      mdast-util-mdx-expression: 2.0.1
+      mdast-util-mdx-jsx: 3.2.0
+      mdast-util-mdxjs-esm: 2.0.1
+      property-information: 7.0.0
+      space-separated-tokens: 2.0.2
+      style-to-js: 1.1.16
+      unist-util-position: 5.0.0
+      vfile-message: 4.0.2
+    transitivePeerDependencies:
+      - supports-color
+
   hast-util-to-parse5@8.0.0:
     dependencies:
       "@types/hast": 3.0.4
@@ -8491,6 +8653,8 @@ snapshots:
       htmlparser2: 8.0.2
       selderee: 0.11.0
 
+  html-url-attributes@3.0.1: {}
+
   html-void-elements@3.0.0: {}
 
   htmlparser2@8.0.2:
@@ -8509,6 +8673,8 @@ snapshots:
 
   imurmurhash@0.1.4: {}
 
+  inline-style-parser@0.2.4: {}
+
   input-otp@1.4.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       react: 19.1.0
@@ -8521,6 +8687,13 @@ snapshots:
       side-channel: 1.1.0
 
   internmap@2.0.3: {}
+
+  is-alphabetical@2.0.1: {}
+
+  is-alphanumerical@2.0.1:
+    dependencies:
+      is-alphabetical: 2.0.1
+      is-decimal: 2.0.1
 
   is-array-buffer@3.0.5:
     dependencies:
@@ -8569,6 +8742,8 @@ snapshots:
       call-bound: 1.0.4
       has-tostringtag: 1.0.2
 
+  is-decimal@2.0.1: {}
+
   is-extendable@0.1.1: {}
 
   is-extglob@2.1.1: {}
@@ -8587,6 +8762,8 @@ snapshots:
   is-glob@4.0.3:
     dependencies:
       is-extglob: 2.1.1
+
+  is-hexadecimal@2.0.1: {}
 
   is-map@2.0.3: {}
 
@@ -8769,6 +8946,8 @@ snapshots:
 
   lodash@4.17.21: {}
 
+  longest-streak@3.1.0: {}
+
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
@@ -8796,6 +8975,50 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  mdast-util-mdx-expression@2.0.1:
+    dependencies:
+      "@types/estree-jsx": 1.0.5
+      "@types/hast": 3.0.4
+      "@types/mdast": 4.0.4
+      devlop: 1.1.0
+      mdast-util-from-markdown: 2.0.2
+      mdast-util-to-markdown: 2.1.2
+    transitivePeerDependencies:
+      - supports-color
+
+  mdast-util-mdx-jsx@3.2.0:
+    dependencies:
+      "@types/estree-jsx": 1.0.5
+      "@types/hast": 3.0.4
+      "@types/mdast": 4.0.4
+      "@types/unist": 3.0.3
+      ccount: 2.0.1
+      devlop: 1.1.0
+      mdast-util-from-markdown: 2.0.2
+      mdast-util-to-markdown: 2.1.2
+      parse-entities: 4.0.2
+      stringify-entities: 4.0.4
+      unist-util-stringify-position: 4.0.0
+      vfile-message: 4.0.2
+    transitivePeerDependencies:
+      - supports-color
+
+  mdast-util-mdxjs-esm@2.0.1:
+    dependencies:
+      "@types/estree-jsx": 1.0.5
+      "@types/hast": 3.0.4
+      "@types/mdast": 4.0.4
+      devlop: 1.1.0
+      mdast-util-from-markdown: 2.0.2
+      mdast-util-to-markdown: 2.1.2
+    transitivePeerDependencies:
+      - supports-color
+
+  mdast-util-phrasing@4.1.0:
+    dependencies:
+      "@types/mdast": 4.0.4
+      unist-util-is: 6.0.0
+
   mdast-util-to-hast@13.2.0:
     dependencies:
       "@types/hast": 3.0.4
@@ -8807,6 +9030,18 @@ snapshots:
       unist-util-position: 5.0.0
       unist-util-visit: 5.0.0
       vfile: 6.0.3
+
+  mdast-util-to-markdown@2.1.2:
+    dependencies:
+      "@types/mdast": 4.0.4
+      "@types/unist": 3.0.3
+      longest-streak: 3.1.0
+      mdast-util-phrasing: 4.1.0
+      mdast-util-to-string: 4.0.0
+      micromark-util-classify-character: 2.0.1
+      micromark-util-decode-string: 2.0.1
+      unist-util-visit: 5.0.0
+      zwitch: 2.0.4
 
   mdast-util-to-string@4.0.0:
     dependencies:
@@ -9088,6 +9323,16 @@ snapshots:
     dependencies:
       callsites: 3.1.0
 
+  parse-entities@4.0.2:
+    dependencies:
+      "@types/unist": 2.0.11
+      character-entities-legacy: 3.0.0
+      character-reference-invalid: 2.0.1
+      decode-named-character-reference: 1.1.0
+      is-alphanumerical: 2.0.1
+      is-decimal: 2.0.1
+      is-hexadecimal: 2.0.1
+
   parse5@7.2.1:
     dependencies:
       entities: 4.5.0
@@ -9185,6 +9430,24 @@ snapshots:
   react-is@16.13.1: {}
 
   react-is@18.3.1: {}
+
+  react-markdown@10.1.0(@types/react@19.1.0)(react@19.1.0):
+    dependencies:
+      "@types/hast": 3.0.4
+      "@types/mdast": 4.0.4
+      "@types/react": 19.1.0
+      devlop: 1.1.0
+      hast-util-to-jsx-runtime: 2.3.6
+      html-url-attributes: 3.0.1
+      mdast-util-to-hast: 13.2.0
+      react: 19.1.0
+      remark-parse: 11.0.0
+      remark-rehype: 11.1.2
+      unified: 11.0.5
+      unist-util-visit: 5.0.0
+      vfile: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
 
   react-promise-suspense@0.3.4:
     dependencies:
@@ -9543,6 +9806,14 @@ snapshots:
   strip-bom@3.0.0: {}
 
   strip-json-comments@3.1.1: {}
+
+  style-to-js@1.1.16:
+    dependencies:
+      style-to-object: 1.0.8
+
+  style-to-object@1.0.8:
+    dependencies:
+      inline-style-parser: 0.2.4
 
   styled-jsx@5.1.6(react@19.1.0):
     dependencies:

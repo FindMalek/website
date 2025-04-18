@@ -1,7 +1,6 @@
 import { useChat as useAIChat } from "@ai-sdk/react"
 import type { Message } from "ai"
 
-// Extended message type that includes toolCalls property
 interface MessageWithToolCalls extends Message {
   toolCalls?: Array<{
     toolCallId: string
@@ -20,7 +19,8 @@ export function useChatWithTools() {
       {
         id: "welcome-message",
         role: "assistant",
-        content: "You can ask me anything, I'm here for your service!",
+        content:
+          "👋 Welcome! I'm here to help you connect with the Malek. I can:\n\n- Save your contact information for follow-up\n- Schedule a meeting at a convenient time\n- Generate a pricing estimate for your project\n- Provide access to the owner's resume/CV\n\nHow can I assist you today?",
       },
     ],
   })
