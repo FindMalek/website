@@ -160,6 +160,30 @@ export const LANGUAGES_COLORS = {
   Swift: "#ffac45",
 }
 
+export const PRICING = {
+  BASE_PRICES: {
+    website: 1000,
+    ecommerce: 2000,
+    webapp: 3000,
+    automation: 500,
+    other: 1200,
+  },
+  MULTIPLIERS: {
+    complexity: {
+      min: 0.8,
+      max: 1.5,
+      range: 0.7, // max - min
+    },
+    timeframe: {
+      min: 0.9,
+      max: 1.3,
+      range: 0.4, // max - min
+    },
+  },
+  CURRENCY: "USD",
+  CALCULATION_DELAY: 1500,
+}
+
 export const FEATURE_OPTIONS: FeatureOption[] = [
   { id: "auth", label: "Authentication", value: 1000 },
   { id: "payment", label: "Payment Processing", value: 1500 },

@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import type { ToolInvocation } from "ai"
 import { useForm } from "react-hook-form"
 
-import { FEATURE_OPTIONS } from "@/config/consts"
+import { FEATURE_OPTIONS, PRICING } from "@/config/consts"
 import {
   pricingEstimatorSchema,
   type PricingEstimatorValues,
@@ -61,14 +61,7 @@ export function usePricingEstimator(toolCall: ToolInvocation) {
 
     try {
       // Base price by project type
-      const basePrice =
-        values.projectType === "website"
-          ? 2000
-          : values.projectType === "ecommerce"
-            ? 5000
-            : values.projectType === "webapp"
-              ? 8000
-              : 10000
+      const basePrice = PRICING.BASE_PRICES[values.projectType]
 
       // Calculate feature costs
       const featureCost = values.selectedFeatures.reduce((sum, featureId) => {
@@ -76,25 +69,31 @@ export function usePricingEstimator(toolCall: ToolInvocation) {
         return sum + (feature?.value || 0)
       }, 0)
 
-      // Complexity multiplier (0.8 to 1.5)
-      const complexityMultiplier = 0.8 + (values.complexity / 100) * 0.7
+      // Complexity multiplier
+      const complexityMultiplier =
+        PRICING.MULTIPLIERS.complexity.min +
+        (values.complexity / 100) * PRICING.MULTIPLIERS.complexity.range
 
-      // Timeframe multiplier (0.9 to 1.3)
-      const timeframeMultiplier = 0.9 + ((100 - values.timeframe) / 100) * 0.4
+      // Timeframe multiplier
+      const timeframeMultiplier =
+        PRICING.MULTIPLIERS.timeframe.min +
+        ((100 - values.timeframe) / 100) * PRICING.MULTIPLIERS.timeframe.range
 
       const calculatedEstimate = Math.round(
         (basePrice + featureCost) * complexityMultiplier * timeframeMultiplier
       )
 
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await new Promise((resolve) =>
+        setTimeout(resolve, PRICING.CALCULATION_DELAY)
+      )
 
       updateState("estimate", calculatedEstimate)
 
       // Create and submit tool result
       const result = createToolResult(true, {
         estimate: calculatedEstimate,
-        currency: "USD",
+        currency: PRICING.CURRENCY,
         projectType: values.projectType,
         complexity: values.complexity,
         timeframe: values.timeframe,
