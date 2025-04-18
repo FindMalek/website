@@ -56,3 +56,11 @@ export function sortProjectsByStars<T extends { stars: number }>(
 ): T[] {
   return [...projects].sort((a, b) => b.stars - a.stars)
 }
+
+export function formatDate(date: Date) {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
+}

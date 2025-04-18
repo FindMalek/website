@@ -1,4 +1,4 @@
-import type { Client } from "@/types"
+import type { Client, FeatureOption } from "@/types"
 
 export const PAGES = {
   HOME: {
@@ -159,3 +159,13 @@ export const LANGUAGES_COLORS = {
   Rust: "#dea584",
   Swift: "#ffac45",
 }
+
+export const FEATURE_OPTIONS: FeatureOption[] = [
+  { id: "auth", label: "Authentication", value: 1000 },
+  { id: "payment", label: "Payment Processing", value: 1500 },
+  { id: "cms", label: "Content Management", value: 1200 },
+  { id: "ai", label: "AI Integration", value: 2000 },
+  { id: "analytics", label: "Analytics", value: 800 },
+  { id: "responsive", label: "Responsive Design", value: 500 },
+  { id: "seo", label: "SEO Optimization", value: 600 },
+]

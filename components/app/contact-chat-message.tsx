@@ -2,10 +2,12 @@
 
 import type { Message, ToolInvocation } from "ai"
 
+import { ToolName } from "@/types/enum"
+
+import { convertToolName } from "@/config/converter"
 import { cn } from "@/lib/utils"
 
 import { ContactToolEmailForm } from "@/components/app/contact-tool-email-form"
-import { ContactToolFeedbackForm } from "@/components/app/contact-tool-feedback-form"
 import { ContactToolMeetingScheduler } from "@/components/app/contact-tool-meeting-scheduler"
 import { ContactToolPricingEstimator } from "@/components/app/contact-tool-pricing-estimator"
 import { ContactToolResumeGenerator } from "@/components/app/contact-tool-resume-generator"
@@ -22,7 +24,7 @@ interface ToolInvocationUIPart {
   toolInvocation: {
     state: ToolInvocationState
     toolCallId: string
-    toolName: string
+    toolName: ToolName
     args: Record<string, unknown>
     result?: Record<string, unknown>
   }
@@ -31,11 +33,9 @@ interface ToolInvocationUIPart {
 export function ContactChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user"
 
-  // Function to render tool calls
   const renderToolCall = (part: ToolInvocationUIPart) => {
     const { toolName, state, toolCallId, args, result } = part.toolInvocation
 
-    // Create a compatible tool call to pass to components
     const toolCall: ToolInvocation = {
       toolCallId,
       toolName,
@@ -51,15 +51,13 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
         return <ContactToolMeetingScheduler toolCall={toolCall} />
       case "generatePricing":
         return <ContactToolPricingEstimator toolCall={toolCall} />
-      case "generateResume":
+      case "getResume":
         return <ContactToolResumeGenerator toolCall={toolCall} />
-      case "submitFeedback":
-        return <ContactToolFeedbackForm toolCall={toolCall} />
       default:
         return (
           <div className="text-muted-foreground text-sm">
-            {state === "call" && `Processing ${toolName}...`}
-            {state === "result" && `${toolName} completed`}
+            {state === "call" && `Processing ${convertToolName(toolName)}...`}
+            {state === "result" && `${convertToolName(toolName)} completed`}
           </div>
         )
     }

@@ -68,3 +68,9 @@ export interface StackSection {
   title: string
   items: StackItem[]
 }
+
+export interface FeatureOption {
+  id: string
+  label: string
+  value: number
+}

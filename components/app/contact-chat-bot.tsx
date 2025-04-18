@@ -1,7 +1,11 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { useChat } from "@ai-sdk/react"
+
+import {
+  setGlobalChatContext,
+  useChatWithTools,
+} from "@/hooks/use-chat-with-tools"
 
 import { ContactChatMessage } from "@/components/app/contact-chat-message"
 import { ContactSuggestedPrompts } from "@/components/app/contact-suggeted-prompts"
@@ -11,6 +15,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 
 export function ContactChatBot() {
+  const chatContext = useChatWithTools()
   const {
     messages,
     input,
@@ -18,16 +23,11 @@ export function ContactChatBot() {
     handleSubmit,
     isLoading,
     setInput,
-  } = useChat({
-    api: "/api/chat",
-    initialMessages: [
-      {
-        id: "welcome-message",
-        role: "assistant",
-        content: "You can ask me anything, I'm here for your service!",
-      },
-    ],
-  })
+  } = chatContext
+
+  useEffect(() => {
+    setGlobalChatContext(chatContext)
+  }, [chatContext])
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [showSuggestions, setShowSuggestions] = useState(true)
@@ -43,6 +43,13 @@ export function ContactChatBot() {
   const handleSuggestionClick = (suggestion: string) => {
     setInput(suggestion)
     setShowSuggestions(false)
+  }
+
+  //TODO: maybe remove this ?
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setShowSuggestions(false)
+    handleSubmit(e)
   }
 
   return (
@@ -67,7 +74,7 @@ export function ContactChatBot() {
       )}
 
       <div className="border-t p-4">
-        <form onSubmit={handleSubmit} className="flex space-x-2">
+        <form onSubmit={handleFormSubmit} className="flex space-x-2">
           <Input
             value={input}
             onChange={handleInputChange}

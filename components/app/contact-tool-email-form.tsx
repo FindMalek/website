@@ -1,11 +1,21 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useChat } from "@ai-sdk/react"
+import { useEffect } from "react"
 import type { ToolInvocation } from "ai"
+
+import { type EmailFormValues } from "@/config/schemas"
+import { useEmailForm } from "@/hooks/use-email-form"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
 interface EmailFormProps {
@@ -13,95 +23,25 @@ interface EmailFormProps {
 }
 
 export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
-  const [email, setEmail] = useState("")
-  const [name, setName] = useState("")
-  const [askingPurpose, setAskingPurpose] = useState(true)
-  const [askingDetails, setAskingDetails] = useState(false)
-  const [askingConfirmation, setAskingConfirmation] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [message, setMessage] = useState("")
-  const { addToolResult, messages, setInput, handleSubmit: chatSubmit } = useChat()
+  const {
+    form,
+    state,
+    updateState,
+    askForPurpose,
+    moveToDetailsStep,
+    moveToConfirmationStep,
+    submitEmail,
+  } = useEmailForm(toolCall)
 
-  // Start by asking what they want to contact about
   useEffect(() => {
-    if (askingPurpose) {
-      setInput("What would you like to contact me about?")
-      chatSubmit()
-    }
-  }, [askingPurpose, setInput, chatSubmit])
+    askForPurpose()
+  }, [askForPurpose])
 
-  const moveToDetailsStep = () => {
-    setAskingPurpose(false)
-    setAskingDetails(true)
-    
-    // Extract the purpose from the conversation
-    const userMessages = messages.filter(msg => msg.role === "user")
-    if (userMessages.length > 0) {
-      setMessage(userMessages[userMessages.length - 1].content)
-    }
+  const onSubmit = (values: EmailFormValues) => {
+    submitEmail(values)
   }
 
-  const moveToConfirmationStep = () => {
-    setAskingDetails(false)
-    setAskingConfirmation(true)
-  }
-
-  const handleSubmit = async () => {
-    setIsSubmitting(true)
-
-    try {
-      // Get the conversation history
-      const conversationHistory = messages.map((msg) => ({
-        role: msg.role,
-        content: msg.content,
-      }))
-
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          name,
-          message,
-          conversation: conversationHistory,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to send email")
-      }
-
-      const result = await response.json()
-
-      setIsSubmitted(true)
-      addToolResult({
-        toolCallId: toolCall.toolCallId,
-        result: JSON.stringify({
-          success: true,
-          email,
-          name,
-          ownerEmailSent: result.ownerEmailSent,
-          userEmailSent: result.userEmailSent,
-        }),
-      })
-    } catch (error) {
-      console.error("Error sending email:", error)
-      addToolResult({
-        toolCallId: toolCall.toolCallId,
-        result: JSON.stringify({
-          success: false,
-          error: "Failed to send email",
-        }),
-      })
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  if (isSubmitted) {
+  if (state.isSubmitted) {
     return (
       <div className="bg-muted/30 space-y-2 rounded-lg border p-4">
         <div className="flex items-center space-x-2 text-green-600">
@@ -120,7 +60,7 @@ export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
     <div className="bg-muted/30 space-y-4 rounded-lg border p-4">
       <h3 className="font-medium">Contact Information</h3>
 
-      {askingPurpose && (
+      {state.askingPurpose && (
         <div className="space-y-4">
           <p className="text-muted-foreground text-sm">
             Please share what you would like to contact me about.
@@ -132,78 +72,94 @@ export function ContactToolEmailForm({ toolCall }: EmailFormProps) {
         </div>
       )}
 
-      {askingDetails && (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <p className="text-sm">Your Name</p>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-              required
+      {state.askingDetails && (
+        <Form {...form}>
+          <form className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Your name" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="space-y-2">
-            <p className="text-sm">Your Email</p>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your.email@example.com"
-              required
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="email"
+                      placeholder="your.email@example.com"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <Button 
-            onClick={moveToConfirmationStep} 
-            disabled={!email || !name}
-            className="w-full"
-          >
-            <Icons.arrowRight className="mr-2 h-4 w-4" />
-            Continue
-          </Button>
-        </div>
+            <Button onClick={() => moveToConfirmationStep()} className="w-full">
+              <Icons.arrowRight className="mr-2 h-4 w-4" />
+              Continue
+            </Button>
+          </form>
+        </Form>
       )}
 
-      {askingConfirmation && (
-        <div className="space-y-4">
-          <div className="bg-background rounded-md p-3">
-            <p className="text-sm font-medium">Message:</p>
-            <p className="text-muted-foreground text-sm mt-1">{message}</p>
-            <div className="mt-3">
-              <p className="text-sm font-medium">From:</p>
-              <p className="text-muted-foreground text-sm">{name} ({email})</p>
+      {state.askingConfirmation && (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="bg-background rounded-md p-3">
+              <p className="text-sm font-medium">Message:</p>
+              <p className="text-muted-foreground mt-1 text-sm">
+                {form.getValues("message")}
+              </p>
+              <div className="mt-3">
+                <p className="text-sm font-medium">From:</p>
+                <p className="text-muted-foreground text-sm">
+                  {form.getValues("name")} ({form.getValues("email")})
+                </p>
+              </div>
             </div>
-          </div>
-          <p className="text-muted-foreground text-sm">
-            Would you like to send this message?
-          </p>
-          <div className="flex space-x-2">
-            <Button 
-              variant="outline" 
-              className="flex-1"
-              onClick={() => setAskingDetails(true)}
-            >
-              Edit Details
-            </Button>
-            <Button 
-              onClick={handleSubmit} 
-              disabled={isSubmitting}
-              className="flex-1"
-            >
-              {isSubmitting ? (
-                <>
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <Icons.send className="mr-2 h-4 w-4" />
-                  Send Message
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
+            <p className="text-muted-foreground text-sm">
+              Would you like to send this message?
+            </p>
+            <div className="flex space-x-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={() => updateState("askingDetails", true)}
+              >
+                Edit Details
+              </Button>
+              <Button
+                type="submit"
+                disabled={state.isSubmitting}
+                className="flex-1"
+              >
+                {state.isSubmitting ? (
+                  <>
+                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Icons.send className="mr-2 h-4 w-4" />
+                    Send Message
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
       )}
     </div>
   )

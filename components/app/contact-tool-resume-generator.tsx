@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
-import { useChat } from "@ai-sdk/react"
 import type { ToolInvocation } from "ai"
+
+import { useResumeGenerator } from "@/hooks/use-resume-generator"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
@@ -12,73 +12,41 @@ interface ResumeGeneratorProps {
 }
 
 export function ContactToolResumeGenerator({ toolCall }: ResumeGeneratorProps) {
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [resumeUrl, setResumeUrl] = useState<string | null>(null)
-  const { addToolResult } = useChat()
+  const { state, generateResume } = useResumeGenerator(toolCall)
 
-  const handleGenerateResume = async () => {
-    setIsGenerating(true)
-
-    try {
-      // In a real implementation, this would call an API to generate a PDF
-      // For now, we'll simulate a successful generation
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      // In a real app, this would be a URL to the generated PDF
-      setResumeUrl("/sample-resume.pdf")
-
-      addToolResult({
-        toolCallId: toolCall.toolCallId,
-        result: JSON.stringify({
-          success: true,
-          resumeUrl: "/sample-resume.pdf",
-        }),
-      })
-    } catch (error) {
-      console.error("Error generating resume:", error)
-      addToolResult({
-        toolCallId: toolCall.toolCallId,
-        result: JSON.stringify({
-          success: false,
-          error: "Failed to generate resume",
-        }),
-      })
-    } finally {
-      setIsGenerating(false)
+  const handleOpenResume = () => {
+    if (state.resumeUrl) {
+      window.open(state.resumeUrl, "_blank")
     }
   }
 
   return (
     <div className="bg-muted/30 space-y-4 rounded-lg border p-4">
-      <h3 className="font-medium">Resume Generator</h3>
+      <h3 className="font-medium">View Resume</h3>
       <p className="text-muted-foreground text-sm">
-        Generate a professional resume based on our conversation.
+        Access my resume to see my professional experience and qualifications.
       </p>
 
-      {resumeUrl ? (
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={() => window.open(resumeUrl, "_blank")}
-        >
+      {state.resumeUrl ? (
+        <Button variant="outline" className="w-full" onClick={handleOpenResume}>
           <Icons.download className="mr-2 h-4 w-4" />
-          Download Resume
+          View Resume
         </Button>
       ) : (
         <Button
-          onClick={handleGenerateResume}
-          disabled={isGenerating}
+          onClick={generateResume}
+          disabled={state.isGenerating}
           className="w-full"
         >
-          {isGenerating ? (
+          {state.isGenerating ? (
             <>
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              Generating...
+              Loading...
             </>
           ) : (
             <>
               <Icons.file className="mr-2 h-4 w-4" />
-              Generate Resume
+              Get Resume
             </>
           )}
         </Button>

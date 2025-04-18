@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     temperature: 0.7,
     maxTokens: 1000,
     system: `You are a helpful assistant on a contact page. Your goal is to help visitors connect with the website owner.
-    You can collect contact information, schedule meetings, provide pricing estimates, generate resumes, and collect feedback.
+    You can collect contact information, schedule meetings, provide pricing estimates, and provide access to the website owner's resume.
     Be friendly, professional, and helpful. Use the available tools when appropriate.`,
     tools: {
       saveEmail: {
@@ -40,25 +40,13 @@ export async function POST(req: Request) {
           timeline: z.string().describe("Expected timeline for the project"),
         }),
       },
-      generateResume: {
-        description: "Generate and download a resume PDF",
+      getResume: {
+        description: "Provide access to the website owner's resume/CV",
         parameters: z.object({
-          skills: z
-            .array(z.string())
-            .optional()
-            .describe("List of skills to highlight"),
-          experience: z
+          purpose: z
             .string()
             .optional()
-            .describe("Brief description of experience"),
-        }),
-      },
-      submitFeedback: {
-        description: "Submit feedback about the service",
-        parameters: z.object({
-          feedbackType: z
-            .string()
-            .describe("Type of feedback (general, suggestion, complaint)"),
+            .describe("The purpose for wanting to view the resume"),
         }),
       },
     },
