@@ -10,6 +10,7 @@ import {
   SiX,
 } from "@icons-pack/react-simple-icons"
 import {
+  AlertCircle,
   AlertTriangle,
   ArrowDown,
   ArrowLeft,
@@ -72,6 +73,7 @@ import {
   Pizza,
   Plus,
   PuzzleIcon,
+  RefreshCw,
   SaveIcon,
   Search,
   Send,
@@ -225,4 +227,6 @@ export const Icons = {
   send: Send,
   calculator: Calculator,
   download: Download,
+  alertCircle: AlertCircle,
+  refresh: RefreshCw,
 }

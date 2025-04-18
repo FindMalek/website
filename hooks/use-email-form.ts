@@ -34,12 +34,7 @@ export function useEmailForm(toolCall: ToolInvocation) {
   })
 
   // Get the global chat context
-  const {
-    addToolResult,
-    messages,
-    setInput,
-    handleSubmit: chatSubmit,
-  } = getGlobalChatContext()
+  const { addToolResult, messages } = getGlobalChatContext()
 
   // Helper function to update a single property in state
   const updateState = <K extends keyof EmailFormState>(
@@ -52,29 +47,52 @@ export function useEmailForm(toolCall: ToolInvocation) {
   // Ask about the purpose
   const askForPurpose = () => {
     if (state.askingPurpose) {
-      setInput("What would you like to contact me about?")
-      chatSubmit()
+      try {
+        // Use addToolResult with a proper result to avoid the "partial-call" error
+        addToolResult({
+          toolCallId: toolCall.toolCallId,
+          result: stringifyToolResult(
+            createToolResult(true, {
+              status: "ready",
+              message: "What would you like to contact me about?",
+            })
+          ),
+        })
+      } catch (error) {
+        console.error("Error in askForPurpose:", error)
+        // Fallback - try to handle degraded state gracefully
+        updateState("askingPurpose", false)
+        updateState("askingDetails", true)
+      }
     }
   }
 
   // Move to details step
   const moveToDetailsStep = () => {
-    updateState("askingPurpose", false)
-    updateState("askingDetails", true)
+    try {
+      updateState("askingPurpose", false)
+      updateState("askingDetails", true)
 
-    // Extract the purpose from the conversation
-    const userMessages = messages.filter((msg) => msg.role === "user")
-    if (userMessages.length > 0) {
-      form.setValue("message", userMessages[userMessages.length - 1].content)
+      // Extract the purpose from the conversation
+      const userMessages = messages.filter((msg) => msg.role === "user")
+      if (userMessages.length > 0) {
+        form.setValue("message", userMessages[userMessages.length - 1].content)
+      }
+    } catch (error) {
+      console.error("Error in moveToDetailsStep:", error)
     }
   }
 
   // Move to confirmation step
   const moveToConfirmationStep = async () => {
-    const isValid = await form.trigger(["name", "email"])
-    if (isValid) {
-      updateState("askingDetails", false)
-      updateState("askingConfirmation", true)
+    try {
+      const isValid = await form.trigger(["name", "email"])
+      if (isValid) {
+        updateState("askingDetails", false)
+        updateState("askingConfirmation", true)
+      }
+    } catch (error) {
+      console.error("Error in moveToConfirmationStep:", error)
     }
   }
 

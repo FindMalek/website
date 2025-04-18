@@ -9,6 +9,7 @@ import {
 
 import { ContactChatMessage } from "@/components/app/contact-chat-message"
 import { ContactSuggestedPrompts } from "@/components/app/contact-suggeted-prompts"
+import { ContactChatBotErrorMessage } from "@/components/app/contact-chat-bot-error-message"
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -23,14 +24,37 @@ export function ContactChatBot() {
     handleSubmit,
     isLoading,
     setInput,
+    error,
   } = chatContext
 
   useEffect(() => {
     setGlobalChatContext(chatContext)
   }, [chatContext])
 
+  const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const [hasError, setHasError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   const [showSuggestions, setShowSuggestions] = useState(true)
+
+  useEffect(() => {
+    if (error) {
+      console.error("Chat error:", error)
+      setHasError(true)
+      setErrorMessage(
+        error.message ||
+          "An error occurred with the chat service. Please try again."
+      )
+    } else {
+      setHasError(false)
+      setErrorMessage("")
+    }
+  }, [error])
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [messages, isLoading])
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -45,11 +69,30 @@ export function ContactChatBot() {
     setShowSuggestions(false)
   }
 
-  //TODO: maybe remove this ?
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setShowSuggestions(false)
-    handleSubmit(e)
+    try {
+      handleSubmit(e)
+
+      // NOTE: Refocus the input after submission
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 0)
+    } catch (err) {
+      console.error("Error submitting message:", err)
+      setHasError(true)
+      setErrorMessage(
+        "Failed to send message. Please try again or reload the page."
+      )
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey && input.trim()) {
+      e.preventDefault()
+      handleFormSubmit(e)
+    }
   }
 
   return (
@@ -74,18 +117,25 @@ export function ContactChatBot() {
       )}
 
       <div className="border-t p-4">
+        {hasError && (
+          <div className="mb-2 flex justify-center">
+            <ContactChatBotErrorMessage message={errorMessage} />
+          </div>
+        )}
         <form onSubmit={handleFormSubmit} className="flex space-x-2">
           <Input
+            ref={inputRef}
             value={input}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             placeholder="Type your message..."
             className="flex-1"
-            disabled={isLoading}
+            disabled={isLoading || hasError}
           />
           <Button
             type="submit"
             size="icon"
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || hasError || !input.trim()}
           >
             <Icons.send className="h-4 w-4" />
           </Button>

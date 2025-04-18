@@ -36,30 +36,48 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
   const renderToolCall = (part: ToolInvocationUIPart) => {
     const { toolName, state, toolCallId, args, result } = part.toolInvocation
 
+    if (state === "partial-call") {
+      return (
+        <div className="text-muted-foreground flex items-center space-x-2 text-sm">
+          <Icons.spinner className="h-4 w-4 animate-spin" />
+          <span>Preparing {convertToolName(toolName)}...</span>
+        </div>
+      )
+    }
+
     const toolCall: ToolInvocation = {
       toolCallId,
       toolName,
       args,
-      state: "result",
+      state: state === "call" ? "call" : "result",
       result: result || {},
     }
 
-    switch (toolName) {
-      case "saveEmail":
-        return <ContactToolEmailForm toolCall={toolCall} />
-      case "scheduleMeeting":
-        return <ContactToolMeetingScheduler toolCall={toolCall} />
-      case "generatePricing":
-        return <ContactToolPricingEstimator toolCall={toolCall} />
-      case "getResume":
-        return <ContactToolResumeGenerator toolCall={toolCall} />
-      default:
-        return (
-          <div className="text-muted-foreground text-sm">
-            {state === "call" && `Processing ${convertToolName(toolName)}...`}
-            {state === "result" && `${convertToolName(toolName)} completed`}
-          </div>
-        )
+    try {
+      switch (toolName) {
+        case "saveEmail":
+          return <ContactToolEmailForm toolCall={toolCall} />
+        case "scheduleMeeting":
+          return <ContactToolMeetingScheduler toolCall={toolCall} />
+        case "generatePricing":
+          return <ContactToolPricingEstimator toolCall={toolCall} />
+        case "getResume":
+          return <ContactToolResumeGenerator toolCall={toolCall} />
+        default:
+          return (
+            <div className="text-muted-foreground text-sm">
+              {state === "call" && `Processing ${convertToolName(toolName)}...`}
+              {state === "result" && `${convertToolName(toolName)} completed`}
+            </div>
+          )
+      }
+    } catch (error) {
+      console.error(`Error rendering tool ${toolName}:`, error)
+      return (
+        <div className="text-destructive text-sm">
+          Error displaying {convertToolName(toolName)}. Please try again.
+        </div>
+      )
     }
   }
 

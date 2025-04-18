@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import type { ToolInvocation } from "ai"
 
 import { PROJECT_TYPE_OPTIONS } from "@/types/enum"
@@ -37,18 +36,8 @@ interface PricingEstimatorProps {
 export function ContactToolPricingEstimator({
   toolCall,
 }: PricingEstimatorProps) {
-  const {
-    form,
-    state,
-    featureOptions,
-    askForProjectType,
-    toggleFeature,
-    calculateEstimate,
-  } = usePricingEstimator(toolCall)
-
-  useEffect(() => {
-    askForProjectType()
-  }, [askForProjectType])
+  const { form, state, featureOptions, toggleFeature, calculateEstimate } =
+    usePricingEstimator(toolCall)
 
   const onSubmit = (values: PricingEstimatorValues) => {
     calculateEstimate(values)

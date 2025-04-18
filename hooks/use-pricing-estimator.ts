@@ -35,11 +35,7 @@ export function usePricingEstimator(toolCall: ToolInvocation) {
   })
 
   // Get the global chat context
-  const {
-    addToolResult,
-    setInput,
-    handleSubmit: chatSubmit,
-  } = getGlobalChatContext()
+  const { addToolResult } = getGlobalChatContext()
 
   // Helper function to update a single property in state
   const updateState = <K extends keyof EstimatorState>(
@@ -47,15 +43,6 @@ export function usePricingEstimator(toolCall: ToolInvocation) {
     value: EstimatorState[K]
   ) => {
     setState((prev) => ({ ...prev, [key]: value }))
-  }
-
-  // Set up the initial prompt
-  const askForProjectType = () => {
-    if (state.askingForProject) {
-      setInput("What type of project are you looking to price?")
-      chatSubmit()
-      updateState("askingForProject", false)
-    }
   }
 
   // Toggle a feature selection
@@ -139,7 +126,6 @@ export function usePricingEstimator(toolCall: ToolInvocation) {
     state,
     updateState,
     featureOptions: FEATURE_OPTIONS,
-    askForProjectType,
     toggleFeature,
     calculateEstimate,
   }
