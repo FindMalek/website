@@ -185,13 +185,13 @@ export const PRICING = {
 }
 
 export const FEATURE_OPTIONS: FeatureOption[] = [
-  { id: "auth", label: "Authentication", value: 1000 },
-  { id: "payment", label: "Payment Processing", value: 1500 },
-  { id: "cms", label: "Content Management", value: 1200 },
-  { id: "ai", label: "AI Integration", value: 2000 },
-  { id: "analytics", label: "Analytics", value: 800 },
-  { id: "responsive", label: "Responsive Design", value: 500 },
-  { id: "seo", label: "SEO Optimization", value: 600 },
+  { id: "auth", label: "Authentication", value: 50 },
+  { id: "payment", label: "Payment Processing", value: 50 },
+  { id: "cms", label: "Content Management", value: 120 },
+  { id: "ai", label: "AI Integration", value: 60 },
+  { id: "analytics", label: "Analytics", value: 20 },
+  { id: "responsive", label: "Responsive Design", value: 100 },
+  { id: "seo", label: "SEO Optimization", value: 20 },
 ]
 
 export const MAX_MESSAGES_ALLOWED = 20
