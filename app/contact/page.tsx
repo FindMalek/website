@@ -1,27 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata } from "next"
 
-import Header from "@/components/sections/display/Header";
-import Footer from "@/components/sections/display/Footer";
-
-import Description from "@/components/sections/display/Descritpion";
-import ContactForm from "@/components/sections/form/ContactForm";
+import { ContactChatBot } from "@/components/app/contact-chat-bot"
+import { PageHeading } from "@/components/shared/page-heading"
 
 export const metadata: Metadata = {
-	title: "Contact | FindMalek",
-};
+  title: "Contact",
+}
 
 export default function Contact() {
-	return (
-		<>
-			<Header name="Contact." />
-
-			<Description />
-			<ContactForm />
-
-			<Footer
-				name="Start over again ?"
-				href="/"
-			/>
-		</>
-	);
+  return (
+    <div className="w-full px-4 pt-20">
+      <PageHeading heading="Something on your mind? Get in touch!" />
+      <ContactChatBot />
+    </div>
+  )
 }

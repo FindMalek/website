@@ -1,0 +1,633 @@
+{
+  "basics": {
+    "name": "Malek Gara Hellal",
+    "headline": "Senior Full Stack Developer",
+    "email": "hi@findmalek.com",
+    "phone": "+216 26586124",
+    "location": "Tunisia, Monastir",
+    "url": {
+      "label": "findmalek.com",
+      "href": "https://www.findmalek.com"
+    },
+    "customFields": [],
+    "picture": {
+      "url": "",
+      "size": 64,
+      "aspectRatio": 1,
+      "borderRadius": 0,
+      "effects": {
+        "hidden": false,
+        "border": false,
+        "grayscale": false
+      }
+    }
+  },
+  "sections": {
+    "summary": {
+      "name": "Summary",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "summary",
+      "content": "<p>Highly skilled Senior Full Stack Developer with expertise in building scalable and efficient web applications. With extensive experience in modern web technologies and backend systems, I specialize in architecting solutions using the T3 stack, Vercel, Prisma, and Next.js. Consistently recognized for technical excellence and leadership in complex, high-impact projects. Graduated <strong>top of my major</strong> from the Higher Institute of Informatics and Mathematics of Monastir, mastering algorithms, C, C++, and Java during my academic career.</p>"
+    },
+    "awards": {
+      "name": "Awards",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "awards",
+      "items": [
+        {
+          "id": "fvyr5objmig5etzg50540zcp",
+          "visible": true,
+          "title": "Competition Winner",
+          "awarder": "B-Tech ",
+          "date": "June 2021",
+          "summary": "<p>Awarded for having the best idea in the ATAST event, including a prize of two tickets to Dubai.</p>",
+          "url": {
+            "label": "",
+            "href": ""
+          }
+        },
+        {
+          "id": "tkuq7ou73o0u30aiq2gsu7p6",
+          "visible": true,
+          "title": "Problem Solving (Basic)",
+          "awarder": "HackerRank",
+          "date": "January 2023",
+          "summary": "<p>Achieved the Problem Solving (Basic) Certificate from HackerRank, showcasing proficiency in solving fundamental algorithmic and coding challenges.</p>",
+          "url": {
+            "label": "hackerrank.com",
+            "href": "https://www.hackerrank.com/certificates/15e0b8af0d90"
+          }
+        },
+        {
+          "id": "dw1tlawhndnpzcu75skpd21p",
+          "visible": true,
+          "title": "Python (Basic)",
+          "awarder": "HackerRank",
+          "date": "January 2023",
+          "summary": "<p>Earned the Python (Basic) Certificate from HackerRank, demonstrating foundational knowledge and skills in Python programming.</p>",
+          "url": {
+            "label": "hackerrank.com",
+            "href": "https://www.hackerrank.com/certificates/15e0b8af0d90"
+          }
+        },
+        {
+          "id": "bnduhkrsm9ciyyrjow0nk85c",
+          "visible": true,
+          "title": "eXtreme winner",
+          "awarder": "IEEE ",
+          "date": "October 2023",
+          "summary": "<p> Achieved a top position in the prestigious global programming competition, showcasing strong problem-solving and coding skills.</p>",
+          "url": {
+            "label": "ieeextreme.org",
+            "href": "https://ieeextreme.org/"
+          }
+        }
+      ]
+    },
+    "certifications": {
+      "name": "Certifications",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "certifications",
+      "items": [
+        {
+          "id": "c7kya13o9adl0ts3qdyp42kw",
+          "visible": true,
+          "name": "Bachelor in Mathematics",
+          "issuer": "Lycee Sayeda",
+          "date": "June 2020",
+          "summary": "",
+          "url": {
+            "label": "",
+            "href": ""
+          }
+        }
+      ]
+    },
+    "education": {
+      "name": "Education",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "education",
+      "items": [
+        {
+          "id": "iot3m85r8g4xwq1hahswywxy",
+          "visible": true,
+          "institution": "Higher Institute of Informatics and Mathematics of Monastir",
+          "studyType": "Engineering",
+          "area": "Software Engineering",
+          "score": "Top of my Major",
+          "date": "September 2021 - June 2024",
+          "summary": "<p>Throughout my university years, I consistently ranked at the top of my cohort. My academic focus included low-level languages like C and C++ and in-depth studies of algorithms, Java, and complex software engineering principles. This foundational knowledge laid the groundwork for my ability to design scalable systems and contribute to innovative projects.</p>",
+          "url": {
+            "label": "",
+            "href": ""
+          }
+        }
+      ]
+    },
+    "experience": {
+      "name": "Experience",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "experience",
+      "items": [
+        {
+          "id": "l1yl8cyws32o08ctm1s2dkiq",
+          "visible": true,
+          "company": "Jobflow Gmbh",
+          "position": "Senior Full Stack Developer",
+          "location": "Remote",
+          "date": "September 2024 - Present",
+          "summary": "<ul><li><p>Managing a large <strong>monorepo</strong> using TurboRepo, integrating multiple workspaces and projects.</p></li><li><p>Delivered a <strong>mobile app</strong> with business and admin dashboards leveraging <strong>tRPC</strong>, secure routing, and <strong>permission systems</strong>.</p></li><li><p>Implemented dependency injection patterns for scalable architecture.</p></li><li><p>Developed and deployed <strong>LLM-powered solutions</strong> and specialized AI models.</p></li><li><p>Optimized <strong>OpenTelemetry</strong> integrations, backend performance with Prisma and Redis, and cloud-native deployments.</p></li></ul>",
+          "url": {
+            "label": "jobflow.de",
+            "href": "https://jobflow.de/"
+          }
+        },
+        {
+          "id": "qxlaper33allpdrck53rq4sm",
+          "visible": true,
+          "company": "Hortensia Agency",
+          "position": "Senior Web Developer",
+          "location": "Remote",
+          "date": "May 2024 - September 2024",
+          "summary": "<ul><li><p style=\"text-align: justify\">Built <strong>Stelify</strong>, a landing page with a functional admin dashboard for analytics and tracking song statistics.</p></li><li><p>Developed the <strong>Primevera E-learning Platform</strong>, enabling instructors to post courses and integrate <strong>Stripe</strong> payment functionalities.</p></li><li><p>Utilized technologies such as <strong>React, Next.js, TailwindCSS, Docker, Cron Jobs, and Coolify</strong> for deployment.</p></li></ul>",
+          "url": {
+            "label": "hortensia.agency",
+            "href": "http://hortensia.agency"
+          }
+        },
+        {
+          "id": "ojxlmgder1cgz0q2k5bykaxy",
+          "visible": true,
+          "company": "Function03 Labs",
+          "position": "UX Engineer & Blockchain Developer",
+          "location": "Remote",
+          "date": "June 2023 - August 2024",
+          "summary": "<ul><li><p style=\"text-align: justify\"><strong>Developed Authentication and Dashboard: </strong>Created an admin dashboard for managing published hooks and resources posted by the public.</p></li><li><p style=\"text-align: justify\"><strong>Automated</strong> <strong>API Key Generation: </strong>Developed an automatic system to generate API keys for WalletLabels.</p></li><li><p style=\"text-align: justify\"><strong>Created Blacklist Endpoint: </strong>Implemented a new Blacklist endpoint to check for addresses in WalletLabels.</p></li><li><p style=\"text-align: justify\"><strong>Refactored TallyZero:</strong> Completely refactored the TallyZero project, including UI and UX improvements, and created a table to showcase proposals and enable voting access for users.</p></li></ul>",
+          "url": {
+            "label": "fn03.xyz",
+            "href": "https://fn03.xyz/"
+          }
+        },
+        {
+          "id": "gyvyirr3r11t16d43lvmn55p",
+          "visible": true,
+          "company": "Promolab",
+          "position": "Web Application Developer",
+          "location": "Remote",
+          "date": "June 2023 - August 2023",
+          "summary": "<ul><li><p style=\"text-align: justify\"><strong>Designed a Custom E-commerce Website</strong>: Utilized ReactJS and Next.js to build a responsive and user-friendly e-commerce platform.</p></li><li><p style=\"text-align: justify\"><strong>Efficient Database Management</strong>: Implemented Supabase and Prisma to handle database operations seamlessly, ensuring data integrity and performance.</p></li><li><p style=\"text-align: justify\"><strong>Product Management Dashboard</strong>: Created a comprehensive dashboard to manage products, enabling easy addition, editing, and deletion of items.</p></li></ul>",
+          "url": {
+            "label": "promolab.tn",
+            "href": "https://promolab.vercel.app/"
+          }
+        },
+        {
+          "id": "y4h91ui5mmezy47g2sd7isj6",
+          "visible": true,
+          "company": "Digital Army",
+          "position": "Web Developer",
+          "location": "Remote",
+          "date": "February 2023 - April 2023",
+          "summary": "<ul><li><p style=\"text-align: justify\">Developed a professional portfolio website using <strong>ReactJS</strong> and <strong>Next.js</strong>.</p></li><li><p style=\"text-align: justify\">Utilized <strong>Tailwind CSS</strong> and <strong>ShadCn UI</strong> to create a modern, responsive, and engaging design.</p></li><li><p style=\"text-align: justify\">Contributed to an <strong>E-commerce</strong> project on Shopify, <strong>LilyPharma</strong>, automating product additions and <strong>inventory management.</strong></p></li></ul>",
+          "url": {
+            "label": "digital-army.org",
+            "href": "https://www.digital-army.org"
+          }
+        }
+      ]
+    },
+    "volunteer": {
+      "name": "Volunteering",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "volunteer",
+      "items": []
+    },
+    "interests": {
+      "name": "Interests",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "interests",
+      "items": []
+    },
+    "languages": {
+      "name": "Languages",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "languages",
+      "items": [
+        {
+          "id": "s36y6h0rc7inwav6fbxob2gk",
+          "visible": true,
+          "name": "English",
+          "description": " Fluent in English, with excellent written and verbal communication skills.",
+          "level": 5
+        },
+        {
+          "id": "vn844o2wdn1y4amp1zgo83zp",
+          "visible": true,
+          "name": "French",
+          "description": "Proficient in French, capable of effective communication in both written and spoken forms.",
+          "level": 4
+        },
+        {
+          "id": "x3308bq7qghrxykvw5cvonzy",
+          "visible": true,
+          "name": "Arabic",
+          "description": "Skilled in Arabic, with strong proficiency in reading, writing, and speaking.",
+          "level": 5
+        }
+      ]
+    },
+    "profiles": {
+      "name": "Profiles",
+      "columns": 2,
+      "separateLinks": true,
+      "visible": true,
+      "id": "profiles",
+      "items": [
+        {
+          "id": "lkb9037xtauh10p8pvjmi60l",
+          "visible": true,
+          "network": "Linkedin",
+          "username": "FindMalek",
+          "icon": "linkedin",
+          "url": {
+            "label": "",
+            "href": "https://www.linkedin.com/in/findmalek/"
+          }
+        },
+        {
+          "id": "koap291a1hz1ib8aa38dk4mi",
+          "visible": true,
+          "network": "Github",
+          "username": "FindMalek",
+          "icon": "github",
+          "url": {
+            "label": "",
+            "href": "https://github.com/findmalek"
+          }
+        },
+        {
+          "id": "zj36u5p3v9chx0w5wayau2ib",
+          "visible": true,
+          "network": "Instagram",
+          "username": "FindMalek",
+          "icon": "instagram",
+          "url": {
+            "label": "",
+            "href": "https://instagram.com/findmalek"
+          }
+        },
+        {
+          "id": "tpbzsiwl0ovnrbsvip52tx4q",
+          "visible": true,
+          "network": "Twitter",
+          "username": "FoundMalek",
+          "icon": "x",
+          "url": {
+            "label": "",
+            "href": "https://x.com/foundmalek"
+          }
+        }
+      ]
+    },
+    "projects": {
+      "name": "Projects",
+      "columns": 2,
+      "separateLinks": true,
+      "visible": true,
+      "id": "projects",
+      "items": [
+        {
+          "id": "t2im1vxiqi5eduw4coywr18d",
+          "visible": true,
+          "name": "FindPlate",
+          "description": "Speeds up project setup and development ",
+          "date": "September 2024 - Present",
+          "summary": "<p><strong>Project Overview</strong>:</p><p>FindPlate is a Next.js boilerplate designed to accelerate the development processes for developers, enabling faster shipping of their projects. This boilerplate provides a robust foundation with a well-structured architecture and essential tools to streamline development.</p><p><strong>Features</strong>:</p><p>- <strong>App Architecture</strong>: A well-organized and scalable architecture to support complex applications.</p><p>- <strong>Package Management</strong>: Utilizes PNPM for efficient and fast package management.</p><p>- <strong>Frontend Technologies</strong>:</p><p>  - <strong>React</strong>: For building dynamic and responsive user interfaces.</p><p>  - <strong>TypeScript</strong>: For type-safe and robust code.</p><p>  - <strong>Next.js</strong>: For server-side rendering and static site generation.</p><p>- <strong>Backend Technologies</strong>:</p><p>  - <strong>Supabase</strong>: For backend-as-a-service, including database, authentication, and real-time capabilities.</p><p>  - <strong>Prisma</strong>: For efficient database management and ORM.</p><p>- <strong>Styling and UI</strong>:</p><p>  - <strong>Shadcn</strong>: For modern and responsive UI components.</p><p>  - <strong>TailwindCSS</strong>: For utility-first CSS framework for rapid UI development.</p><p>- <strong>Authentication</strong>:</p><p>  - <strong>NextAuth</strong>: For secure and flexible authentication solutions.</p><p>- <strong>Internationalization</strong>:</p><p>  - <strong>NextI18Next</strong>: For seamless internationalization and localization support.</p><p><strong>Motivation</strong>:</p><p>FindPlate was created to address the common challenges developers face when starting new projects. By providing a comprehensive boilerplate, it aims to reduce setup time and allow developers to focus on building features and shipping products faster.</p><p><strong>Technologies Used</strong>:</p><p>- <strong>Programming Languages</strong>: JavaScript, TypeScript</p><p>- <strong>Frameworks and Libraries</strong>: React, Next.js, Prisma, NextAuth, NextI18Next</p><p>- <strong>Styling</strong>: TailwindCSS, Shadcn</p><p>- <strong>Package Management</strong>: PNPM</p><p>- <strong>Backend-as-a-Service</strong>: Supabase</p><p><strong>Impact</strong>:</p><p>FindPlate has the potential to significantly enhance developer productivity by providing a solid foundation for new projects. It ensures that developers can start building features immediately, without the overhead of setting up the project infrastructure.</p><p><strong>Future Plans</strong>:</p><p>The project will continue to evolve with regular updates to incorporate the latest best practices, new features, and improvements based on community feedback.</p><p></p>",
+          "keywords": [
+            "Nextjs",
+            "Boilerplaten",
+            "TypeScript",
+            "Supabase",
+            "Prisma",
+            "NextAuth",
+            "NextI18Next"
+          ],
+          "url": {
+            "label": "plate.findmalek.com",
+            "href": "https://plate.findmalek.com"
+          }
+        },
+        {
+          "id": "rlkgbf4wun1rhowdh4lqe2ji",
+          "visible": true,
+          "name": "Undrstnd Education",
+          "description": "SaaS web app with TypeScript, React, Node.js. Auth, Stripe plans, PDF viewer, real-time API, clean UI, drag & drop, tRPC, LangChain, PineCone, Prisma & more!",
+          "date": "October 2023 - Present",
+          "summary": "<p><strong>Project Overview</strong>:</p><p>Undrstnd Education is an innovative platform that combines the functionalities of ChatGPT and Google Classroom, designed to streamline the educational experience for both students and teachers. The platform aims to make learning more interactive, accessible, and efficient.</p><p><strong>Features</strong>:</p><p>- <strong>Classroom Management</strong>: Teachers can create and manage virtual classrooms, post courses, and share documents.</p><p>- <strong>Interactive Learning</strong>: Students can comment on posts, download materials, and engage in discussions.</p><p>- <strong>AI-Powered Chat</strong>: Integration with RAG (Retrieval-Augmented Generation) allows students to open a chat with specific files, enhancing understanding and interaction.</p><p>- <strong>Document Management</strong>: Supports the upload and download of various file types, ensuring seamless access to educational resources.</p><p><strong>Motivation</strong>:</p><p>The project was inspired by the need to create a more dynamic and engaging learning environment. By leveraging AI and interactive features, Undrstnd Education aims to enhance the educational experience, making it more accessible and effective for both students and teachers.</p><p><strong>Impact</strong>:</p><p>Undrstnd Education has the potential to revolutionize the way education is delivered and consumed. By providing a platform that combines the best of AI and traditional classroom management, it empowers teachers to create more engaging content and helps students to learn more effectively.</p><p><strong>Future Plans</strong>:</p><p>The project is continuously evolving, with plans to add more advanced AI features, improve user experience, and expand the platform's capabilities to meet the diverse needs of educators and learners.</p>",
+          "keywords": [
+            "Education",
+            "ai",
+            "chatgpt",
+            "google-classroom",
+            "InteractiveLearning",
+            "ClassroomManagement",
+            "DocumentManagement",
+            "RAG"
+          ],
+          "url": {
+            "label": "edu.undrstnd-labs.com",
+            "href": "https://undrstnd.vercel.app/"
+          }
+        },
+        {
+          "id": "yrbu7ef9oig9vabm7ri32b15",
+          "visible": true,
+          "name": "Syncify",
+          "description": "An open-source application allowing users to download tracks, albums, and playlists from Spotify for offline listening.",
+          "date": "",
+          "summary": "<p><strong>Project Overview</strong>:</p><p>Syncify is an open-source application developed in 2019 to download tracks, albums, and playlists from Spotify. This project was created to provide a solution for users who could not afford a Spotify subscription, enabling them to enjoy their favorite music offline.</p><p><strong>Features</strong>:</p><p>- <strong>File Conversion</strong>: Converts tracks to various formats including MP3, AAC, FLAC, M4A, OPUS, VORBIS, and WAV.</p><p>- <strong>Metadata and Cover Art</strong>: Includes full metadata and cover art for each track.</p><p>- <strong>Playlist Support</strong>: Creates <code>.m3a</code> files for playlists, ensuring a seamless listening experience.</p><p><strong>Motivation</strong>:</p><p>Syncify was my first ever project, born out of the necessity to access Spotify content without a paid subscription. It served as a practical solution to my personal needs and provided valuable experience in software development.</p><p><strong>Technologies Used</strong>:</p><p>- <strong>Programming Languages</strong>: Python</p><p>- <strong>Libraries and Frameworks</strong>: FFMPEG</p><p>- <strong>APIs</strong>: Youtube API and Spotify API</p><p><strong>Impact</strong>:</p><p>Syncify has been well-received by the open-source community, offering a free and accessible way to enjoy music from Spotify. It has also been a significant learning experience, helping me develop my skills in programming, API integration, and open-source contribution.</p><p><strong>Future Plans</strong>:</p><p>While Syncify was a foundational project, there are plans to update and enhance its features to keep up with the evolving needs of users and the advancements in technology.</p>",
+          "keywords": [
+            "python",
+            "music",
+            "metadata",
+            "playlist",
+            "spotify",
+            "savify",
+            "mp3",
+            "OpenSource"
+          ],
+          "url": {
+            "label": "Syncify",
+            "href": "https://github.com/FindMalek/Syncify"
+          }
+        },
+        {
+          "id": "il516nyz6ihxbakvsu6zztrf",
+          "visible": true,
+          "name": "Undrstnd Developers",
+          "description": "Easy AI integration for devs.",
+          "date": "September 2024 - Present",
+          "summary": "<p><strong>Project Overview</strong>:</p><p>Undrstnd Developers is a platform designed to help developers build high-performance, easy, and fast AI-powered projects. It offers efficient scaling of applications with easy-to-use AI inference, providing unbeatable performance and sustainability.</p><p><strong>Features</strong>:</p><p>- <strong>AI Inference</strong>: Utilize our lightning-fast AI inference capabilities to enhance your applications.</p><p>- <strong>Large Language Models (LLMs)</strong>: Our LLMs are optimized for speed and energy efficiency, ensuring sustainable performance.</p><p>- <strong>API Integration</strong>: Offers the fastest inferences as API, making it easy to integrate into your projects.</p><p>- <strong>RAG (Retrieval-Augmented Generation)</strong>: Supports RAG for advanced AI-powered functionalities.</p><p>- <strong>Document Upload</strong>: Upload your documents and receive a pre-trained model tailored to your data.</p><p>- <strong>Cost-Effective</strong>: Significantly cheaper than other solutions, including OpenAI, without compromising on performance.</p><p><strong>Motivation</strong>:</p><p>Undrstnd Developers aims to provide developers with a powerful and efficient AI solution that is both fast and cost-effective. By focusing on performance and sustainability, the platform helps developers scale their applications efficiently and deliver high-quality AI-powered experiences.</p><p><strong>Technologies Used</strong>:</p><p>- <strong>AI Inference</strong>: Custom-built AI models for fast and efficient inference.</p><p>- <strong>APIs</strong>: RESTful APIs for seamless integration with your applications.</p><p>- <strong>RAG</strong>: Retrieval-Augmented Generation for advanced AI functionalities.</p><p>- <strong>Document Management</strong>: Tools for uploading and processing documents to create pre-trained models.</p><p><strong>Impact</strong>:</p><p>Undrstnd Developers empowers developers to build AI-powered projects with ease, offering unmatched performance and sustainability. By providing faster and cheaper solutions compared to competitors, it enables developers to focus on innovation and deliver exceptional user experiences.</p><p><strong>Future Plans</strong>:</p><p>The platform will continue to evolve with regular updates to incorporate the latest advancements in AI technology, new features, and improvements based on user feedback. The goal is to maintain the platform's position as a leader in fast and cost-effective AI solutions.</p>",
+          "keywords": [
+            "ai",
+            "MachineLearning",
+            "LLM",
+            "Inference",
+            "API",
+            "RAG",
+            "DeveloperTools"
+          ],
+          "url": {
+            "label": "dev.undrstnd-labs.com",
+            "href": "http://dev.undrstnd-labs.com/"
+          }
+        }
+      ]
+    },
+    "publications": {
+      "name": "Publications",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "publications",
+      "items": []
+    },
+    "references": {
+      "name": "References",
+      "columns": 1,
+      "separateLinks": true,
+      "visible": true,
+      "id": "references",
+      "items": []
+    },
+    "skills": {
+      "name": "Skills",
+      "columns": 3,
+      "separateLinks": true,
+      "visible": true,
+      "id": "skills",
+      "items": [
+        {
+          "id": "pccae2aee16picqxhwn09j8x",
+          "visible": true,
+          "name": "React.js",
+          "description": "Proficient in building dynamic and responsive user interfaces with React.js.",
+          "level": 5,
+          "keywords": ["FrontEnd", "UI", "Components", "Library"]
+        },
+        {
+          "id": "nshx4t7zet7vsdlf4czhyaas",
+          "visible": true,
+          "name": "Next.js",
+          "description": "Experienced in developing server-side rendered applications using Next.js.",
+          "level": 5,
+          "keywords": ["SSR", "SEO", "Performance"]
+        },
+        {
+          "id": "b0g4bib0scz9ejz9xwv9470n",
+          "visible": true,
+          "name": "TailwindCSS",
+          "description": "Skilled in creating modern and responsive designs using TailwindCSS.",
+          "level": 4,
+          "keywords": ["CSS", "Responsive", "Styling"]
+        },
+        {
+          "id": "qx0tbo0gptng0sdkuwllej4b",
+          "visible": true,
+          "name": "TypeScript",
+          "description": "Expertise in writing type-safe code with TypeScript for robust applications.",
+          "level": 4,
+          "keywords": ["TypeSafety", "StaticTyping", "CodeQuality"]
+        },
+        {
+          "id": "bu8zjkqasti6kr6h4p0y6hrn",
+          "visible": true,
+          "name": "JavaScript",
+          "description": "Proficient in JavaScript for both front-end and back-end development.",
+          "level": 5,
+          "keywords": ["Scripting", "Dynamic", "BackEnd"]
+        },
+        {
+          "id": "kc4kbfik1scyfwk4pw3zg58j",
+          "visible": true,
+          "name": "Python",
+          "description": "Experienced in Python for scripting, automation, and data analysis.",
+          "level": 5,
+          "keywords": ["Scripting", "Automation", "DataAnalysis", "Backend"]
+        },
+        {
+          "id": "h79mi26bhsllw9njq8hf2wdf",
+          "visible": true,
+          "name": "Java",
+          "description": "Skilled in Java for developing enterprise-level applications.",
+          "level": 3,
+          "keywords": ["Enterprise", "OOP", "Backend", "JVM"]
+        },
+        {
+          "id": "ltih20y84zjdsgi1gr415iau",
+          "visible": true,
+          "name": "C",
+          "description": "Proficient in C for system-level programming and performance-critical applications.",
+          "level": 3,
+          "keywords": ["SystemProgramming", "LowLevel", "Embedded"]
+        },
+        {
+          "id": "r2oa1eiyrf1l0ptv5qf87kna",
+          "visible": true,
+          "name": "PostgreSQL",
+          "description": " Experienced in managing and querying databases using PostgreSQL.",
+          "level": 4,
+          "keywords": ["Database", "SQL", "Relational"]
+        },
+        {
+          "id": "sm41vu9jjpu291n5smy1bfw3",
+          "visible": true,
+          "name": "Prisma",
+          "description": "Skilled in using Prisma for efficient database management and ORM.",
+          "level": 5,
+          "keywords": ["ORM", "Database", "TypeScript", "GraphQL"]
+        },
+        {
+          "id": "nd60sp3muxumrhqrgdrr8ozc",
+          "visible": true,
+          "name": "Git",
+          "description": "Proficient in version control with Git for collaborative development.",
+          "level": 5,
+          "keywords": ["VersionControl", "Collaboration", "SourceControl"]
+        },
+        {
+          "id": "f3hn4mtc9m5c6enxedvf81kb",
+          "visible": true,
+          "name": "Linux",
+          "description": "Skilled in Linux for system administration and development.",
+          "level": 3,
+          "keywords": [
+            "OperatingSystem",
+            "SystemAdministration",
+            "ShellScripting"
+          ]
+        },
+        {
+          "id": "qi0br1lyp767ikx9ayp4zye8",
+          "visible": true,
+          "name": "Docker",
+          "description": "Proficient in containerization with Docker for consistent development environments.",
+          "level": 2,
+          "keywords": ["Containerization", "DevOps", "Microservices"]
+        },
+        {
+          "id": "uwochlc229mtz6hp1t4r0ewc",
+          "visible": true,
+          "name": "OpenAI",
+          "description": "Experienced in integrating and utilizing OpenAI's APIs for AI-driven applications.",
+          "level": 4,
+          "keywords": ["AI", "MachineLearning", "NLP"]
+        },
+        {
+          "id": "knfuvsm8tranc78bved17woq",
+          "visible": true,
+          "name": "SQL",
+          "description": "Proficient in SQL for querying and managing relational databases.",
+          "level": 4,
+          "keywords": ["Database", "Querying", "Relational", "DataManagement"]
+        },
+        {
+          "id": "jafebb4bfyfxnuv0fiy75zbp",
+          "visible": true,
+          "name": "MongoDB",
+          "description": "Experienced in using MongoDB for NoSQL database management.",
+          "level": 4,
+          "keywords": ["Database", "NoSQL", "DataManagement"]
+        },
+        {
+          "id": "hl08syh36q2nls7tkn5o4e2n",
+          "visible": true,
+          "name": "Vercel",
+          "description": "Proficient in deploying and managing applications using Vercel.",
+          "level": 5,
+          "keywords": ["Deployment", "Hosting", "Serverless"]
+        },
+        {
+          "id": "jaofizv5vj6rufslr7q54f84",
+          "visible": true,
+          "name": "Supabase",
+          "description": "Experienced in using Supabase for backend-as-a-service and database management.",
+          "level": 5,
+          "keywords": ["Backend", "Database", "Realtime"]
+        },
+        {
+          "id": "e6tdfjadntdr6oha7qlv2b1h",
+          "visible": true,
+          "name": "AWS",
+          "description": "Proficient in using AWS for cloud services, including computing, storage, and deployment.",
+          "level": 3,
+          "keywords": ["Cloud", "EC2", "S3", "Lambda"]
+        }
+      ]
+    },
+    "custom": {}
+  },
+  "metadata": {
+    "template": "rhyhorn",
+    "layout": [
+      [
+        [
+          "summary",
+          "profiles",
+          "experience",
+          "projects",
+          "volunteer",
+          "references",
+          "publications"
+        ],
+        ["skills", "interests", "certifications", "awards", "languages"]
+      ],
+      [["education"], []]
+    ],
+    "css": {
+      "value": "* {\n\toutline: 1px solid #000;\n\toutline-offset: 4px;\n}",
+      "visible": false
+    },
+    "page": {
+      "margin": 18,
+      "format": "a4",
+      "options": {
+        "breakLine": false,
+        "pageNumbers": true
+      }
+    },
+    "theme": {
+      "background": "#ffffff",
+      "text": "#000000",
+      "primary": "#0284c7"
+    },
+    "typography": {
+      "font": {
+        "family": "Ubuntu",
+        "subset": "latin",
+        "variants": ["regular"],
+        "size": 14
+      },
+      "lineHeight": 1.5,
+      "hideIcons": false,
+      "underlineLinks": true
+    },
+    "notes": ""
+  }
+}

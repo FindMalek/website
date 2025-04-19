@@ -1,7 +1,8 @@
-![](/public/thumbnail.png)
+![](/public/og.png)
+
 # 💫 [Malek Gara-Hellal](https://www.findmalek.com)
 
-The person for web development, design engineer, and creative entrepreneurship. I have a passion for turning lines of code into meaningful projects, and I'm known for my meticulous organization. Explore my <a href="https://www.findmalek.com/projects">PROJECTS</a> to join me on my creative journey, and discover my <a href="https://www.findmalek.com/about#my-ventures">VENTURES</a> where I bring business ideas to life.
+Your go-to expert for web development, design engineering, and creative entrepreneurship. With a passion for transforming lines of code into impactful projects, I'm renowned for my meticulous organization and attention to detail. Dive into my <a href="https://www.findmalek.com/projects">PROJECTS</a> to join me on my creative journey, and explore my <a href="https://www.findmalek.com/about#my-ventures">VENTURES</a> where I turn innovative ideas into thriving businesses.
 
    <p align="left">
       <a href="https://github.com/FindMalek">
