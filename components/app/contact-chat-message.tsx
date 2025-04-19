@@ -59,7 +59,7 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
         case "saveEmail":
           return <ContactToolEmailForm toolCall={toolCall} />
         case "scheduleMeeting":
-          return <ContactToolMeetingScheduler toolCall={toolCall} />
+          return <ContactToolMeetingScheduler />
         case "generatePricing":
           return <ContactToolPricingEstimator toolCall={toolCall} />
         case "getResume":
@@ -91,7 +91,7 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
     >
       <div
         className={cn(
-          "flex hidden h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow md:block",
+          "hidden h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow md:block",
           isUser ? "bg-background" : "bg-primary text-primary-foreground"
         )}
       >
