@@ -35,10 +35,19 @@ export function Background() {
   }, [])
 
   useEffect(() => {
-    const currentPage = Object.values(PAGES).find(
-      (page) => page.path === pathname
-    )
-    setPageLabel(currentPage?.label || PAGES.NOT_FOUND.label)
+    // Check if path has more than one segment (has a dynamic part)
+    const pathSegments = pathname.split("/").filter(Boolean)
+
+    if (pathSegments.length > 1) {
+      // Use the last segment as the label
+      const dynamicSegment = pathSegments[pathSegments.length - 1]
+      setPageLabel(dynamicSegment)
+    } else {
+      const currentPage = Object.values(PAGES).find(
+        (page) => page.path === pathname
+      )
+      setPageLabel(currentPage?.label || PAGES.NOT_FOUND.label)
+    }
   }, [pathname])
 
   const updateSquarePosition = (id: number) => {

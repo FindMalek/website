@@ -429,12 +429,7 @@
           "name": "React.js",
           "description": "Proficient in building dynamic and responsive user interfaces with React.js.",
           "level": 5,
-          "keywords": [
-            "FrontEnd",
-            "UI",
-            "Components",
-            "Library"
-          ]
+          "keywords": ["FrontEnd", "UI", "Components", "Library"]
         },
         {
           "id": "nshx4t7zet7vsdlf4czhyaas",
@@ -442,11 +437,7 @@
           "name": "Next.js",
           "description": "Experienced in developing server-side rendered applications using Next.js.",
           "level": 5,
-          "keywords": [
-            "SSR",
-            "SEO",
-            "Performance"
-          ]
+          "keywords": ["SSR", "SEO", "Performance"]
         },
         {
           "id": "b0g4bib0scz9ejz9xwv9470n",
@@ -454,11 +445,7 @@
           "name": "TailwindCSS",
           "description": "Skilled in creating modern and responsive designs using TailwindCSS.",
           "level": 4,
-          "keywords": [
-            "CSS",
-            "Responsive",
-            "Styling"
-          ]
+          "keywords": ["CSS", "Responsive", "Styling"]
         },
         {
           "id": "qx0tbo0gptng0sdkuwllej4b",
@@ -466,11 +453,7 @@
           "name": "TypeScript",
           "description": "Expertise in writing type-safe code with TypeScript for robust applications.",
           "level": 4,
-          "keywords": [
-            "TypeSafety",
-            "StaticTyping",
-            "CodeQuality"
-          ]
+          "keywords": ["TypeSafety", "StaticTyping", "CodeQuality"]
         },
         {
           "id": "bu8zjkqasti6kr6h4p0y6hrn",
@@ -478,11 +461,7 @@
           "name": "JavaScript",
           "description": "Proficient in JavaScript for both front-end and back-end development.",
           "level": 5,
-          "keywords": [
-            "Scripting",
-            "Dynamic",
-            "BackEnd"
-          ]
+          "keywords": ["Scripting", "Dynamic", "BackEnd"]
         },
         {
           "id": "kc4kbfik1scyfwk4pw3zg58j",
@@ -490,12 +469,7 @@
           "name": "Python",
           "description": "Experienced in Python for scripting, automation, and data analysis.",
           "level": 5,
-          "keywords": [
-            "Scripting",
-            "Automation",
-            "DataAnalysis",
-            "Backend"
-          ]
+          "keywords": ["Scripting", "Automation", "DataAnalysis", "Backend"]
         },
         {
           "id": "h79mi26bhsllw9njq8hf2wdf",
@@ -503,12 +477,7 @@
           "name": "Java",
           "description": "Skilled in Java for developing enterprise-level applications.",
           "level": 3,
-          "keywords": [
-            "Enterprise",
-            "OOP",
-            "Backend",
-            "JVM"
-          ]
+          "keywords": ["Enterprise", "OOP", "Backend", "JVM"]
         },
         {
           "id": "ltih20y84zjdsgi1gr415iau",
@@ -516,11 +485,7 @@
           "name": "C",
           "description": "Proficient in C for system-level programming and performance-critical applications.",
           "level": 3,
-          "keywords": [
-            "SystemProgramming",
-            "LowLevel",
-            "Embedded"
-          ]
+          "keywords": ["SystemProgramming", "LowLevel", "Embedded"]
         },
         {
           "id": "r2oa1eiyrf1l0ptv5qf87kna",
@@ -528,11 +493,7 @@
           "name": "PostgreSQL",
           "description": " Experienced in managing and querying databases using PostgreSQL.",
           "level": 4,
-          "keywords": [
-            "Database",
-            "SQL",
-            "Relational"
-          ]
+          "keywords": ["Database", "SQL", "Relational"]
         },
         {
           "id": "sm41vu9jjpu291n5smy1bfw3",
@@ -540,12 +501,7 @@
           "name": "Prisma",
           "description": "Skilled in using Prisma for efficient database management and ORM.",
           "level": 5,
-          "keywords": [
-            "ORM",
-            "Database",
-            "TypeScript",
-            "GraphQL"
-          ]
+          "keywords": ["ORM", "Database", "TypeScript", "GraphQL"]
         },
         {
           "id": "nd60sp3muxumrhqrgdrr8ozc",
@@ -553,11 +509,7 @@
           "name": "Git",
           "description": "Proficient in version control with Git for collaborative development.",
           "level": 5,
-          "keywords": [
-            "VersionControl",
-            "Collaboration",
-            "SourceControl"
-          ]
+          "keywords": ["VersionControl", "Collaboration", "SourceControl"]
         },
         {
           "id": "f3hn4mtc9m5c6enxedvf81kb",
@@ -577,11 +529,7 @@
           "name": "Docker",
           "description": "Proficient in containerization with Docker for consistent development environments.",
           "level": 2,
-          "keywords": [
-            "Containerization",
-            "DevOps",
-            "Microservices"
-          ]
+          "keywords": ["Containerization", "DevOps", "Microservices"]
         },
         {
           "id": "uwochlc229mtz6hp1t4r0ewc",
@@ -589,11 +537,7 @@
           "name": "OpenAI",
           "description": "Experienced in integrating and utilizing OpenAI's APIs for AI-driven applications.",
           "level": 4,
-          "keywords": [
-            "AI",
-            "MachineLearning",
-            "NLP"
-          ]
+          "keywords": ["AI", "MachineLearning", "NLP"]
         },
         {
           "id": "knfuvsm8tranc78bved17woq",
@@ -601,12 +545,7 @@
           "name": "SQL",
           "description": "Proficient in SQL for querying and managing relational databases.",
           "level": 4,
-          "keywords": [
-            "Database",
-            "Querying",
-            "Relational",
-            "DataManagement"
-          ]
+          "keywords": ["Database", "Querying", "Relational", "DataManagement"]
         },
         {
           "id": "jafebb4bfyfxnuv0fiy75zbp",
@@ -614,11 +553,7 @@
           "name": "MongoDB",
           "description": "Experienced in using MongoDB for NoSQL database management.",
           "level": 4,
-          "keywords": [
-            "Database",
-            "NoSQL",
-            "DataManagement"
-          ]
+          "keywords": ["Database", "NoSQL", "DataManagement"]
         },
         {
           "id": "hl08syh36q2nls7tkn5o4e2n",
@@ -626,11 +561,7 @@
           "name": "Vercel",
           "description": "Proficient in deploying and managing applications using Vercel.",
           "level": 5,
-          "keywords": [
-            "Deployment",
-            "Hosting",
-            "Serverless"
-          ]
+          "keywords": ["Deployment", "Hosting", "Serverless"]
         },
         {
           "id": "jaofizv5vj6rufslr7q54f84",
@@ -638,11 +569,7 @@
           "name": "Supabase",
           "description": "Experienced in using Supabase for backend-as-a-service and database management.",
           "level": 5,
-          "keywords": [
-            "Backend",
-            "Database",
-            "Realtime"
-          ]
+          "keywords": ["Backend", "Database", "Realtime"]
         },
         {
           "id": "e6tdfjadntdr6oha7qlv2b1h",
@@ -650,12 +577,7 @@
           "name": "AWS",
           "description": "Proficient in using AWS for cloud services, including computing, storage, and deployment.",
           "level": 3,
-          "keywords": [
-            "Cloud",
-            "EC2",
-            "S3",
-            "Lambda"
-          ]
+          "keywords": ["Cloud", "EC2", "S3", "Lambda"]
         }
       ]
     },
@@ -674,20 +596,9 @@
           "references",
           "publications"
         ],
-        [
-          "skills",
-          "interests",
-          "certifications",
-          "awards",
-          "languages"
-        ]
+        ["skills", "interests", "certifications", "awards", "languages"]
       ],
-      [
-        [
-          "education"
-        ],
-        []
-      ]
+      [["education"], []]
     ],
     "css": {
       "value": "* {\n\toutline: 1px solid #000;\n\toutline-offset: 4px;\n}",
@@ -710,9 +621,7 @@
       "font": {
         "family": "Ubuntu",
         "subset": "latin",
-        "variants": [
-          "regular"
-        ],
+        "variants": ["regular"],
         "size": 14
       },
       "lineHeight": 1.5,

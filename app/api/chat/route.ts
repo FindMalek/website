@@ -59,10 +59,14 @@ export async function POST(req: Request) {
           }),
         },
         scheduleMeeting: {
-          description: "Direct user to Malek's calendar for scheduling a meeting",
+          description:
+            "Direct user to Malek's calendar for scheduling a meeting",
           parameters: z.object({
             purpose: z.string().describe("The purpose of the meeting"),
-            calendarLink: z.string().default("https://cal.com/findmalek").describe("The link to Malek's calendar"),
+            calendarLink: z
+              .string()
+              .default("https://cal.com/findmalek")
+              .describe("The link to Malek's calendar"),
           }),
         },
         generatePricing: {

@@ -5,7 +5,7 @@ export const PAGES = {
     path: "/",
     label: "FindMalek.",
     name: "Home",
-    text: "Learn more about me",
+    text: "Start over again?",
   },
   ABOUT: {
     path: "/about",
