@@ -162,11 +162,11 @@ export const LANGUAGES_COLORS = {
 
 export const PRICING = {
   BASE_PRICES: {
-    website: 1000,
-    ecommerce: 2000,
-    webapp: 3000,
-    automation: 500,
-    other: 1200,
+    website: 100,
+    ecommerce: 700,
+    webapp: 1000,
+    automation: 200,
+    other: 800,
   },
   MULTIPLIERS: {
     complexity: {
@@ -186,12 +186,14 @@ export const PRICING = {
 
 export const FEATURE_OPTIONS: FeatureOption[] = [
   { id: "auth", label: "Authentication", value: 50 },
-  { id: "payment", label: "Payment Processing", value: 50 },
+  { id: "payment", label: "Payment Processing", value: 80 },
   { id: "cms", label: "Content Management", value: 120 },
-  { id: "ai", label: "AI Integration", value: 60 },
-  { id: "analytics", label: "Analytics", value: 20 },
+  { id: "ai", label: "AI Integration", value: 200 },
   { id: "responsive", label: "Responsive Design", value: 100 },
-  { id: "seo", label: "SEO Optimization", value: 20 },
+  { id: "seo", label: "SEO & OpenGraph Images", value: 50 },
+  { id: "api", label: "API Integration", value: 70 },
+  { id: "analytics", label: "Analytics Dashboard", value: 60 },
+  { id: "multilingual", label: "Multilingual Support", value: 90 },
 ]
 
 export const MAX_MESSAGES_ALLOWED = 20
