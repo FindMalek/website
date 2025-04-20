@@ -13,6 +13,7 @@
   "dependencies": {
     "@ai-sdk/groq": "^1.2.8",
     "@ai-sdk/react": "^1.2.9",
+    "@content-collections/mdx": "^0.2.2",
     "@headlessui/react": "^2.2.1",
     "@hookform/resolvers": "^5.0.1",
     "@icons-pack/react-simple-icons": "^12.5.0",

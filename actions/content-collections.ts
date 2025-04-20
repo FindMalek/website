@@ -1,15 +1,15 @@
 import { defineCollection, defineConfig } from "@content-collections/core"
-import { compileMarkdown } from "@content-collections/markdown"
+import { compileMDX } from "@content-collections/mdx"
 
 import { projectSchema, workSchema } from "@/config/schemas"
 
 const work = defineCollection({
   name: "work",
   directory: "../data/work",
-  include: "**/*.md",
+  include: "**/*.mdx",
   schema: () => workSchema.shape,
   transform: async (document, context) => {
-    const html = await compileMarkdown(context, document)
+    const html = await compileMDX(context, document)
     return {
       ...document,
       html,
@@ -20,10 +20,10 @@ const work = defineCollection({
 const projects = defineCollection({
   name: "projects",
   directory: "../data/projects",
-  include: "**/*.md",
+  include: "**/*.mdx",
   schema: () => projectSchema.shape,
   transform: async (document, context) => {
-    const html = await compileMarkdown(context, document)
+    const html = await compileMDX(context, document)
     return {
       ...document,
       html,

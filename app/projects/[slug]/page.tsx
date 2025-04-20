@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { MDXContent } from "@content-collections/mdx/react"
 import { allProjects } from "content-collections"
 
 import {
@@ -117,7 +118,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         {html && (
           <div className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
-            <div dangerouslySetInnerHTML={{ __html: html }} />
+            <MDXContent code={html} />
           </div>
         )}
       </div>

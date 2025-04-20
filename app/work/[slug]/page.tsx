@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { MDXContent } from "@content-collections/mdx/react"
 import { allWorks } from "content-collections"
 
 import { convertWorkType } from "@/config/converter"
@@ -115,7 +116,7 @@ export default async function WorkPageById({ params }: WorkPageByIdProps) {
         )}
 
         <div className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
-          <div dangerouslySetInnerHTML={{ __html: html || "" }} />
+          <MDXContent code={html} />
         </div>
       </div>
     </div>
