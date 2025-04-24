@@ -103,7 +103,7 @@ export function AboutOverviewCard({
             <h2 className="text-4xl font-bold">{card.text}</h2>
             {card.subtext && (
               <div className="mt-auto pb-8">
-                <p className="text-xl opacity-80">{card.subtext}</p>
+                <p className="text-md opacity-80">{card.subtext}</p>
               </div>
             )}
           </div>
