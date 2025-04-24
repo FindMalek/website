@@ -1,4 +1,4 @@
-import type { Client, FeatureOption, CardData } from "@/types"
+import type { CardData, Client, FeatureOption } from "@/types"
 
 export const PAGES = {
   HOME: {
@@ -197,7 +197,6 @@ export const FEATURE_OPTIONS: FeatureOption[] = [
 ]
 
 export const MAX_MESSAGES_ALLOWED = 20
-
 
 // Sample data with placeholder images
 export const OVERVIEW_CARDS: CardData[] = [

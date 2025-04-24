@@ -4,9 +4,9 @@ import { siteConfig } from "@/config/site"
 import { link } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
+import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-stack"
 import { CopyText } from "@/components/shared/copy-text"
 import { Icons } from "@/components/shared/icons"
-import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-stack"
 
 export function AboutOverview() {
   return (
@@ -100,7 +100,7 @@ export function AboutOverview() {
             >
               OpenStatus
             </Link>{" "}
-            for {" "}
+            for{" "}
             <Link
               href={"https://github.com/openstatusHQ/goat-stack"}
               target="_blank"

@@ -1,11 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { AnimatePresence } from "motion/react"
-import {  OVERVIEW_CARDS } from "@/config/consts"
+
+import type { CardData } from "@/types"
+
+import { OVERVIEW_CARDS } from "@/config/consts"
 
 import { AboutOverviewCard } from "@/components/app/about-overview-card-stack"
-import type { CardData } from "@/types"
 
 export function AboutOverviewCardsStack() {
   const [cards, setCards] = useState<CardData[]>(OVERVIEW_CARDS)
@@ -35,7 +37,13 @@ export function AboutOverviewCardsStack() {
     <div className="relative aspect-square w-full">
       <AnimatePresence mode="popLayout">
         {cards.slice(0, 3).map((card, index) => (
-          <AboutOverviewCard key={card.id} card={card} index={index} cycleCard={cycleCard} totalCards={Math.min(cards.length, 3)} />
+          <AboutOverviewCard
+            key={card.id}
+            card={card}
+            index={index}
+            cycleCard={cycleCard}
+            totalCards={Math.min(cards.length, 3)}
+          />
         ))}
       </AnimatePresence>
     </div>
