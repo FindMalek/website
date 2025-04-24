@@ -1,10 +1,10 @@
-import Image from "next/image"
 import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 import { link } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
+import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-stack"
 import { CopyText } from "@/components/shared/copy-text"
 import { Icons } from "@/components/shared/icons"
 
@@ -94,26 +94,28 @@ export function AboutOverview() {
             </Link>
             ,{" "}
             <Link
-              href={"https://github.com/openstatusHQ/goat-stack"}
+              href={"https://www.openstatus.dev"}
               target="_blank"
               className={cn(link, "font-semibold")}
             >
               OpenStatus
             </Link>{" "}
-            for Goat Stack , and many more.
+            for{" "}
+            <Link
+              href={"https://github.com/openstatusHQ/goat-stack"}
+              target="_blank"
+              className={cn(link, "font-semibold")}
+            >
+              Goat Stack
+            </Link>
+            , and many more.
           </p>
         </div>
 
         <div className="relative lg:w-2/5">
           <div className="lg:sticky lg:top-8">
-            <div className="mb-6 overflow-hidden rounded-3xl">
-              <Image
-                src="/author.jpg"
-                alt="Profile"
-                width={500}
-                height={500}
-                className="aspect-square h-auto w-full object-cover grayscale transition-all duration-300 hover:grayscale-0"
-              />
+            <div className="mb-6 rounded-3xl p-12 lg:p-0">
+              <AboutOverviewCardsStack />
             </div>
 
             <div className="space-y-2">

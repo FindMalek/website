@@ -1,4 +1,4 @@
-import type { Client, FeatureOption } from "@/types"
+import type { CardData, Client, FeatureOption } from "@/types"
 
 export const PAGES = {
   HOME: {
@@ -197,3 +197,29 @@ export const FEATURE_OPTIONS: FeatureOption[] = [
 ]
 
 export const MAX_MESSAGES_ALLOWED = 20
+
+// Sample data with placeholder images
+export const OVERVIEW_CARDS: CardData[] = [
+  {
+    id: 1,
+    type: "image",
+    imageUrl: "/author.jpg",
+    backgroundColor: "#1a1a1a",
+    textColor: "#ffffff",
+  },
+  {
+    id: 2,
+    type: "text",
+    text: "Yes, I had cut my hair",
+    subtext: "RIP 23, March 2025",
+    backgroundColor: "#0f2b46",
+    textColor: "#ffffff",
+  },
+  {
+    id: 3,
+    type: "image",
+    imageUrl: "/about/author.png",
+    backgroundColor: "#2d4a22",
+    textColor: "#ffffff",
+  },
+]
