@@ -119,3 +119,13 @@ export interface ContactEmailIntroductionProps {
   contactPurpose: string
   conversation: ConversationHistory[]
 }
+
+export interface CardData {
+  id: number
+  type: "image" | "text"
+  imageUrl?: string
+  text?: string
+  subtext?: string
+  backgroundColor: string
+  textColor: string
+}
