@@ -34,7 +34,7 @@ export function NextPage() {
   const nextPage = getNextPage()
 
   return (
-    <div className="mb-16 mt-10 px-4 md:mb-0">
+    <div className="mb-16 mt-10 px-4 md:mb-4">
       <Link
         href={nextPage.path}
         className="flex items-center gap-2 pb-2 text-lg font-normal leading-6"
