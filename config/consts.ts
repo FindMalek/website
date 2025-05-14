@@ -198,12 +198,11 @@ export const FEATURE_OPTIONS: FeatureOption[] = [
 
 export const MAX_MESSAGES_ALLOWED = 20
 
-// Sample data with placeholder images
 export const OVERVIEW_CARDS: CardData[] = [
   {
     id: 1,
     type: "image",
-    imageUrl: "/author.jpg",
+    imageUrl: "/about/author.png",
     backgroundColor: "#1a1a1a",
     textColor: "#ffffff",
   },
@@ -218,7 +217,7 @@ export const OVERVIEW_CARDS: CardData[] = [
   {
     id: 3,
     type: "image",
-    imageUrl: "/about/author.png",
+    imageUrl: "/author.jpg",
     backgroundColor: "#2d4a22",
     textColor: "#ffffff",
   },

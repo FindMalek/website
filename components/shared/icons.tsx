@@ -108,7 +108,7 @@ function LogoIcon({
 }) {
   return (
     <Image
-      src="/author.jpg"
+      src="/about/author.png"
       alt="Logo"
       width={100}
       height={100}
