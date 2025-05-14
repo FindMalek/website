@@ -39,7 +39,7 @@ export function Avatar({
       style={style}
     >
       <Image
-        src={"/author.jpg"}
+        src={"/about/author.png"}
         alt="Malek Gara-Hellal avatar"
         sizes={large ? "4rem" : "2.25rem"}
         className={cn(
