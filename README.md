@@ -2,7 +2,7 @@
 
 # 💫 [Malek Gara-Hellal](https://www.findmalek.com)
 
-Your go-to expert for web development, design engineering, and creative entrepreneurship. With a passion for transforming lines of code into impactful projects, I'm renowned for my meticulous organization and attention to detail. Dive into my <a href="https://www.findmalek.com/projects">PROJECTS</a> to join me on my creative journey, and explore my <a href="https://www.findmalek.com/about#my-ventures">VENTURES</a> where I turn innovative ideas into thriving businesses.
+Specialized in transforming complex ideas into elegant digital solutions through web development, design engineering, and entrepreneurial innovation. I craft meaningful projects that blend creativity with technical precision. Explore my <a href="https://www.findmalek.com/work">WORK</a> experience, check out my <a href="https://www.findmalek.com/projects">PROJECTS</a>, discover my technical <a href="https://www.findmalek.com/stack">STACK</a>, or learn about my <a href="https://www.findmalek.com/about#overview">VENTURES</a> where innovative ideas become thriving businesses.
 
    <p align="left">
       <a href="https://github.com/FindMalek">
