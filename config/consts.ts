@@ -144,6 +144,7 @@ export const REPOSITORIES = [
   "https://github.com/FindMalek/event-duration-calculator",
   "https://github.com/FindMalek/muslim-fasting",
   "https://github.com/FindMalek/findauth",
+  "https://github.com/FindMalek/syncify"
 ]
 
 export const LANGUAGES_COLORS = {
