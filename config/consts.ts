@@ -137,7 +137,7 @@ export const CLIENTS: Client[] = [
 ]
 
 export const REPOSITORIES = [
-  "https://github.com/findmalek/findmalek",
+  "https://github.com/findmalek/website",
   "https://github.com/undrstnd-labs/education",
   "https://github.com/undrstnd-labs/developers",
   "https://github.com/FindMalek/lead-insight",
