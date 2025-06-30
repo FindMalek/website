@@ -86,7 +86,7 @@ export function AboutOverview() {
             </Link>{" "}
             in Web3 ,{" "}
             <Link
-              href={"tally-zero.preview.tally.xyz"}
+              href={"https://tally-zero.preview.tally.xyz/"}
               target="_blank"
               className={cn(link, "font-semibold")}
             >

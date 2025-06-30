@@ -210,7 +210,7 @@ export const OVERVIEW_CARDS: CardData[] = [
   {
     id: 2,
     type: "text",
-    text: "RIP my to my hair",
+    text: "I cut my hair, RIP!",
     subtext: "January 2020 - March 2025",
     backgroundColor: "#0f2b46",
     textColor: "#ffffff",
