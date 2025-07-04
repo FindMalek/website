@@ -3,7 +3,7 @@ import type { CardData, Client, FeatureOption } from "@/types"
 export const PAGES = {
   HOME: {
     path: "/",
-    label: "FindMalek.",
+    label: "Malek.",
     name: "Home",
     text: "Start over again?",
   },
