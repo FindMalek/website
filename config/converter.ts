@@ -13,35 +13,27 @@ export const convertWorkType = (type: WorkType) => {
 
 export const convertProjectStatus = (status: ProjectStatus) => {
   switch (status) {
+    case "published":
+      return "Published"
     case "wip":
       return "Work In Progress"
-    case "active":
-      return "Active"
-    case "inactive":
-      return "Inactive"
-    case "archived":
-      return "Archived"
-    case "draft":
-      return "Draft"
     case "on-hold":
       return "On Hold"
+    case "draft":
+      return "Draft"
   }
 }
 
 export const convertProjectStatusColor = (status: ProjectStatus) => {
   switch (status) {
+    case "published":
+      return "bg-green-100 text-green-800 hover:bg-green-200"
     case "wip":
       return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
-    case "active":
-      return "bg-green-100 text-green-800 hover:bg-green-200"
-    case "inactive":
-      return "bg-gray-100 text-gray-800 hover:bg-gray-200"
-    case "archived":
-      return "bg-red-100 text-red-800 hover:bg-red-200"
-    case "draft":
-      return "bg-gray-100 text-gray-800 hover:bg-gray-200"
     case "on-hold":
       return "bg-orange-100 text-orange-800 hover:bg-orange-200"
+    case "draft":
+      return "bg-gray-100 text-gray-800 hover:bg-gray-200"
   }
 }
 

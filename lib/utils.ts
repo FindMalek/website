@@ -27,16 +27,14 @@ export function remToPx(remValue: string) {
  * Status priority map where lower numbers indicate higher priority
  */
 export const statusPriority: Record<ProjectStatus, number> = {
-  active: 1,
+  published: 1,
   wip: 2,
   "on-hold": 3,
-  inactive: 4,
-  draft: 5,
-  archived: 6,
+  draft: 4,
 }
 
 /**
- * Sort projects by status priority (active first) then by id
+ * Sort projects by status priority (published first) then by id
  */
 export function sortProjectsByStatus<
   T extends { status: ProjectStatus; id: number },

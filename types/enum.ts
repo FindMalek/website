@@ -3,14 +3,7 @@ import { z } from "zod"
 export const workType = z.enum(["full-time", "part-time", "freelance"])
 export type WorkType = z.infer<typeof workType>
 
-export const projectStatus = z.enum([
-  "active",
-  "wip",
-  "inactive",
-  "on-hold",
-  "draft",
-  "archived",
-])
+export const projectStatus = z.enum(["published", "wip", "on-hold", "draft"])
 export type ProjectStatus = z.infer<typeof projectStatus>
 
 export const toolName = z.enum([
