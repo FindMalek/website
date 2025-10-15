@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const messages = sanitizeMessages(rawMessages as ChatMessage[])
 
     const result = streamText({
-      model: groq("llama3-70b-8192"),
+      model: groq("meta-llama/llama-4-scout-17b-16e-instruct"),
       messages,
       temperature: 0.7,
       maxTokens: 1000,
