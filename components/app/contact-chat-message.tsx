@@ -98,7 +98,7 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
         {isUser ? (
           <Icons.user className="size-5" />
         ) : (
-          <Icons.logo className="size-8 rounded-md" />
+          <Icons.logo className="aspect-square size-8 rounded-md object-cover" />
         )}
       </div>
       <div
