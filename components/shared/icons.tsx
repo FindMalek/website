@@ -110,7 +110,7 @@ function LogoIcon({
     <Image
       src="/about/author.png"
       alt="Logo"
-      width={768}
+      width={1024}
       height={768}
       className={className}
       {...props}

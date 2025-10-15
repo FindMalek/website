@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const messages = sanitizeMessages(rawMessages as ChatMessage[])
 
     const result = streamText({
-      model: groq("llama3-70b-8192"),
+      model: groq("meta-llama/llama-4-scout-17b-16e-instruct"),
       messages,
       temperature: 0.7,
       maxTokens: 1000,
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       5. Always format your responses using markdown:
          - Use **bold** for emphasis
          - Use *italics* for subtle emphasis
-         - Use ## and ### for headings
+         - Avoid using ## and ### for headings
          - Use bullet lists and numbered lists when appropriate
          - Use > for quotes or highlights
       
