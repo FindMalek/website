@@ -22,9 +22,10 @@ export default function Home() {
       <div className="text-foreground mt-4 space-y-4">
         <section>
           <p className="text-base leading-relaxed">
-            Specialized in transforming complex ideas into elegant digital solutions through 
-            web development, design engineering, and entrepreneurial innovation. I craft 
-            meaningful projects that blend creativity with technical precision. View my{" "}
+            Specialized in transforming complex ideas into elegant digital
+            solutions through web development, design engineering, and
+            entrepreneurial innovation. I craft meaningful projects that blend
+            creativity with technical precision. View my{" "}
             <Link
               href="/work"
               className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"
@@ -51,8 +52,9 @@ export default function Home() {
 
         <section>
           <p className="text-base leading-relaxed">
-            Beyond code, I find creative inspiration in diverse music genres from Metal to Ambient,
-            and maintain a curated collection of books that fuel my innovative thinking. Explore my{" "}
+            Beyond code, I find creative inspiration in diverse music genres
+            from Metal to Ambient, and maintain a curated collection of books
+            that fuel my innovative thinking. Explore my{" "}
             <Link
               href="/about#playlists"
               className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"
@@ -66,7 +68,8 @@ export default function Home() {
             >
               BOOKS
             </Link>{" "}
-            that shape my perspective. Ready to collaborate on something remarkable?{" "}
+            that shape my perspective. Ready to collaborate on something
+            remarkable?{" "}
             <Link
               href="/contact"
               className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"

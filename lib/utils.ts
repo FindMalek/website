@@ -66,6 +66,50 @@ export function formatDate(date: Date) {
   })
 }
 
+/**
+ * Parse date string in format "Month, Year" (e.g., "September, 2024")
+ * Returns a Date object for comparison
+ */
+function parseWorkDate(dateString: string): Date {
+  if (dateString.toLowerCase() === "present") {
+    // Return a future date for "Present" to ensure it sorts to the top
+    return new Date(9999, 11, 31)
+  }
+
+  // Parse "Month, Year" format
+  const [month, year] = dateString.split(", ")
+  const monthIndex = new Date(`${month} 1, ${year}`).getMonth()
+  return new Date(parseInt(year), monthIndex, 1)
+}
+
+/**
+ * Sort work experiences by date with the following logic:
+ * 1. Current positions (endDate = "Present") appear first
+ * 2. Among current positions, sort by most recent startDate
+ * 3. Past positions sorted by most recent endDate
+ * 4. If endDates are equal, sort by most recent startDate
+ */
+export function sortWorkExperiences<
+  T extends { startDate: string; endDate: string },
+>(works: T[]): T[] {
+  return [...works].sort((a, b) => {
+    const aEndDate = parseWorkDate(a.endDate)
+    const bEndDate = parseWorkDate(b.endDate)
+    const aStartDate = parseWorkDate(a.startDate)
+    const bStartDate = parseWorkDate(b.startDate)
+
+    // Compare end dates (most recent first)
+    const endDateDiff = bEndDate.getTime() - aEndDate.getTime()
+
+    if (endDateDiff !== 0) {
+      return endDateDiff
+    }
+
+    // If end dates are equal, compare start dates (most recent first)
+    return bStartDate.getTime() - aStartDate.getTime()
+  })
+}
+
 export function sanitizeMessages(messages: ChatMessage[]): ChatMessage[] {
   // First pass: detect context reset messages
   const hasContextReset = messages.some(
