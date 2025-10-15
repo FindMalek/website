@@ -91,14 +91,14 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
     >
       <div
         className={cn(
-          "hidden h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow md:block",
+          "hidden h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow md:flex",
           isUser ? "bg-background" : "bg-primary text-primary-foreground"
         )}
       >
         {isUser ? (
           <Icons.user className="size-5" />
         ) : (
-          <Icons.logo className="size-8 rounded-md" />
+          <Icons.logo className="aspect-square size-8 rounded-md object-cover" />
         )}
       </div>
       <div
