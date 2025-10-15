@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       5. Always format your responses using markdown:
          - Use **bold** for emphasis
          - Use *italics* for subtle emphasis
-         - Use ## and ### for headings
+         - Avoid using ## and ### for headings
          - Use bullet lists and numbered lists when appropriate
          - Use > for quotes or highlights
       
