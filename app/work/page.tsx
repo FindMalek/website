@@ -4,7 +4,7 @@ import { allWorks } from "content-collections"
 
 import { CLIENTS } from "@/config/consts"
 import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
+import { cn, sortWorkExperiences } from "@/lib/utils"
 
 import { WorkCard } from "@/components/app/work-card"
 import { ClientShowcase } from "@/components/app/work-client-showcase"
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 }
 
 export default function Work() {
-  const orderedWorks = allWorks.sort((a, b) => a.id - b.id)
+  const orderedWorks = sortWorkExperiences(allWorks)
 
   return (
     <div className="w-full px-4 pt-20">

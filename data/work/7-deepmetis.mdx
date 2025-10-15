@@ -1,0 +1,206 @@
+---
+id: 7
+logo: "/work/deepmetis.svg"
+logoClassName: "dark:bg-white"
+company: "DeepMetis"
+position: "Full Stack Developer"
+overview: "Joined DeepMetis after completing an impressive take-home assessment in 4 hours. Expanded my technical expertise by learning Go and Svelte, discovering Svelte's 30% performance advantage over React and superior state management capabilities."
+type: "full-time"
+startDate: "July, 2025"
+endDate: "August, 2025"
+place: "Remote"
+link: "https://www.deepmetis.com"
+href: "/work/deepmetis"
+---
+
+### DeepMetis: Exploring New Technologies and Performance Optimization
+
+I joined **DeepMetis** as a Full Stack Developer after completing a take-home assessment that impressed the team with both speed and quality. This experience introduced me to new technologies and provided valuable insights into alternative tech stacks and team dynamics.
+
+#### **The Take-Home Assessment: Pokemon Battle Arena**
+
+The interview process began with a take-home assessment to build a **Pokemon Battle Arena** application—a full-stack project requiring database design, API development, and a modern frontend. I completed the entire assessment in just **4 hours**, significantly faster than expected, which impressed the hiring team and secured my position.
+
+**Project Highlights:**
+
+- **Full-Stack Implementation:** Built a complete Pokemon battle system with team management and real-time battle simulation
+- **Modern Tech Stack:** Next.js 15, React 19, TypeScript, Prisma ORM, PostgreSQL
+- **Type-Safe API:** Implemented ORPC (tRPC-like) for end-to-end type safety
+- **Battle Mechanics:** Created realistic Pokemon battle logic with type effectiveness (Fire/Water/Grass)
+- **Database Design:** Designed normalized schema with enums, relations, and optimized queries
+
+**Core Features:**
+
+- Pokemon CRUD with stats management (power, life, type)
+- Team builder with exactly 6 Pokemon per team
+- Battle simulator with turn-based combat and type effectiveness
+- Type weakness chart (2.0x, 1.0x, 0.5x damage multipliers)
+- Real-time battle round visualization
+
+**Technical Approach:**
+
+- Prisma entity layer with query helpers for reusable operations
+- Zod schemas for comprehensive validation
+- React Query for optimized data fetching
+- Responsive UI with Tailwind CSS and Radix UI components
+- Fast database seeding with `createMany` operations
+
+**Repository:** [Pokemon Battle Arena on GitHub](https://github.com/FindMalek/jobmetis-pokemon)
+
+The rapid completion of this assessment demonstrated my ability to:
+
+- Quickly understand complex requirements
+- Design scalable database architectures
+- Implement type-safe full-stack applications
+- Deliver production-ready code under time constraints
+
+---
+
+#### **Learning Go and Svelte: Expanding the Tech Stack**
+
+After joining DeepMetis, I transitioned to working with their production stack, which included **Go** for backend services and **Svelte** for frontend development. This was an exciting opportunity to expand my technical expertise beyond my comfort zone of Node.js and React.
+
+**Go Backend Development:**
+
+- **Concurrency Patterns:** Learned Go's goroutines and channels for handling concurrent operations
+- **Performance:** Experienced Go's superior performance for CPU-intensive operations
+- **Type Safety:** Appreciated Go's strong typing system and compile-time error checking
+- **Standard Library:** Leveraged Go's robust standard library for HTTP servers and database operations
+- **Simplicity:** Discovered Go's philosophy of simplicity and explicit error handling
+
+**Svelte Frontend Development:**
+
+One of the most surprising discoveries was Svelte's performance advantages and developer experience improvements over React.
+
+**Performance Benefits:**
+
+- **30% Faster:** Svelte's compile-time approach results in approximately 30% faster runtime performance compared to React
+- **Smaller Bundle Size:** No virtual DOM overhead means significantly smaller JavaScript bundles
+- **No Runtime:** Svelte compiles to vanilla JavaScript, eliminating framework runtime costs
+- **Faster Initial Load:** Reduced JavaScript payload leads to faster page loads and better Core Web Vitals
+
+**Superior State Management:**
+
+Unlike React's useState and useReducer patterns, Svelte offers a more intuitive and performant approach:
+
+```svelte
+<script>
+  // Simple reactive declarations - no hooks, no re-render concerns
+  let count = 0;
+  $: doubled = count * 2; // Automatically updates when count changes
+
+  function increment() {
+    count += 1; // Just mutate - Svelte handles the reactivity
+  }
+</script>
+
+<button on:click={increment}>
+  Count: {count}, Doubled: {doubled}
+</button>
+```
+
+**Why Svelte's State Management is Better:**
+
+1. **True Reactivity:** Svelte's compiler analyzes your code and generates reactive updates at build time
+2. **No Virtual DOM Diffing:** Direct DOM updates eliminate React's reconciliation overhead
+3. **Less Boilerplate:** No need for useEffect, useMemo, useCallback, or dependency arrays
+4. **Predictable Updates:** Reactive statements ($:) automatically track dependencies
+5. **Stores for Global State:** Simple, built-in stores that "just work" without context providers
+6. **No Stale Closures:** Svelte's reactivity system eliminates common React pitfalls
+
+**Developer Experience Improvements:**
+
+- **Less Code:** Svelte requires significantly less code than React for the same functionality
+- **Better Readability:** Component logic is more straightforward and easier to understand
+- **Built-in Transitions:** Smooth animations and transitions without external libraries
+- **Scoped Styles:** CSS is automatically scoped to components by default
+- **No Build Tools Required:** Can write Svelte in a single HTML file for rapid prototyping
+
+---
+
+#### **Technical Challenges and Learning Outcomes**
+
+Working with Go and Svelte provided valuable perspective on different approaches to solving common web development problems:
+
+**Go Insights:**
+
+- Appreciated explicit error handling vs. try-catch patterns
+- Understood the benefits of compiled languages for performance-critical services
+- Learned to think about concurrency differently with goroutines
+- Experienced the trade-offs between Go's simplicity and Node.js's flexibility
+
+**Svelte Insights:**
+
+- Realized that React's popularity doesn't always mean it's the best technical choice
+- Understood the performance implications of virtual DOM diffing
+- Appreciated compile-time optimization vs. runtime processing
+- Discovered that simpler mental models can lead to fewer bugs
+
+**Cross-Stack Comparisons:**
+
+- **Performance:** Go + Svelte stack was noticeably faster than Node.js + React for similar workloads
+- **Developer Velocity:** Initial learning curve was steep, but productivity increased once comfortable
+- **Ecosystem:** React's larger ecosystem provides more third-party solutions, but often adds unnecessary complexity
+- **Type Safety:** TypeScript + Go's type systems provided excellent end-to-end safety
+
+---
+
+#### **Work Environment and Communication Challenges**
+
+While the technical stack was interesting, I encountered significant challenges with the work environment that ultimately led to my departure:
+
+**Communication Barriers:**
+
+- The CTO's limited English proficiency created substantial communication difficulties
+- Technical discussions often required multiple clarifications and follow-ups
+- Code review feedback was sometimes unclear, leading to misaligned implementations
+- Team meetings were challenging, with important details occasionally lost in translation
+
+**Impact on Productivity:**
+
+- More time spent clarifying requirements than writing code
+- Delayed feedback loops due to communication issues
+- Difficulty discussing architectural decisions and best practices
+- Reduced confidence in understanding project requirements correctly
+
+**Cultural and Process Considerations:**
+
+- Work environment didn't align with my preference for clear, direct communication
+- Limited opportunities for technical mentorship due to language barriers
+- Team collaboration was hindered by communication friction
+
+These challenges, combined with my realization that I preferred working with Node.js and React ecosystems despite Svelte's technical advantages, led me to make the difficult decision to leave after just one month.
+
+---
+
+### Lessons Learned and Key Takeaways
+
+**Technical Growth:**
+
+- **Polyglot Development:** Expanded my capabilities to work with Go and Svelte, proving adaptability to new tech stacks
+- **Performance Awareness:** Gained deeper understanding of framework performance implications
+- **State Management Insights:** Learned alternative approaches to state management beyond React patterns
+- **Compile-Time Optimization:** Appreciated the benefits of compile-time vs. runtime processing
+
+**Professional Insights:**
+
+- **Communication is Critical:** Technical skills alone aren't sufficient; clear communication is essential for team success
+- **Cultural Fit Matters:** Work environment and team dynamics are as important as interesting technology
+- **Stack Preferences:** Confirmed my preference for Node.js/React ecosystem, while respecting Go/Svelte's technical merits
+- **Interview Performance:** Demonstrated ability to deliver high-quality work under tight deadlines
+
+**Balanced Perspective:**
+
+While my time at DeepMetis was brief, it provided valuable lessons about the importance of communication, cultural fit, and understanding personal preferences in technology choices. The technical skills gained—particularly understanding Svelte's performance advantages and Go's concurrency model—remain valuable additions to my toolkit, even as I continue to work primarily with Node.js and React.
+
+---
+
+### Impact and Achievements
+
+- **Rapid Assessment Delivery:** Completed complex take-home assessment in 4 hours, demonstrating exceptional speed and quality
+- **Tech Stack Expansion:** Successfully learned and worked with Go and Svelte in a production environment
+- **Performance Insights:** Gained practical understanding of Svelte's 30% performance advantage and superior state management
+- **Professional Maturity:** Made thoughtful decision about work environment fit and technical stack preferences
+- **Code Quality:** Delivered production-ready code showcasing full-stack capabilities and modern best practices
+
+The Pokemon Battle Arena assessment remains a showcase of my ability to quickly understand requirements, design robust architectures, and deliver polished products under time constraints.
