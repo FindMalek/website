@@ -104,7 +104,7 @@ function formatWorkExperience() {
     .map(
       (job: Work) =>
         `### ${job.position} at ${job.company}
-Type: ${job.type} | Place: ${job.place}
+Type: ${job.type} | Place: ${job.place}${job.location ? ` | Location: ${job.location}` : ""}
 Period: ${job.startDate} - ${job.endDate}
 ${job.overview}
 ${job.link ? `Link: ${job.link}` : ""}`

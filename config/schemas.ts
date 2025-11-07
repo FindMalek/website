@@ -13,6 +13,7 @@ export const workSchema = z.object({
   startDate: z.string(),
   endDate: z.string(),
   place: z.string().min(1),
+  location: z.string().optional(),
   link: z.string().url().optional(),
   href: z.string(),
 })

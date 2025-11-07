@@ -53,6 +53,7 @@ export default async function WorkPageById({ params }: WorkPageByIdProps) {
     startDate,
     endDate,
     place,
+    location,
     link,
     html,
     overview,
@@ -98,6 +99,12 @@ export default async function WorkPageById({ params }: WorkPageByIdProps) {
           <span>{`${startDate} — ${endDate}`}</span>
           <span className="hidden md:inline">•</span>
           <span>{place}</span>
+          {location && (
+            <>
+              <span className="hidden md:inline">•</span>
+              <span>{location}</span>
+            </>
+          )}
         </div>
 
         {link && (
