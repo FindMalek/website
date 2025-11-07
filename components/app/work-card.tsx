@@ -39,6 +39,7 @@ export function WorkCard({ work }: { work: WorkRo }) {
     startDate,
     endDate,
     place,
+    location,
     href,
   } = work
 
@@ -86,6 +87,12 @@ export function WorkCard({ work }: { work: WorkRo }) {
             <span>{`${startDate} - ${endDate}`}</span>
             <span>•</span>
             <span>{place}</span>
+            {location && (
+              <>
+                <span>•</span>
+                <span>{location}</span>
+              </>
+            )}
           </div>
         </div>
       </div>
