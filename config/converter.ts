@@ -47,6 +47,8 @@ export const convertToolName = (name: ToolName) => {
       return "Generate Pricing"
     case "getResume":
       return "View Resume"
+    case "getTodayDate":
+      return "Get Today's Date"
   }
 }
 

@@ -144,6 +144,7 @@ ${resumeData.sections.summary.content
 - LinkedIn: https://www.linkedin.com/in/findmalek/
 - GitHub: https://github.com/findmalek
 - Twitter: https://x.com/foundmalek
+- Birthdate: July 31, 2001
 
 ### Education
 ${formatEducation()}

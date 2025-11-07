@@ -64,6 +64,9 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
           return <ContactToolPricingEstimator toolCall={toolCall} />
         case "getResume":
           return <ContactToolResumeGenerator toolCall={toolCall} />
+        case "getTodayDate":
+          // getTodayDate is handled server-side, no UI needed
+          return null
         default:
           return (
             <div className="text-muted-foreground text-sm">
