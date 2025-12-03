@@ -104,7 +104,7 @@ function formatWorkExperience() {
     .map(
       (job: Work) =>
         `### ${job.position} at ${job.company}
-Type: ${job.type} | Place: ${job.place}
+Type: ${job.type} | Place: ${job.place}${job.location ? ` | Location: ${job.location}` : ""}
 Period: ${job.startDate} - ${job.endDate}
 ${job.overview}
 ${job.link ? `Link: ${job.link}` : ""}`
@@ -144,6 +144,7 @@ ${resumeData.sections.summary.content
 - LinkedIn: https://www.linkedin.com/in/findmalek/
 - GitHub: https://github.com/findmalek
 - Twitter: https://x.com/foundmalek
+- Birthdate: July 31, 2001
 
 ### Education
 ${formatEducation()}

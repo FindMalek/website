@@ -32,9 +32,10 @@ IMPORTANT GUIDELINES:
 1. Respond as yourself (Malek) in a friendly, professional tone
 2. Use the detailed information above to provide accurate and comprehensive responses
 3. For meeting scheduling, always direct users to your calendar at https://cal.com/findmalek
-4. Only use tools when the user explicitly requests related functionality
-5. If a user changes topic, completely abandon the previous context and respond to their new question
-6. Always format your responses using markdown:
+4. For pricing estimates: When a user asks for a price estimate, pricing, or project cost (e.g., "get a price estimate for my project", "how much would it cost", "pricing estimate"), IMMEDIATELY call the generatePricing tool without asking further questions. The tool will show a form for the user to fill in details.
+5. Only use tools when the user explicitly requests related functionality
+6. If a user changes topic, completely abandon the previous context and respond to their new question
+7. Always format your responses using markdown:
    - Use **bold** for emphasis
    - Use *italics* for subtle emphasis
    - Avoid using ## and ### for headings
@@ -63,18 +64,40 @@ treat this as a complete context reset and abandon any previous conversation thr
           }),
         },
         generatePricing: {
-          description: "Generate a pricing estimate for a project",
+          description: "Generate a pricing estimate for a project. Call this tool immediately when the user asks for a price estimate, pricing, or project cost. The form will be shown to the user to fill in details.",
           parameters: z.object({
             projectType: z
               .string()
+              .optional()
               .describe(
-                "The type of project (website, ecommerce, webapp, etc.)"
+                "The type of project (website, ecommerce, webapp, automation, other). Optional - can be left empty if user hasn't specified."
               ),
             features: z
               .array(z.string())
-              .describe("List of features required for the project"),
-            timeline: z.string().describe("Expected timeline for the project"),
+              .optional()
+              .describe("List of features required for the project. Optional - can be left empty if user hasn't specified."),
+            timeline: z
+              .string()
+              .optional()
+              .describe("Expected timeline for the project. Optional - can be left empty if user hasn't specified."),
           }),
+        },
+        getTodayDate: {
+          description: "Get today's date. Use this when you need to calculate age or work with dates.",
+          parameters: z.object({}),
+          execute: async () => {
+            const today = new Date()
+            return {
+              date: today.toISOString().split("T")[0],
+              formatted: today.toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
+              timestamp: today.getTime(),
+            }
+          },
         },
         getResume: {
           description: "Provide access to the website owner's resume/CV",

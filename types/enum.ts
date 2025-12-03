@@ -11,6 +11,7 @@ export const toolName = z.enum([
   "scheduleMeeting",
   "generatePricing",
   "getResume",
+  "getTodayDate",
 ])
 export type ToolName = z.infer<typeof toolName>
 
