@@ -175,7 +175,7 @@
           "summary": "<ul><li><p>Built and maintained <strong>WalletLabels</strong>: created an admin dashboard, automated API key generation, and a blacklist endpoint.</p></li><li><p>Refactored <strong>TallyZero</strong> voting app with a redesigned UI/UX and transparent proposal system using Web3Modal and Ethers.</p></li><li><p>Contributed to the <strong>UniswapHooks</strong> rebranding, delivering clean and modern marketing pages.</p></li><li><p>Used <strong>React, Next.js, TailwindCSS, MongoDB, Node.js, TypeScript</strong>, and <strong>IPFS</strong> deployment via Fleek.</p></li></ul>",
           "url": {
             "label": "fn03.xyz",
-            "href": "https://fn03.xyz/"
+            "href": "https://github.com/function03-labs"
           }
         },
         {
@@ -201,7 +201,7 @@
           "summary": "<ul><li><p style=\"text-align: justify\">Developed a professional portfolio website using <strong>ReactJS</strong> and <strong>Next.js</strong>.</p></li><li><p style=\"text-align: justify\">Utilized <strong>Tailwind CSS</strong> and <strong>ShadCn UI</strong> to create a modern, responsive, and engaging design.</p></li><li><p style=\"text-align: justify\">Contributed to an <strong>E-commerce</strong> project on Shopify, <strong>LilyPharma</strong>, automating product additions and <strong>inventory management.</strong></p></li></ul>",
           "url": {
             "label": "digital-army.org",
-            "href": "https://www.digital-army.org"
+            "href": "https://digital-army.clients.malek.engineering"
           }
         }
       ]

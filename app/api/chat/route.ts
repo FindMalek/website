@@ -64,7 +64,8 @@ treat this as a complete context reset and abandon any previous conversation thr
           }),
         },
         generatePricing: {
-          description: "Generate a pricing estimate for a project. Call this tool immediately when the user asks for a price estimate, pricing, or project cost. The form will be shown to the user to fill in details.",
+          description:
+            "Generate a pricing estimate for a project. Call this tool immediately when the user asks for a price estimate, pricing, or project cost. The form will be shown to the user to fill in details.",
           parameters: z.object({
             projectType: z
               .string()
@@ -75,15 +76,20 @@ treat this as a complete context reset and abandon any previous conversation thr
             features: z
               .array(z.string())
               .optional()
-              .describe("List of features required for the project. Optional - can be left empty if user hasn't specified."),
+              .describe(
+                "List of features required for the project. Optional - can be left empty if user hasn't specified."
+              ),
             timeline: z
               .string()
               .optional()
-              .describe("Expected timeline for the project. Optional - can be left empty if user hasn't specified."),
+              .describe(
+                "Expected timeline for the project. Optional - can be left empty if user hasn't specified."
+              ),
           }),
         },
         getTodayDate: {
-          description: "Get today's date. Use this when you need to calculate age or work with dates.",
+          description:
+            "Get today's date. Use this when you need to calculate age or work with dates.",
           parameters: z.object({}),
           execute: async () => {
             const today = new Date()
