@@ -78,7 +78,7 @@ export function AboutOverview() {
             </Link>
             ,{" "}
             <Link
-              href={"https://function03.xyz/"}
+              href={"https://github.com/function03-labs"}
               target="_blank"
               className={cn(link, "font-semibold")}
             >

@@ -203,3 +203,53 @@ export function sanitizeMessages(messages: ChatMessage[]): ChatMessage[] {
     return message
   })
 }
+
+/**
+ * Calculate the duration between two dates in years and months
+ * Returns an object with years and months
+ */
+export function calculateWorkDuration(
+  startDate: string,
+  endDate: string
+): { years: number; months: number; totalMonths: number } {
+  const start = parseWorkDate(startDate)
+  const end =
+    endDate.toLowerCase() === "present"
+      ? new Date() // Use current date for "Present"
+      : parseWorkDate(endDate)
+
+  // Calculate total months
+  const totalMonths =
+    (end.getFullYear() - start.getFullYear()) * 12 +
+    (end.getMonth() - start.getMonth())
+
+  const years = Math.floor(totalMonths / 12)
+  const months = totalMonths % 12
+
+  return { years, months, totalMonths }
+}
+
+/**
+ * Format work duration as a human-readable string
+ * Examples: "2 years 3 months", "1 year", "6 months", "1 month"
+ */
+export function formatWorkDuration(startDate: string, endDate: string): string {
+  const { years, months } = calculateWorkDuration(startDate, endDate)
+
+  const parts: string[] = []
+
+  if (years > 0) {
+    parts.push(`${years} ${years === 1 ? "year" : "years"}`)
+  }
+
+  if (months > 0) {
+    parts.push(`${months} ${months === 1 ? "month" : "months"}`)
+  }
+
+  // If less than a month, show "Less than a month"
+  if (years === 0 && months === 0) {
+    return "Less than a month"
+  }
+
+  return parts.join(" ")
+}
