@@ -6,7 +6,7 @@ import { allWorks } from "content-collections"
 
 import { convertWorkType } from "@/config/converter"
 import { link as linkStyle } from "@/config/styles"
-import { cn, formatWorkDuration } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
 import { WorkDateWithTooltip } from "@/components/app/work-date-with-tooltip"
 import { Icons } from "@/components/shared/icons"
@@ -59,8 +59,6 @@ export default async function WorkPageById({ params }: WorkPageByIdProps) {
     html,
     overview,
   } = work
-
-  const duration = formatWorkDuration(startDate, endDate)
 
   return (
     <div className="container max-w-4xl px-4 py-16 md:py-24">
