@@ -134,6 +134,11 @@ export const CLIENTS: Client[] = [
     href: "https://www.kachouri-getraenke-service.de",
     logo: "/clients/kachouri.svg",
   },
+  {
+    name: "Sa7abox",
+    href: "https://www.sa7abox.com",
+    logo: "/clients/sa7abox.svg",
+  }
 ]
 
 export const REPOSITORIES = [
