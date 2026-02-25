@@ -31,6 +31,20 @@ export const STACK_SECTIONS: StackSection[] = [
         imageUrl: "https://img.logo.dev/v0.dev",
         url: "https://v0.dev/",
       },
+      {
+        title: "Braintrust",
+        description:
+          "AI observability platform for building and evaluating quality AI products.",
+        imageUrl: "https://img.logo.dev/braintrust.dev",
+        url: "https://braintrust.dev",
+      },
+      {
+        title: "Banani",
+        description:
+          "AI-powered UI design platform that converts text or screenshots to editable prototypes and code.",
+        imageUrl: "https://img.logo.dev/banani.co",
+        url: "https://banani.co",
+      },
     ],
   },
   {
@@ -101,6 +115,13 @@ export const STACK_SECTIONS: StackSection[] = [
         url: "https://www.radix-ui.com",
       },
       {
+        title: "Base UI",
+        description:
+          "Unstyled, headless React components for accessible web apps and design systems.",
+        imageUrl: "https://img.logo.dev/base-ui.com",
+        url: "https://base-ui.com",
+      },
+      {
         title: "Excalidraw",
         description:
           "Virtual whiteboard for sketching hand-drawn like diagrams.",
@@ -131,6 +152,13 @@ export const STACK_SECTIONS: StackSection[] = [
         url: "https://trpc.io",
       },
       {
+        title: "ORPC",
+        description:
+          "TypeScript RPC framework combining RPC with OpenAPI for type-safe APIs.",
+        imageUrl: "https://img.logo.dev/orpc.dev",
+        url: "https://orpc.dev",
+      },
+      {
         title: "React Query",
         description: "Data fetching and state management library for React.",
         imageUrl: "https://img.logo.dev/tanstack.com",
@@ -142,6 +170,13 @@ export const STACK_SECTIONS: StackSection[] = [
           "Simple, scalable state management for JavaScript applications.",
         imageUrl: "https://img.logo.dev/mobx.js.org",
         url: "https://mobx.js.org/README.html",
+      },
+      {
+        title: "Zustand",
+        description:
+          "Lightweight state management for React with minimal boilerplate and hooks.",
+        imageUrl: "https://img.logo.dev/pmnd.rs",
+        url: "https://docs.pmnd.rs/zustand",
       },
     ],
   },
@@ -377,6 +412,13 @@ export const STACK_SECTIONS: StackSection[] = [
         imageUrl: "https://img.logo.dev/ghostty.org",
         url: "https://ghostty.org",
       },
+      {
+        title: "Zsh",
+        description:
+          "Powerful Unix shell with advanced scripting and completion features.",
+        imageUrl: "https://img.logo.dev/zsh.org",
+        url: "https://zsh.org",
+      },
     ],
   },
   {
@@ -395,6 +437,25 @@ export const STACK_SECTIONS: StackSection[] = [
           "On-demand delivery platform for food, groceries, and more.",
         imageUrl: "https://img.logo.dev/glovoapp.com",
         url: "https://glovoapp.com",
+      },
+    ],
+  },
+  {
+    title: "Observability and Monitoring",
+    items: [
+      {
+        title: "OpenTelemetry",
+        description:
+          "Open-source observability framework for traces, metrics, and logs.",
+        imageUrl: "https://img.logo.dev/opentelemetry.io",
+        url: "https://opentelemetry.io",
+      },
+      {
+        title: "BetterStack",
+        description:
+          "OpenTelemetry-native platform for logging, monitoring, and incident management.",
+        imageUrl: "https://img.logo.dev/betterstack.com",
+        url: "https://betterstack.com",
       },
     ],
   },
