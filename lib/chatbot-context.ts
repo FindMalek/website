@@ -1,4 +1,5 @@
 import resumeData from "@/data/resume.json"
+import { llml } from "@zenbase/llml"
 import { allProjects, allWorks } from "content-collections"
 
 import { STACK_SECTIONS } from "@/config/stack"
@@ -8,171 +9,122 @@ type Work = (typeof allWorks)[number]
 type SkillItem = { name: string; description: string }
 type LanguageItem = { name: string; description: string }
 
-/**
- * Formats resume skills into a readable string
- */
-function formatSkills() {
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, "")
+    .replace(/\n+/g, " ")
+    .trim()
+}
+
+function getExperienceData() {
+  return resumeData.sections.experience.items.map((exp) => ({
+    position: exp.position,
+    company: exp.company,
+    period: exp.period,
+    location: exp.location,
+    description: stripHtml(exp.description),
+  }))
+}
+
+function getEducationData() {
+  return resumeData.sections.education.items.map((edu) => ({
+    degree: edu.degree,
+    area: edu.area,
+    school: edu.school,
+    period: edu.period,
+    grade: edu.grade,
+    description: stripHtml(edu.description),
+  }))
+}
+
+function getAwardsData() {
+  return resumeData.sections.awards.items.map((award) => ({
+    title: award.title,
+    awarder: award.awarder,
+    date: award.date,
+    description: stripHtml(award.description),
+  }))
+}
+
+function getSkillsData() {
   const skills = resumeData.sections.skills.items as SkillItem[]
-  return skills
-    .map((skill) => `- **${skill.name}**: ${skill.description}`)
-    .join("\n")
+  return skills.map((skill) => ({
+    name: skill.name,
+    description: skill.description,
+  }))
 }
 
-/**
- * Formats resume experience into a readable string
- */
-function formatExperience() {
-  const experiences = resumeData.sections.experience.items
-  return experiences
-    .map(
-      (exp) =>
-        `- **${exp.position}** at **${exp.company}** (${exp.period})
-  Location: ${exp.location}
-  ${exp.description
-    .replace(/<[^>]*>/g, "")
-    .replace(/\n+/g, " ")
-    .trim()}`
-    )
-    .join("\n\n")
-}
-
-/**
- * Formats resume education into a readable string
- */
-function formatEducation() {
-  const education = resumeData.sections.education.items
-  return education
-    .map(
-      (edu) =>
-        `- **${edu.degree} in ${edu.area}** at **${edu.school}**
-  Date: ${edu.period}
-  Score: ${edu.grade}
-  ${edu.description
-    .replace(/<[^>]*>/g, "")
-    .replace(/\n+/g, " ")
-    .trim()}`
-    )
-    .join("\n\n")
-}
-
-/**
- * Formats resume awards into a readable string
- */
-function formatAwards() {
-  const awards = resumeData.sections.awards.items
-  return awards
-    .map(
-      (award) =>
-        `- **${award.title}** by ${award.awarder} (${award.date})
-  ${award.description
-    .replace(/<[^>]*>/g, "")
-    .replace(/\n+/g, " ")
-    .trim()}`
-    )
-    .join("\n\n")
-}
-
-/**
- * Formats resume languages into a readable string
- */
-function formatLanguages() {
+function getLanguagesData() {
   const languages = resumeData.sections.languages.items as LanguageItem[]
-  return languages
-    .map((lang) => `- **${lang.name}**: ${lang.description}`)
-    .join("\n")
+  return languages.map((lang) => ({
+    name: lang.name,
+    description: lang.description,
+  }))
 }
 
-/**
- * Formats projects from content collections into a readable string
- */
-function formatProjects() {
-  return allProjects
-    .sort((a: Project, b: Project) => a.id - b.id)
-    .map(
-      (project: Project) =>
-        `### ${project.name}
-${project.overview}
-${project.link ? `Link: ${project.link}` : ""}`
-    )
-    .join("\n\n")
-}
-
-/**
- * Formats work experience from content collections into a readable string
- */
-function formatWorkExperience() {
+function getWorkExperienceData() {
   return allWorks
     .sort((a: Work, b: Work) => a.id - b.id)
-    .map(
-      (job: Work) =>
-        `### ${job.position} at ${job.company}
-Type: ${job.type} | Place: ${job.place}${job.location ? ` | Location: ${job.location}` : ""}
-Period: ${job.startDate} - ${job.endDate}
-${job.overview}
-${job.link ? `Link: ${job.link}` : ""}`
-    )
-    .join("\n\n")
+    .map((job: Work) => ({
+      position: job.position,
+      company: job.company,
+      type: job.type,
+      place: job.place,
+      location: job.location,
+      period: `${job.startDate} - ${job.endDate}`,
+      overview: job.overview,
+      link: job.link,
+    }))
+}
+
+function getProjectsData() {
+  return allProjects
+    .sort((a: Project, b: Project) => a.id - b.id)
+    .map((project: Project) => ({
+      name: project.name,
+      overview: project.overview,
+      link: project.link,
+    }))
+}
+
+function getTechStackData() {
+  return STACK_SECTIONS.map((section) => ({
+    section: section.title,
+    items: section.items.map((item) => ({
+      title: item.title,
+      description: item.description,
+    })),
+  }))
 }
 
 /**
- * Formats tech stack from config into a readable string
- */
-function formatStack() {
-  return STACK_SECTIONS.map(
-    (section) =>
-      `**${section.title}:**
-${section.items.map((item) => `- ${item.title}: ${item.description}`).join("\n")}`
-  ).join("\n\n")
-}
-
-/**
- * Generates the complete context for the chatbot
+ * Generates the complete context for the chatbot using LLML
+ * Transforms structured data into VibeXML optimized for AI attention
  */
 export function generateChatbotContext() {
-  return `
-## DETAILED PROFESSIONAL BACKGROUND
+  const context = {
+    professionalBackground: {
+      summary: stripHtml(resumeData.summary.content),
+      contact: {
+        email: resumeData.basics.email,
+        phone: resumeData.basics.phone,
+        location: resumeData.basics.location,
+        website: resumeData.basics.website.url,
+        linkedin: "https://www.linkedin.com/in/findmalek/",
+        github: "https://github.com/findmalek",
+        twitter: "https://x.com/foundmalek",
+        birthdate: "July 31, 2001",
+      },
+      education: getEducationData(),
+      experience: getExperienceData(),
+      awards: getAwardsData(),
+      skills: getSkillsData(),
+      languages: getLanguagesData(),
+    },
+    workExperience: getWorkExperienceData(),
+    projects: getProjectsData(),
+    techStack: getTechStackData(),
+  }
 
-### Summary
-${resumeData.summary.content
-  .replace(/<[^>]*>/g, "")
-  .replace(/\n+/g, " ")
-  .trim()}
-
-### Contact Information
-- Email: ${resumeData.basics.email}
-- Phone: ${resumeData.basics.phone}
-- Location: ${resumeData.basics.location}
-- Website: ${resumeData.basics.website.url}
-- LinkedIn: https://www.linkedin.com/in/findmalek/
-- GitHub: https://github.com/findmalek
-- Twitter: https://x.com/foundmalek
-- Birthdate: July 31, 2001
-
-### Education
-${formatEducation()}
-
-### Professional Experience
-${formatExperience()}
-
-### Awards & Recognition
-${formatAwards()}
-
-### Technical Skills
-${formatSkills()}
-
-### Languages
-${formatLanguages()}
-
-## DETAILED WORK EXPERIENCE
-
-${formatWorkExperience()}
-
-## PROJECT PORTFOLIO
-
-${formatProjects()}
-
-## TECHNOLOGY STACK & TOOLS
-
-${formatStack()}
-`.trim()
+  return llml(context)
 }
