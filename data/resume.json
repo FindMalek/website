@@ -1,628 +1,406 @@
 {
+  "picture": {
+    "hidden": false,
+    "url": "",
+    "size": 80,
+    "rotation": 0,
+    "aspectRatio": 1,
+    "borderRadius": 0,
+    "borderColor": "rgba(0, 0, 0, 0.5)",
+    "borderWidth": 0,
+    "shadowColor": "rgba(0, 0, 0, 0.5)",
+    "shadowWidth": 0
+  },
   "basics": {
-    "name": "Malek Gara Hellal",
-    "headline": "Senior Full Stack Engineer",
+    "name": "Malek Gara-Hellal",
+    "headline": "Product Engineer | Senior Full-Stack (React/Next.js + AI)",
     "email": "hi@findmalek.com",
-    "phone": "+216 26586124",
-    "location": "Tunisia, Monastir",
-    "url": {
-      "label": "findmalek.com",
-      "href": "https://www.findmalek.com"
+    "phone": "",
+    "location": "Monastir, Tunisia (Remote)",
+    "website": {
+      "url": "https://www.findmalek.com",
+      "label": "findmalek.com"
     },
-    "customFields": [],
-    "picture": {
-      "url": "",
-      "size": 64,
-      "aspectRatio": 1,
-      "borderRadius": 0,
-      "effects": {
-        "hidden": false,
-        "border": false,
-        "grayscale": false
-      }
-    }
+    "customFields": []
+  },
+  "summary": {
+    "title": "",
+    "columns": 1,
+    "hidden": false,
+    "content": "<p>Product-focused Full-Stack Engineer building AI-powered SaaS products end-to-end. Strong in React/Next.js, TypeScript, monorepos, and LLM integrations. High-volume contributor (5000 total contributions) with ownership across architecture, prompting, evaluation frameworks, automation pipelines, and reliability engineering. Experience working remotely with Berlin and US teams.</p>"
   },
   "sections": {
-    "summary": {
-      "name": "Summary",
-      "columns": 1,
-      "separateLinks": true,
-      "visible": true,
-      "id": "summary",
-      "content": "<p>Senior full-stack engineer and builder with a strong track record in leading complex projects, open-source innovation, and product development. Experienced in architecting scalable systems, improving developer workflows, and shipping AI-driven features. Passionate about building tools and products that solve real-world problems and empowering teams through impactful engineering.</p>"
-    },
-    "awards": {
-      "name": "Awards",
+    "profiles": {
+      "title": "",
       "columns": 2,
-      "separateLinks": true,
-      "visible": true,
-      "id": "awards",
+      "hidden": false,
       "items": [
         {
-          "id": "fvyr5objmig5etzg50540zcp",
-          "visible": true,
-          "title": "Competition Winner",
-          "awarder": "B-Tech ",
-          "date": "June 2021",
-          "summary": "<p>Awarded for having the best idea in the ATAST event, including a prize of two tickets to Dubai.</p>",
-          "url": {
-            "label": "",
-            "href": ""
+          "id": "019c80f6-303f-767f-a08b-211031d0e15a",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "icon": "github-logo",
+          "network": "Github",
+          "username": "findmalek",
+          "website": {
+            "url": "https://go.findmalek.com/gh",
+            "label": ""
           }
         },
         {
-          "id": "tkuq7ou73o0u30aiq2gsu7p6",
-          "visible": true,
-          "title": "Problem Solving (Basic)",
-          "awarder": "HackerRank",
-          "date": "January 2023",
-          "summary": "<p>Achieved the Problem Solving (Basic) Certificate from HackerRank, showcasing proficiency in solving fundamental algorithmic and coding challenges.</p>",
-          "url": {
-            "label": "hackerrank.com",
-            "href": "https://www.hackerrank.com/certificates/15e0b8af0d90"
-          }
-        },
-        {
-          "id": "dw1tlawhndnpzcu75skpd21p",
-          "visible": true,
-          "title": "Python (Basic)",
-          "awarder": "HackerRank",
-          "date": "January 2023",
-          "summary": "<p>Earned the Python (Basic) Certificate from HackerRank, demonstrating foundational knowledge and skills in Python programming.</p>",
-          "url": {
-            "label": "hackerrank.com",
-            "href": "https://www.hackerrank.com/certificates/15e0b8af0d90"
-          }
-        },
-        {
-          "id": "bnduhkrsm9ciyyrjow0nk85c",
-          "visible": true,
-          "title": "eXtreme winner",
-          "awarder": "IEEE ",
-          "date": "October 2023",
-          "summary": "<p> Achieved a top position in the prestigious global programming competition, showcasing strong problem-solving and coding skills.</p>",
-          "url": {
-            "label": "ieeextreme.org",
-            "href": "https://ieeextreme.org/"
-          }
-        }
-      ]
-    },
-    "certifications": {
-      "name": "Certifications",
-      "columns": 1,
-      "separateLinks": true,
-      "visible": true,
-      "id": "certifications",
-      "items": []
-    },
-    "education": {
-      "name": "Education",
-      "columns": 1,
-      "separateLinks": true,
-      "visible": true,
-      "id": "education",
-      "items": [
-        {
-          "id": "iot3m85r8g4xwq1hahswywxy",
-          "visible": true,
-          "institution": "Higher Institute of Informatics and Mathematics of Monastir",
-          "studyType": "Engineering",
-          "area": "Software Engineering",
-          "score": "Top of my Major",
-          "date": "September 2021 - June 2024",
-          "summary": "<p>Throughout my university years, I consistently ranked at the top of my cohort. My academic focus included low-level languages like C and C++ and in-depth studies of algorithms, Java, and complex software engineering principles. This foundational knowledge laid the groundwork for my ability to design scalable systems and contribute to innovative projects.</p>",
-          "url": {
-            "label": "",
-            "href": ""
+          "id": "019c80f6-92bb-77cf-a0a4-6a791475629d",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "icon": "linkedin-logo",
+          "network": "LinkedIn",
+          "username": "findmalek",
+          "website": {
+            "url": "https://go.findmalek.com/li",
+            "label": ""
           }
         }
       ]
     },
     "experience": {
-      "name": "Experience",
+      "title": "",
       "columns": 1,
-      "separateLinks": true,
-      "visible": true,
-      "id": "experience",
+      "hidden": false,
       "items": [
         {
-          "id": "l1yl8cyws32o08ctm1s2dkiq",
-          "visible": true,
-          "company": "Jobflow Gmbh",
-          "position": "Senior Full Stack Developer",
-          "location": "Berlin, Germany - Remote",
-          "date": "September 2024 - Present",
-          "summary": "<ul><li><p>Designed and built an autonomous Agent for working students: navigates job sites, scrapes postings, autofills candidate details, and submits applications—dramatically reducing manual workload.</p></li><li><p>Redesigned backend job-saving flows to simplify how users manage saved locations and employers.</p></li><li><p>Led a major refactor of the job scraper platform using Effect, doubling scraping performance and reliability.</p></li><li><p>Built scraper pipelines for external partners (IHK, Kaufland) with <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://Trigger.dev\">Trigger.dev</a>, reducing processing time by 45%.</p></li><li><p>Shipped AI-powered features and integrated internal LLM models to enhance recruiter productivity.</p></li><li><p>Maintained a large monorepo (TurboRepo) and delivered dashboards and mobile apps with tRPC and MobX</p></li></ul>",
-          "url": {
-            "label": "jobflow.de",
-            "href": "https://jobflow.de/"
-          }
+          "id": "019c8102-56be-736d-bd30-7361b8ca8b13",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "company": "Jobflow GmbH",
+          "position": "Senior Full-Stack Engineer (Contract)",
+          "location": "Berlin, Germany (Remote)",
+          "period": "September 2024 - Present",
+          "website": {
+            "url": "https://www.jobflow.de",
+            "label": "jobflow.de"
+          },
+          "description": "<ul><li><p>Delivered AI-driven automation features across recruiter–candidate workflows.</p></li><li><p>Built interview confirmation detection system (message → backend event → calendar integration + notifications).</p></li><li><p>Implemented AI task extraction from recruiter conversations into structured candidate tasks with reminders.</p></li><li><p>Designed prompting strategies and evaluation frameworks for LLM workflows in production.</p></li><li><p>Refactored scraping infrastructure using Effect &amp; <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://Trigger.dev\">Trigger.dev</a> to improve maintainability and resilience.</p></li><li><p>Introduced automated smoke testing for CV rendering, eliminating recurring production issues.</p></li><li><p>200+ merged PRs; ranked among top active contributors in repository.</p></li></ul><p></p>"
         },
         {
-          "id": "lkszzhlb0pha8pvp5rztlc4m",
-          "visible": true,
-          "company": "DeepMetis",
-          "position": "Senior Full Stack Engineer",
-          "location": "Berlin, Germany - Remote",
-          "date": "July 2025 - August 2025",
-          "summary": "<ul><li><p>Spearheaded the development of multiple projects using Svelte for frontend development, ensuring high-quality, responsive user interfaces.</p></li><li><p>Designed and implemented robust backend services using Go, optimizing performance and ensuring seamless integration with frontend components.</p></li><li><p>Managed and optimized SQL databases, specifically PostgreSQL, to enhance data integrity and retrieval efficiency.</p></li><li><p>Served as the Tech Lead for Project Dori, guiding the technical direction, coordinating with cross-functional teams, and ensuring timely delivery of project milestones.</p></li></ul>",
-          "url": {
-            "label": "deepmetis.com",
-            "href": "https://deepmetis.com"
-          }
+          "id": "019c80ff-ec34-730b-a667-91ffd584e0e3",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "company": "8Returns UG",
+          "position": "Senior Frontend Engineer (Contract)",
+          "location": "Berlin, Germany (Remote)",
+          "period": "December 2025 – Present",
+          "website": {
+            "url": "https://www.8returns.com",
+            "label": "8returns.com"
+          },
+          "description": "<ul><li><p>Built Shopify-embedded return experience powered by AI chatbot (refund, exchange, store credit flows).</p></li><li><p>Reduced chatbot reply delay from ~10s to ~3s through frontend optimization and API orchestration improvements.</p></li><li><p>Implemented complex UI state management and Rails API integrations.</p></li><li><p>Collaborated closely with backend team (Ruby on Rails) on data contracts and flow reliability.</p></li><li><p>Contributed to AI flow design and merchant-facing UX improvements.</p></li></ul><p></p>"
         },
         {
-          "id": "qxlaper33allpdrck53rq4sm",
-          "visible": true,
+          "id": "019c80fd-2ba2-71cb-874f-835885ebf8c4",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "company": "DeepMetis UG",
+          "position": "Senior Full Stack Engineer (Contract)",
+          "location": "Berlin, Germany - Remote",
+          "period": "June 2025 - August 2025",
+          "website": {
+            "url": "https://deepmetis.com",
+            "label": "deepmetis.com"
+          },
+          "description": "<ul><li><p>Built responsive frontend interfaces using Svelte across multiple production projects.</p></li><li><p>Designed and implemented backend services in Go, improving performance and system reliability.</p></li><li><p>Managed and optimized PostgreSQL databases to ensure data integrity and efficient query performance.</p></li><li><p>Led technical direction for Project Dori, coordinating cross-functional teams and driving milestone delivery.</p></li></ul><p></p>"
+        },
+        {
+          "id": "019c80f7-5171-7184-a13a-4b25d2b4a2c2",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
           "company": "Hortensia Agency",
-          "position": "Senior Web Developer",
-          "location": "Bardo, Tunisia - Remote",
-          "date": "May 2024 - September 2024",
-          "summary": "<ul><li><p>Built <strong>Stelify</strong>, a sleek landing page with an admin dashboard for real-time song analytics.</p></li><li><p>Developed <strong>Primevera</strong>, an e-learning platform with Stripe integration for course sales.</p></li><li><p>Used <strong>React, Next.js, TailwindCSS, Docker, Cron Jobs</strong>, and <strong>Coolify</strong> for scalable deployment.</p></li><li><p>Delivered polished, high-performance web solutions praised by clients for UX and reliability.</p></li></ul>",
-          "url": {
-            "label": "hortensia.agency",
-            "href": "http://hortensia.agency"
-          }
+          "position": "Full Stack Developer",
+          "location": "Ariana, Tunisia (Remote)",
+          "period": "May 2024 - September 2024",
+          "website": {
+            "url": "https://hortensia-agency.com/",
+            "label": "hortensia-agency.com"
+          },
+          "description": "<ul><li><p>Built Stelify real-time music analytics dashboard.</p></li><li><p>Delivered Primevera e-learning platform with Stripe payments.</p></li><li><p>Managed deployments via Docker &amp; Coolify.</p></li></ul><p></p>"
         },
         {
-          "id": "ojxlmgder1cgz0q2k5bykaxy",
-          "visible": true,
+          "id": "019c80f9-2f7a-723e-9926-fad98306180d",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
           "company": "Function03 Labs",
           "position": "UX Engineer & Blockchain Developer",
-          "location": "Sanfransico, USA - Remote",
-          "date": "June 2023 - August 2024",
-          "summary": "<ul><li><p>Built and maintained <strong>WalletLabels</strong>: created an admin dashboard, automated API key generation, and a blacklist endpoint.</p></li><li><p>Refactored <strong>TallyZero</strong> voting app with a redesigned UI/UX and transparent proposal system using Web3Modal and Ethers.</p></li><li><p>Contributed to the <strong>UniswapHooks</strong> rebranding, delivering clean and modern marketing pages.</p></li><li><p>Used <strong>React, Next.js, TailwindCSS, MongoDB, Node.js, TypeScript</strong>, and <strong>IPFS</strong> deployment via Fleek.</p></li></ul>",
-          "url": {
-            "label": "fn03.xyz",
-            "href": "https://github.com/function03-labs"
-          }
-        },
-        {
-          "id": "gyvyirr3r11t16d43lvmn55p",
-          "visible": true,
-          "company": "Promolab",
-          "position": "Web Application Developer",
-          "location": "Remote",
-          "date": "June 2023 - August 2023",
-          "summary": "<ul><li><p>Built a <strong>custom e-commerce site</strong> with ReactJS and Next.js; designed for responsiveness and ease of use.</p></li><li><p>Created a <strong>product management dashboard</strong> for admins to easily add, edit, and remove items.</p></li><li><p>Managed data with <strong>Supabase</strong> and <strong>Prisma</strong>, ensuring high performance and data integrity.</p></li><li><p>Collaborated in a 3-dev team (Endless Byte) to deliver a full-stack project from scratch.</p></li></ul>",
-          "url": {
-            "label": "promolab.tn",
-            "href": "https://promolab.vercel.app/"
-          }
-        },
-        {
-          "id": "y4h91ui5mmezy47g2sd7isj6",
-          "visible": true,
-          "company": "Digital Army",
-          "position": "Web Developer",
-          "location": "Remote",
-          "date": "February 2023 - April 2023",
-          "summary": "<ul><li><p style=\"text-align: justify\">Developed a professional portfolio website using <strong>ReactJS</strong> and <strong>Next.js</strong>.</p></li><li><p style=\"text-align: justify\">Utilized <strong>Tailwind CSS</strong> and <strong>ShadCn UI</strong> to create a modern, responsive, and engaging design.</p></li><li><p style=\"text-align: justify\">Contributed to an <strong>E-commerce</strong> project on Shopify, <strong>LilyPharma</strong>, automating product additions and <strong>inventory management.</strong></p></li></ul>",
-          "url": {
-            "label": "digital-army.org",
-            "href": "https://digital-army.clients.malek.engineering"
-          }
+          "location": "USA, San Fransico (Remote)",
+          "period": "June 2023 – August 2024",
+          "website": {
+            "url": "https://fn03-new-brand-gold.vercel.app/",
+            "label": "fn03.xyz"
+          },
+          "description": "<ul><li><p>Built <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://docs.walletlabels.xyz/endpoint/ethereum/label\">WalletLabels</a> admin dashboard and API tooling.</p></li><li><p>Automated API key generation and blacklist endpoint.</p></li><li><p>Improved UX and architecture of <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://zero.tally.xyz/\">TallyZero</a> voting platform.</p></li><li><p>Contributed to <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://v4.uniswap.org/\">UniswapHooks</a> marketing rebuild.</p></li></ul><p></p>"
         }
       ]
     },
-    "volunteer": {
-      "name": "Volunteering",
+    "education": {
+      "title": "",
       "columns": 1,
-      "separateLinks": true,
-      "visible": true,
-      "id": "volunteer",
-      "items": []
-    },
-    "interests": {
-      "name": "Interests",
-      "columns": 1,
-      "separateLinks": true,
-      "visible": true,
-      "id": "interests",
-      "items": []
-    },
-    "languages": {
-      "name": "Languages",
-      "columns": 3,
-      "separateLinks": true,
-      "visible": true,
-      "id": "languages",
+      "hidden": false,
       "items": [
         {
-          "id": "s36y6h0rc7inwav6fbxob2gk",
-          "visible": true,
-          "name": "English",
-          "description": " Fluent in English, with excellent written and verbal communication skills.",
-          "level": 0
-        },
-        {
-          "id": "vn844o2wdn1y4amp1zgo83zp",
-          "visible": true,
-          "name": "French",
-          "description": "Proficient in French, capable of effective communication in both written and spoken forms.",
-          "level": 0
-        },
-        {
-          "id": "x3308bq7qghrxykvw5cvonzy",
-          "visible": true,
-          "name": "Arabic",
-          "description": "Skilled in Arabic, with strong proficiency in reading, writing, and speaking.",
-          "level": 0
-        }
-      ]
-    },
-    "profiles": {
-      "name": "Profiles",
-      "columns": 2,
-      "separateLinks": true,
-      "visible": true,
-      "id": "profiles",
-      "items": [
-        {
-          "id": "lkb9037xtauh10p8pvjmi60l",
-          "visible": true,
-          "network": "Linkedin",
-          "username": "FindMalek",
-          "icon": "linkedin",
-          "url": {
-            "label": "",
-            "href": "https://www.linkedin.com/in/findmalek/"
-          }
-        },
-        {
-          "id": "koap291a1hz1ib8aa38dk4mi",
-          "visible": true,
-          "network": "Github",
-          "username": "FindMalek",
-          "icon": "github",
-          "url": {
-            "label": "",
-            "href": "https://github.com/findmalek"
-          }
-        },
-        {
-          "id": "zj36u5p3v9chx0w5wayau2ib",
-          "visible": true,
-          "network": "Instagram",
-          "username": "FindMalek",
-          "icon": "instagram",
-          "url": {
-            "label": "",
-            "href": "https://instagram.com/findmalek"
-          }
-        },
-        {
-          "id": "tpbzsiwl0ovnrbsvip52tx4q",
-          "visible": true,
-          "network": "Twitter",
-          "username": "FoundMalek",
-          "icon": "x",
-          "url": {
-            "label": "",
-            "href": "https://x.com/foundmalek"
-          }
+          "id": "019c8103-be48-76d1-a24e-c6ef5f13b08a",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "school": "Higher Institute of Informatics and Mathematics of Monastir",
+          "degree": "Software Engineering",
+          "area": "Computer Science",
+          "grade": "Top of my Major",
+          "location": "Monastir, Tunisia",
+          "period": "September 2021 - June 2024",
+          "website": {
+            "url": "https://isimm.rnu.tn/public/",
+            "label": ""
+          },
+          "description": "<p>Throughout my university years, I consistently ranked at the top of my cohort. My academic focus included low-level</p><p>languages like C and C++ and in-depth studies of algorithms, Java, and complex software engineering principles. This</p><p>foundational knowledge laid the groundwork for my ability to design scalable systems and contribute to innovative</p><p>projects.</p>"
         }
       ]
     },
     "projects": {
-      "name": "Projects",
-      "columns": 2,
-      "separateLinks": true,
-      "visible": true,
-      "id": "projects",
+      "title": "",
+      "columns": 1,
+      "hidden": false,
       "items": [
         {
-          "id": "rlkgbf4wun1rhowdh4lqe2ji",
-          "visible": true,
+          "id": "019c8104-f316-72b8-98ce-f93e60f3c8e2",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "name": "Dukkani",
+          "period": "November 2025 - Present",
+          "website": {
+            "url": "https://dukkani.malek.engineering",
+            "label": "dukkani.malek.engineering"
+          },
+          "description": "<p>Lightweight commerce infrastructure for social sellers (Instagram/Facebook merchants).</p><ul><li><p>Designed multi-tenant storefront architecture.</p></li><li><p>Built onboarding → product management → order routing pipeline.</p></li><li><p>Hired and manage contributor; review PRs and define technical roadmap.</p></li><li><p>Built with Next.js, TurboRepo, TypeScript, PostgreSQL.</p></li></ul><p></p>"
+        },
+        {
+          "id": "019c8105-bb60-7274-9a38-f7687981cf16",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "name": "ZeroLocker",
+          "period": "",
+          "website": {
+            "url": "https://www.zero-locker.com",
+            "label": ""
+          },
+          "description": "<p>Secure credential &amp; secret management tool for developers.</p>"
+        },
+        {
+          "id": "019c8106-250a-7316-a74d-79f8dcbb6462",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
           "name": "Undrstnd Education",
-          "description": "",
-          "date": "October 2023 - June 2024",
-          "summary": "<p>AI-powered education platform combining features of ChatGPT and Google Classroom. Helps students and teachers organize, collaborate, and enhance the learning experience</p>",
-          "keywords": [
-            "Education",
-            "ai",
-            "chatgpt",
-            "google-classroom",
-            "InteractiveLearning",
-            "ClassroomManagement",
-            "DocumentManagement",
-            "RAG"
-          ],
-          "url": {
-            "label": "github.com/undrstnd",
-            "href": "https://github.com/undrstnd-labs/education"
-          }
+          "period": "",
+          "website": {
+            "url": "",
+            "label": ""
+          },
+          "description": "<p>AI-powered classroom + productivity system for students and teachers.</p>"
+        }
+      ]
+    },
+    "skills": {
+      "title": "",
+      "columns": 1,
+      "hidden": false,
+      "items": []
+    },
+    "languages": {
+      "title": "",
+      "columns": 1,
+      "hidden": false,
+      "items": []
+    },
+    "interests": {
+      "title": "",
+      "columns": 1,
+      "hidden": false,
+      "items": []
+    },
+    "awards": {
+      "title": "",
+      "columns": 1,
+      "hidden": false,
+      "items": [
+        {
+          "id": "019c8107-091d-7296-9d05-dd10f4b7a48c",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "title": "Competition Winner",
+          "awarder": "B-Tech",
+          "date": "June 2021",
+          "website": {
+            "url": "",
+            "label": ""
+          },
+          "description": "<p>Awarded for having the best idea in the ATAST event,</p><p>including a prize of two tickets to Dubai.</p>"
         },
         {
-          "id": "t2im1vxiqi5eduw4coywr18d",
-          "visible": true,
-          "name": "FindPlate",
-          "description": "",
-          "date": "September 2024 - July 2024",
-          "summary": "<p>Developer productivity toolkit designed to speed up development workflows, featuring fast utilities and integrations</p>",
-          "keywords": [
-            "Nextjs",
-            "Boilerplaten",
-            "TypeScript",
-            "Supabase",
-            "Prisma",
-            "NextAuth",
-            "NextI18Next"
-          ],
-          "url": {
-            "label": "plate.findmalek.com",
-            "href": "https://plate.findmalek.com"
-          }
+          "id": "019c8108-49b3-713f-b401-342ba28c3f5c",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "title": "eXtreme winner",
+          "awarder": "IEEE",
+          "date": "October 2023",
+          "website": {
+            "url": "https://ieeextreme.org",
+            "label": ""
+          },
+          "description": "<p>Achieved a top position in the prestigious global programming competition, showcasing strong problem-solving and coding skills.</p>"
+        }
+      ]
+    },
+    "certifications": {
+      "title": "",
+      "columns": 1,
+      "hidden": false,
+      "items": [
+        {
+          "id": "019c8107-602c-778a-b11e-2ae9540210b8",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "title": "Problem Solving (Basic)",
+          "issuer": "HackerRank",
+          "date": "January 2023",
+          "website": {
+            "url": "https://hackerrank.com",
+            "label": ""
+          },
+          "description": "<p>Achieved the Problem Solving (Basic) Certificate from HackerRank, showcasing proficiency in solving fundamental algorithmic and coding challenges.</p>"
         },
         {
-          "id": "yrbu7ef9oig9vabm7ri32b15",
-          "visible": true,
-          "name": "Syncify",
-          "description": "",
-          "date": "",
-          "summary": "<p>An open-source application allowing users to download tracks, albums, and playlists from Spotify for offline listening.</p>",
-          "keywords": [
-            "python",
-            "music",
-            "metadata",
-            "playlist",
-            "spotify",
-            "savify",
-            "mp3",
-            "OpenSource"
-          ],
-          "url": {
-            "label": "github.com/syncify",
-            "href": "https://github.com/FindMalek/Syncify"
-          }
-        },
-        {
-          "id": "p2013974zd6z6v71ccfti9mk",
-          "visible": true,
-          "name": "Zero Locker",
-          "description": "",
-          "date": "May 2025 - Present",
-          "summary": "<p>Open-source alternative to LastPass/HashiCorp Vault with an intuitive UX. Manages accounts, cards, environment variables, and developer secrets. MVP in active development with account storage feature shipping soon.</p>",
-          "keywords": [],
-          "url": {
-            "label": "0locker.com",
-            "href": "https://0locker.com/"
-          }
+          "id": "019c8107-ddf0-76cd-97ea-19cc806bd86d",
+          "hidden": false,
+          "options": {
+            "showLinkInTitle": false
+          },
+          "title": "Python (Basic)",
+          "issuer": "HackerRank",
+          "date": "January 2024",
+          "website": {
+            "url": "",
+            "label": ""
+          },
+          "description": "<p>Earned the Python (Basic) Certificate from HackerRank, demonstrating foundational knowledge and skills in Python programming.</p>"
         }
       ]
     },
     "publications": {
-      "name": "Publications",
+      "title": "",
       "columns": 1,
-      "separateLinks": true,
-      "visible": true,
-      "id": "publications",
+      "hidden": false,
+      "items": []
+    },
+    "volunteer": {
+      "title": "",
+      "columns": 1,
+      "hidden": false,
       "items": []
     },
     "references": {
-      "name": "References",
+      "title": "",
       "columns": 1,
-      "separateLinks": true,
-      "visible": true,
-      "id": "references",
+      "hidden": false,
       "items": []
-    },
-    "skills": {
-      "name": "Skills",
-      "columns": 5,
-      "separateLinks": true,
-      "visible": true,
-      "id": "skills",
-      "items": [
+    }
+  },
+  "customSections": [],
+  "metadata": {
+    "template": "lapras",
+    "layout": {
+      "sidebarWidth": 45.17,
+      "pages": [
         {
-          "id": "pccae2aee16picqxhwn09j8x",
-          "visible": true,
-          "name": "React.js",
-          "description": "",
-          "level": 0,
-          "keywords": ["FrontEnd", "UI", "Components", "Library"]
-        },
-        {
-          "id": "nshx4t7zet7vsdlf4czhyaas",
-          "visible": true,
-          "name": "Next.js",
-          "description": "",
-          "level": 0,
-          "keywords": ["SSR", "SEO", "Performance"]
-        },
-        {
-          "id": "b0g4bib0scz9ejz9xwv9470n",
-          "visible": true,
-          "name": "TailwindCSS",
-          "description": "",
-          "level": 0,
-          "keywords": ["CSS", "Responsive", "Styling"]
-        },
-        {
-          "id": "qx0tbo0gptng0sdkuwllej4b",
-          "visible": true,
-          "name": "TypeScript",
-          "description": "",
-          "level": 0,
-          "keywords": ["TypeSafety", "StaticTyping"]
-        },
-        {
-          "id": "kc4kbfik1scyfwk4pw3zg58j",
-          "visible": true,
-          "name": "Python",
-          "description": "",
-          "level": 0,
-          "keywords": ["Scripting", "Automation", "DataAnalysis", "Backend"]
-        },
-        {
-          "id": "h79mi26bhsllw9njq8hf2wdf",
-          "visible": true,
-          "name": "Java",
-          "description": "",
-          "level": 0,
-          "keywords": ["Enterprise", "OOP", "Backend", "JVM"]
-        },
-        {
-          "id": "ltih20y84zjdsgi1gr415iau",
-          "visible": true,
-          "name": "C",
-          "description": "",
-          "level": 0,
-          "keywords": ["SystemProgramming", "LowLevel", "Embedded"]
-        },
-        {
-          "id": "r2oa1eiyrf1l0ptv5qf87kna",
-          "visible": true,
-          "name": "PostgreSQL",
-          "description": "",
-          "level": 0,
-          "keywords": ["Database", "SQL", "Relational"]
-        },
-        {
-          "id": "sm41vu9jjpu291n5smy1bfw3",
-          "visible": true,
-          "name": "Prisma",
-          "description": "",
-          "level": 0,
-          "keywords": ["ORM", "Database"]
-        },
-        {
-          "id": "nd60sp3muxumrhqrgdrr8ozc",
-          "visible": true,
-          "name": "Git",
-          "description": "",
-          "level": 0,
-          "keywords": ["VersionControl", "Collaboration", "SourceControl"]
-        },
-        {
-          "id": "f3hn4mtc9m5c6enxedvf81kb",
-          "visible": true,
-          "name": "Linux",
-          "description": "",
-          "level": 0,
-          "keywords": ["OperatingSystem", "ShellScripting"]
-        },
-        {
-          "id": "qi0br1lyp767ikx9ayp4zye8",
-          "visible": true,
-          "name": "Docker",
-          "description": "",
-          "level": 0,
-          "keywords": ["Containerization", "DevOps", "Microservices"]
-        },
-        {
-          "id": "knfuvsm8tranc78bved17woq",
-          "visible": true,
-          "name": "SQL",
-          "description": "",
-          "level": 0,
-          "keywords": ["Database", "Querying", "Relational", "DataManagement"]
-        },
-        {
-          "id": "jafebb4bfyfxnuv0fiy75zbp",
-          "visible": true,
-          "name": "MongoDB",
-          "description": "",
-          "level": 0,
-          "keywords": ["Database", "NoSQL", "DataManagement"]
-        },
-        {
-          "id": "jaofizv5vj6rufslr7q54f84",
-          "visible": true,
-          "name": "Supabase",
-          "description": "",
-          "level": 0,
-          "keywords": ["Backend", "Database", "Realtime"]
-        },
-        {
-          "id": "e6tdfjadntdr6oha7qlv2b1h",
-          "visible": true,
-          "name": "AWS",
-          "description": "",
-          "level": 0,
-          "keywords": ["Cloud", "EC2", "S3", "Lambda"]
-        },
-        {
-          "id": "xpkq3xza4yjk2ldqoa8kr2q4",
-          "visible": true,
-          "name": "Vercel AI SDK",
-          "description": "",
-          "level": 0,
-          "keywords": []
-        },
-        {
-          "id": "lln3nzo4xpmosoj35bfpe8q6",
-          "visible": true,
-          "name": "Ollama",
-          "description": "",
-          "level": 0,
-          "keywords": []
-        },
-        {
-          "id": "qs8yw9wifn1xy8rei6j393u4",
-          "visible": true,
-          "name": "Neon Serverless",
-          "description": "",
-          "level": 0,
-          "keywords": ["Postgres", "Database"]
-        },
-        {
-          "id": "qr7y1vw5ljnhuhp0nvagkpfh",
-          "visible": true,
-          "name": "Google Cloud Platform",
-          "description": "",
-          "level": 0,
-          "keywords": []
-        },
-        {
-          "id": "jketkevyynzz3vg6dskksb31",
-          "visible": true,
-          "name": "Svelte",
-          "description": "",
-          "level": 0,
-          "keywords": []
+          "fullWidth": false,
+          "main": [
+            "profiles",
+            "summary",
+            "experience",
+            "projects",
+            "education",
+            "awards",
+            "certifications",
+            "interests",
+            "volunteer",
+            "skills",
+            "references",
+            "languages",
+            "publications"
+          ],
+          "sidebar": []
         }
       ]
     },
-    "custom": {}
-  },
-  "metadata": {
-    "template": "rhyhorn",
-    "layout": [
-      [
-        ["summary", "profiles", "experience", "projects"],
-        ["volunteer", "references", "interests", "publications"]
-      ],
-      [["education", "awards", "skills", "languages"], ["certifications"]]
-    ],
     "css": {
-      "value": "* {\n\toutline: 1px solid #000;\n\toutline-offset: 4px;\n}",
-      "visible": false
+      "enabled": false,
+      "value": ""
     },
     "page": {
-      "margin": 18,
+      "gapX": 4,
+      "gapY": 6,
+      "marginX": 14,
+      "marginY": 12,
       "format": "a4",
-      "options": {
-        "breakLine": false,
-        "pageNumbers": true
+      "locale": "en-US",
+      "hideIcons": false
+    },
+    "design": {
+      "level": {
+        "icon": "star",
+        "type": "circle"
+      },
+      "colors": {
+        "primary": "rgba(0, 146, 184, 1)",
+        "text": "rgba(0, 0, 0, 1)",
+        "background": "rgba(255, 255, 255, 1)"
       }
     },
-    "theme": {
-      "background": "#ffffff",
-      "text": "#000000",
-      "primary": "#0284c7"
-    },
     "typography": {
-      "font": {
-        "family": "Arial",
-        "subset": "latin",
-        "variants": ["regular"],
-        "size": 14
+      "body": {
+        "fontFamily": "Inter",
+        "fontWeights": ["400", "600"],
+        "fontSize": 10,
+        "lineHeight": 1.5
       },
-      "lineHeight": 1.5,
-      "hideIcons": false,
-      "underlineLinks": true
+      "heading": {
+        "fontFamily": "Inter",
+        "fontWeights": ["700"],
+        "fontSize": 14,
+        "lineHeight": 1.5
+      }
     },
     "notes": ""
   }

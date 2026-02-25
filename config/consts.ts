@@ -138,7 +138,7 @@ export const CLIENTS: Client[] = [
     name: "Sa7abox",
     href: "https://www.sa7abox.com",
     logo: "/clients/sa7abox.svg",
-  }
+  },
 ]
 
 export const REPOSITORIES = [
