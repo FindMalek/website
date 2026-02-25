@@ -5,12 +5,14 @@ import { STACK_SECTIONS } from "@/config/stack"
 
 type Project = (typeof allProjects)[number]
 type Work = (typeof allWorks)[number]
+type SkillItem = { name: string; description: string }
+type LanguageItem = { name: string; description: string }
 
 /**
  * Formats resume skills into a readable string
  */
 function formatSkills() {
-  const skills = resumeData.sections.skills.items
+  const skills = resumeData.sections.skills.items as SkillItem[]
   return skills
     .map((skill) => `- **${skill.name}**: ${skill.description}`)
     .join("\n")
@@ -24,9 +26,9 @@ function formatExperience() {
   return experiences
     .map(
       (exp) =>
-        `- **${exp.position}** at **${exp.company}** (${exp.date})
+        `- **${exp.position}** at **${exp.company}** (${exp.period})
   Location: ${exp.location}
-  ${exp.summary
+  ${exp.description
     .replace(/<[^>]*>/g, "")
     .replace(/\n+/g, " ")
     .trim()}`
@@ -42,10 +44,10 @@ function formatEducation() {
   return education
     .map(
       (edu) =>
-        `- **${edu.studyType} in ${edu.area}** at **${edu.institution}**
-  Date: ${edu.date}
-  Score: ${edu.score}
-  ${edu.summary
+        `- **${edu.degree} in ${edu.area}** at **${edu.school}**
+  Date: ${edu.period}
+  Score: ${edu.grade}
+  ${edu.description
     .replace(/<[^>]*>/g, "")
     .replace(/\n+/g, " ")
     .trim()}`
@@ -62,7 +64,7 @@ function formatAwards() {
     .map(
       (award) =>
         `- **${award.title}** by ${award.awarder} (${award.date})
-  ${award.summary
+  ${award.description
     .replace(/<[^>]*>/g, "")
     .replace(/\n+/g, " ")
     .trim()}`
@@ -74,7 +76,7 @@ function formatAwards() {
  * Formats resume languages into a readable string
  */
 function formatLanguages() {
-  const languages = resumeData.sections.languages.items
+  const languages = resumeData.sections.languages.items as LanguageItem[]
   return languages
     .map((lang) => `- **${lang.name}**: ${lang.description}`)
     .join("\n")
@@ -131,7 +133,7 @@ export function generateChatbotContext() {
 ## DETAILED PROFESSIONAL BACKGROUND
 
 ### Summary
-${resumeData.sections.summary.content
+${resumeData.summary.content
   .replace(/<[^>]*>/g, "")
   .replace(/\n+/g, " ")
   .trim()}
@@ -140,7 +142,7 @@ ${resumeData.sections.summary.content
 - Email: ${resumeData.basics.email}
 - Phone: ${resumeData.basics.phone}
 - Location: ${resumeData.basics.location}
-- Website: ${resumeData.basics.url.href}
+- Website: ${resumeData.basics.website.url}
 - LinkedIn: https://www.linkedin.com/in/findmalek/
 - GitHub: https://github.com/findmalek
 - Twitter: https://x.com/foundmalek
