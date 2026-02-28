@@ -1,0 +1,208 @@
+---
+id: 11
+image: "/project/dukkani.png"
+name: "Dukkani"
+overview: "A mobile-first commerce platform for Tunisia — enabling merchants to launch online stores, manage orders via Telegram, and sell without technical complexity. Think Shopify, but built for the Tunisian market."
+status: "published"
+link: "https://dukkani.co"
+href: "/projects/dukkani"
+---
+
+# Dukkani — The Shopify of Tunisia 🇹🇳
+
+## Overview
+
+**Dukkani** is a mobile-first commerce platform built specifically for the Tunisian market.  
+The vision is simple but ambitious:  
+> Build a local-first Shopify alternative that works with how Tunisian merchants already operate — fast onboarding, social commerce, messaging-based order management, and zero technical friction.
+
+Merchants can:
+- Create their storefront
+- List products
+- Receive orders directly on Telegram
+- Manage orders from a dashboard
+- Sell without needing any technical knowledge
+
+---
+
+## Vision
+
+E-commerce platforms today are not designed for Tunisia’s reality.
+
+- Payment systems are fragmented  
+- WhatsApp Business APIs are restricted and paid  
+- Most merchants operate through Facebook / Instagram / messaging  
+- Shopify is expensive and overkill for local small businesses  
+
+**Dukkani’s vision:**  
+> Become the default commerce infrastructure for Tunisian merchants — simple, fast, mobile-first, and deeply integrated with local workflows.
+
+Long-term, Dukkani aims to be:
+- The backbone for small businesses in Tunisia  
+- A full-stack commerce platform (storefront, orders, delivery, payments, analytics)  
+- A launchpad for the next generation of local digital businesses  
+
+---
+
+## How This Project Started
+
+Dukkani started as an experiment between two friends:
+- **[Adam Nouira](https://github.com/ademNr)** (co-founder, idea & early brainstorming)
+- Me (solo builder after MVP decision)
+
+### Phase 1 — The First Idea (Rejected)
+The initial idea was to build a **gym & coaching platform** for Tunisia.  
+After early thinking and market reflection, it became clear:
+- Adoption would be low  
+- Gyms are not digitally mature yet  
+- Monetization would be very slow  
+
+So the idea was dropped.
+
+### Phase 2 — The Pivot
+We pivoted to:
+> **A Shopify-like platform for Tunisia**
+
+We identified competitors (Convert, Kick Tech Pro), but decided:
+- Even if it fails, the project will become a strong portfolio product  
+- Best case: it becomes a real business  
+- Worst case: I level up massively as an engineer  
+
+We set a rule:
+> Build an MVP in 2 weeks or kill the idea.
+
+### Phase 3 — Solo Execution
+
+My co-founder couldn’t contribute code-wise, so I decided to:
+- Take full ownership  
+- Use the project as a learning vehicle  
+- Build a real production-grade system  
+
+This is where Dukkani became:
+- My monorepo learning project  
+- My infra & deployment learning lab  
+- My architecture stress test  
+
+---
+
+## Stack & Architecture
+
+Dukkani is built as a **modular monorepo** with clear separation of concerns:
+
+### Core Apps
+- **Dashboard (Web App)**  
+  Merchant admin interface (products, orders, settings)
+- **Storefront (Web App)**  
+  Public merchant stores
+- **API App (ORPC)**  
+  Dedicated API app hosted on Vercel with full typed endpoints + UI explorer
+- **Telegram Bot**  
+  Merchants receive and manage orders directly on Telegram
+
+### Core Tech Stack
+- Next.js (App Router)
+- TypeScript
+- ORPC (similar to tRPC)
+- Prisma + PostgreSQL
+- Vercel (apps hosting)
+- Supabase Storage (soon migrating to Cloudflare R2)
+- Telegram Bot API
+- Monorepo architecture (multiple apps + shared packages)
+- CI with Lighthouse tests for performance & accessibility
+
+### Architecture Goals
+- Fully typed API layer  
+- Shared domain logic between apps  
+- Clean separation of concerns  
+- Scalable infra for future growth  
+
+---
+
+## Product Scope
+
+Dukkani is not just “a website builder”.  
+It’s a full commerce system:
+
+- Merchant Dashboard  
+- Custom Storefront per merchant  
+- Product management  
+- Order management  
+- Telegram integration  
+- API explorer  
+- Future: delivery, payments, analytics  
+
+---
+
+## Roadmap (High-Level)
+
+### Short-Term (0–2 months)
+- Finish core product flows (products, orders, editing, archiving)
+- Fix UX gaps discovered by real merchants
+- Mobile UX improvements
+- Localization (FR / AR)
+- Better image handling & compression
+- Error observability improvements
+
+### Mid-Term (3–6 months)
+- Delivery management
+- Customer experience improvements
+- AI-powered product descriptions
+- Better analytics
+- Merchant onboarding improvements
+
+### Long-Term
+- Payments integration
+- Logistics partnerships
+- Marketplace features
+- Growth tools for merchants
+- Full merchant operating system
+
+---
+
+## Team & Contributors
+
+- Founder & Builder: Me  
+- Co-founder (Idea & early discussions): **[Adam Nouira](https://github.com/ademNr)**  
+- Contributor / Hire: **[Skander Souissi](https://github.com/SkandarS0)**
+
+GitHub:
+- Adam Nouira — https://github.com/ademNr 
+- Skander Souissi — https://github.com/SkandarS0
+
+---
+
+## Current Status
+
+Dukkani is:
+- Live in early beta  
+- Used by real merchants  
+- Actively under heavy development  
+- Continuously iterated based on real user feedback  
+
+This case study will be updated as:
+- The product evolves  
+- New features ship  
+- More merchants onboard  
+- The business side matures  
+
+---
+
+## Why This Project Matters (Personally)
+
+Dukkani is:
+- My first serious product attempt  
+- My biggest monorepo so far  
+- My first platform with real users  
+- My first time onboarding real merchants  
+- My first step toward building a real startup  
+
+Even if Dukkani never becomes a business,  
+it already succeeded as:
+- A technical achievement  
+- A learning accelerator  
+- A proof that I can build full platforms end-to-end  
+
+---
+
+_This case study is a living document.  
+It will evolve with the product._
