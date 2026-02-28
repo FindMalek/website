@@ -18,7 +18,7 @@ export default async function About() {
     <div className="w-full px-4 pt-20">
       <PageHeading
         title="About"
-        heading="I'm a Design Engineer, Founder and professional wanderer."
+        heading="I'm a Design Engineer, Founder, and Product Builder."
       />
       <AboutOverview />
       <AboutMusic playlists={playlists.items} />

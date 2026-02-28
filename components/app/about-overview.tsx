@@ -15,7 +15,8 @@ export function AboutOverview() {
         <div className="space-y-6 lg:w-3/5">
           <p className="text-lg">
             Hi, I&apos;m Malek Gara-Hellal. I&apos;m a Design Engineer, Founder,
-            and Creative Entrepreneur.
+            and Product Builder focused on turning ideas into real, scalable
+            systems.
           </p>
 
           <p className="text-lg">
@@ -27,12 +28,14 @@ export function AboutOverview() {
             >
               Undrstnd Labs
             </Link>
-            , an AI development and research lab focused on solving real-life
-            problems through innovative web apps. Our work spans education with{" "}
+            , an AI development and research lab focused on solving real-world
+            problems through thoughtfully designed products. Our work spans
+            education with{" "}
             <span className={cn("font-semibold")}>Undrstnd Education</span> and{" "}
             <span className={cn("font-semibold")}>Undrstnd Developers</span>,
-            and we continue to ship new applications to this day.
+            and we continue to ship new applications in production.
           </p>
+
           <p className="text-lg">
             Before that, I founded{" "}
             <Link
@@ -42,10 +45,11 @@ export function AboutOverview() {
             >
               Endless Byte
             </Link>
-            , a startup specializing in web app development in Tunisia. We
-            collaborated with numerous clients, particularly in developing
-            e-commerce websites.
+            , a web development startup in Tunisia where I worked closely with
+            founders and businesses to ship production-grade web applications,
+            mainly in e-commerce and internal tools.
           </p>
+
           <p className="text-lg">
             I also co-founded{" "}
             <Link
@@ -55,22 +59,44 @@ export function AboutOverview() {
             >
               Artweave
             </Link>
-            , a clothing brand known for its innovative style, which was
-            acquired by Tunisian Design in 2023.
+            , a clothing brand that explored creative direction, branding, and
+            product execution, and was later acquired by Tunisian Design in
+            2023.
           </p>
+
           <p className="text-lg">
-            I&apos;m an active contributor to open-source projects and have
-            designed several websites available on my{" "}
+            More recently, I&apos;ve been building{" "}
             <Link
-              href={siteConfig.links.github}
-              target="_blank"
+              href="/projects/dukkani"
               className={cn(link, "font-semibold")}
             >
-              GitHub
+              Dukkani
             </Link>
-            . Some of my notable contributions include{" "}
+            , a product focused on simplifying digital operations for local
+            businesses by combining design, automation, and practical tooling.
+          </p>
+
+          <p className="text-lg">
+            My philosophy is simple: I don&apos;t build features, I build
+            systems. I focus on creating structures that scale — in code, in
+            products, and in how teams work. I care deeply about
+            maintainability, clarity, and long-term leverage over short-term
+            hacks.
+          </p>
+
+          <p className="text-lg">
+            My journey hasn&apos;t been linear. I started by taking on small
+            freelance work, building and shipping constantly, failing fast, and
+            iterating in public and private. Over time, that evolved into
+            founding products, working with teams, contributing to open-source,
+            and designing systems that survive real usage.
+          </p>
+
+          <p className="text-lg">
+            I&apos;m an active open-source contributor and builder. Some
+            projects I&apos;ve contributed to include{" "}
             <Link
-              href={"https://midday.ai/"}
+              href="https://midday.ai/"
               target="_blank"
               className={cn(link, "font-semibold")}
             >
@@ -78,15 +104,15 @@ export function AboutOverview() {
             </Link>
             ,{" "}
             <Link
-              href={"https://github.com/function03-labs"}
+              href="https://github.com/function03-labs"
               target="_blank"
               className={cn(link, "font-semibold")}
             >
               Function03
             </Link>{" "}
-            in Web3 ,{" "}
+            in Web3,{" "}
             <Link
-              href={"https://tally-zero.preview.tally.xyz/"}
+              href="https://tally-zero.preview.tally.xyz/"
               target="_blank"
               className={cn(link, "font-semibold")}
             >
@@ -94,7 +120,7 @@ export function AboutOverview() {
             </Link>
             ,{" "}
             <Link
-              href={"https://www.openstatus.dev"}
+              href="https://www.openstatus.dev"
               target="_blank"
               className={cn(link, "font-semibold")}
             >
@@ -102,13 +128,13 @@ export function AboutOverview() {
             </Link>{" "}
             for{" "}
             <Link
-              href={"https://github.com/openstatusHQ/goat-stack"}
+              href="https://github.com/openstatusHQ/goat-stack"
               target="_blank"
               className={cn(link, "font-semibold")}
             >
               Goat Stack
             </Link>
-            , and many more.
+            , and other production-grade tools.
           </p>
         </div>
 
