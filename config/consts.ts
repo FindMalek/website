@@ -145,7 +145,7 @@ export const REPOSITORIES = [
   "https://github.com/findmalek/website",
   "https://github.com/undrstnd-labs/education",
   "https://github.com/undrstnd-labs/developers",
-  "https://github.com/FindMalek/lead-insight",
+  "https://github.com/FindMalek/dukkani",
   "https://github.com/FindMalek/zero-locker",
   "https://github.com/FindMalek/muslim-fasting",
   "https://github.com/FindMalek/findauth",
