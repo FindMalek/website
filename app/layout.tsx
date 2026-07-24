@@ -13,6 +13,7 @@ import { Header } from "@/components/layout/header"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator"
 import { ChatFloatingContainer } from "@/components/app/chat-floating-container"
+import { HighlightAskAction } from "@/components/app/highlight-ask-action"
 import { Toaster } from "@/components/ui/sonner"
 import { ChatProvider } from "@/providers/chat-provider"
 
@@ -95,6 +96,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <Toaster />
             <TailwindIndicator />
             <ChatFloatingContainer />
+            <HighlightAskAction />
           </ChatProvider>
         </LayoutWrapper>
       </body>

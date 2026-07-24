@@ -11,6 +11,7 @@ import {
 import { link as linkStyle } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
+import { ArticleContent } from "@/components/app/article-content"
 import { Icons } from "@/components/shared/icons"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Badge } from "@/components/ui/badge"
@@ -117,9 +118,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
 
         {html && (
-          <div className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
+          <ArticleContent className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
             <MDXContent code={html} />
-          </div>
+          </ArticleContent>
         )}
       </div>
     </div>

@@ -8,6 +8,7 @@ import { convertWorkType } from "@/config/converter"
 import { link as linkStyle } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
+import { ArticleContent } from "@/components/app/article-content"
 import { WorkDateWithTooltip } from "@/components/app/work-date-with-tooltip"
 import { Icons } from "@/components/shared/icons"
 import { buttonVariants } from "@/components/ui/button"
@@ -123,9 +124,9 @@ export default async function WorkPageById({ params }: WorkPageByIdProps) {
           </div>
         )}
 
-        <div className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
+        <ArticleContent className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
           <MDXContent code={html} />
-        </div>
+        </ArticleContent>
       </div>
     </div>
   )
