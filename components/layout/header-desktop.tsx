@@ -1,16 +1,12 @@
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 
 import { DesktopNavigationType, NavItemType } from "@/types"
 
 import { NAV_ITEMS } from "@/config/consts"
 import { cn } from "@/lib/utils"
+import { useActiveSection } from "@/hooks/use-active-section"
 
-function NavItem({ href, children }: NavItemType) {
-  const pathname = usePathname()
-  const isActive =
-    pathname === href || (href !== "/" && pathname?.startsWith(`${href}/`))
-
+function NavItem({ href, children, isActive }: NavItemType) {
   return (
     <li>
       <Link
@@ -38,6 +34,8 @@ function NavItem({ href, children }: NavItemType) {
 }
 
 export function HeaderDesktop(props: DesktopNavigationType) {
+  const activeSection = useActiveSection(["work", "projects", "stack", "about"])
+
   return (
     <nav {...props}>
       <ul
@@ -53,7 +51,11 @@ export function HeaderDesktop(props: DesktopNavigationType) {
         )}
       >
         {Object.values(NAV_ITEMS).map((item) => (
-          <NavItem key={item.path} href={item.path}>
+          <NavItem
+            key={item.path}
+            href={item.path}
+            isActive={item.path.split("#")[1] === activeSection}
+          >
             {item.name}
           </NavItem>
         ))}

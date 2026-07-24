@@ -10,6 +10,7 @@ interface Direct {
 }
 
 interface SectionHeadingProps {
+  id?: string
   title: string
   description?: string
   direct?: Direct
@@ -17,13 +18,21 @@ interface SectionHeadingProps {
 }
 
 export function SectionHeading({
+  id,
   title,
   description,
   direct,
   className,
 }: SectionHeadingProps) {
   return (
-    <div className={cn("mb-6 flex items-center justify-between", className)}>
+    <div
+      id={id}
+      className={cn(
+        "mb-6 flex items-center justify-between",
+        id && "[scroll-margin-top:var(--header-height,6rem)]",
+        className
+      )}
+    >
       <div>
         <h2 className="mb-2 text-3xl font-bold">{title}</h2>
         {description && (

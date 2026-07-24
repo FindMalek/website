@@ -12,7 +12,6 @@ import { Footer } from "@/components/layout/footer"
 import { Header } from "@/components/layout/header"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator"
-import { NextPage } from "@/components/shared/next-page"
 import { Toaster } from "@/components/ui/sonner"
 
 interface RootLayoutProps {
@@ -86,10 +85,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       >
         <LayoutWrapper>
           <Header />
-          <main className="flex-1">
-            {children}
-            <NextPage />
-          </main>
+          <main className="flex-1">{children}</main>
           <Footer />
           <Background />
           <Analytics />

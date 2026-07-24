@@ -59,7 +59,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     <div className="container max-w-4xl px-4 py-16 md:py-24">
       <div className="relative mx-auto">
         <Link
-          href="/projects"
+          href="/#projects"
           className={cn(
             buttonVariants({ variant: "ghost", size: "sm" }),
             "absolute -top-8 left-0"

@@ -5,7 +5,10 @@ import { SectionHeading } from "@/components/shared/section-heading"
 
 export function AboutBooks() {
   return (
-    <section className="mb-32">
+    <section
+      id="readings"
+      className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
+    >
       <SectionHeading title="Reading list" />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {BOOKS.map((book) => (

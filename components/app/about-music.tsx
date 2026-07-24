@@ -19,7 +19,10 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
   }
 
   return (
-    <section className="mb-32">
+    <section
+      id="playlists"
+      className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
+    >
       <SectionHeading
         title="Music"
         description="I love listening to music and creating playlists"

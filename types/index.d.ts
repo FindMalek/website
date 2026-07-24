@@ -34,6 +34,7 @@ export type AvatarContainerType = React.ComponentProps<"div">
 export type NavItemType = {
   href: string
   children: React.ReactNode
+  isActive?: boolean
 }
 
 export type MobileNavigationType = React.ComponentProps<typeof Popover>
