@@ -2,6 +2,9 @@
   "name": "@findmalek/website",
   "version": "0.2.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -11,8 +14,8 @@
     "format": "prettier . --write && next lint --fix"
   },
   "dependencies": {
-    "@ai-sdk/groq": "^3.0.53",
-    "@ai-sdk/react": "^3.0.237",
+    "@ai-sdk/groq": "^4.0.13",
+    "@ai-sdk/react": "^4.0.40",
     "@content-collections/mdx": "0.2.2",
     "@headlessui/react": "^2.2.1",
     "@hookform/resolvers": "^5.4.0",
@@ -48,7 +51,7 @@
     "@tanstack/react-query": "^5.72.1",
     "@vercel/analytics": "^1.5.0",
     "@zenbase/llml": "^0.4.0",
-    "ai": "^6.0.235",
+    "ai": "^7.0.37",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

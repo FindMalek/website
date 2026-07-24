@@ -1,6 +1,6 @@
 import { groq } from "@ai-sdk/groq"
 import { llml } from "@zenbase/llml"
-import { convertToModelMessages, stepCountIs, streamText, UIMessage } from "ai"
+import { convertToModelMessages, isStepCount, streamText, UIMessage } from "ai"
 import { z } from "zod/v3"
 
 import { generateChatbotContext } from "@/lib/chatbot-context"
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       messages,
       temperature: 0.7,
       maxOutputTokens: 1000,
-      system: systemPrompt,
+      instructions: systemPrompt,
 
       tools: {
         saveEmail: {
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
         },
       },
 
-      stopWhen: stepCountIs(5),
+      stopWhen: isStepCount(5),
     })
 
     return result.toUIMessageStreamResponse()
