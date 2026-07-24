@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { WorkDateWithTooltip } from "@/components/app/work-date-with-tooltip"
 
 export function WorkCardCompact({ work }: { work: WorkRo }) {
-  const { logo, logoClassName, company, position, type, startDate, endDate, href } =
+  const { logo, logoClassName, company, position, startDate, endDate, href } =
     work
 
   return (

@@ -37,7 +37,7 @@ export function useChatWithTools() {
   const isLoading =
     chatState.status === "submitted" || chatState.status === "streaming"
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value)
   }
 

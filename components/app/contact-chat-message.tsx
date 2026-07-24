@@ -1,7 +1,6 @@
 "use client"
 
 import type { UIMessage } from "ai"
-import ReactMarkdown from "react-markdown"
 
 import { ToolName } from "@/types/enum"
 
@@ -9,6 +8,7 @@ import { convertToolName } from "@/config/converter"
 import { ToolCallLike } from "@/lib/tool-helpers"
 import { cn, getMessageText } from "@/lib/utils"
 
+import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message"
 import { ContactToolEmailForm } from "@/components/app/contact-tool-email-form"
 import { ContactToolMeetingScheduler } from "@/components/app/contact-tool-meeting-scheduler"
 import { ContactToolPricingEstimator } from "@/components/app/contact-tool-pricing-estimator"
@@ -86,12 +86,7 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
   }
 
   return (
-    <div
-      className={cn(
-        "mb-4 flex items-start gap-3",
-        isUser && "flex-row-reverse"
-      )}
-    >
+    <div className={cn("mb-4 flex items-start gap-3", isUser && "flex-row-reverse")}>
       <div
         className={cn(
           "hidden h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow md:flex",
@@ -104,23 +99,12 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
           <Icons.logo className="aspect-square size-8 rounded-md object-cover" />
         )}
       </div>
-      <div
-        className={cn(
-          "flex max-w-[80%] flex-col space-y-2",
-          isUser && "items-end"
-        )}
-      >
+
+      <Message from={message.role} className="max-w-[80%]">
         {text.length > 0 && (
-          <div
-            className={cn(
-              "prose prose-sm max-w-none rounded-lg px-3 py-2 text-sm",
-              isUser
-                ? "bg-primary text-primary-foreground prose-invert"
-                : "bg-muted prose-gray dark:prose-invert"
-            )}
-          >
-            {isUser ? text : <ReactMarkdown>{text}</ReactMarkdown>}
-          </div>
+          <MessageContent>
+            {isUser ? text : <MessageResponse>{text}</MessageResponse>}
+          </MessageContent>
         )}
 
         {message.parts.map((part, index) => {
@@ -133,7 +117,7 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
           }
           return null
         })}
-      </div>
+      </Message>
     </div>
   )
 }
