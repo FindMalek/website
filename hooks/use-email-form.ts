@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import type { ToolInvocation } from "ai"
 import { useForm } from "react-hook-form"
 
 import { emailFormSchema, type EmailFormValues } from "@/config/schemas"
-import { createToolResult, stringifyToolResult } from "@/lib/tool-helpers"
+import { createToolResult, type ToolCallLike } from "@/lib/tool-helpers"
+import { getMessageText } from "@/lib/utils"
 import { getGlobalChatContext } from "@/hooks/use-chat-with-tools"
 
 import { sendContactEmailIntroduction } from "@/actions/resend"
@@ -16,7 +16,7 @@ interface EmailFormState {
   isSubmitted: boolean
 }
 
-export function useEmailForm(toolCall: ToolInvocation) {
+export function useEmailForm(toolCall: ToolCallLike) {
   const [state, setState] = useState<EmailFormState>({
     askingDetails: true,
     askingConfirmation: false,
@@ -65,7 +65,7 @@ export function useEmailForm(toolCall: ToolInvocation) {
       // Get the conversation history
       const conversationHistory = messages.map((msg) => ({
         role: msg.role,
-        message: msg.content,
+        message: getMessageText(msg),
       }))
 
       const result = await sendContactEmailIntroduction(
@@ -87,18 +87,18 @@ export function useEmailForm(toolCall: ToolInvocation) {
 
       addToolResult({
         toolCallId: toolCall.toolCallId,
-        result: stringifyToolResult(toolResult),
+        tool: "saveEmail",
+        result: toolResult,
       })
     } catch (error) {
       console.error("Error sending email:", error)
 
       addToolResult({
         toolCallId: toolCall.toolCallId,
-        result: stringifyToolResult(
-          createToolResult(false, {
-            error: "Failed to send email",
-          })
-        ),
+        tool: "saveEmail",
+        result: createToolResult(false, {
+          error: "Failed to send email",
+        }),
       })
     } finally {
       updateState("isSubmitting", false)

@@ -1,13 +1,12 @@
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import type { ToolInvocation } from "ai"
 import { useForm } from "react-hook-form"
 
 import {
   meetingSchedulerSchema,
   type MeetingSchedulerValues,
 } from "@/config/schemas"
-import { createToolResult, stringifyToolResult } from "@/lib/tool-helpers"
+import { createToolResult, type ToolCallLike } from "@/lib/tool-helpers"
 import { getGlobalChatContext } from "@/hooks/use-chat-with-tools"
 
 interface MeetingState {
@@ -17,7 +16,7 @@ interface MeetingState {
   showingCalendar: boolean
 }
 
-export function useMeetingScheduler(toolCall: ToolInvocation) {
+export function useMeetingScheduler(toolCall: ToolCallLike) {
   const [state, setState] = useState<MeetingState>({
     isLoading: false,
     isScheduled: false,
@@ -80,18 +79,18 @@ export function useMeetingScheduler(toolCall: ToolInvocation) {
 
       addToolResult({
         toolCallId: toolCall.toolCallId,
-        result: stringifyToolResult(result),
+        tool: "scheduleMeeting",
+        result,
       })
     } catch (error) {
       console.error("Error scheduling meeting:", error)
 
       addToolResult({
         toolCallId: toolCall.toolCallId,
-        result: stringifyToolResult(
-          createToolResult(false, {
-            error: "Failed to schedule meeting",
-          })
-        ),
+        tool: "scheduleMeeting",
+        result: createToolResult(false, {
+          error: "Failed to schedule meeting",
+        }),
       })
     } finally {
       updateState("isLoading", false)

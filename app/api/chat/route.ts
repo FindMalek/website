@@ -1,9 +1,7 @@
 import { groq } from "@ai-sdk/groq"
 import { llml } from "@zenbase/llml"
-import { streamText } from "ai"
-import { z } from "zod"
-
-import { ChatMessage } from "@/types"
+import { convertToModelMessages, stepCountIs, streamText, UIMessage } from "ai"
+import { z } from "zod/v3"
 
 import { generateChatbotContext } from "@/lib/chatbot-context"
 import { sanitizeMessages } from "@/lib/utils"
@@ -13,9 +11,10 @@ export const maxDuration = 20
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const rawMessages = body.messages || []
+    const rawMessages: UIMessage[] = body.messages || []
     const contextualKnowledge = generateChatbotContext()
-    const messages = sanitizeMessages(rawMessages as ChatMessage[])
+    const uiMessages = sanitizeMessages(rawMessages)
+    const messages = convertToModelMessages(uiMessages)
 
     const systemPrompt = llml({
       role: "You are Malek Gara-Hellal, a Senior Full Stack Developer from Tunisia, Monastir. You are responding to visitors on your personal website.",
@@ -39,19 +38,20 @@ export async function POST(req: Request) {
       model: groq("openai/gpt-oss-120b"),
       messages,
       temperature: 0.7,
-      maxTokens: 1000,
+      maxOutputTokens: 1000,
       system: systemPrompt,
+
       tools: {
         saveEmail: {
           description: "Save the user's email and contact information",
-          parameters: z.object({
+          inputSchema: z.object({
             purpose: z.string().describe("The purpose of collecting the email"),
           }),
         },
         scheduleMeeting: {
           description:
             "Direct user to Malek's calendar for scheduling a meeting",
-          parameters: z.object({
+          inputSchema: z.object({
             purpose: z.string().describe("The purpose of the meeting"),
             calendarLink: z
               .string()
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
         generatePricing: {
           description:
             "Generate a pricing estimate for a project. Call this tool immediately when the user asks for a price estimate, pricing, or project cost. The form will be shown to the user to fill in details.",
-          parameters: z.object({
+          inputSchema: z.object({
             projectType: z
               .string()
               .optional()
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
         getTodayDate: {
           description:
             "Get today's date. Use this when you need to calculate age or work with dates.",
-          parameters: z.object({}),
+          inputSchema: z.object({}),
           execute: async () => {
             const today = new Date()
             return {
@@ -103,7 +103,7 @@ export async function POST(req: Request) {
         },
         getResume: {
           description: "Provide access to the website owner's resume/CV",
-          parameters: z.object({
+          inputSchema: z.object({
             purpose: z
               .string()
               .optional()
@@ -111,11 +111,11 @@ export async function POST(req: Request) {
           }),
         },
       },
-      experimental_toolCallStreaming: true,
-      maxSteps: 5,
+
+      stopWhen: stepCountIs(5),
     })
 
-    return result.toDataStreamResponse()
+    return result.toUIMessageStreamResponse()
   } catch (error) {
     console.error("Error in chat API:", error)
     return new Response(

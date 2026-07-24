@@ -1,11 +1,11 @@
 import { RefObject } from "react"
-import { Message } from "ai"
+import { UIMessage } from "ai"
 
 import { ContactChatMessage } from "@/components/app/contact-chat-message"
 import { Icons } from "@/components/shared/icons"
 
 interface ContactChatMessagesProps {
-  messages: Message[]
+  messages: UIMessage[]
   isLoading: boolean
   isCancelling: boolean
   messagesEndRef: RefObject<HTMLDivElement | null>

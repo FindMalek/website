@@ -1,8 +1,7 @@
 import { useState } from "react"
-import type { ToolInvocation } from "ai"
 
 import { siteConfig } from "@/config/site"
-import { createToolResult, stringifyToolResult } from "@/lib/tool-helpers"
+import { createToolResult, type ToolCallLike } from "@/lib/tool-helpers"
 import { getGlobalChatContext } from "@/hooks/use-chat-with-tools"
 
 interface ResumeGeneratorState {
@@ -10,7 +9,7 @@ interface ResumeGeneratorState {
   resumeUrl: string | null
 }
 
-export function useResumeGenerator(toolCall: ToolInvocation) {
+export function useResumeGenerator(toolCall: ToolCallLike) {
   const [state, setState] = useState<ResumeGeneratorState>({
     isGenerating: false,
     resumeUrl: null,
@@ -39,18 +38,18 @@ export function useResumeGenerator(toolCall: ToolInvocation) {
 
       addToolResult({
         toolCallId: toolCall.toolCallId,
-        result: stringifyToolResult(result),
+        tool: "getResume",
+        result,
       })
     } catch (error) {
       console.error("Error providing resume:", error)
 
       addToolResult({
         toolCallId: toolCall.toolCallId,
-        result: stringifyToolResult(
-          createToolResult(false, {
-            error: "Failed to provide resume link",
-          })
-        ),
+        tool: "getResume",
+        result: createToolResult(false, {
+          error: "Failed to provide resume link",
+        }),
       })
     } finally {
       updateState("isGenerating", false)

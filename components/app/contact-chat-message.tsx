@@ -1,12 +1,13 @@
 "use client"
 
-import type { Message, ToolInvocation } from "ai"
+import type { UIMessage } from "ai"
 import ReactMarkdown from "react-markdown"
 
 import { ToolName } from "@/types/enum"
 
 import { convertToolName } from "@/config/converter"
-import { cn } from "@/lib/utils"
+import { ToolCallLike } from "@/lib/tool-helpers"
+import { cn, getMessageText } from "@/lib/utils"
 
 import { ContactToolEmailForm } from "@/components/app/contact-tool-email-form"
 import { ContactToolMeetingScheduler } from "@/components/app/contact-tool-meeting-scheduler"
@@ -15,29 +16,26 @@ import { ContactToolResumeGenerator } from "@/components/app/contact-tool-resume
 import { Icons } from "@/components/shared/icons"
 
 interface ChatMessageProps {
-  message: Message
+  message: UIMessage
 }
 
-type ToolInvocationState = "partial-call" | "call" | "result"
-
-interface ToolInvocationUIPart {
-  type: "tool-invocation"
-  toolInvocation: {
-    state: ToolInvocationState
-    toolCallId: string
-    toolName: ToolName
-    args: Record<string, unknown>
-    result?: Record<string, unknown>
-  }
+type ToolPart = UIMessage["parts"][number] & {
+  type: `tool-${string}`
+  toolCallId: string
+  state: "input-streaming" | "input-available" | "output-available" | "output-error"
+  input?: Record<string, unknown>
+  output?: Record<string, unknown>
 }
 
 export function ContactChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user"
+  const text = getMessageText(message)
 
-  const renderToolCall = (part: ToolInvocationUIPart) => {
-    const { toolName, state, toolCallId, args, result } = part.toolInvocation
+  const renderToolCall = (part: ToolPart) => {
+    const toolName = part.type.slice("tool-".length) as ToolName
+    const { state, toolCallId, input, output } = part
 
-    if (state === "partial-call") {
+    if (state === "input-streaming") {
       return (
         <div className="text-muted-foreground flex items-center space-x-2 text-sm">
           <Icons.spinner className="h-4 w-4 animate-spin" />
@@ -46,12 +44,10 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
       )
     }
 
-    const toolCall: ToolInvocation = {
+    const toolCall: ToolCallLike = {
       toolCallId,
-      toolName,
-      args,
-      state: state === "call" ? "call" : "result",
-      result: result || {},
+      input: input || {},
+      output: output || {},
     }
 
     try {
@@ -70,8 +66,12 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
         default:
           return (
             <div className="text-muted-foreground text-sm">
-              {state === "call" && `Processing ${convertToolName(toolName)}...`}
-              {state === "result" && `${convertToolName(toolName)} completed`}
+              {state === "input-available" &&
+                `Processing ${convertToolName(toolName)}...`}
+              {state === "output-available" &&
+                `${convertToolName(toolName)} completed`}
+              {state === "output-error" &&
+                `${convertToolName(toolName)} failed`}
             </div>
           )
       }
@@ -110,7 +110,7 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
           isUser && "items-end"
         )}
       >
-        {message.content.length > 0 && (
+        {text.length > 0 && (
           <div
             className={cn(
               "prose prose-sm max-w-none rounded-lg px-3 py-2 text-sm",
@@ -119,19 +119,15 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
                 : "bg-muted prose-gray dark:prose-invert"
             )}
           >
-            {isUser ? (
-              message.content
-            ) : (
-              <ReactMarkdown>{message.content}</ReactMarkdown>
-            )}
+            {isUser ? text : <ReactMarkdown>{text}</ReactMarkdown>}
           </div>
         )}
 
-        {message.parts?.map((part, index) => {
-          if (part.type === "tool-invocation") {
+        {message.parts.map((part, index) => {
+          if (part.type.startsWith("tool-")) {
             return (
               <div key={index} className="w-full">
-                {renderToolCall(part as ToolInvocationUIPart)}
+                {renderToolCall(part as ToolPart)}
               </div>
             )
           }

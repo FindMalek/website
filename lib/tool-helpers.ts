@@ -1,4 +1,15 @@
-import type { ToolInvocation } from "ai"
+/**
+ * Minimal shape shared by every tool-UI component's `toolCall` prop.
+ * AI SDK v5's UIToolInvocation carries `input`/`output` (not `args`/`result`)
+ * and derives the tool name from the message part's `type` discriminant
+ * rather than a `toolName` field, so callers that need the name pass it
+ * separately.
+ */
+export interface ToolCallLike {
+  toolCallId: string
+  input?: Record<string, unknown>
+  output?: Record<string, unknown>
+}
 
 /**
  * Extracts arguments from a tool call
@@ -6,9 +17,9 @@ import type { ToolInvocation } from "ai"
  * @returns Extracted arguments from the tool call
  */
 export function getToolArgs<T extends Record<string, unknown>>(
-  toolCall: ToolInvocation
+  toolCall: ToolCallLike
 ): T {
-  return toolCall.args as T
+  return (toolCall.input ?? {}) as T
 }
 
 /**
@@ -46,6 +57,6 @@ export function stringifyToolResult(result: Record<string, unknown>): string {
  * @param toolCall The tool call to validate
  * @returns True if the tool call has a valid ID
  */
-export function isValidToolCall(toolCall: ToolInvocation | undefined): boolean {
+export function isValidToolCall(toolCall: ToolCallLike | undefined): boolean {
   return Boolean(toolCall && toolCall.toolCallId)
 }

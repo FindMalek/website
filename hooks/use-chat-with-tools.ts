@@ -1,128 +1,143 @@
+import { ChangeEvent, useState } from "react"
 import { useChat as useAIChat } from "@ai-sdk/react"
-import type { Message } from "ai"
+import { DefaultChatTransport, type UIMessage } from "ai"
 
-interface MessageWithToolCalls extends Message {
-  toolCalls?: Array<{
-    toolCallId: string
-    state: string
-    [key: string]: unknown
-  }>
+const WELCOME_MESSAGE: UIMessage = {
+  id: "welcome-message",
+  role: "assistant",
+  parts: [
+    {
+      type: "text",
+      text: "👋 Welcome! I'm here to help you connect with the Malek. I can:\n\n- Save your contact information for follow-up\n- Schedule a meeting at a convenient time\n- Generate a pricing estimate for your project\n- Provide access to the owner's resume/CV\n\nHow can I assist you today?",
+    },
+  ],
+}
+
+function textMessage(id: string, role: "assistant" | "system", text: string): UIMessage {
+  return { id, role, parts: [{ type: "text", text }] }
 }
 
 /**
- * Custom hook that extends useChat with safe tool result handling
+ * Custom hook that extends useChat with safe tool result handling.
+ *
+ * v5's useChat no longer manages input state or exposes a boolean
+ * `isLoading`, so both are rebuilt here to keep the rest of the app's
+ * v4-shaped consumers (use-contact-chat.ts, the tool hooks) unchanged.
  */
 export function useChatWithTools() {
   const chatState = useAIChat({
-    api: "/api/chat",
-    initialMessages: [
-      {
-        id: "welcome-message",
-        role: "assistant",
-        content:
-          "👋 Welcome! I'm here to help you connect with the Malek. I can:\n\n- Save your contact information for follow-up\n- Schedule a meeting at a convenient time\n- Generate a pricing estimate for your project\n- Provide access to the owner's resume/CV\n\nHow can I assist you today?",
-      },
-    ],
+    messages: [WELCOME_MESSAGE],
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+    }),
   })
 
+  const [input, setInput] = useState("")
+
+  const isLoading =
+    chatState.status === "submitted" || chatState.status === "streaming"
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value)
+  }
+
+  const handleSubmit = (e?: { preventDefault?: () => void }) => {
+    e?.preventDefault?.()
+    if (!input.trim()) return
+    chatState.sendMessage({ text: input })
+    setInput("")
+  }
+
   /**
-   * Safely adds a tool result to the chat
-   * Falls back to appending a new message if direct tool result fails
+   * Safely adds a tool result to the chat.
+   * Falls back to appending a new message if direct tool result fails.
    */
   const safeAddToolResult = (params: {
     toolCallId: string
-    result: string | Record<string, unknown>
+    tool: string
+    result: Record<string, unknown>
   }) => {
     try {
-      // Try to add the result directly
-      chatState.addToolResult(params)
+      chatState.addToolResult({
+        tool: params.tool,
+        toolCallId: params.toolCallId,
+        output: params.result,
+      })
     } catch (error) {
       console.error("Error adding tool result:", error)
 
-      // If that fails, create a new message to handle the result
-      const toolResultMsg: Message = {
-        id: `tool-result-${Date.now()}`,
-        role: "assistant",
-        content:
-          "I've processed your request. Let me know if you need anything else!",
-      }
-
-      // Add the new message
-      chatState.append(toolResultMsg)
+      chatState.setMessages((prev) => [
+        ...prev,
+        textMessage(
+          `tool-result-${Date.now()}`,
+          "assistant",
+          "I've processed your request. Let me know if you need anything else!"
+        ),
+      ])
     }
   }
 
   /**
-   * Cancels any pending tool calls and resets the conversation context
-   * Creates a new assistant message that clearly ends the previous topic
-   * and signals to the model to stop using tools from that context
+   * Cancels any pending tool calls and resets the conversation context.
+   * Appends synthetic messages directly to local state (no API round-trip)
+   * that clearly end the previous topic and signal the model to stop using
+   * tools from that context.
    */
   const cancelToolCall = () => {
     try {
-      // Get the last message
-      const lastMessage = chatState.messages[
-        chatState.messages.length - 1
-      ] as MessageWithToolCalls
+      const lastMessage = chatState.messages[chatState.messages.length - 1]
 
-      // Safety check - ensure the message exists and has toolCalls property
       if (!lastMessage) {
         console.warn("No messages found to cancel tool calls")
         return
       }
 
-      // Check if there are any pending tool calls
-      const hasPendingToolCalls =
-        lastMessage.toolCalls?.some((toolCall) => toolCall.state === "call") ??
-        false
+      const hasPendingToolCalls = lastMessage.parts.some(
+        (part) =>
+          part.type.startsWith("tool-") &&
+          "state" in part &&
+          (part.state === "input-streaming" || part.state === "input-available")
+      )
 
-      // Even if no pending tool calls, we'll add a context reset message
-      // to ensure the conversation moves to a new topic
+      const resetMsg = textMessage(
+        `context-reset-${Date.now()}`,
+        "assistant",
+        "I understand you want to change the topic. Let's start fresh. How can I help you now?"
+      )
 
-      // Create a context reset message that clearly indicates topic change
-      const resetMsg: Message = {
-        id: `context-reset-${Date.now()}`,
-        role: "assistant",
-        content:
-          "I understand you want to change the topic. Let's start fresh. How can I help you now?",
-      }
+      const systemHint = textMessage(
+        `system-hint-${Date.now()}`,
+        "system",
+        "The previous conversation thread has been reset. Previous tool calls were cancelled. Treat this as a new conversation context."
+      )
 
-      // Add the reset message to clearly change context
-      chatState.append(resetMsg)
+      chatState.setMessages((prev) => [...prev, resetMsg, systemHint])
 
-      // Log the context reset
       console.log(
         hasPendingToolCalls
           ? "Cancelled pending tool calls and reset context"
           : "Reset conversation context"
       )
-
-      // Add a user-invisible system message that tells the model to stop using tools
-      // from the previous context (this will be filtered out by sanitizeMessages)
-      const systemHint: Message = {
-        id: `system-hint-${Date.now()}`,
-        role: "system",
-        content:
-          "The previous conversation thread has been reset. Previous tool calls were cancelled. Treat this as a new conversation context.",
-      }
-
-      // Add the system hint
-      chatState.append(systemHint)
     } catch (error) {
       console.error("Error in cancelToolCall:", error)
 
-      // Fallback reset message if error occurs
-      const fallbackMsg: Message = {
-        id: `fallback-reset-${Date.now()}`,
-        role: "assistant",
-        content: "Let's start a new conversation. How can I help you?",
-      }
-
-      chatState.append(fallbackMsg)
+      chatState.setMessages((prev) => [
+        ...prev,
+        textMessage(
+          `fallback-reset-${Date.now()}`,
+          "assistant",
+          "Let's start a new conversation. How can I help you?"
+        ),
+      ])
     }
   }
 
   return {
     ...chatState,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
     addToolResult: safeAddToolResult,
     cancelToolCall,
   }

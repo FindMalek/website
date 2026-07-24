@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import type { ToolInvocation } from "ai"
 import { useForm } from "react-hook-form"
 
 import { FEATURE_OPTIONS, PRICING } from "@/config/consts"
@@ -8,7 +7,7 @@ import {
   pricingEstimatorSchema,
   type PricingEstimatorValues,
 } from "@/config/schemas"
-import { createToolResult, stringifyToolResult } from "@/lib/tool-helpers"
+import { createToolResult, type ToolCallLike } from "@/lib/tool-helpers"
 import { getGlobalChatContext } from "@/hooks/use-chat-with-tools"
 
 interface EstimatorState {
@@ -17,7 +16,7 @@ interface EstimatorState {
   askingForProject: boolean
 }
 
-export function usePricingEstimator(toolCall: ToolInvocation) {
+export function usePricingEstimator(toolCall: ToolCallLike) {
   const [state, setState] = useState<EstimatorState>({
     isCalculating: false,
     estimate: null,
@@ -102,18 +101,18 @@ export function usePricingEstimator(toolCall: ToolInvocation) {
 
       addToolResult({
         toolCallId: toolCall.toolCallId,
-        result: stringifyToolResult(result),
+        tool: "generatePricing",
+        result,
       })
     } catch (error) {
       console.error("Error calculating estimate:", error)
 
       addToolResult({
         toolCallId: toolCall.toolCallId,
-        result: stringifyToolResult(
-          createToolResult(false, {
-            error: "Failed to calculate estimate",
-          })
-        ),
+        tool: "generatePricing",
+        result: createToolResult(false, {
+          error: "Failed to calculate estimate",
+        }),
       })
     } finally {
       updateState("isCalculating", false)
