@@ -114,6 +114,16 @@ export interface ConversationHistory {
   message: string
 }
 
+/**
+ * Describes what the visitor is currently looking at, sent by the client
+ * on every chat request so the assistant can reference it in context.
+ */
+export interface PageContext {
+  route: string
+  section: "work" | "projects" | "stack" | "about" | null
+  slug?: string
+}
+
 export interface ContactEmailIntroductionProps {
   userName: string
   userEmail: string

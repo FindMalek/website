@@ -2,6 +2,8 @@ import { ChangeEvent, useState } from "react"
 import { useChat as useAIChat } from "@ai-sdk/react"
 import { DefaultChatTransport, type UIMessage } from "ai"
 
+import { PageContext } from "@/types"
+
 const WELCOME_MESSAGE: UIMessage = {
   id: "welcome-message",
   role: "assistant",
@@ -23,8 +25,12 @@ function textMessage(id: string, role: "assistant" | "system", text: string): UI
  * v5's useChat no longer manages input state or exposes a boolean
  * `isLoading`, so both are rebuilt here to keep the rest of the app's
  * v4-shaped consumers (use-contact-chat.ts, the tool hooks) unchanged.
+ *
+ * @param pageContext - what the visitor is currently looking at (route,
+ * scroll section, or case-study slug); re-evaluated by the caller on every
+ * render, so it's always current at send-time, not just at mount.
  */
-export function useChatWithTools() {
+export function useChatWithTools(pageContext?: PageContext) {
   const chatState = useAIChat({
     messages: [WELCOME_MESSAGE],
     transport: new DefaultChatTransport({
@@ -44,7 +50,7 @@ export function useChatWithTools() {
   const handleSubmit = (e?: { preventDefault?: () => void }) => {
     e?.preventDefault?.()
     if (!input.trim()) return
-    chatState.sendMessage({ text: input })
+    chatState.sendMessage({ text: input }, { body: { pageContext } })
     setInput("")
   }
 

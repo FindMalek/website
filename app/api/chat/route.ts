@@ -3,6 +3,8 @@ import { llml } from "@zenbase/llml"
 import { convertToModelMessages, isStepCount, streamText, UIMessage } from "ai"
 import { z } from "zod/v3"
 
+import { PageContext } from "@/types"
+
 import { generateChatbotContext } from "@/lib/chatbot-context"
 import { sanitizeMessages } from "@/lib/utils"
 
@@ -12,7 +14,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.json()
     const rawMessages: UIMessage[] = body.messages || []
-    const contextualKnowledge = generateChatbotContext()
+    const pageContext: PageContext | undefined = body.pageContext
+    const contextualKnowledge = generateChatbotContext(pageContext)
     const uiMessages = sanitizeMessages(rawMessages)
     const messages = await convertToModelMessages(uiMessages)
 

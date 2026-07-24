@@ -5,10 +5,15 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react"
+import { usePathname } from "next/navigation"
+
+import { PageContext } from "@/types"
 
 import { setGlobalChatContext, useChatWithTools } from "@/hooks/use-chat-with-tools"
+import { useActiveSection } from "@/hooks/use-active-section"
 
 type DockState = "idle" | "docked"
 
@@ -32,7 +37,19 @@ export function useChatDock() {
 }
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-  const chat = useChatWithTools()
+  const pathname = usePathname()
+  const activeSection = useActiveSection(["work", "projects", "stack", "about"])
+
+  const pageContext = useMemo<PageContext>(() => {
+    const slugMatch = pathname.match(/^\/(?:work|projects)\/(.+)$/)
+    return {
+      route: pathname,
+      section: activeSection,
+      slug: slugMatch?.[1],
+    }
+  }, [pathname, activeSection])
+
+  const chat = useChatWithTools(pageContext)
   const [dockState, setDockState] = useState<DockState>("idle")
 
   useEffect(() => {
