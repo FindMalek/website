@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const rawMessages: UIMessage[] = body.messages || []
     const contextualKnowledge = generateChatbotContext()
     const uiMessages = sanitizeMessages(rawMessages)
-    const messages = convertToModelMessages(uiMessages)
+    const messages = await convertToModelMessages(uiMessages)
 
     const systemPrompt = llml({
       role: "You are Malek Gara-Hellal, a Senior Full Stack Developer from Tunisia, Monastir. You are responding to visitors on your personal website.",
