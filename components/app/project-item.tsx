@@ -41,7 +41,7 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
       tabIndex={0}
       onClick={() => router.push(href)}
       onKeyDown={handleCardKeyDown}
-      className="group border-foreground/10 hover:border-primary/30 hover:bg-muted/50 focus-visible:ring-ring flex cursor-pointer items-center gap-3 border-b py-3 outline-none transition-colors last:border-b-0 focus-visible:ring-2"
+      className="group border-foreground/10 hover:bg-muted/50 focus-visible:ring-ring -mx-2 flex cursor-pointer items-center gap-3 rounded-lg border-b px-2 py-3 outline-none transition-colors last:border-b-0 focus-visible:ring-2"
     >
       <div className="border-border relative size-9 shrink-0 overflow-hidden rounded-md border">
         <Image src={image} alt={name} fill className="object-cover" />
@@ -49,6 +49,8 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
+          <p className="truncate text-sm font-semibold">{name}</p>
+
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="relative flex size-2 shrink-0">
@@ -70,8 +72,6 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
               <p>{convertProjectStatus(status)}</p>
             </TooltipContent>
           </Tooltip>
-
-          <p className="truncate text-sm font-semibold">{name}</p>
         </div>
 
         {(startDate || endDate) && (
