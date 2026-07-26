@@ -134,7 +134,7 @@
   --sidebar-ring: oklch(0.723 0.014 214.4);
   --background: oklch(1 0 0);
   --foreground: oklch(0.148 0.004 228.8);
-  --line: color-mix(in oklab, var(--border) 64%, var(--background));
+  --line: var(--border);
 }
 
 .dark {
