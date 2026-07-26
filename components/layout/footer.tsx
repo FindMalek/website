@@ -3,12 +3,19 @@ import Link from "next/link"
 import { REPOSITORIES } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 
+import { AbstractMark } from "@/components/app/abstract-mark"
 import { Icons } from "@/components/shared/icons"
 import { ModeToggle } from "@/components/shared/mode-toggle"
-import { FooterInteractiveLogotype } from "@/components/layout/footer-interactive-logotype"
-import { FooterShimmerText } from "@/components/layout/footer-shimmer-text"
 
 const SOURCE_REPO_URL = REPOSITORIES[0]
+
+const INSPIRED_BY = [
+  { name: "Next.js", href: "https://nextjs.org" },
+  { name: "Tailwind CSS", href: "https://tailwindcss.com" },
+  { name: "shadcn/ui", href: "https://ui.shadcn.com" },
+  { name: "Radix UI", href: "https://www.radix-ui.com" },
+  { name: "Motion", href: "https://motion.dev" },
+]
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -47,8 +54,31 @@ export function Footer() {
           </dd>
         </div>
         <div className="flex items-center justify-between">
+          <dt>Inspired by</dt>
+          <dd>
+            <ul className="flex flex-wrap justify-end gap-x-1.5">
+              {INSPIRED_BY.map((tool, index) => (
+                <li key={tool.name}>
+                  <Link
+                    href={tool.href}
+                    target="_blank"
+                    className="underline decoration-current/30 underline-offset-4 hover:decoration-current"
+                  >
+                    {tool.name}
+                  </Link>
+                  {index < INSPIRED_BY.length - 1 ? "," : ""}
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+        <div className="flex items-center justify-between">
           <dt>Deployed on</dt>
           <dd>Vercel</dd>
+        </div>
+        <div className="flex items-center justify-between">
+          <dt>Analytics</dt>
+          <dd>Vercel Analytics</dd>
         </div>
         <div className="flex items-center justify-between">
           <dt>Source code</dt>
@@ -64,8 +94,9 @@ export function Footer() {
         </div>
       </dl>
 
-      <FooterInteractiveLogotype />
-      <FooterShimmerText />
+      <div className="container">
+        <AbstractMark size="sm" />
+      </div>
 
       <div className="container flex items-center justify-between">
         <p className="text-muted-foreground text-xs">
