@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 
 import { ChatFloatingContainer } from "@/components/app/chat-floating-container"
 import { HighlightAskAction } from "@/components/app/highlight-ask-action"
+import { ScrollToTop } from "@/components/app/scroll-to-top"
 import { Analytics } from "@/components/layout/analytics"
 import { Background } from "@/components/layout/background"
 import { ClientsSection } from "@/components/layout/clients-section"
@@ -102,6 +103,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <TailwindIndicator />
             <ChatFloatingContainer />
             <HighlightAskAction />
+            <ScrollToTop />
           </ChatProvider>
         </LayoutWrapper>
       </body>
