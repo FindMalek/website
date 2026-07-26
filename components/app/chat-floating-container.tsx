@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useChatDock } from "@/providers/chat-provider"
 import { AnimatePresence, motion } from "motion/react"
 
@@ -11,8 +11,11 @@ import { ContactChatBotErrorMessage } from "@/components/app/contact-chat-bot-er
 import { ContactChatMessage } from "@/components/app/contact-chat-message"
 import { ContactSuggestedPrompts } from "@/components/app/contact-suggeted-prompts"
 import { Icons } from "@/components/shared/icons"
+import { Button } from "@/components/ui/button"
 import { PromptInputSubmit } from "@/components/ui/prompt-input"
 import { Textarea } from "@/components/ui/textarea"
+
+const AT_BOTTOM_THRESHOLD = 24
 
 export function ChatFloatingContainer() {
   const { dockState, closeChat } = useChatDock()
@@ -34,8 +37,10 @@ export function ChatFloatingContainer() {
   const isDocked = dockState === "docked"
 
   const containerRef = useRef<HTMLDivElement>(null)
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
   const messageRefs = useRef(new Map<string, HTMLDivElement>())
   const lastScrolledMessageId = useRef<string | null>(null)
+  const [isAtBottom, setIsAtBottom] = useState(true)
 
   // Click/tap or Escape anywhere outside the chat closes it. A document-level
   // listener checking containment (rather than a full-screen backdrop's own
@@ -86,6 +91,26 @@ export function ChatFloatingContainer() {
       ?.scrollIntoView({ behavior: "smooth", block: "start" })
   }, [messages])
 
+  const checkIsAtBottom = () => {
+    const el = scrollAreaRef.current
+    if (!el) return
+    setIsAtBottom(
+      el.scrollHeight - el.scrollTop - el.clientHeight < AT_BOTTOM_THRESHOLD
+    )
+  }
+
+  // Re-check whenever content grows (streaming text extends scrollHeight
+  // without necessarily firing a scroll event on its own).
+  useEffect(() => {
+    checkIsAtBottom()
+  }, [messages, isLoading, isCancelling])
+
+  const scrollToBottom = () => {
+    const el = scrollAreaRef.current
+    if (!el) return
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" })
+  }
+
   return (
     <>
       <AnimatePresence>
@@ -112,8 +137,12 @@ export function ChatFloatingContainer() {
         )}
       >
         {isDocked && (
-          <div className="bg-background/95 mb-2 flex max-h-[60vh] flex-col overflow-hidden rounded-2xl border shadow-2xl backdrop-blur">
-            <div className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto p-4">
+          <div className="bg-background/95 relative mb-2 flex max-h-[60vh] flex-col overflow-hidden rounded-2xl border shadow-2xl backdrop-blur">
+            <div
+              ref={scrollAreaRef}
+              onScroll={checkIsAtBottom}
+              className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto p-4"
+            >
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -134,6 +163,19 @@ export function ChatFloatingContainer() {
                 </div>
               )}
             </div>
+
+            {!isAtBottom && (
+              <Button
+                type="button"
+                size="icon"
+                variant="outline"
+                onClick={scrollToBottom}
+                aria-label="Scroll to bottom"
+                className="bg-background dark:bg-background dark:hover:bg-muted absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full shadow-md"
+              >
+                <Icons.down className="size-4" />
+              </Button>
+            )}
 
             {showSuggestions && messages.length === 1 && (
               <ContactSuggestedPrompts
