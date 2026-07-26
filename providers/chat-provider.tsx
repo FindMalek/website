@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react"
 import { usePathname } from "next/navigation"
@@ -54,18 +55,24 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   const chat = useChatWithTools(pageContext)
   const [dockState, setDockState] = useState<DockState>("idle")
+  const hasAutoDocked = useRef(false)
 
   useEffect(() => {
     setGlobalChatContext(chat)
   }, [chat])
 
   // Dock the moment the visitor sends a real message (index 0 is the seeded
-  // welcome message, so >1 means a real exchange has started).
+  // welcome message, so >1 means a real exchange has started). Guarded by a
+  // ref rather than depending on `dockState` -- messages.length stays >1
+  // forever once a conversation has started, so a dockState-dependent check
+  // would re-dock immediately every time the visitor closes the chat,
+  // making it impossible to ever close after the first exchange.
   useEffect(() => {
-    if (chat.messages.length > 1 && dockState === "idle") {
+    if (chat.messages.length > 1 && !hasAutoDocked.current) {
+      hasAutoDocked.current = true
       setDockState("docked")
     }
-  }, [chat.messages.length, dockState])
+  }, [chat.messages.length])
 
   const openChat = useCallback(() => setDockState("docked"), [])
   const closeChat = useCallback(() => setDockState("idle"), [])
