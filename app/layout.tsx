@@ -2,7 +2,7 @@ import "@/styles/globals.css"
 
 import type { Metadata, Viewport } from "next"
 
-import { poppins } from "@/config/fonts"
+import { geistHeading, geistMono, poppins } from "@/config/fonts"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
@@ -76,7 +76,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html suppressHydrationWarning>
+    <html
+      suppressHydrationWarning
+      className={cn(geistMono.variable, geistHeading.variable)}
+    >
       <body
         suppressHydrationWarning
         className={cn(
