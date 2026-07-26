@@ -16,6 +16,7 @@ import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
 import { CollapsibleList } from "@/components/app/collapsible-list"
 import { HelloTitle } from "@/components/app/hello-title"
+import { Hero } from "@/components/app/hero"
 import {
   Panel,
   PanelContent,
@@ -31,7 +32,6 @@ import {
   GitHubContributions,
   GitHubContributionsFallback,
 } from "@/components/github-contributions"
-import { LineShadowText } from "@/components/ui/line-shadow-text"
 
 import { getMultipleRepoInfo } from "@/actions/github"
 import { getUserPlaylists } from "@/actions/spotify"
@@ -49,23 +49,21 @@ export default async function Home() {
 
   return (
     <div className="w-full">
-      <section className="px-4 pt-30">
-        <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:leading-snug xl:text-4xl">
-          Full Stack Developer and{" "}
-          <LineShadowText className="dark:text-primary italic">
-            Design
-          </LineShadowText>{" "}
-          <LineShadowText className="dark:text-primary italic">
-            Engineer
-          </LineShadowText>{" "}
-          currently{" "}
-          <span className="whitespace-nowrap">
-            based in 🇹🇳 Monastir, Tunisia.
-          </span>
-        </h1>
+      <Hero />
 
-        <div className="text-foreground mt-4 space-y-4">
-          <section>
+      <div className="stripe-divider" />
+
+      <Panel id="about">
+        <PanelHeader>
+          <HelloTitle className="text-2xl font-bold leading-tight tracking-tight text-balance" />
+          <PanelDescription>
+            I&apos;m a Design Engineer, Founder, and Product Builder based in
+            Monastir, Tunisia.
+          </PanelDescription>
+        </PanelHeader>
+
+        <PanelContent>
+          <div className="text-foreground mb-8 space-y-4">
             <p className="text-base leading-relaxed">
               Specialized in transforming complex ideas into elegant digital
               solutions through web development, design engineering, and
@@ -93,9 +91,7 @@ export default async function Home() {
               </Link>{" "}
               to see how I bring ideas to life.
             </p>
-          </section>
 
-          <section>
             <p className="text-base leading-relaxed">
               Beyond code, I find creative inspiration in diverse music genres
               from Metal to Ambient, and maintain a curated collection of
@@ -115,32 +111,6 @@ export default async function Home() {
               </Link>{" "}
               that shape my perspective.
             </p>
-          </section>
-        </div>
-      </section>
-
-      <div className="stripe-divider mt-24" />
-
-      <Panel id="about">
-        <PanelHeader>
-          <HelloTitle className="text-2xl font-bold leading-tight tracking-tight text-balance" />
-          <PanelDescription>
-            I&apos;m a Design Engineer, Founder, and Product Builder based in
-            Monastir, Tunisia.
-          </PanelDescription>
-        </PanelHeader>
-
-        <PanelContent>
-          <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-            <span className="text-muted-foreground">
-              {siteConfig.author.name}
-            </span>
-            <Link
-              href={`mailto:${siteConfig.author.email}`}
-              className="hover:text-primary transition-colors"
-            >
-              {siteConfig.author.email}
-            </Link>
           </div>
 
           <div className="mb-8">
