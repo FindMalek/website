@@ -22,6 +22,7 @@ const workFrontmatterSchema = z.object({
   location: z.string().optional(),
   link: z.url().optional(),
   href: z.string(),
+  skills: z.array(z.string()).optional(),
 })
 
 const projectFrontmatterSchema = z.object({

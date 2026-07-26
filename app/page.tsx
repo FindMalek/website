@@ -6,6 +6,7 @@ import { REPOSITORIES } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 import { STACK_SECTIONS } from "@/config/stack"
 import {
+  groupWorkByCompany,
   sortProjectsByStars,
   sortProjectsByStatus,
   sortWorkExperiences,
@@ -27,7 +28,7 @@ import {
 import { ProjectCardCompact } from "@/components/app/project-card-compact"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
-import { WorkCardCompact } from "@/components/app/work-card-compact"
+import { WorkExperienceItem } from "@/components/app/work-experience-item"
 import {
   GitHubContributions,
   GitHubContributionsFallback,
@@ -43,6 +44,7 @@ const GITHUB_USERNAME = SOURCE_REPO_URL.split("/").at(-2) ?? "findmalek"
 export default async function Home() {
   const playlists = await getUserPlaylists(20, 0)
   const orderedWorks = sortWorkExperiences(allWorks)
+  const workGroups = groupWorkByCompany(orderedWorks)
   const orderedProjects = sortProjectsByStatus(allProjects)
   const openSourceProjects = await getMultipleRepoInfo(REPOSITORIES)
   const sortedOpenSourceProjects = sortProjectsByStars(openSourceProjects)
@@ -141,12 +143,12 @@ export default async function Home() {
 
         <PanelContent>
           <CollapsibleList
-            items={orderedWorks.map((work) => (
-              <WorkCardCompact key={work._meta.path} work={work} />
+            items={workGroups.map((group) => (
+              <WorkExperienceItem key={group.company} group={group} />
             ))}
             initialCount={4}
-            step={4}
-            className="grid gap-3"
+            step={2}
+            className="flex flex-col"
           />
         </PanelContent>
       </Panel>

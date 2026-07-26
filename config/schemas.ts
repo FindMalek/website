@@ -16,6 +16,7 @@ export const workSchema = z.object({
   location: z.string().optional(),
   link: z.string().url().optional(),
   href: z.string(),
+  skills: z.array(z.string()).optional(),
 })
 
 export type WorkRo = z.infer<typeof workSchema>

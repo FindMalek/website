@@ -244,3 +244,54 @@ export function formatWorkDuration(startDate: string, endDate: string): string {
 
   return parts.join(" ")
 }
+
+export interface WorkExperienceGroup<T> {
+  company: string
+  logo: string
+  logoClassName?: string
+  link?: string
+  location?: string
+  isCurrentEmployer: boolean
+  positions: T[]
+}
+
+/**
+ * Group an already-sorted flat list of work experiences by company,
+ * preserving each company's position order. A company is flagged as the
+ * current employer if any of its positions has endDate "Present".
+ */
+export function groupWorkByCompany<
+  T extends {
+    company: string
+    logo: string
+    logoClassName?: string
+    link?: string
+    location?: string
+    endDate: string
+  },
+>(works: T[]): WorkExperienceGroup<T>[] {
+  const groups: WorkExperienceGroup<T>[] = []
+
+  for (const work of works) {
+    const existing = groups.find((group) => group.company === work.company)
+
+    if (existing) {
+      existing.positions.push(work)
+      if (work.endDate.toLowerCase() === "present") {
+        existing.isCurrentEmployer = true
+      }
+    } else {
+      groups.push({
+        company: work.company,
+        logo: work.logo,
+        logoClassName: work.logoClassName,
+        link: work.link,
+        location: work.location,
+        isCurrentEmployer: work.endDate.toLowerCase() === "present",
+        positions: [work],
+      })
+    }
+  }
+
+  return groups
+}
