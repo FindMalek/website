@@ -19,7 +19,7 @@ function ClientBadge({ client }: { client: Client }) {
     <Badge
       variant="secondary"
       className={cn(
-        "flex items-center gap-2 px-4 py-2",
+        "flex items-center gap-1.5 px-2.5 py-1",
         "duration-300 hover:shadow-sm",
         "hover:bg-secondary/50 hover:text-secondary-foreground hover:border-secondary-foreground transition-all"
       )}
@@ -28,7 +28,7 @@ function ClientBadge({ client }: { client: Client }) {
         color: client.textColor || "inherit",
       }}
     >
-      <div className="relative h-5 w-5 flex-shrink-0">
+      <div className="relative size-3.5 flex-shrink-0">
         <Image
           src={client.logo || "/clients/placeholder.ico"}
           alt={`${client.name} logo`}
@@ -36,7 +36,7 @@ function ClientBadge({ client }: { client: Client }) {
           className="object-contain"
         />
       </div>
-      <span className="text-sm font-medium">{client.name}</span>
+      <span className="text-xs font-medium">{client.name}</span>
     </Badge>
   )
 }
