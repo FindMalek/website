@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import Link from "next/link"
 import { allProjects, allWorks } from "content-collections"
 
@@ -14,7 +15,6 @@ import { AboutBooks } from "@/components/app/about-books"
 import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
 import { CollapsibleList } from "@/components/app/collapsible-list"
-import { GithubHeatmap } from "@/components/app/github-heatmap"
 import { HelloTitle } from "@/components/app/hello-title"
 import {
   Panel,
@@ -27,10 +27,15 @@ import { ProjectCardCompact } from "@/components/app/project-card-compact"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
 import { WorkCardCompact } from "@/components/app/work-card-compact"
+import {
+  GitHubContributions,
+  GitHubContributionsFallback,
+} from "@/components/github-contributions"
 import { LineShadowText } from "@/components/ui/line-shadow-text"
 
-import { getContributionCalendar, getMultipleRepoInfo } from "@/actions/github"
+import { getMultipleRepoInfo } from "@/actions/github"
 import { getUserPlaylists } from "@/actions/spotify"
+import { getCachedContributions } from "@/lib/get-cached-contributions"
 
 const SOURCE_REPO_URL = REPOSITORIES[0]
 const GITHUB_USERNAME = SOURCE_REPO_URL.split("/").at(-2) ?? "findmalek"
@@ -39,7 +44,6 @@ export default async function Home() {
   const playlists = await getUserPlaylists(20, 0)
   const orderedWorks = sortWorkExperiences(allWorks)
   const orderedProjects = sortProjectsByStatus(allProjects)
-  const contributions = await getContributionCalendar(GITHUB_USERNAME)
   const openSourceProjects = await getMultipleRepoInfo(REPOSITORIES)
   const sortedOpenSourceProjects = sortProjectsByStars(openSourceProjects)
 
@@ -139,14 +143,14 @@ export default async function Home() {
             </Link>
           </div>
 
-          {contributions && (
-            <div className="mb-8">
-              <GithubHeatmap
-                days={contributions.days}
-                totalContributions={contributions.totalContributions}
+          <div className="mb-8">
+            <Suspense fallback={<GitHubContributionsFallback />}>
+              <GitHubContributions
+                contributions={getCachedContributions(GITHUB_USERNAME)}
+                githubProfileUrl={siteConfig.links.github}
               />
-            </div>
-          )}
+            </Suspense>
+          </div>
 
           <AboutOverview />
           <AboutMusic playlists={playlists.items} />
