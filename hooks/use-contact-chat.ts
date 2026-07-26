@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { useChatDock } from "@/providers/chat-provider"
 
 import { MAX_MESSAGES_ALLOWED } from "@/config/consts"
-import { useChatDock } from "@/providers/chat-provider"
 
 /**
  * Reads the single shared chat instance from ChatProvider instead of

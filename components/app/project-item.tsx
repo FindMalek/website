@@ -25,8 +25,7 @@ const STATUS_DOT_COLOR: Record<ProjectRo["status"], string> = {
 
 export function ProjectItem({ project }: { project: ProjectRo }) {
   const router = useRouter()
-  const { image, name, status, link, href, tags, startDate, endDate } =
-    project
+  const { image, name, status, link, href, tags, startDate, endDate } = project
 
   const handleCardKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -41,7 +40,7 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
       tabIndex={0}
       onClick={() => router.push(href)}
       onKeyDown={handleCardKeyDown}
-      className="group border-foreground/10 hover:bg-muted/50 focus-visible:ring-ring -mx-2 flex cursor-pointer items-center gap-3 rounded-lg border-b px-2 py-3 outline-none transition-colors last:border-b-0 focus-visible:ring-2"
+      className="border-foreground/10 hover:bg-muted/50 focus-visible:ring-ring group -mx-2 flex cursor-pointer items-center gap-3 rounded-lg border-b px-2 py-3 outline-none transition-colors last:border-b-0 focus-visible:ring-2"
     >
       <div className="border-border relative size-9 shrink-0 overflow-hidden rounded-md border">
         <Image src={image} alt={name} fill className="object-cover" />

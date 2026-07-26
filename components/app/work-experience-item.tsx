@@ -35,7 +35,7 @@ export function WorkExperienceItem({
 
   return (
     <div className="border-foreground/10 border-b py-6 last:border-b-0">
-      <div className="group hover:bg-muted/30 -mx-2 flex items-center gap-3 rounded-lg px-2 py-1 transition-colors">
+      <div className="hover:bg-muted/30 group -mx-2 flex items-center gap-3 rounded-lg px-2 py-1 transition-colors">
         <div className="border-border relative size-10 shrink-0 overflow-hidden rounded-md border">
           <Image
             src={logo}
@@ -60,9 +60,7 @@ export function WorkExperienceItem({
                 {company}
               </Link>
             ) : (
-              <span className="truncate text-sm font-semibold">
-                {company}
-              </span>
+              <span className="truncate text-sm font-semibold">{company}</span>
             )}
 
             {isCurrentEmployer && (
@@ -96,7 +94,7 @@ export function WorkExperienceItem({
         </div>
       </div>
 
-      <div className="border-foreground/10 divide-foreground/10 mt-2 ml-5 divide-y border-l border-dashed pl-5">
+      <div className="border-foreground/10 divide-foreground/10 ml-5 mt-2 divide-y border-l border-dashed pl-5">
         {positions.map((position, index) => (
           <WorkPositionItem
             key={position.id}

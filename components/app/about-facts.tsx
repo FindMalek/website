@@ -53,7 +53,6 @@ export function AboutFacts() {
           </IntroItemLink>
         </IntroItemContent>
       </IntroItem>
-
     </div>
   )
 }

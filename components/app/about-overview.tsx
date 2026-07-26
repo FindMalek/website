@@ -9,7 +9,11 @@ import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-s
 import { Icons } from "@/components/shared/icons"
 
 const SOCIAL_LINKS = [
-  { href: siteConfig.links.instagram, icon: Icons.instagram, label: "Instagram" },
+  {
+    href: siteConfig.links.instagram,
+    icon: Icons.instagram,
+    label: "Instagram",
+  },
   { href: siteConfig.links.linkedin, icon: Icons.linkedin, label: "LinkedIn" },
   { href: siteConfig.links.github, icon: Icons.github, label: "GitHub" },
   { href: siteConfig.links.twitter, icon: Icons.x, label: "X (Twitter)" },

@@ -28,7 +28,7 @@ export function Footer() {
         </Link>
       </div>
 
-      <div className="container flex items-center justify-between mb-20">
+      <div className="container mb-20 flex items-center justify-between">
         <p className="text-muted-foreground text-xs">
           © {currentYear} Malek Gara-Hellal. All rights reserved.
         </p>

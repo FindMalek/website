@@ -16,6 +16,10 @@ import { AboutBooks } from "@/components/app/about-books"
 import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
 import { CollapsibleList } from "@/components/app/collapsible-list"
+import {
+  GitHubContributions,
+  GitHubContributionsFallback,
+} from "@/components/app/github-contributions"
 import { HelloTitle } from "@/components/app/hello-title"
 import { Hero } from "@/components/app/hero"
 import {
@@ -29,10 +33,6 @@ import { ProjectItem } from "@/components/app/project-item"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
 import { WorkExperienceItem } from "@/components/app/work-experience-item"
-import {
-  GitHubContributions,
-  GitHubContributionsFallback,
-} from "@/components/app/github-contributions"
 
 import { getMultipleRepoInfo } from "@/actions/github"
 import { getUserPlaylists } from "@/actions/spotify"

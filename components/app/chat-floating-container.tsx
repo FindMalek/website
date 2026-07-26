@@ -122,12 +122,12 @@ export function ChatFloatingContainer() {
                 placeholder="Ask me anything..."
                 disabled={isLoading || isCancelling}
                 rows={1}
-                className="max-h-40 min-h-11 resize-none rounded-2xl border-0 py-3 pr-12 pl-4 shadow-none focus-visible:ring-0"
+                className="max-h-40 min-h-11 resize-none rounded-2xl border-0 py-3 pl-4 pr-12 shadow-none focus-visible:ring-0"
               />
               <PromptInputSubmit
                 status={isLoading ? "streaming" : undefined}
                 disabled={isLoading || !input.trim() || isCancelling}
-                className="absolute right-2 bottom-2"
+                className="absolute bottom-2 right-2"
               />
             </div>
           </form>
