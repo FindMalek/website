@@ -34,6 +34,7 @@ export type AvatarContainerType = React.ComponentProps<"div">
 export type NavItemType = {
   href: string
   children: React.ReactNode
+  isActive?: boolean
 }
 
 export type MobileNavigationType = React.ComponentProps<typeof Popover>
@@ -111,6 +112,16 @@ export interface ChatMessage {
 export interface ConversationHistory {
   role: string
   message: string
+}
+
+/**
+ * Describes what the visitor is currently looking at, sent by the client
+ * on every chat request so the assistant can reference it in context.
+ */
+export interface PageContext {
+  route: string
+  section: "work" | "projects" | "stack" | "about" | null
+  slug?: string
 }
 
 export interface ContactEmailIntroductionProps {

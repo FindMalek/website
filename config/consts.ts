@@ -46,11 +46,12 @@ export const PAGES = {
 } as const
 
 export const NAV_ITEMS = {
-  ABOUT: PAGES.ABOUT,
-  WORK: PAGES.WORK,
-  PROJECTS: PAGES.PROJECTS,
-  STACK: PAGES.STACK,
-  CONTACT: PAGES.CONTACT,
+  ABOUT: { ...PAGES.ABOUT, path: "/#about" },
+  WORK: { ...PAGES.WORK, path: "/#work" },
+  PROJECTS: { ...PAGES.PROJECTS, path: "/#projects" },
+  STACK: { ...PAGES.STACK, path: "/#stack" },
+  // CONTACT intentionally omitted: contact is no longer a nav destination,
+  // it becomes the floating chat trigger once that ships.
 } as const
 
 export type PagePath = (typeof PAGES)[keyof typeof PAGES]["path"]

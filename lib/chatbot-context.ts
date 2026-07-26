@@ -2,6 +2,8 @@ import resumeData from "@/data/resume.json"
 import { llml } from "@zenbase/llml"
 import { allProjects, allWorks } from "content-collections"
 
+import { PageContext } from "@/types"
+
 import { STACK_SECTIONS } from "@/config/stack"
 
 type Project = (typeof allProjects)[number]
@@ -98,10 +100,42 @@ function getTechStackData() {
 }
 
 /**
+ * Describes what the visitor is currently looking at, in a form the model
+ * can naturally reference ("I see you're checking out my Zero Locker case
+ * study..."). Undefined when no page context was sent (e.g. an older
+ * client, or a direct API call).
+ */
+function describePageContext(pageContext?: PageContext): string | undefined {
+  if (!pageContext) return undefined
+
+  if (pageContext.slug) {
+    const work = allWorks.find((w: Work) => w.href === pageContext.route)
+    if (work) {
+      return `The visitor is currently reading the case study for the ${work.position} role at ${work.company}.`
+    }
+
+    const project = allProjects.find(
+      (p: Project) => p.href === pageContext.route
+    )
+    if (project) {
+      return `The visitor is currently reading the case study for the "${project.name}" project.`
+    }
+
+    return `The visitor is currently reading a case study page (${pageContext.slug}).`
+  }
+
+  if (pageContext.section) {
+    return `The visitor is currently viewing the "${pageContext.section}" section of the homepage.`
+  }
+
+  return "The visitor is currently viewing the top of the homepage (hero section)."
+}
+
+/**
  * Generates the complete context for the chatbot using LLML
  * Transforms structured data into VibeXML optimized for AI attention
  */
-export function generateChatbotContext() {
+export function generateChatbotContext(pageContext?: PageContext) {
   const context = {
     professionalBackground: {
       summary: stripHtml(resumeData.summary.content),
@@ -124,6 +158,9 @@ export function generateChatbotContext() {
     workExperience: getWorkExperienceData(),
     projects: getProjectsData(),
     techStack: getTechStackData(),
+    ...(describePageContext(pageContext)
+      ? { currentContext: describePageContext(pageContext) }
+      : {}),
   }
 
   return llml(context)

@@ -58,6 +58,85 @@ export async function getRepoInfo(
   }
 }
 
+export interface ContributionDay {
+  date: string
+  count: number
+}
+
+export interface ContributionCalendar {
+  totalContributions: number
+  days: ContributionDay[]
+}
+
+/**
+ * Fetches the authenticated-account-shaped contribution calendar via
+ * GitHub's GraphQL API (contributionsCollection isn't exposed over REST).
+ * Same bearer-token pattern as getMultipleRepoInfo below.
+ */
+export async function getContributionCalendar(
+  username: string
+): Promise<ContributionCalendar | null> {
+  try {
+    const query = `
+      query($login: String!) {
+        user(login: $login) {
+          contributionsCollection {
+            contributionCalendar {
+              totalContributions
+              weeks {
+                contributionDays {
+                  date
+                  contributionCount
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+
+    const response = await fetch("https://api.github.com/graphql", {
+      method: "POST",
+      headers: {
+        Authorization: `bearer ${env.GITHUB_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query, variables: { login: username } }),
+      next: { revalidate: 21600 }, // 6 hours -- contribution data doesn't need to be fresher
+    })
+
+    if (!response.ok) {
+      throw new Error(
+        `${response.status} Network response was not ok fetching contributions`
+      )
+    }
+
+    const jsonResponse = await response.json()
+    const calendar =
+      jsonResponse.data?.user?.contributionsCollection?.contributionCalendar
+
+    if (!calendar) {
+      if (jsonResponse.errors) {
+        console.error("GraphQL errors fetching contributions:", jsonResponse.errors)
+      }
+      return null
+    }
+
+    const days: ContributionDay[] = calendar.weeks.flatMap(
+      (week: { contributionDays: { date: string; contributionCount: number }[] }) =>
+        week.contributionDays.map((day) => ({
+          date: day.date,
+          count: day.contributionCount,
+        }))
+    )
+
+    return { totalContributions: calendar.totalContributions, days }
+  } catch (error) {
+    console.error("Error fetching contribution calendar:", error)
+    return null
+  }
+}
+
 // Modified function using GraphQL API to handle forbidden repositories
 export async function getMultipleRepoInfo(
   repoUrls: string[]

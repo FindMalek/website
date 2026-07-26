@@ -12,8 +12,10 @@ import { Footer } from "@/components/layout/footer"
 import { Header } from "@/components/layout/header"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator"
-import { NextPage } from "@/components/shared/next-page"
+import { ChatFloatingContainer } from "@/components/app/chat-floating-container"
+import { HighlightAskAction } from "@/components/app/highlight-ask-action"
 import { Toaster } from "@/components/ui/sonner"
+import { ChatProvider } from "@/providers/chat-provider"
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -85,16 +87,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <LayoutWrapper>
-          <Header />
-          <main className="flex-1">
-            {children}
-            <NextPage />
-          </main>
-          <Footer />
-          <Background />
-          <Analytics />
-          <Toaster />
-          <TailwindIndicator />
+          <ChatProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <Background />
+            <Analytics />
+            <Toaster />
+            <TailwindIndicator />
+            <ChatFloatingContainer />
+            <HighlightAskAction />
+          </ChatProvider>
         </LayoutWrapper>
       </body>
     </html>

@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils"
 
 interface PageHeadingProps {
+  id?: string
   title?: string
   heading: string
   className?: string
@@ -11,6 +12,7 @@ interface PageHeadingProps {
 }
 
 export function PageHeading({
+  id,
   title,
   heading,
   className,
@@ -20,7 +22,14 @@ export function PageHeading({
   children,
 }: PageHeadingProps) {
   return (
-    <section className={cn("w-full py-16 md:py-24", bgClassName)}>
+    <section
+      id={id}
+      className={cn(
+        "w-full py-16 md:py-24",
+        id && "[scroll-margin-top:var(--header-height,6rem)]",
+        bgClassName
+      )}
+    >
       <div className={cn("container mx-auto", className)}>
         <div className="max-w-4xl">
           {title && (

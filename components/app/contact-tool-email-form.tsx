@@ -1,9 +1,8 @@
 "use client"
 
-import type { ToolInvocation } from "ai"
-
 import { type EmailFormValues } from "@/config/schemas"
 import { useEmailForm } from "@/hooks/use-email-form"
+import { type ToolCallLike } from "@/lib/tool-helpers"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
@@ -19,7 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 interface EmailFormProps {
-  toolCall: ToolInvocation
+  toolCall: ToolCallLike
 }
 
 export function ContactToolEmailForm({ toolCall }: EmailFormProps) {

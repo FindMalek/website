@@ -11,6 +11,7 @@ import {
 import { link as linkStyle } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
+import { ArticleContent } from "@/components/app/article-content"
 import { Icons } from "@/components/shared/icons"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Badge } from "@/components/ui/badge"
@@ -59,7 +60,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     <div className="container max-w-4xl px-4 py-16 md:py-24">
       <div className="relative mx-auto">
         <Link
-          href="/projects"
+          href="/#projects"
           className={cn(
             buttonVariants({ variant: "ghost", size: "sm" }),
             "absolute -top-8 left-0"
@@ -117,9 +118,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
 
         {html && (
-          <div className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
+          <ArticleContent className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
             <MDXContent code={html} />
-          </div>
+          </ArticleContent>
         )}
       </div>
     </div>

@@ -1,15 +1,14 @@
 "use client"
 
-import { type ToolInvocation } from "ai"
-
 import { type PricingEstimatorValues } from "@/config/schemas"
 import { usePricingEstimator } from "@/hooks/use-pricing-estimator"
+import { type ToolCallLike } from "@/lib/tool-helpers"
 
 import { ContactToolPricingEstimatorForm } from "@/components/app/contact-tool-pricing-estimator-form"
 import { ContactToolPricingEstimatorResult } from "@/components/app/contact-tool-pricing-estimator-result"
 
 interface PricingEstimatorProps {
-  toolCall: ToolInvocation
+  toolCall: ToolCallLike
 }
 
 export function ContactToolPricingEstimator({

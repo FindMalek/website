@@ -1,14 +1,13 @@
 "use client"
 
-import type { ToolInvocation } from "ai"
-
 import { useResumeGenerator } from "@/hooks/use-resume-generator"
+import { type ToolCallLike } from "@/lib/tool-helpers"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 
 interface ResumeGeneratorProps {
-  toolCall: ToolInvocation
+  toolCall: ToolCallLike
 }
 
 export function ContactToolResumeGenerator({ toolCall }: ResumeGeneratorProps) {
