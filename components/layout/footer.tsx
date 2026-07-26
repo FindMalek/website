@@ -1,20 +1,9 @@
 import Link from "next/link"
 
-import { REPOSITORIES } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 
 import { Icons } from "@/components/shared/icons"
 import { ModeToggle } from "@/components/shared/mode-toggle"
-
-const SOURCE_REPO_URL = REPOSITORIES[0]
-
-const INSPIRED_BY = [
-  { name: "Next.js", href: "https://nextjs.org" },
-  { name: "Tailwind CSS", href: "https://tailwindcss.com" },
-  { name: "shadcn/ui", href: "https://ui.shadcn.com" },
-  { name: "Radix UI", href: "https://www.radix-ui.com" },
-  { name: "Motion", href: "https://motion.dev" },
-]
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -44,6 +33,15 @@ export function Footer() {
           © {currentYear} Malek Gara-Hellal. All rights reserved.
         </p>
         <ModeToggle />
+      </div>
+
+      <div className="container overflow-hidden">
+        <p
+          aria-hidden
+          className="text-foreground/10 -mb-4 -ml-1 translate-y-3 font-mono text-[4rem] leading-none font-bold tracking-tighter select-none sm:text-[6rem] md:text-[8rem]"
+        >
+          findmalek
+        </p>
       </div>
     </footer>
   )
