@@ -30,6 +30,8 @@ export const projectSchema = z.object({
   link: z.string().url().optional(),
   href: z.string(),
   tags: z.array(z.string()).optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 })
 
 export type ProjectRo = z.infer<typeof projectSchema>

@@ -25,7 +25,7 @@ import {
   PanelHeader,
   PanelTitle,
 } from "@/components/app/panel"
-import { ProjectCardCompact } from "@/components/app/project-card-compact"
+import { ProjectItem } from "@/components/app/project-item"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
 import { WorkExperienceItem } from "@/components/app/work-experience-item"
@@ -166,11 +166,11 @@ export default async function Home() {
         <PanelContent>
           <CollapsibleList
             items={orderedProjects.map((project) => (
-              <ProjectCardCompact key={project._meta.path} project={project} />
+              <ProjectItem key={project._meta.path} project={project} />
             ))}
             initialCount={6}
-            step={6}
-            className="grid gap-4 sm:grid-cols-2"
+            step={4}
+            className="flex flex-col"
           />
 
           <h3 className="mb-4 mt-12 text-xl font-semibold">Open Source</h3>

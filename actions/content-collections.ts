@@ -34,6 +34,8 @@ const projectFrontmatterSchema = z.object({
   link: z.url().optional(),
   href: z.string(),
   tags: z.array(z.string()).optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 })
 
 const work = defineCollection({
