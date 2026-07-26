@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-
 import { cn } from "@/lib/utils"
 
 import { Icons } from "@/components/shared/icons"
@@ -18,18 +16,18 @@ interface PronounceNameButtonProps {
  * There's no realistic pronunciation-hint mechanism available without a
  * real audio file; that's an accepted trade-off of this approach, not a
  * bug to chase.
+ *
+ * Support is feature-detected inside the click handler, not during render --
+ * branching render output on `typeof window`/`"speechSynthesis" in window`
+ * would make the client's first render disagree with the server-rendered
+ * HTML (which always runs with no `window`), causing a hydration mismatch.
  */
 export function PronounceNameButton({
   name,
   className,
 }: PronounceNameButtonProps) {
-  const [isSupported] = useState(
-    () => typeof window !== "undefined" && "speechSynthesis" in window
-  )
-
-  if (!isSupported) return null
-
   const handleClick = () => {
+    if (!("speechSynthesis" in window)) return
     window.speechSynthesis.cancel()
     window.speechSynthesis.speak(new SpeechSynthesisUtterance(name))
   }

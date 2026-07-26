@@ -53,7 +53,12 @@ export async function getRepoInfo(
 
     return repoInfo
   } catch (error) {
-    console.error("Error fetching repository info:", error)
+    // Handled: the caller falls back to an empty/partial project list, so
+    // this doesn't need to surface as a "Console Error" in Next's overlay.
+    console.warn(
+      "Error fetching repository info:",
+      error instanceof Error ? error.message : error
+    )
     return null
   }
 }
@@ -122,7 +127,7 @@ export async function getMultipleRepoInfo(
       []
 
     if (jsonResponse.errors) {
-      console.error("GraphQL Errors:", jsonResponse.errors)
+      console.warn("GraphQL Errors:", jsonResponse.errors)
 
       // Track repositories with access errors
       jsonResponse.errors.forEach((error: GraphQLError) => {
@@ -181,7 +186,12 @@ export async function getMultipleRepoInfo(
 
     return accessibleRepos
   } catch (error) {
-    console.error("Error in GraphQL request, falling back to REST API:", error)
+    // Handled: falls through to the REST fallback below, so this doesn't
+    // need to surface as a "Console Error" in Next's overlay.
+    console.warn(
+      "Error in GraphQL request, falling back to REST API:",
+      error instanceof Error ? error.message : error
+    )
 
     // If GraphQL completely fails, fall back to REST API for all repositories
     const results = await Promise.allSettled(repoUrls.map(getRepoInfo))
