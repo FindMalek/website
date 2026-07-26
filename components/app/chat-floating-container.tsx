@@ -18,7 +18,7 @@ import { Textarea } from "@/components/ui/textarea"
 const AT_BOTTOM_THRESHOLD = 24
 
 export function ChatFloatingContainer() {
-  const { dockState, closeChat } = useChatDock()
+  const { dockState, closeChat, openChat } = useChatDock()
   const {
     messages,
     hasError,
@@ -109,6 +109,14 @@ export function ChatFloatingContainer() {
     const el = scrollAreaRef.current
     if (!el) return
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" })
+  }
+
+  // If there's already a real conversation (more than just the seeded
+  // welcome message), focusing the input should reopen it right away --
+  // no need to send another message first just to see history you already
+  // have.
+  const handleInputFocus = () => {
+    if (messages.length > 1) openChat()
   }
 
   return (
@@ -205,6 +213,7 @@ export function ChatFloatingContainer() {
                 ref={inputRef}
                 value={input}
                 onChange={handleInputChange}
+                onFocus={handleInputFocus}
                 onKeyDown={(e) => {
                   if (
                     e.key === "Enter" &&
