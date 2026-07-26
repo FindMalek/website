@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Work } from "content-collections"
 
 import { convertWorkType } from "@/config/converter"
@@ -12,13 +13,33 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export function WorkPositionItem({ work }: { work: Work }) {
-  const { position, type, startDate, endDate, overview, skills } = work
+  const { position, type, startDate, endDate, overview, skills, href } = work
 
   return (
-    <Collapsible className="group/position">
-      <CollapsibleTrigger className="flex w-full items-center gap-3 py-3 text-left">
+    <Collapsible className="group/position relative">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link
+            href={href}
+            aria-label="View full case study"
+            className="text-muted-foreground hover:text-foreground absolute top-3 right-0 transition-colors"
+          >
+            <Icons.arrowUpRight className="size-4" />
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>View full case study</p>
+        </TooltipContent>
+      </Tooltip>
+
+      <CollapsibleTrigger className="flex w-full items-center gap-3 py-3 pr-7 text-left">
         <Icons.briefcase className="text-muted-foreground size-4 shrink-0" />
 
         <div className="min-w-0 flex-1">
