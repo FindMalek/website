@@ -9,6 +9,7 @@ import { z } from "zod"
 // does not implement the Standard Schema spec, so these are separate,
 // content-collections-only schemas mirroring the same shape.
 const workFrontmatterSchema = z.object({
+  content: z.string(),
   id: z.number(),
   logo: z.string(),
   logoClassName: z.string().optional(),
@@ -26,6 +27,7 @@ const workFrontmatterSchema = z.object({
 })
 
 const projectFrontmatterSchema = z.object({
+  content: z.string(),
   id: z.number(),
   image: z.string(),
   name: z.string().min(1),
@@ -67,5 +69,5 @@ const projects = defineCollection({
 })
 
 export default defineConfig({
-  collections: [work, projects],
+  content: [work, projects],
 })
