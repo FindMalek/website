@@ -72,6 +72,25 @@
     }
   }
 
+  --animate-spin-slow: spin-slow 12s linear infinite;
+  --animate-shimmer-char: shimmer-char 4s ease-in-out infinite;
+
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes shimmer-char {
+    0%,
+    100% {
+      fill: var(--muted-foreground);
+    }
+    50% {
+      fill: var(--foreground);
+    }
+  }
+
   --font-heading: var(--font-heading);
 
   --radius-2xl: calc(var(--radius) * 1.8);
