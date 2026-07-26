@@ -12,10 +12,10 @@ import { SectionHeading } from "@/components/shared/section-heading"
 import { Button } from "@/components/ui/button"
 
 export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
-  const [displayCount, setDisplayCount] = useState(8)
+  const [displayCount, setDisplayCount] = useState(12)
 
   const handleShowMore = () => {
-    setDisplayCount((prev) => Math.min(prev + 8, playlists.length))
+    setDisplayCount((prev) => Math.min(prev + 12, playlists.length))
   }
 
   return (
