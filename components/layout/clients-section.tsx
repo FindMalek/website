@@ -3,13 +3,16 @@ import Link from "next/link"
 
 import type { Client } from "@/types"
 
+import { CLIENTS } from "@/config/consts"
 import { cn } from "@/lib/utils"
 
+import {
+  Panel,
+  PanelContent,
+  PanelHeader,
+  PanelTitle,
+} from "@/components/app/panel"
 import { Badge } from "@/components/ui/badge"
-
-interface ClientShowcaseProps {
-  clients: Client[]
-}
 
 function ClientBadge({ client }: { client: Client }) {
   return (
@@ -38,20 +41,33 @@ function ClientBadge({ client }: { client: Client }) {
   )
 }
 
-export function ClientShowcase({ clients }: ClientShowcaseProps) {
+/**
+ * Renders globally, on every route, directly above the Footer -- see
+ * app/layout.tsx. Not homepage-only and not part of useActiveSection's
+ * tracked ids (no nav entry for this one).
+ */
+export function ClientsSection() {
   return (
-    <div className="flex flex-wrap justify-center gap-3">
-      {clients.map((client, index) =>
-        client.href ? (
-          <Link href={client.href} key={index} target="_blank">
-            <ClientBadge client={client} />
-          </Link>
-        ) : (
-          <div key={index}>
-            <ClientBadge client={client} />
-          </div>
-        )
-      )}
-    </div>
+    <Panel>
+      <PanelHeader>
+        <PanelTitle className="text-lg">
+          Companies I&apos;ve worked with
+        </PanelTitle>
+      </PanelHeader>
+
+      <PanelContent className="flex flex-wrap justify-center gap-3">
+        {CLIENTS.map((client, index) =>
+          client.href ? (
+            <Link href={client.href} key={index} target="_blank">
+              <ClientBadge client={client} />
+            </Link>
+          ) : (
+            <div key={index}>
+              <ClientBadge client={client} />
+            </div>
+          )
+        )}
+      </PanelContent>
+    </Panel>
   )
 }

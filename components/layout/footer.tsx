@@ -3,17 +3,13 @@ import Link from "next/link"
 import { REPOSITORIES } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 
-import { getContributionCalendar } from "@/actions/github"
-import { GithubHeatmap } from "@/components/app/github-heatmap"
 import { Icons } from "@/components/shared/icons"
 import { ModeToggle } from "@/components/shared/mode-toggle"
 
 const SOURCE_REPO_URL = REPOSITORIES[0]
-const GITHUB_USERNAME = SOURCE_REPO_URL.split("/").at(-2) ?? "findmalek"
 
-export async function Footer() {
+export function Footer() {
   const currentYear = new Date().getFullYear()
-  const contributions = await getContributionCalendar(GITHUB_USERNAME)
 
   return (
     <footer className="border-secondary-foreground/20 w-full space-y-4 border-t px-2 py-4">
@@ -34,15 +30,6 @@ export async function Footer() {
           <Icons.github className="text-foreground/80 hover:text-foreground size-4 transition-all duration-200" />
         </Link>
       </div>
-
-      {contributions && (
-        <div className="container">
-          <GithubHeatmap
-            days={contributions.days}
-            totalContributions={contributions.totalContributions}
-          />
-        </div>
-      )}
 
       <div className="container flex items-center justify-between">
         <p className="text-muted-foreground text-xs">

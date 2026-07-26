@@ -2,6 +2,7 @@ import Link from "next/link"
 import { allProjects, allWorks } from "content-collections"
 
 import { REPOSITORIES } from "@/config/consts"
+import { siteConfig } from "@/config/site"
 import { STACK_SECTIONS } from "@/config/stack"
 import {
   sortProjectsByStars,
@@ -13,6 +14,8 @@ import { AboutBooks } from "@/components/app/about-books"
 import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
 import { CollapsibleList } from "@/components/app/collapsible-list"
+import { GithubHeatmap } from "@/components/app/github-heatmap"
+import { HelloTitle } from "@/components/app/hello-title"
 import {
   Panel,
   PanelContent,
@@ -26,13 +29,17 @@ import { StackSection } from "@/components/app/stack-section"
 import { WorkCardCompact } from "@/components/app/work-card-compact"
 import { LineShadowText } from "@/components/ui/line-shadow-text"
 
-import { getMultipleRepoInfo } from "@/actions/github"
+import { getContributionCalendar, getMultipleRepoInfo } from "@/actions/github"
 import { getUserPlaylists } from "@/actions/spotify"
+
+const SOURCE_REPO_URL = REPOSITORIES[0]
+const GITHUB_USERNAME = SOURCE_REPO_URL.split("/").at(-2) ?? "findmalek"
 
 export default async function Home() {
   const playlists = await getUserPlaylists(20, 0)
   const orderedWorks = sortWorkExperiences(allWorks)
   const orderedProjects = sortProjectsByStatus(allProjects)
+  const contributions = await getContributionCalendar(GITHUB_USERNAME)
   const openSourceProjects = await getMultipleRepoInfo(REPOSITORIES)
   const sortedOpenSourceProjects = sortProjectsByStars(openSourceProjects)
 
@@ -112,13 +119,35 @@ export default async function Home() {
 
       <Panel id="about">
         <PanelHeader>
-          <PanelTitle>About</PanelTitle>
+          <HelloTitle className="text-2xl font-bold leading-tight tracking-tight text-balance" />
           <PanelDescription>
-            I&apos;m a Design Engineer, Founder, and Product Builder.
+            I&apos;m a Design Engineer, Founder, and Product Builder based in
+            Monastir, Tunisia.
           </PanelDescription>
         </PanelHeader>
 
         <PanelContent>
+          <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+            <span className="text-muted-foreground">
+              {siteConfig.author.name}
+            </span>
+            <Link
+              href={`mailto:${siteConfig.author.email}`}
+              className="hover:text-primary transition-colors"
+            >
+              {siteConfig.author.email}
+            </Link>
+          </div>
+
+          {contributions && (
+            <div className="mb-8">
+              <GithubHeatmap
+                days={contributions.days}
+                totalContributions={contributions.totalContributions}
+              />
+            </div>
+          )}
+
           <AboutOverview />
           <AboutMusic playlists={playlists.items} />
           <AboutBooks />
