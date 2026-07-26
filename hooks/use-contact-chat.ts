@@ -3,10 +3,18 @@
 import { useEffect, useRef, useState } from "react"
 
 import { MAX_MESSAGES_ALLOWED } from "@/config/consts"
-import { useChatWithTools } from "@/hooks/use-chat-with-tools"
+import { useChatDock } from "@/providers/chat-provider"
 
+/**
+ * Reads the single shared chat instance from ChatProvider instead of
+ * calling useChatWithTools() itself. Calling it again here would spin up a
+ * second, disconnected useChat instance -- messages sent from this hook's
+ * UI would land in a state nobody else (dock-open logic, the tool-result
+ * hooks reading getGlobalChatContext()) ever looks at, so the request would
+ * succeed but the UI would never visibly update.
+ */
 export function useContactChat() {
-  const chatContext = useChatWithTools()
+  const { chat: chatContext } = useChatDock()
   const { messages, error, input, handleInputChange, isLoading, stop } =
     chatContext
 

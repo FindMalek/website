@@ -15,8 +15,8 @@ import {
   ConversationContent,
   ConversationScrollButton,
 } from "@/components/ui/conversation"
-import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group"
 import { PromptInputSubmit } from "@/components/ui/prompt-input"
+import { Textarea } from "@/components/ui/textarea"
 
 export function ChatFloatingContainer() {
   const { dockState, closeChat } = useChatDock()
@@ -104,8 +104,8 @@ export function ChatFloatingContainer() {
             onSubmit={handleFormSubmit}
             className="pb-[calc(env(safe-area-inset-bottom)+0.5rem)]"
           >
-            <InputGroup className="bg-background rounded-2xl shadow-lg">
-              <InputGroupTextarea
+            <div className="bg-background focus-within:ring-ring/50 relative rounded-2xl border shadow-lg transition-[color,box-shadow] focus-within:ring-[3px]">
+              <Textarea
                 ref={inputRef}
                 value={input}
                 onChange={handleInputChange}
@@ -122,12 +122,14 @@ export function ChatFloatingContainer() {
                 placeholder="Ask me anything..."
                 disabled={isLoading || isCancelling}
                 rows={1}
+                className="max-h-40 min-h-11 resize-none rounded-2xl border-0 py-3 pr-12 pl-4 shadow-none focus-visible:ring-0"
               />
               <PromptInputSubmit
                 status={isLoading ? "streaming" : undefined}
                 disabled={isLoading || !input.trim() || isCancelling}
+                className="absolute right-2 bottom-2"
               />
-            </InputGroup>
+            </div>
           </form>
         )}
       </motion.div>
