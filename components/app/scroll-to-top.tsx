@@ -1,40 +1,50 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 
-import { clamp } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { useChatDock } from "@/providers/chat-provider"
 
 import { Icons } from "@/components/shared/icons"
 
 const APPEAR_AT = 200
-const FULL_OPACITY_AT = 800
-const MIN_OPACITY = 0.35
+const DIRECTION_DELTA_THRESHOLD = 5
 
 /**
  * Homepage-only "back to top" button. Hidden near the top of the page (no
- * point offering it when you're already there), then fades in and keeps
- * getting more visible the further down you scroll -- not a single jump from
- * invisible to fully opaque.
+ * point offering it when you're already there). Below that, it's driven by
+ * scroll *direction*, not position: scrolling up (a "let me go back" signal)
+ * reveals it clearly; scrolling down keeps it stealthy -- barely-there on
+ * desktop, fully hidden on mobile so it doesn't sit in the way of reading.
  */
 export function ScrollToTop() {
   const pathname = usePathname()
   const { dockState } = useChatDock()
   const [scrollY, setScrollY] = useState(0)
+  const [isScrollingUp, setIsScrollingUp] = useState(false)
+  const lastScrollY = useRef(0)
 
   useEffect(() => {
     let ticking = false
 
-    const updateScrollY = () => {
-      setScrollY(window.scrollY)
+    const update = () => {
+      const currentY = window.scrollY
+      const delta = currentY - lastScrollY.current
+
+      if (Math.abs(delta) > DIRECTION_DELTA_THRESHOLD) {
+        setIsScrollingUp(delta < 0)
+        lastScrollY.current = currentY
+      }
+
+      setScrollY(currentY)
       ticking = false
     }
 
     const handleScroll = () => {
       if (ticking) return
       ticking = true
-      requestAnimationFrame(updateScrollY)
+      requestAnimationFrame(update)
     }
 
     handleScroll()
@@ -46,23 +56,19 @@ export function ScrollToTop() {
     return null
   }
 
-  const opacity = clamp(
-    MIN_OPACITY +
-      ((scrollY - APPEAR_AT) / (FULL_OPACITY_AT - APPEAR_AT)) *
-        (1 - MIN_OPACITY),
-    MIN_OPACITY,
-    1
-  )
-
   return (
     <button
       type="button"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Back to top"
-      style={{ opacity }}
-      className="bg-background fixed right-4 bottom-24 z-30 flex size-10 items-center justify-center rounded-full border shadow-lg transition-opacity md:right-6"
+      className={cn(
+        "bg-background fixed right-4 bottom-20 z-30 flex size-8 items-center justify-center rounded-full border shadow-md transition-opacity duration-300 md:right-6",
+        isScrollingUp
+          ? "opacity-70 hover:opacity-100"
+          : "pointer-events-none opacity-0 md:pointer-events-auto md:opacity-15 md:hover:opacity-60"
+      )}
     >
-      <Icons.up className="size-4" />
+      <Icons.up className="size-3.5" />
     </button>
   )
 }
