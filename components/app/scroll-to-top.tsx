@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
+import { useChatDock } from "@/providers/chat-provider"
 
 import { cn } from "@/lib/utils"
-import { useChatDock } from "@/providers/chat-provider"
 
 import { Icons } from "@/components/shared/icons"
 
@@ -62,7 +62,7 @@ export function ScrollToTop() {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Back to top"
       className={cn(
-        "bg-background fixed right-4 bottom-20 z-30 flex size-8 items-center justify-center rounded-full border shadow-md transition-opacity duration-300 md:right-6",
+        "bg-background fixed bottom-20 right-4 z-30 flex size-8 items-center justify-center rounded-full border shadow-md transition-opacity duration-300 md:right-6",
         isScrollingUp
           ? "opacity-70 hover:opacity-100"
           : "pointer-events-none opacity-0 md:pointer-events-auto md:opacity-15 md:hover:opacity-60"
