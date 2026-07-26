@@ -171,16 +171,11 @@ export default async function Home() {
 
         <PanelContent>
           <CollapsibleList
-            visible={orderedWorks
-              .slice(0, 4)
-              .map((work) => (
-                <WorkCardCompact key={work._meta.path} work={work} />
-              ))}
-            hidden={orderedWorks
-              .slice(4)
-              .map((work) => (
-                <WorkCardCompact key={work._meta.path} work={work} />
-              ))}
+            items={orderedWorks.map((work) => (
+              <WorkCardCompact key={work._meta.path} work={work} />
+            ))}
+            initialCount={4}
+            step={4}
             className="grid gap-3"
           />
         </PanelContent>
@@ -198,16 +193,11 @@ export default async function Home() {
 
         <PanelContent>
           <CollapsibleList
-            visible={orderedProjects
-              .slice(0, 6)
-              .map((project) => (
-                <ProjectCardCompact key={project._meta.path} project={project} />
-              ))}
-            hidden={orderedProjects
-              .slice(6)
-              .map((project) => (
-                <ProjectCardCompact key={project._meta.path} project={project} />
-              ))}
+            items={orderedProjects.map((project) => (
+              <ProjectCardCompact key={project._meta.path} project={project} />
+            ))}
+            initialCount={6}
+            step={6}
             className="grid gap-4 sm:grid-cols-2"
           />
 

@@ -1,62 +1,57 @@
 "use client"
 
-import { cn } from "@/lib/utils"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+import { useState } from "react"
+
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/shared/icons"
 
 interface CollapsibleListProps {
-  /** Already-rendered, always-visible items. */
-  visible: React.ReactNode[]
-  /** Already-rendered items revealed by "Show more". */
-  hidden: React.ReactNode[]
-  /** Layout classes (e.g. "grid gap-3") applied to both groups, so they
-   * read as one continuous grid/list rather than two visually distinct
-   * blocks. Pre-rendered nodes (not a renderItem callback) because this
-   * is a client component consumed from Server Component pages -- functions
-   * can't cross that boundary as props, JSX already can. */
+  /** All items, already rendered server-side -- a client component consumed
+   * from a Server Component page can only receive pre-rendered JSX as props,
+   * not a renderItem callback (functions can't cross that boundary). */
+  items: React.ReactNode[]
+  /** How many items are visible before any "Show more" click. */
+  initialCount: number
+  /** How many more items each "Show more" click reveals. */
+  step: number
+  /** Layout classes (e.g. "grid gap-3") applied to the item container. */
   className?: string
 }
 
 /**
- * Shows `visible` directly, wraps `hidden` in a Collapsible with a
- * "Show more/less" trigger -- the one canonical "show more" pattern reused
- * across Work and Projects, instead of a bespoke version per section.
+ * Progressive reveal: shows `initialCount` items, "Show more" reveals
+ * `step` more at a time until everything is visible. The one canonical
+ * "show more" pattern reused across Work and Projects.
  */
 export function CollapsibleList({
-  visible,
-  hidden,
+  items,
+  initialCount,
+  step,
   className,
 }: CollapsibleListProps) {
+  const [visibleCount, setVisibleCount] = useState(initialCount)
+
   return (
-    <Collapsible>
-      <div className={className}>{visible}</div>
+    <div>
+      <div className={className}>{items.slice(0, visibleCount)}</div>
 
-      {hidden.length > 0 && (
-        <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-none">
-          <div className={cn(className, "mt-3")}>{hidden}</div>
-        </CollapsibleContent>
-      )}
-
-      {hidden.length > 0 && (
+      {visibleCount < items.length && (
         <div className="mt-3 flex justify-center">
-          <CollapsibleTrigger asChild>
-            <Button variant="secondary" size="sm" className="group gap-2">
-              <span className="group-data-[state=open]:hidden">
-                Show more
-              </span>
-              <span className="hidden group-data-[state=open]:block">
-                Show less
-              </span>
-              <Icons.chevronDown className="size-4 transition-transform group-data-[state=open]:rotate-180" />
-            </Button>
-          </CollapsibleTrigger>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="min-w-32 gap-2"
+            onClick={() =>
+              setVisibleCount((count) =>
+                Math.min(count + step, items.length)
+              )
+            }
+          >
+            Show more
+            <Icons.down className="size-4" />
+          </Button>
         </div>
       )}
-    </Collapsible>
+    </div>
   )
 }
