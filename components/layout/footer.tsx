@@ -28,20 +28,11 @@ export function Footer() {
         </Link>
       </div>
 
-      <div className="container flex items-center justify-between">
+      <div className="container flex items-center justify-between mb-20">
         <p className="text-muted-foreground text-xs">
           © {currentYear} Malek Gara-Hellal. All rights reserved.
         </p>
         <ModeToggle />
-      </div>
-
-      <div className="container overflow-hidden">
-        <p
-          aria-hidden
-          className="text-foreground/10 -mb-4 -ml-1 translate-y-3 font-mono text-[4rem] leading-none font-bold tracking-tighter select-none sm:text-[6rem] md:text-[8rem]"
-        >
-          findmalek
-        </p>
       </div>
     </footer>
   )
