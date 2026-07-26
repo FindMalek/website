@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Work } from "content-collections"
 
-import { WorkExperienceGroup, cn } from "@/lib/utils"
+import { cn, WorkExperienceGroup } from "@/lib/utils"
 
 import { WorkPositionItem } from "@/components/app/work-position-item"
 
@@ -11,8 +11,15 @@ export function WorkExperienceItem({
 }: {
   group: WorkExperienceGroup<Work>
 }) {
-  const { company, logo, logoClassName, link, location, isCurrentEmployer, positions } =
-    group
+  const {
+    company,
+    logo,
+    logoClassName,
+    link,
+    location,
+    isCurrentEmployer,
+    positions,
+  } = group
 
   return (
     <div className="border-foreground/10 border-b py-6 last:border-b-0">
@@ -41,9 +48,7 @@ export function WorkExperienceItem({
                 {company}
               </Link>
             ) : (
-              <span className="truncate text-sm font-semibold">
-                {company}
-              </span>
+              <span className="truncate text-sm font-semibold">{company}</span>
             )}
 
             {isCurrentEmployer && (
@@ -60,7 +65,7 @@ export function WorkExperienceItem({
         </div>
       </div>
 
-      <div className="border-foreground/10 divide-foreground/10 mt-2 ml-5 divide-y border-l border-dashed pl-5">
+      <div className="border-foreground/10 divide-foreground/10 ml-5 mt-2 divide-y border-l border-dashed pl-5">
         {positions.map((position) => (
           <WorkPositionItem key={position.id} work={position} />
         ))}

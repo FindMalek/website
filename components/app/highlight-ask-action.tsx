@@ -1,8 +1,9 @@
 "use client"
 
-import { useHighlightToAsk } from "@/hooks/use-highlight-to-ask"
-import { clamp } from "@/lib/utils"
 import { useChatDock } from "@/providers/chat-provider"
+
+import { clamp } from "@/lib/utils"
+import { useHighlightToAsk } from "@/hooks/use-highlight-to-ask"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"

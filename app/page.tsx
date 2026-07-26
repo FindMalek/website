@@ -5,6 +5,7 @@ import { allProjects, allWorks } from "content-collections"
 import { REPOSITORIES } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 import { STACK_SECTIONS } from "@/config/stack"
+import { getCachedContributions } from "@/lib/get-cached-contributions"
 import {
   groupWorkByCompany,
   sortProjectsByStars,
@@ -36,7 +37,6 @@ import {
 
 import { getMultipleRepoInfo } from "@/actions/github"
 import { getUserPlaylists } from "@/actions/spotify"
-import { getCachedContributions } from "@/lib/get-cached-contributions"
 
 const SOURCE_REPO_URL = REPOSITORIES[0]
 const GITHUB_USERNAME = SOURCE_REPO_URL.split("/").at(-2) ?? "findmalek"
@@ -57,7 +57,7 @@ export default async function Home() {
 
       <Panel id="about">
         <PanelHeader>
-          <HelloTitle className="text-2xl font-bold leading-tight tracking-tight text-balance" />
+          <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
           <PanelDescription>
             I&apos;m a Design Engineer, Founder, and Product Builder based in
             Monastir, Tunisia.
@@ -69,8 +69,8 @@ export default async function Home() {
             <p className="text-base leading-relaxed">
               Specialized in transforming complex ideas into elegant digital
               solutions through web development, design engineering, and
-              entrepreneurial innovation. I craft meaningful projects that
-              blend creativity with technical precision. View my{" "}
+              entrepreneurial innovation. I craft meaningful projects that blend
+              creativity with technical precision. View my{" "}
               <Link
                 href="/#work"
                 className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"
@@ -96,8 +96,8 @@ export default async function Home() {
 
             <p className="text-base leading-relaxed">
               Beyond code, I find creative inspiration in diverse music genres
-              from Metal to Ambient, and maintain a curated collection of
-              books that fuel my innovative thinking. Explore my{" "}
+              from Metal to Ambient, and maintain a curated collection of books
+              that fuel my innovative thinking. Explore my{" "}
               <Link
                 href="/#playlists"
                 className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"

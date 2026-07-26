@@ -2,13 +2,12 @@
 
 import { useEffect, useId, useState } from "react"
 
-import { Icons } from "@/components/shared/icons"
-
 import {
   IntroItem,
   IntroItemContent,
   IntroItemIcon,
 } from "@/components/app/intro-item"
+import { Icons } from "@/components/shared/icons"
 
 interface CurrentLocalTimeItemProps {
   timeZone: string
@@ -58,7 +57,10 @@ function runClockScript(
 // Blocking inline script that paints the viewer-local clock before
 // hydration. The script body is fixed, developer-authored source with no
 // interpolated user input -- safe for dangerouslySetInnerHTML.
-function getInlineScript(timeZone: string, ids: { time: string; diff: string }) {
+function getInlineScript(
+  timeZone: string,
+  ids: { time: string; diff: string }
+) {
   return `(${runClockScript.toString()})(${JSON.stringify(timeZone)},${JSON.stringify(ids)},${computeClock.toString()})`
 }
 

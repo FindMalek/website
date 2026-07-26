@@ -97,7 +97,7 @@
 
   --radius-3xl: calc(var(--radius) * 2.2);
 
-  --radius-4xl: calc(var(--radius) * 2.6)
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 :root {
@@ -176,7 +176,7 @@
   @apply relative;
   &::before {
     content: "";
-    @apply bg-line absolute top-0 left-[-100vw] -z-1 h-px w-[200vw];
+    @apply bg-line -z-1 absolute left-[-100vw] top-0 h-px w-[200vw];
   }
 }
 
@@ -184,7 +184,7 @@
   @apply relative;
   &::after {
     content: "";
-    @apply bg-line absolute bottom-0 left-[-100vw] -z-1 h-px w-[200vw];
+    @apply bg-line -z-1 absolute bottom-0 left-[-100vw] h-px w-[200vw];
   }
 }
 
@@ -192,7 +192,7 @@
   @apply relative h-8;
   &::before {
     content: "";
-    @apply absolute left-[-100vw] -z-1 h-full w-[200vw];
+    @apply -z-1 absolute left-[-100vw] h-full w-[200vw];
     background-image: repeating-linear-gradient(
       315deg,
       var(--line) 0,
@@ -221,4 +221,5 @@
 }
 
 @utility link-underline {
-    @apply underline decoration-current/30 decoration-1 underline-offset-3 transition-colors hover:decoration-current;}
+  @apply decoration-current/30 underline-offset-3 underline decoration-1 transition-colors hover:decoration-current;
+}

@@ -1,8 +1,8 @@
 "use client"
 
 import { type EmailFormValues } from "@/config/schemas"
-import { useEmailForm } from "@/hooks/use-email-form"
 import { type ToolCallLike } from "@/lib/tool-helpers"
+import { useEmailForm } from "@/hooks/use-email-form"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"

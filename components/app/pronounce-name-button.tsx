@@ -19,7 +19,10 @@ interface PronounceNameButtonProps {
  * real audio file; that's an accepted trade-off of this approach, not a
  * bug to chase.
  */
-export function PronounceNameButton({ name, className }: PronounceNameButtonProps) {
+export function PronounceNameButton({
+  name,
+  className,
+}: PronounceNameButtonProps) {
   const [isSupported] = useState(
     () => typeof window !== "undefined" && "speechSynthesis" in window
   )

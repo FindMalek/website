@@ -1,4 +1,4 @@
-import { z } from 'zod/v3';
+import { z } from "zod/v3"
 
 import { projectStatus, projectType, workType } from "@/types/enum"
 

@@ -1,6 +1,9 @@
 import { cn } from "@/lib/utils"
 
-export function IntroItem({ className, ...props }: React.ComponentProps<"div">) {
+export function IntroItem({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       className={cn("flex items-center gap-3 font-mono text-sm", className)}
@@ -17,7 +20,7 @@ export function IntroItemIcon({
     <div
       className={cn(
         "border-muted-foreground/15 bg-muted flex size-6 shrink-0 items-center justify-center rounded-md border",
-        "[&_svg]:text-muted-foreground [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+        "[&_svg]:text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none",
         className
       )}
       {...props}

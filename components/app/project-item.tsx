@@ -3,7 +3,10 @@
 import Image from "next/image"
 import Link from "next/link"
 
-import { convertProjectStatus, convertProjectStatusColor } from "@/config/converter"
+import {
+  convertProjectStatus,
+  convertProjectStatusColor,
+} from "@/config/converter"
 import { ProjectRo } from "@/config/schemas"
 import { cn } from "@/lib/utils"
 
@@ -21,8 +24,17 @@ import {
 } from "@/components/ui/tooltip"
 
 export function ProjectItem({ project }: { project: ProjectRo }) {
-  const { image, name, overview, status, link, href, tags, startDate, endDate } =
-    project
+  const {
+    image,
+    name,
+    overview,
+    status,
+    link,
+    href,
+    tags,
+    startDate,
+    endDate,
+  } = project
 
   return (
     <Collapsible className="group/project border-foreground/10 border-b py-3 last:border-b-0">
@@ -76,7 +88,7 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
       </div>
 
       <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-none">
-        <div className="space-y-3 pt-3 pl-12">
+        <div className="space-y-3 pl-12 pt-3">
           <p className="text-muted-foreground text-sm">{overview}</p>
 
           {tags && tags.length > 0 && (

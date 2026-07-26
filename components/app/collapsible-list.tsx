@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 
-import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/shared/icons"
+import { Button } from "@/components/ui/button"
 
 interface CollapsibleListProps {
   /** All items, already rendered server-side -- a client component consumed
@@ -42,9 +42,7 @@ export function CollapsibleList({
             size="sm"
             className="min-w-32 gap-2"
             onClick={() =>
-              setVisibleCount((count) =>
-                Math.min(count + step, items.length)
-              )
+              setVisibleCount((count) => Math.min(count + step, items.length))
             }
           >
             Show more

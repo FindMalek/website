@@ -2,22 +2,19 @@ import resumeData from "@/data/resume.json"
 
 import { siteConfig } from "@/config/site"
 
-import { AbstractMark } from "@/components/app/abstract-mark"
 import { PronounceNameButton } from "@/components/app/pronounce-name-button"
 import { VerifiedIcon } from "@/components/app/verified-icon"
 import { Avatar } from "@/components/shared/avatar"
 
 export function Hero() {
   return (
-    <section className="screen-line-bottom px-4 pt-12 pb-6">
-      <AbstractMark size="lg" caption="FIG_001" className="mb-6" />
-
+    <section className="screen-line-bottom px-4 pb-6 pt-12">
       <div className="flex items-center gap-3">
         <Avatar large />
 
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <h1 className="text-2xl font-bold tracking-tight text-balance">
+            <h1 className="text-balance text-2xl font-bold tracking-tight">
               {siteConfig.author.name}
             </h1>
             <VerifiedIcon className="text-primary size-4.5 shrink-0" />

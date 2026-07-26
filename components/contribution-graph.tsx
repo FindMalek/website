@@ -378,7 +378,7 @@ export const ContributionGraphCalendar = ({
   return (
     <div
       className={cn(
-        "no-scrollbar max-w-full scroll-fade-x overflow-x-auto overflow-y-hidden",
+        "no-scrollbar scroll-fade-x max-w-full overflow-x-auto overflow-y-hidden",
         className
       )}
       {...props}
@@ -393,7 +393,7 @@ export const ContributionGraphCalendar = ({
         {!hideMonthLabels && (
           <g
             data-slot="month-labels"
-            className="fill-current selection:fill-selection-foreground"
+            className="selection:fill-selection-foreground fill-current"
           >
             {monthLabels.map(({ label, weekIndex }) => (
               <text
@@ -489,7 +489,7 @@ export const ContributionGraphLegend = ({
       style={{ gap: blockMargin }}
       {...props}
     >
-      <span className="mr-1 text-muted-foreground">
+      <span className="text-muted-foreground mr-1">
         {labels.legend?.less || "Less"}
       </span>
 
@@ -511,7 +511,7 @@ export const ContributionGraphLegend = ({
         )
       )}
 
-      <span className="ml-1 text-muted-foreground">
+      <span className="text-muted-foreground ml-1">
         {labels.legend?.more || "More"}
       </span>
     </div>

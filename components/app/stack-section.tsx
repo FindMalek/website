@@ -12,7 +12,7 @@ export function StackSection({ section, index }: StackSectionProps) {
     <div className="border-line grid gap-x-4 gap-y-2 border-b py-4 last:border-none sm:grid-cols-[12rem_1fr]">
       <div className="text-muted-foreground flex h-6 items-center text-sm">
         <span
-          className="text-muted-foreground/50 mr-1.5 font-mono select-none"
+          className="text-muted-foreground/50 mr-1.5 select-none font-mono"
           aria-hidden
         >
           {(index + 1).toString().padStart(2, "0")}

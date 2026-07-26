@@ -1,10 +1,10 @@
 "use client"
 
+import { useChatDock } from "@/providers/chat-provider"
 import { AnimatePresence, motion } from "motion/react"
 
-import { useContactChat } from "@/hooks/use-contact-chat"
 import { cn } from "@/lib/utils"
-import { useChatDock } from "@/providers/chat-provider"
+import { useContactChat } from "@/hooks/use-contact-chat"
 
 import {
   Conversation,
@@ -82,7 +82,9 @@ export function ChatFloatingContainer() {
             </Conversation>
 
             {showSuggestions && messages.length === 1 && (
-              <ContactSuggestedPrompts onSuggestionClick={handleSuggestionClick} />
+              <ContactSuggestedPrompts
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
         )}
@@ -108,7 +110,11 @@ export function ChatFloatingContainer() {
                 value={input}
                 onChange={handleInputChange}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                  if (
+                    e.key === "Enter" &&
+                    !e.shiftKey &&
+                    !e.nativeEvent.isComposing
+                  ) {
                     e.preventDefault()
                     e.currentTarget.form?.requestSubmit()
                   }

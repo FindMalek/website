@@ -3,7 +3,6 @@ import Link from "next/link"
 import { REPOSITORIES } from "@/config/consts"
 import { siteConfig } from "@/config/site"
 
-import { AbstractMark } from "@/components/app/abstract-mark"
 import { Icons } from "@/components/shared/icons"
 import { ModeToggle } from "@/components/shared/mode-toggle"
 
@@ -38,64 +37,6 @@ export function Footer() {
         <Link href={siteConfig.links.github} target="_blank">
           <Icons.github className="text-foreground/80 hover:text-foreground size-4 transition-all duration-200" />
         </Link>
-      </div>
-
-      <dl className="container flex flex-col gap-2 font-mono text-sm [&_dd]:text-foreground [&_dt]:text-muted-foreground">
-        <div className="flex items-center justify-between">
-          <dt>Crafted by</dt>
-          <dd>
-            <Link
-              href={siteConfig.links.twitter}
-              target="_blank"
-              className="underline decoration-current/30 underline-offset-4 hover:decoration-current"
-            >
-              {siteConfig.author.name}
-            </Link>
-          </dd>
-        </div>
-        <div className="flex items-center justify-between">
-          <dt>Inspired by</dt>
-          <dd>
-            <ul className="flex flex-wrap justify-end gap-x-1.5">
-              {INSPIRED_BY.map((tool, index) => (
-                <li key={tool.name}>
-                  <Link
-                    href={tool.href}
-                    target="_blank"
-                    className="underline decoration-current/30 underline-offset-4 hover:decoration-current"
-                  >
-                    {tool.name}
-                  </Link>
-                  {index < INSPIRED_BY.length - 1 ? "," : ""}
-                </li>
-              ))}
-            </ul>
-          </dd>
-        </div>
-        <div className="flex items-center justify-between">
-          <dt>Deployed on</dt>
-          <dd>Vercel</dd>
-        </div>
-        <div className="flex items-center justify-between">
-          <dt>Analytics</dt>
-          <dd>Vercel Analytics</dd>
-        </div>
-        <div className="flex items-center justify-between">
-          <dt>Source code</dt>
-          <dd>
-            <Link
-              href={SOURCE_REPO_URL}
-              target="_blank"
-              className="underline decoration-current/30 underline-offset-4 hover:decoration-current"
-            >
-              GitHub
-            </Link>
-          </dd>
-        </div>
-      </dl>
-
-      <div className="container">
-        <AbstractMark size="sm" />
       </div>
 
       <div className="container flex items-center justify-between">

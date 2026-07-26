@@ -16,7 +16,7 @@ export function Panel({ id, className, ...props }: PanelProps) {
     <section
       id={id}
       className={cn(
-        "screen-line-top screen-line-bottom border-x border-line",
+        "screen-line-top screen-line-bottom border-line border-x",
         id && "[scroll-margin-top:var(--header-height,6rem)]",
         className
       )}
@@ -44,7 +44,7 @@ export function PanelTitle({
   return (
     <h2
       className={cn(
-        "text-2xl font-bold leading-tight tracking-tight text-balance",
+        "text-balance text-2xl font-bold leading-tight tracking-tight",
         className
       )}
       {...props}
@@ -59,7 +59,7 @@ export function PanelTitleSup({
   return (
     <sup
       className={cn(
-        "text-muted-foreground ml-1 top-[-0.75em] text-sm font-medium tracking-normal",
+        "text-muted-foreground top-[-0.75em] ml-1 text-sm font-medium tracking-normal",
         className
       )}
       {...props}

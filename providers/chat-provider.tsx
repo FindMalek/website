@@ -12,8 +12,11 @@ import { usePathname } from "next/navigation"
 
 import { PageContext } from "@/types"
 
-import { setGlobalChatContext, useChatWithTools } from "@/hooks/use-chat-with-tools"
 import { useActiveSection } from "@/hooks/use-active-section"
+import {
+  setGlobalChatContext,
+  useChatWithTools,
+} from "@/hooks/use-chat-with-tools"
 
 type DockState = "idle" | "docked"
 
