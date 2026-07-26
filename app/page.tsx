@@ -1,10 +1,9 @@
 import Link from "next/link"
 import { allProjects, allWorks } from "content-collections"
 
-import { CLIENTS, REPOSITORIES } from "@/config/consts"
+import { REPOSITORIES } from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
 import {
-  cn,
   sortProjectsByStars,
   sortProjectsByStatus,
   sortWorkExperiences,
@@ -13,11 +12,17 @@ import {
 import { AboutBooks } from "@/components/app/about-books"
 import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
+import {
+  Panel,
+  PanelContent,
+  PanelDescription,
+  PanelHeader,
+  PanelTitle,
+} from "@/components/app/panel"
 import { ProjectCardCompact } from "@/components/app/project-card-compact"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
 import { WorkCardCompact } from "@/components/app/work-card-compact"
-import { ClientShowcase } from "@/components/app/work-client-showcase"
 import { LineShadowText } from "@/components/ui/line-shadow-text"
 
 import { getMultipleRepoInfo } from "@/actions/github"
@@ -31,8 +36,8 @@ export default async function Home() {
   const sortedOpenSourceProjects = sortProjectsByStars(openSourceProjects)
 
   return (
-    <div className="w-full px-4">
-      <section className="pt-30">
+    <div className="w-full">
+      <section className="px-4 pt-30">
         <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:leading-snug xl:text-4xl">
           Full Stack Developer and{" "}
           <LineShadowText className="dark:text-primary italic">
@@ -102,82 +107,86 @@ export default async function Home() {
         </div>
       </section>
 
-      <section
-        id="work"
-        className="mb-32 mt-24 [scroll-margin-top:var(--header-height,6rem)]"
-      >
-        <h2 className="mb-6 text-3xl font-bold">Work</h2>
-        <p className="text-secondary-foreground/80 mb-6">
-          I&apos;ve been fortunate to work with some amazing companies and
-          people.
-        </p>
+      <div className="stripe-divider mt-24" />
 
-        <div className={cn("grid gap-3")}>
+      <Panel id="about">
+        <PanelHeader>
+          <PanelTitle>About</PanelTitle>
+          <PanelDescription>
+            I&apos;m a Design Engineer, Founder, and Product Builder.
+          </PanelDescription>
+        </PanelHeader>
+
+        <PanelContent>
+          <AboutOverview />
+          <AboutMusic playlists={playlists.items} />
+          <AboutBooks />
+        </PanelContent>
+      </Panel>
+
+      <div className="stripe-divider" />
+
+      <Panel id="work">
+        <PanelHeader>
+          <PanelTitle>Work</PanelTitle>
+          <PanelDescription>
+            I&apos;ve been fortunate to work with some amazing companies and
+            people.
+          </PanelDescription>
+        </PanelHeader>
+
+        <PanelContent className="grid gap-3">
           {orderedWorks.map((work) => (
             <WorkCardCompact key={work._meta.path} work={work} />
           ))}
-        </div>
+        </PanelContent>
+      </Panel>
 
-        <div className="mt-8 space-y-4">
-          <h3 className="text-muted-foreground/80 text-center text-base font-medium">
-            I&apos;ve also worked with some amazing companies and people.
-          </h3>
-          <ClientShowcase clients={CLIENTS} />
-        </div>
-      </section>
+      <div className="stripe-divider" />
 
-      <section
-        id="projects"
-        className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
-      >
-        <h2 className="mb-6 text-3xl font-bold">Projects</h2>
-        <p className="text-secondary-foreground/80 mb-6">
-          I love shipping products and open source software.
-        </p>
+      <Panel id="projects">
+        <PanelHeader>
+          <PanelTitle>Projects</PanelTitle>
+          <PanelDescription>
+            I love shipping products and open source software.
+          </PanelDescription>
+        </PanelHeader>
 
-        <div className="grid gap-3">
-          {orderedProjects.map((project) => (
-            <ProjectCardCompact key={project._meta.path} project={project} />
-          ))}
-        </div>
+        <PanelContent>
+          <div className="grid gap-3">
+            {orderedProjects.map((project) => (
+              <ProjectCardCompact
+                key={project._meta.path}
+                project={project}
+              />
+            ))}
+          </div>
 
-        <h3 className="mb-4 mt-12 text-xl font-semibold">Open Source</h3>
-        <div className="grid gap-4 md:grid-cols-2">
-          {sortedOpenSourceProjects.map((project) => (
-            <ProjectOpenSourceCard key={project.name} project={project} />
-          ))}
-        </div>
-      </section>
+          <h3 className="mb-4 mt-12 text-xl font-semibold">Open Source</h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            {sortedOpenSourceProjects.map((project) => (
+              <ProjectOpenSourceCard key={project.name} project={project} />
+            ))}
+          </div>
+        </PanelContent>
+      </Panel>
 
-      <section
-        id="stack"
-        className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
-      >
-        <h2 className="mb-6 text-3xl font-bold">Stack</h2>
-        <p className="text-secondary-foreground/80 mb-8">
-          Tools, technology and apps I use every day.
-        </p>
+      <div className="stripe-divider" />
 
-        <div className="space-y-16">
+      <Panel id="stack">
+        <PanelHeader>
+          <PanelTitle>Stack</PanelTitle>
+          <PanelDescription>
+            Tools, technology and apps I use every day.
+          </PanelDescription>
+        </PanelHeader>
+
+        <PanelContent>
           {STACK_SECTIONS.map((section, index) => (
             <StackSection key={index} section={section} />
           ))}
-        </div>
-      </section>
-
-      <section
-        id="about"
-        className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
-      >
-        <h2 className="mb-6 text-3xl font-bold">About</h2>
-        <p className="text-secondary-foreground/80 mb-8">
-          I&apos;m a Design Engineer, Founder, and Product Builder.
-        </p>
-
-        <AboutOverview />
-        <AboutMusic playlists={playlists.items} />
-        <AboutBooks />
-      </section>
+        </PanelContent>
+      </Panel>
     </div>
   )
 }

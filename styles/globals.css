@@ -26,6 +26,7 @@
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
+  --color-line: var(--line);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
@@ -114,6 +115,7 @@
   --sidebar-ring: oklch(0.723 0.014 214.4);
   --background: oklch(1 0 0);
   --foreground: oklch(0.148 0.004 228.8);
+  --line: color-mix(in oklab, var(--border) 64%, var(--background));
 }
 
 .dark {
@@ -149,6 +151,38 @@
   --sidebar-accent-foreground: oklch(0.987 0.002 197.1);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.56 0.021 213.5);
+}
+
+@utility screen-line-top {
+  @apply relative;
+  &::before {
+    content: "";
+    @apply bg-line absolute top-0 left-[-100vw] -z-1 h-px w-[200vw];
+  }
+}
+
+@utility screen-line-bottom {
+  @apply relative;
+  &::after {
+    content: "";
+    @apply bg-line absolute bottom-0 left-[-100vw] -z-1 h-px w-[200vw];
+  }
+}
+
+@utility stripe-divider {
+  @apply relative h-8;
+  &::before {
+    content: "";
+    @apply absolute left-[-100vw] -z-1 h-full w-[200vw];
+    background-image: repeating-linear-gradient(
+      315deg,
+      var(--line) 0,
+      var(--line) 1px,
+      transparent 0,
+      transparent 50%
+    );
+    background-size: 8px 8px;
+  }
 }
 
 @layer base {

@@ -84,7 +84,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         suppressHydrationWarning
         className={cn(
           "bg-background min-h-screen font-sans antialiased",
-          "mx-auto flex w-full flex-col",
+          "mx-auto flex w-full flex-col overflow-x-clip",
           "sm:max-w-lg md:max-w-2xl xl:max-w-3xl",
           poppins
         )}
