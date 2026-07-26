@@ -14,7 +14,7 @@ export function StackItem({ item }: StackItemProps) {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="bg-secondary/50 hover:bg-secondary inset-ring-border text-foreground inset-ring-1 flex h-6 items-center gap-1.5 rounded-full px-2 font-mono text-xs transition-colors"
+      className="bg-secondary/50 hover:bg-secondary inset-ring-border text-foreground inset-ring-1 flex h-6 items-center gap-1.5 whitespace-nowrap rounded-full px-2 font-mono text-xs transition-colors"
     >
       <Image
         src={`${item.imageUrl}?token=${env.NEXT_PUBLIC_LOGO_DEV_TOKEN}&size=32`}

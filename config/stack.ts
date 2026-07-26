@@ -222,7 +222,7 @@ export const STACK_SECTIONS: StackSection[] = [
         url: "https://www.notion.so",
       },
       {
-        title: "Notion Calendar",
+        title: "Calendar",
         description:
           "Calendar integration for Notion to manage schedules and tasks.",
         imageUrl: "https://img.logo.dev/notion.so",
@@ -383,7 +383,7 @@ export const STACK_SECTIONS: StackSection[] = [
     title: "Cloud Storage and Link Management",
     items: [
       {
-        title: "Google Drive",
+        title: "Drive",
         description: "Cloud storage service for files and documents.",
         imageUrl: "https://img.logo.dev/drive.google.com",
         url: "https://www.google.com/drive/",
