@@ -32,6 +32,7 @@ const projectFrontmatterSchema = z.object({
   status: z.enum(["published", "wip", "on-hold", "draft"]),
   link: z.url().optional(),
   href: z.string(),
+  tags: z.array(z.string()).optional(),
 })
 
 const work = defineCollection({

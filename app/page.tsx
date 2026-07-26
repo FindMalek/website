@@ -164,14 +164,19 @@ export default async function Home() {
         </PanelHeader>
 
         <PanelContent>
-          <div className="grid gap-3">
-            {orderedProjects.map((project) => (
-              <ProjectCardCompact
-                key={project._meta.path}
-                project={project}
-              />
-            ))}
-          </div>
+          <CollapsibleList
+            visible={orderedProjects
+              .slice(0, 6)
+              .map((project) => (
+                <ProjectCardCompact key={project._meta.path} project={project} />
+              ))}
+            hidden={orderedProjects
+              .slice(6)
+              .map((project) => (
+                <ProjectCardCompact key={project._meta.path} project={project} />
+              ))}
+            className="grid gap-4 sm:grid-cols-2"
+          />
 
           <h3 className="mb-4 mt-12 text-xl font-semibold">Open Source</h3>
           <div className="grid gap-4 md:grid-cols-2">

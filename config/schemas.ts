@@ -28,6 +28,7 @@ export const projectSchema = z.object({
   status: projectStatus,
   link: z.string().url().optional(),
   href: z.string(),
+  tags: z.array(z.string()).optional(),
 })
 
 export type ProjectRo = z.infer<typeof projectSchema>
