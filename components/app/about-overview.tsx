@@ -1,10 +1,20 @@
 import Link from "next/link"
 
+import { siteConfig } from "@/config/site"
 import { link } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
 import { AboutFacts } from "@/components/app/about-facts"
 import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-stack"
+import { Icons } from "@/components/shared/icons"
+
+const SOCIAL_LINKS = [
+  { href: siteConfig.links.instagram, icon: Icons.instagram, label: "Instagram" },
+  { href: siteConfig.links.linkedin, icon: Icons.linkedin, label: "LinkedIn" },
+  { href: siteConfig.links.github, icon: Icons.github, label: "GitHub" },
+  { href: siteConfig.links.twitter, icon: Icons.x, label: "X (Twitter)" },
+  { href: siteConfig.links.facebook, icon: Icons.facebook, label: "Facebook" },
+] as const
 
 export function AboutOverview() {
   return (
@@ -140,8 +150,23 @@ export function AboutOverview() {
 
         <div className="relative lg:w-2/5">
           <div className="lg:sticky lg:top-8">
-            <div className="rounded-3xl p-12 lg:p-0">
+            <div className="mb-6 rounded-3xl p-12 lg:p-0">
               <AboutOverviewCardsStack />
+            </div>
+
+            <div className="flex items-center gap-3.5">
+              {SOCIAL_LINKS.map(({ href, icon: Icon, label }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={label}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Icon className="size-4" />
+                </Link>
+              ))}
             </div>
           </div>
         </div>
