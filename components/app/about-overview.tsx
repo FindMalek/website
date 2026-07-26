@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site"
 import { link } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
+import { AboutFacts } from "@/components/app/about-facts"
 import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-stack"
 import { CopyText } from "@/components/shared/copy-text"
 import { Icons } from "@/components/shared/icons"
@@ -11,6 +12,8 @@ import { Icons } from "@/components/shared/icons"
 export function AboutOverview() {
   return (
     <section className="mb-32" id="overview">
+      <AboutFacts />
+
       <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">
         <div className="space-y-6 lg:w-3/5">
           <p className="text-lg">
