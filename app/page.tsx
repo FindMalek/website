@@ -199,7 +199,7 @@ export default async function Home() {
 
         <PanelContent>
           {STACK_SECTIONS.map((section, index) => (
-            <StackSection key={index} section={section} />
+            <StackSection key={index} section={section} index={index} />
           ))}
         </PanelContent>
       </Panel>
