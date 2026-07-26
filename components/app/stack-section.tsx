@@ -10,14 +10,14 @@ interface StackSectionProps {
 export function StackSection({ section, index }: StackSectionProps) {
   return (
     <div className="border-line grid gap-x-4 gap-y-2 border-b py-4 last:border-none sm:grid-cols-[12rem_1fr]">
-      <div className="text-muted-foreground flex h-6 items-center text-sm">
+      <div className="text-muted-foreground flex h-6 items-center truncate text-sm">
         <span
-          className="text-muted-foreground/50 mr-1.5 select-none font-mono"
+          className="text-muted-foreground/50 mr-1.5 shrink-0 select-none font-mono"
           aria-hidden
         >
           {(index + 1).toString().padStart(2, "0")}
         </span>
-        {section.title}
+        <span className="truncate">{section.title}</span>
       </div>
 
       <ul className="flex flex-wrap gap-1.5">
