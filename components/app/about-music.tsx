@@ -33,7 +33,7 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
         }}
       />
 
-      <div className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8">
+      <div className="grid grid-cols-6 gap-3">
         {playlists.slice(0, displayCount).map((playlist) => (
           <Link
             key={playlist.id}
@@ -54,12 +54,9 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
               />
             </div>
 
-            <div className="flex items-center justify-between gap-1.5">
-              <span className="line-clamp-1 text-sm font-medium">
-                {playlist.name}
-              </span>
-              <Icons.externalLink className="text-muted-foreground group-hover:text-foreground size-3.5 shrink-0 transition-colors" />
-            </div>
+            <span className="line-clamp-1 text-sm font-medium">
+              {playlist.name}
+            </span>
           </Link>
         ))}
       </div>
@@ -68,10 +65,12 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
         <div className="mt-4 flex justify-center">
           <Button
             variant="secondary"
-            className="w-full"
+            size="sm"
+            className="min-w-32 gap-2"
             onClick={handleShowMore}
           >
             Show more
+            <Icons.down className="size-4" />
           </Button>
         </div>
       )}

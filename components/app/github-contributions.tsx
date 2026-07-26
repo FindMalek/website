@@ -1,7 +1,6 @@
 "use client"
 
 import { use } from "react"
-import Link from "next/link"
 import { format } from "date-fns"
 
 import { cn } from "@/lib/utils"
@@ -15,7 +14,6 @@ import {
   ContributionGraphLegend,
   ContributionGraphTotalCount,
 } from "@/components/app/contribution-graph"
-import { Icons } from "@/components/shared/icons"
 import { Spinner } from "@/components/ui/spinner"
 import {
   Tooltip,
@@ -25,11 +23,9 @@ import {
 
 export function GitHubContributions({
   contributions,
-  githubProfileUrl,
   className,
 }: {
   contributions: Promise<Activity[]>
-  githubProfileUrl: string
   className?: string
 }) {
   const data = use(contributions)
@@ -77,16 +73,6 @@ export function GitHubContributions({
         </ContributionGraphTotalCount>
 
         <ContributionGraphLegend />
-
-        <Link
-          href={githubProfileUrl}
-          target="_blank"
-          rel="noopener"
-          aria-label="View on GitHub"
-          className="text-muted-foreground hover:text-foreground shrink-0 transition-colors"
-        >
-          <Icons.externalLink className="size-3.5" />
-        </Link>
       </ContributionGraphFooter>
     </ContributionGraph>
   )

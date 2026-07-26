@@ -3,7 +3,6 @@ import Link from "next/link"
 import { allProjects, allWorks } from "content-collections"
 
 import { REPOSITORIES } from "@/config/consts"
-import { siteConfig } from "@/config/site"
 import { STACK_SECTIONS } from "@/config/stack"
 import { getCachedContributions } from "@/lib/get-cached-contributions"
 import {
@@ -119,7 +118,6 @@ export default async function Home() {
             <Suspense fallback={<GitHubContributionsFallback />}>
               <GitHubContributions
                 contributions={getCachedContributions(GITHUB_USERNAME)}
-                githubProfileUrl={siteConfig.links.github}
               />
             </Suspense>
           </div>
@@ -143,8 +141,12 @@ export default async function Home() {
 
         <PanelContent>
           <CollapsibleList
-            items={workGroups.map((group) => (
-              <WorkExperienceItem key={group.company} group={group} />
+            items={workGroups.map((group, index) => (
+              <WorkExperienceItem
+                key={group.company}
+                group={group}
+                defaultOpen={index === 0}
+              />
             ))}
             initialCount={4}
             step={2}
