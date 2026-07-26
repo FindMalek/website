@@ -40,28 +40,25 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
             href={playlist.external_urls.spotify}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-secondary group relative aspect-square overflow-hidden rounded-lg"
+            className="group flex flex-col gap-2"
           >
-            {/* This is for Vercel crazy image optimization pricing */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={playlist.images[0]?.url || "/placeholder.svg"}
-              alt={playlist.name}
-              width={300}
-              height={300}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
-            />
-            <div className="bg-secondary-foreground/80 absolute inset-0 flex flex-col items-center justify-center p-2 opacity-0 transition-opacity group-hover:opacity-100">
-              <Button
-                variant="secondary"
-                size="sm"
-                className="mb-2 rounded-full"
-              >
-                Play
-              </Button>
-              <span className="text-secondary line-clamp-2 text-center text-sm font-medium">
+            <div className="bg-secondary relative aspect-square overflow-hidden rounded-lg">
+              {/* This is for Vercel crazy image optimization pricing */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={playlist.images[0]?.url || "/placeholder.svg"}
+                alt={playlist.name}
+                width={300}
+                height={300}
+                className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              />
+            </div>
+
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="line-clamp-1 text-sm font-medium">
                 {playlist.name}
               </span>
+              <Icons.externalLink className="text-muted-foreground group-hover:text-foreground size-3.5 shrink-0 transition-colors" />
             </div>
           </Link>
         ))}
