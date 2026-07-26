@@ -2,7 +2,7 @@ import type { StackSection } from "@/types"
 
 export const STACK_SECTIONS: StackSection[] = [
   {
-    title: "AI and Development Tools",
+    title: "AI Tools",
     items: [
       {
         title: "Le Chat",
@@ -48,7 +48,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Programming Languages and Frameworks",
+    title: "Languages",
     items: [
       {
         title: "TypeScript",
@@ -137,7 +137,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "State Management and Data Fetching",
+    title: "State & Data",
     items: [
       {
         title: "Prisma",
@@ -181,7 +181,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Package Management and Development Tools",
+    title: "Dev Tools",
     items: [
       {
         title: "npm",
@@ -212,7 +212,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Productivity and Project Management",
+    title: "Productivity",
     items: [
       {
         title: "Notion",
@@ -222,7 +222,7 @@ export const STACK_SECTIONS: StackSection[] = [
         url: "https://www.notion.so",
       },
       {
-        title: "Notion Calendar",
+        title: "Calendar",
         description:
           "Calendar integration for Notion to manage schedules and tasks.",
         imageUrl: "https://img.logo.dev/notion.so",
@@ -251,7 +251,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Communication and Collaboration",
+    title: "Communication",
     items: [
       {
         title: "Tella",
@@ -287,7 +287,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Finance and Payment Management",
+    title: "Finance & Payments",
     items: [
       {
         title: "Flouci",
@@ -337,7 +337,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Database and Serverless Solutions",
+    title: "Databases",
     items: [
       {
         title: "Neon",
@@ -354,7 +354,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Entertainment and Streaming",
+    title: "Entertainment",
     items: [
       {
         title: "Spotify",
@@ -380,10 +380,10 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Cloud Storage and Link Management",
+    title: "Cloud & Links",
     items: [
       {
-        title: "Google Drive",
+        title: "Drive",
         description: "Cloud storage service for files and documents.",
         imageUrl: "https://img.logo.dev/drive.google.com",
         url: "https://www.google.com/drive/",
@@ -397,7 +397,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Networking and Security",
+    title: "Network & Security",
     items: [
       {
         title: "Cloudflare",
@@ -422,7 +422,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Transportation and Delivery",
+    title: "Transport",
     items: [
       {
         title: "Bolt",
@@ -441,7 +441,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Observability and Monitoring",
+    title: "Observability",
     items: [
       {
         title: "OpenTelemetry",
@@ -460,7 +460,7 @@ export const STACK_SECTIONS: StackSection[] = [
     ],
   },
   {
-    title: "Deployment and Management Tools",
+    title: "Deployment",
     items: [
       {
         title: "Dokploy",

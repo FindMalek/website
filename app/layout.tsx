@@ -1,21 +1,23 @@
 import "@/styles/globals.css"
 
 import type { Metadata, Viewport } from "next"
+import { ChatProvider } from "@/providers/chat-provider"
 
-import { poppins } from "@/config/fonts"
+import { geistHeading, geistMono, poppins } from "@/config/fonts"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
+import { ChatFloatingContainer } from "@/components/app/chat-floating-container"
+import { HighlightAskAction } from "@/components/app/highlight-ask-action"
+import { ScrollToTop } from "@/components/app/scroll-to-top"
 import { Analytics } from "@/components/layout/analytics"
 import { Background } from "@/components/layout/background"
+import { ClientsSection } from "@/components/layout/clients-section"
 import { Footer } from "@/components/layout/footer"
 import { Header } from "@/components/layout/header"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
 import { TailwindIndicator } from "@/components/layout/tailwind-indicator"
-import { ChatFloatingContainer } from "@/components/app/chat-floating-container"
-import { HighlightAskAction } from "@/components/app/highlight-ask-action"
 import { Toaster } from "@/components/ui/sonner"
-import { ChatProvider } from "@/providers/chat-provider"
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -76,12 +78,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html suppressHydrationWarning>
+    <html
+      suppressHydrationWarning
+      className={cn(geistMono.variable, geistHeading.variable)}
+    >
       <body
         suppressHydrationWarning
         className={cn(
           "bg-background min-h-screen font-sans antialiased",
-          "mx-auto flex w-full flex-col",
+          "mx-auto flex w-full flex-col overflow-x-clip",
           "sm:max-w-lg md:max-w-2xl xl:max-w-3xl",
           poppins
         )}
@@ -90,6 +95,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <ChatProvider>
             <Header />
             <main className="flex-1">{children}</main>
+            <ClientsSection />
             <Footer />
             <Background />
             <Analytics />
@@ -97,6 +103,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <TailwindIndicator />
             <ChatFloatingContainer />
             <HighlightAskAction />
+            <ScrollToTop />
           </ChatProvider>
         </LayoutWrapper>
       </body>

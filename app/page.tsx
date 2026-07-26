@@ -1,10 +1,12 @@
+import { Suspense } from "react"
 import Link from "next/link"
 import { allProjects, allWorks } from "content-collections"
 
-import { CLIENTS, REPOSITORIES } from "@/config/consts"
+import { REPOSITORIES } from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
+import { getCachedContributions } from "@/lib/get-cached-contributions"
 import {
-  cn,
+  groupWorkByCompany,
   sortProjectsByStars,
   sortProjectsByStatus,
   sortWorkExperiences,
@@ -13,47 +15,61 @@ import {
 import { AboutBooks } from "@/components/app/about-books"
 import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
-import { ProjectCardCompact } from "@/components/app/project-card-compact"
+import { CollapsibleList } from "@/components/app/collapsible-list"
+import {
+  GitHubContributions,
+  GitHubContributionsFallback,
+} from "@/components/app/github-contributions"
+import { HelloTitle } from "@/components/app/hello-title"
+import { Hero } from "@/components/app/hero"
+import {
+  Panel,
+  PanelContent,
+  PanelDescription,
+  PanelHeader,
+  PanelTitle,
+} from "@/components/app/panel"
+import { ProjectItem } from "@/components/app/project-item"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
-import { WorkCardCompact } from "@/components/app/work-card-compact"
-import { ClientShowcase } from "@/components/app/work-client-showcase"
-import { LineShadowText } from "@/components/ui/line-shadow-text"
+import { WorkExperienceItem } from "@/components/app/work-experience-item"
 
 import { getMultipleRepoInfo } from "@/actions/github"
 import { getUserPlaylists } from "@/actions/spotify"
 
+const SOURCE_REPO_URL = REPOSITORIES[0]
+const GITHUB_USERNAME = SOURCE_REPO_URL.split("/").at(-2) ?? "findmalek"
+
 export default async function Home() {
   const playlists = await getUserPlaylists(20, 0)
   const orderedWorks = sortWorkExperiences(allWorks)
+  const workGroups = groupWorkByCompany(orderedWorks)
   const orderedProjects = sortProjectsByStatus(allProjects)
   const openSourceProjects = await getMultipleRepoInfo(REPOSITORIES)
   const sortedOpenSourceProjects = sortProjectsByStars(openSourceProjects)
 
   return (
-    <div className="w-full px-4">
-      <section className="pt-30">
-        <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:leading-snug xl:text-4xl">
-          Full Stack Developer and{" "}
-          <LineShadowText className="dark:text-primary italic">
-            Design
-          </LineShadowText>{" "}
-          <LineShadowText className="dark:text-primary italic">
-            Engineer
-          </LineShadowText>{" "}
-          currently{" "}
-          <span className="whitespace-nowrap">
-            based in 🇹🇳 Monastir, Tunisia.
-          </span>
-        </h1>
+    <div className="w-full">
+      <Hero />
 
-        <div className="text-foreground mt-4 space-y-4">
-          <section>
+      <div className="stripe-divider" />
+
+      <Panel id="about">
+        <PanelHeader>
+          <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
+          <PanelDescription>
+            I&apos;m a Design Engineer, Founder, and Product Builder based in
+            Monastir, Tunisia.
+          </PanelDescription>
+        </PanelHeader>
+
+        <PanelContent>
+          <div className="text-foreground mb-8 space-y-4">
             <p className="text-base leading-relaxed">
               Specialized in transforming complex ideas into elegant digital
               solutions through web development, design engineering, and
-              entrepreneurial innovation. I craft meaningful projects that
-              blend creativity with technical precision. View my{" "}
+              entrepreneurial innovation. I craft meaningful projects that blend
+              creativity with technical precision. View my{" "}
               <Link
                 href="/#work"
                 className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"
@@ -76,13 +92,11 @@ export default async function Home() {
               </Link>{" "}
               to see how I bring ideas to life.
             </p>
-          </section>
 
-          <section>
             <p className="text-base leading-relaxed">
               Beyond code, I find creative inspiration in diverse music genres
-              from Metal to Ambient, and maintain a curated collection of
-              books that fuel my innovative thinking. Explore my{" "}
+              from Metal to Ambient, and maintain a curated collection of books
+              that fuel my innovative thinking. Explore my{" "}
               <Link
                 href="/#playlists"
                 className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"
@@ -98,86 +112,94 @@ export default async function Home() {
               </Link>{" "}
               that shape my perspective.
             </p>
-          </section>
-        </div>
-      </section>
+          </div>
 
-      <section
-        id="work"
-        className="mb-32 mt-24 [scroll-margin-top:var(--header-height,6rem)]"
-      >
-        <h2 className="mb-6 text-3xl font-bold">Work</h2>
-        <p className="text-secondary-foreground/80 mb-6">
-          I&apos;ve been fortunate to work with some amazing companies and
-          people.
-        </p>
+          <div className="mb-8">
+            <Suspense fallback={<GitHubContributionsFallback />}>
+              <GitHubContributions
+                contributions={getCachedContributions(GITHUB_USERNAME)}
+              />
+            </Suspense>
+          </div>
 
-        <div className={cn("grid gap-3")}>
-          {orderedWorks.map((work) => (
-            <WorkCardCompact key={work._meta.path} work={work} />
-          ))}
-        </div>
+          <AboutOverview />
+          <AboutMusic playlists={playlists.items} />
+          <AboutBooks />
+        </PanelContent>
+      </Panel>
 
-        <div className="mt-8 space-y-4">
-          <h3 className="text-muted-foreground/80 text-center text-base font-medium">
-            I&apos;ve also worked with some amazing companies and people.
-          </h3>
-          <ClientShowcase clients={CLIENTS} />
-        </div>
-      </section>
+      <div className="stripe-divider" />
 
-      <section
-        id="projects"
-        className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
-      >
-        <h2 className="mb-6 text-3xl font-bold">Projects</h2>
-        <p className="text-secondary-foreground/80 mb-6">
-          I love shipping products and open source software.
-        </p>
+      <Panel id="work">
+        <PanelHeader>
+          <PanelTitle>Work</PanelTitle>
+          <PanelDescription>
+            I&apos;ve been fortunate to work with some amazing companies and
+            people.
+          </PanelDescription>
+        </PanelHeader>
 
-        <div className="grid gap-3">
-          {orderedProjects.map((project) => (
-            <ProjectCardCompact key={project._meta.path} project={project} />
-          ))}
-        </div>
+        <PanelContent>
+          <CollapsibleList
+            items={workGroups.map((group, index) => (
+              <WorkExperienceItem
+                key={group.company}
+                group={group}
+                defaultOpen={index === 0}
+              />
+            ))}
+            initialCount={4}
+            step={2}
+            className="flex flex-col"
+          />
+        </PanelContent>
+      </Panel>
 
-        <h3 className="mb-4 mt-12 text-xl font-semibold">Open Source</h3>
-        <div className="grid gap-4 md:grid-cols-2">
-          {sortedOpenSourceProjects.map((project) => (
-            <ProjectOpenSourceCard key={project.name} project={project} />
-          ))}
-        </div>
-      </section>
+      <div className="stripe-divider" />
 
-      <section
-        id="stack"
-        className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
-      >
-        <h2 className="mb-6 text-3xl font-bold">Stack</h2>
-        <p className="text-secondary-foreground/80 mb-8">
-          Tools, technology and apps I use every day.
-        </p>
+      <Panel id="projects">
+        <PanelHeader>
+          <PanelTitle>Projects</PanelTitle>
+          <PanelDescription>
+            I love shipping products and open source software.
+          </PanelDescription>
+        </PanelHeader>
 
-        <div className="space-y-16">
+        <PanelContent>
+          <CollapsibleList
+            items={orderedProjects.map((project) => (
+              <ProjectItem key={project._meta.path} project={project} />
+            ))}
+            initialCount={6}
+            step={4}
+            className="flex flex-col"
+          />
+
+          <h3 className="mb-4 mt-12 text-xl font-semibold">Open Source</h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            {sortedOpenSourceProjects.map((project) => (
+              <ProjectOpenSourceCard key={project.name} project={project} />
+            ))}
+          </div>
+        </PanelContent>
+      </Panel>
+
+      <div className="stripe-divider" />
+
+      <Panel id="stack">
+        <PanelHeader>
+          <PanelTitle>Stack</PanelTitle>
+          <PanelDescription>
+            Tools, technology and apps I use every day.
+          </PanelDescription>
+        </PanelHeader>
+
+        <PanelContent>
           {STACK_SECTIONS.map((section, index) => (
-            <StackSection key={index} section={section} />
+            <StackSection key={index} section={section} index={index} />
           ))}
-        </div>
-      </section>
-
-      <section
-        id="about"
-        className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
-      >
-        <h2 className="mb-6 text-3xl font-bold">About</h2>
-        <p className="text-secondary-foreground/80 mb-8">
-          I&apos;m a Design Engineer, Founder, and Product Builder.
-        </p>
-
-        <AboutOverview />
-        <AboutMusic playlists={playlists.items} />
-        <AboutBooks />
-      </section>
+        </PanelContent>
+      </Panel>
     </div>
   )
 }

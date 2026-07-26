@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useHeaderAnimation } from "@/hooks/use-header-animation"
 
-import { HeaderAvatar } from "@/components/layout/header-avatar"
 import { HeaderDesktop } from "@/components/layout/header-desktop"
 import { HeaderMobile } from "@/components/layout/header-mobile"
 
@@ -22,9 +21,6 @@ export function Header() {
           marginBottom: "var(--header-mb)",
         }}
       >
-        {isHomePage && (
-          <HeaderAvatar isHomePage={isHomePage} avatarRef={avatarRef} />
-        )}
         <div
           ref={headerRef}
           className={cn(
@@ -46,14 +42,6 @@ export function Header() {
               )}
             >
               <div className="flex items-center justify-between">
-                <div className="pointer-events-auto fixed left-4">
-                  {!isHomePage && (
-                    <HeaderAvatar
-                      isHomePage={isHomePage}
-                      avatarRef={avatarRef}
-                    />
-                  )}
-                </div>
                 <div
                   className={cn(
                     "pointer-events-auto ml-auto",

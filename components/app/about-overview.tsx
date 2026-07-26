@@ -4,13 +4,27 @@ import { siteConfig } from "@/config/site"
 import { link } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
+import { AboutFacts } from "@/components/app/about-facts"
 import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-stack"
-import { CopyText } from "@/components/shared/copy-text"
 import { Icons } from "@/components/shared/icons"
+
+const SOCIAL_LINKS = [
+  {
+    href: siteConfig.links.instagram,
+    icon: Icons.instagram,
+    label: "Instagram",
+  },
+  { href: siteConfig.links.linkedin, icon: Icons.linkedin, label: "LinkedIn" },
+  { href: siteConfig.links.github, icon: Icons.github, label: "GitHub" },
+  { href: siteConfig.links.twitter, icon: Icons.x, label: "X (Twitter)" },
+  { href: siteConfig.links.facebook, icon: Icons.facebook, label: "Facebook" },
+] as const
 
 export function AboutOverview() {
   return (
     <section className="mb-32" id="overview">
+      <AboutFacts />
+
       <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">
         <div className="space-y-6 lg:w-3/5">
           <p className="text-lg">
@@ -144,58 +158,19 @@ export function AboutOverview() {
               <AboutOverviewCardsStack />
             </div>
 
-            <div className="space-y-2">
-              <Link
-                href={siteConfig.links.instagram}
-                target="_blank"
-                className="flex items-center gap-2"
-              >
-                <Icons.instagram className="size-4" />
-                <span className={cn(link, "text-sm")}>
-                  Follow me on Instagram
-                </span>
-              </Link>
-              <Link
-                href={siteConfig.links.linkedin}
-                target="_blank"
-                className="flex items-center gap-2"
-              >
-                <Icons.linkedin className="size-4" />
-                <span className={cn(link, "text-sm")}>
-                  Follow me on LinkedIn
-                </span>
-              </Link>
-              <Link
-                href={siteConfig.links.github}
-                className="flex items-center gap-2"
-              >
-                <Icons.github className="size-4" />
-                <span className={cn(link, "text-sm")}>Follow me on Github</span>
-              </Link>
-              <Link
-                href={siteConfig.links.twitter}
-                target="_blank"
-                className="flex items-center gap-2"
-              >
-                <Icons.x className="size-4" />
-                <span className={cn(link, "text-sm")}>Follow me on X</span>
-              </Link>
-              <Link
-                href={siteConfig.links.facebook}
-                target="_blank"
-                className="flex items-center gap-2"
-              >
-                <Icons.facebook className="size-4" />
-                <span className={cn(link, "text-sm")}>
-                  Follow me on Facebook
-                </span>
-              </Link>
-              <CopyText
-                text={siteConfig.author.email}
-                className={cn("flex items-center gap-2", link)}
-              >
-                <Icons.mail className="size-4" />
-              </CopyText>
+            <div className="flex items-center gap-3.5">
+              {SOCIAL_LINKS.map(({ href, icon: Icon, label }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={label}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Icon className="size-4" />
+                </Link>
+              ))}
             </div>
           </div>
         </div>

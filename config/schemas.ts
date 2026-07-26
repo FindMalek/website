@@ -1,4 +1,4 @@
-import { z } from 'zod/v3';
+import { z } from "zod/v3"
 
 import { projectStatus, projectType, workType } from "@/types/enum"
 
@@ -16,6 +16,7 @@ export const workSchema = z.object({
   location: z.string().optional(),
   link: z.string().url().optional(),
   href: z.string(),
+  skills: z.array(z.string()).optional(),
 })
 
 export type WorkRo = z.infer<typeof workSchema>
@@ -28,6 +29,9 @@ export const projectSchema = z.object({
   status: projectStatus,
   link: z.string().url().optional(),
   href: z.string(),
+  tags: z.array(z.string()).optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 })
 
 export type ProjectRo = z.infer<typeof projectSchema>

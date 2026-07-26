@@ -1,5 +1,7 @@
 import { SiteConfig } from "@/types"
 
+export const TIMEZONE = "Africa/Tunis"
+
 export const siteConfig: SiteConfig = {
   name: "Tunisian Design Engineer and Developer",
   description:

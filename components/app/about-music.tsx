@@ -12,10 +12,10 @@ import { SectionHeading } from "@/components/shared/section-heading"
 import { Button } from "@/components/ui/button"
 
 export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
-  const [displayCount, setDisplayCount] = useState(8)
+  const [displayCount, setDisplayCount] = useState(12)
 
   const handleShowMore = () => {
-    setDisplayCount((prev) => Math.min(prev + 8, playlists.length))
+    setDisplayCount((prev) => Math.min(prev + 12, playlists.length))
   }
 
   return (
@@ -33,36 +33,30 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
         }}
       />
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-6 gap-3">
         {playlists.slice(0, displayCount).map((playlist) => (
           <Link
             key={playlist.id}
             href={playlist.external_urls.spotify}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-secondary group relative aspect-square overflow-hidden rounded-lg"
+            className="group flex flex-col gap-2"
           >
-            {/* This is for Vercel crazy image optimization pricing */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={playlist.images[0]?.url || "/placeholder.svg"}
-              alt={playlist.name}
-              width={300}
-              height={300}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
-            />
-            <div className="bg-secondary-foreground/80 absolute inset-0 flex flex-col items-center justify-center p-2 opacity-0 transition-opacity group-hover:opacity-100">
-              <Button
-                variant="secondary"
-                size="sm"
-                className="mb-2 rounded-full"
-              >
-                Play
-              </Button>
-              <span className="text-secondary line-clamp-2 text-center text-sm font-medium">
-                {playlist.name}
-              </span>
+            <div className="bg-secondary relative aspect-square overflow-hidden rounded-lg">
+              {/* This is for Vercel crazy image optimization pricing */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={playlist.images[0]?.url || "/placeholder.svg"}
+                alt={playlist.name}
+                width={300}
+                height={300}
+                className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              />
             </div>
+
+            <span className="line-clamp-1 text-sm font-medium">
+              {playlist.name}
+            </span>
           </Link>
         ))}
       </div>
@@ -71,10 +65,12 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
         <div className="mt-4 flex justify-center">
           <Button
             variant="secondary"
-            className="w-full"
+            size="sm"
+            className="min-w-32 gap-2"
             onClick={handleShowMore}
           >
             Show more
+            <Icons.down className="size-4" />
           </Button>
         </div>
       )}

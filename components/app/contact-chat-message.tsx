@@ -8,12 +8,16 @@ import { convertToolName } from "@/config/converter"
 import { ToolCallLike } from "@/lib/tool-helpers"
 import { cn, getMessageText } from "@/lib/utils"
 
-import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message"
 import { ContactToolEmailForm } from "@/components/app/contact-tool-email-form"
 import { ContactToolMeetingScheduler } from "@/components/app/contact-tool-meeting-scheduler"
 import { ContactToolPricingEstimator } from "@/components/app/contact-tool-pricing-estimator"
 import { ContactToolResumeGenerator } from "@/components/app/contact-tool-resume-generator"
 import { Icons } from "@/components/shared/icons"
+import {
+  Message,
+  MessageContent,
+  MessageResponse,
+} from "@/components/ui/message"
 
 interface ChatMessageProps {
   message: UIMessage
@@ -22,7 +26,11 @@ interface ChatMessageProps {
 type ToolPart = UIMessage["parts"][number] & {
   type: `tool-${string}`
   toolCallId: string
-  state: "input-streaming" | "input-available" | "output-available" | "output-error"
+  state:
+    | "input-streaming"
+    | "input-available"
+    | "output-available"
+    | "output-error"
   input?: Record<string, unknown>
   output?: Record<string, unknown>
 }
@@ -86,7 +94,12 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
   }
 
   return (
-    <div className={cn("mb-4 flex items-start gap-3", isUser && "flex-row-reverse")}>
+    <div
+      className={cn(
+        "mb-4 flex items-start gap-3",
+        isUser && "flex-row-reverse"
+      )}
+    >
       <div
         className={cn(
           "hidden h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow md:flex",

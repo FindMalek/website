@@ -1,7 +1,7 @@
 "use client"
 
-import { useResumeGenerator } from "@/hooks/use-resume-generator"
 import { type ToolCallLike } from "@/lib/tool-helpers"
+import { useResumeGenerator } from "@/hooks/use-resume-generator"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"

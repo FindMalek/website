@@ -15,7 +15,11 @@ const WELCOME_MESSAGE: UIMessage = {
   ],
 }
 
-function textMessage(id: string, role: "assistant" | "system", text: string): UIMessage {
+function textMessage(
+  id: string,
+  role: "assistant" | "system",
+  text: string
+): UIMessage {
   return { id, role, parts: [{ type: "text", text }] }
 }
 

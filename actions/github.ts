@@ -53,86 +53,12 @@ export async function getRepoInfo(
 
     return repoInfo
   } catch (error) {
-    console.error("Error fetching repository info:", error)
-    return null
-  }
-}
-
-export interface ContributionDay {
-  date: string
-  count: number
-}
-
-export interface ContributionCalendar {
-  totalContributions: number
-  days: ContributionDay[]
-}
-
-/**
- * Fetches the authenticated-account-shaped contribution calendar via
- * GitHub's GraphQL API (contributionsCollection isn't exposed over REST).
- * Same bearer-token pattern as getMultipleRepoInfo below.
- */
-export async function getContributionCalendar(
-  username: string
-): Promise<ContributionCalendar | null> {
-  try {
-    const query = `
-      query($login: String!) {
-        user(login: $login) {
-          contributionsCollection {
-            contributionCalendar {
-              totalContributions
-              weeks {
-                contributionDays {
-                  date
-                  contributionCount
-                }
-              }
-            }
-          }
-        }
-      }
-    `
-
-    const response = await fetch("https://api.github.com/graphql", {
-      method: "POST",
-      headers: {
-        Authorization: `bearer ${env.GITHUB_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ query, variables: { login: username } }),
-      next: { revalidate: 21600 }, // 6 hours -- contribution data doesn't need to be fresher
-    })
-
-    if (!response.ok) {
-      throw new Error(
-        `${response.status} Network response was not ok fetching contributions`
-      )
-    }
-
-    const jsonResponse = await response.json()
-    const calendar =
-      jsonResponse.data?.user?.contributionsCollection?.contributionCalendar
-
-    if (!calendar) {
-      if (jsonResponse.errors) {
-        console.error("GraphQL errors fetching contributions:", jsonResponse.errors)
-      }
-      return null
-    }
-
-    const days: ContributionDay[] = calendar.weeks.flatMap(
-      (week: { contributionDays: { date: string; contributionCount: number }[] }) =>
-        week.contributionDays.map((day) => ({
-          date: day.date,
-          count: day.contributionCount,
-        }))
+    // Handled: the caller falls back to an empty/partial project list, so
+    // this doesn't need to surface as a "Console Error" in Next's overlay.
+    console.warn(
+      "Error fetching repository info:",
+      error instanceof Error ? error.message : error
     )
-
-    return { totalContributions: calendar.totalContributions, days }
-  } catch (error) {
-    console.error("Error fetching contribution calendar:", error)
     return null
   }
 }
@@ -201,7 +127,7 @@ export async function getMultipleRepoInfo(
       []
 
     if (jsonResponse.errors) {
-      console.error("GraphQL Errors:", jsonResponse.errors)
+      console.warn("GraphQL Errors:", jsonResponse.errors)
 
       // Track repositories with access errors
       jsonResponse.errors.forEach((error: GraphQLError) => {
@@ -260,7 +186,12 @@ export async function getMultipleRepoInfo(
 
     return accessibleRepos
   } catch (error) {
-    console.error("Error in GraphQL request, falling back to REST API:", error)
+    // Handled: falls through to the REST fallback below, so this doesn't
+    // need to surface as a "Console Error" in Next's overlay.
+    console.warn(
+      "Error in GraphQL request, falling back to REST API:",
+      error instanceof Error ? error.message : error
+    )
 
     // If GraphQL completely fails, fall back to REST API for all repositories
     const results = await Promise.allSettled(repoUrls.map(getRepoInfo))
