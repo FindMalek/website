@@ -6,17 +6,17 @@ import { AnimatePresence, motion } from "motion/react"
 import { cn } from "@/lib/utils"
 import { useContactChat } from "@/hooks/use-contact-chat"
 
-import {
-  Conversation,
-  ConversationContent,
-  ConversationScrollButton,
-} from "@/components/ai-elements/conversation"
-import { PromptInputSubmit } from "@/components/ai-elements/prompt-input"
 import { ContactChatBotErrorMessage } from "@/components/app/contact-chat-bot-error-message"
 import { ContactChatMessage } from "@/components/app/contact-chat-message"
 import { ContactSuggestedPrompts } from "@/components/app/contact-suggeted-prompts"
 import { Icons } from "@/components/shared/icons"
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from "@/components/ui/conversation"
 import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group"
+import { PromptInputSubmit } from "@/components/ui/prompt-input"
 
 export function ChatFloatingContainer() {
   const { dockState, closeChat } = useChatDock()

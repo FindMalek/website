@@ -33,7 +33,7 @@ import { WorkExperienceItem } from "@/components/app/work-experience-item"
 import {
   GitHubContributions,
   GitHubContributionsFallback,
-} from "@/components/github-contributions"
+} from "@/components/app/github-contributions"
 
 import { getMultipleRepoInfo } from "@/actions/github"
 import { getUserPlaylists } from "@/actions/spotify"

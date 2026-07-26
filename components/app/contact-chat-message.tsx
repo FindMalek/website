@@ -8,16 +8,16 @@ import { convertToolName } from "@/config/converter"
 import { ToolCallLike } from "@/lib/tool-helpers"
 import { cn, getMessageText } from "@/lib/utils"
 
-import {
-  Message,
-  MessageContent,
-  MessageResponse,
-} from "@/components/ai-elements/message"
 import { ContactToolEmailForm } from "@/components/app/contact-tool-email-form"
 import { ContactToolMeetingScheduler } from "@/components/app/contact-tool-meeting-scheduler"
 import { ContactToolPricingEstimator } from "@/components/app/contact-tool-pricing-estimator"
 import { ContactToolResumeGenerator } from "@/components/app/contact-tool-resume-generator"
 import { Icons } from "@/components/shared/icons"
+import {
+  Message,
+  MessageContent,
+  MessageResponse,
+} from "@/components/ui/message"
 
 interface ChatMessageProps {
   message: UIMessage
