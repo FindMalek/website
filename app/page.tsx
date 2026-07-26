@@ -12,6 +12,7 @@ import {
 import { AboutBooks } from "@/components/app/about-books"
 import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
+import { CollapsibleList } from "@/components/app/collapsible-list"
 import {
   Panel,
   PanelContent,
@@ -135,10 +136,20 @@ export default async function Home() {
           </PanelDescription>
         </PanelHeader>
 
-        <PanelContent className="grid gap-3">
-          {orderedWorks.map((work) => (
-            <WorkCardCompact key={work._meta.path} work={work} />
-          ))}
+        <PanelContent>
+          <CollapsibleList
+            visible={orderedWorks
+              .slice(0, 4)
+              .map((work) => (
+                <WorkCardCompact key={work._meta.path} work={work} />
+              ))}
+            hidden={orderedWorks
+              .slice(4)
+              .map((work) => (
+                <WorkCardCompact key={work._meta.path} work={work} />
+              ))}
+            className="grid gap-3"
+          />
         </PanelContent>
       </Panel>
 
