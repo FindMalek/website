@@ -1,13 +1,10 @@
 import Link from "next/link"
 
-import { siteConfig } from "@/config/site"
 import { link } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
 import { AboutFacts } from "@/components/app/about-facts"
 import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-stack"
-import { CopyText } from "@/components/shared/copy-text"
-import { Icons } from "@/components/shared/icons"
 
 export function AboutOverview() {
   return (
@@ -143,62 +140,8 @@ export function AboutOverview() {
 
         <div className="relative lg:w-2/5">
           <div className="lg:sticky lg:top-8">
-            <div className="mb-6 rounded-3xl p-12 lg:p-0">
+            <div className="rounded-3xl p-12 lg:p-0">
               <AboutOverviewCardsStack />
-            </div>
-
-            <div className="space-y-2">
-              <Link
-                href={siteConfig.links.instagram}
-                target="_blank"
-                className="flex items-center gap-2"
-              >
-                <Icons.instagram className="size-4" />
-                <span className={cn(link, "text-sm")}>
-                  Follow me on Instagram
-                </span>
-              </Link>
-              <Link
-                href={siteConfig.links.linkedin}
-                target="_blank"
-                className="flex items-center gap-2"
-              >
-                <Icons.linkedin className="size-4" />
-                <span className={cn(link, "text-sm")}>
-                  Follow me on LinkedIn
-                </span>
-              </Link>
-              <Link
-                href={siteConfig.links.github}
-                className="flex items-center gap-2"
-              >
-                <Icons.github className="size-4" />
-                <span className={cn(link, "text-sm")}>Follow me on Github</span>
-              </Link>
-              <Link
-                href={siteConfig.links.twitter}
-                target="_blank"
-                className="flex items-center gap-2"
-              >
-                <Icons.x className="size-4" />
-                <span className={cn(link, "text-sm")}>Follow me on X</span>
-              </Link>
-              <Link
-                href={siteConfig.links.facebook}
-                target="_blank"
-                className="flex items-center gap-2"
-              >
-                <Icons.facebook className="size-4" />
-                <span className={cn(link, "text-sm")}>
-                  Follow me on Facebook
-                </span>
-              </Link>
-              <CopyText
-                text={siteConfig.author.email}
-                className={cn("flex items-center gap-2", link)}
-              >
-                <Icons.mail className="size-4" />
-              </CopyText>
             </div>
           </div>
         </div>
