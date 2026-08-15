@@ -3,6 +3,8 @@ import { createContentCollectionPlugin } from "@content-collections/next";
 
 const nextConfig: NextConfig = {
   images: {
+    deviceSizes: [640, 828, 1200, 1920],
+    imageSizes: [16, 32, 40, 48, 64, 96, 128, 256],
     remotePatterns: [
       { protocol: "https", hostname: "www.findmalek.com" },
       { protocol: "https", hostname: "image-cdn-fa.spotifycdn.com" },

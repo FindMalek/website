@@ -41,6 +41,7 @@ export function WorkExperienceItem({
             src={logo}
             alt={`${company} logo`}
             fill
+            sizes="40px"
             className={cn(
               "object-cover grayscale transition-all duration-200 group-hover:grayscale-0",
               logoClassName

@@ -21,6 +21,7 @@ export function StackItem({ item }: StackItemProps) {
         alt=""
         width={14}
         height={14}
+        unoptimized
         className="rounded-xs size-3.5 shrink-0"
         aria-hidden
       />
