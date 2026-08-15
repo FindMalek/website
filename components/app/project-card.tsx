@@ -50,6 +50,7 @@ export function ProjectCard({ project }: { project: ProjectRo }) {
                 alt={project.name}
                 className="object-cover"
                 fill
+                sizes="(min-width: 768px) 400px, 100vw"
               />
             </AspectRatio>
           </div>

@@ -43,7 +43,13 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
       className="border-foreground/10 hover:bg-muted/50 focus-visible:ring-ring group -mx-2 flex cursor-pointer items-center gap-3 rounded-lg border-b px-2 py-3 outline-none transition-colors last:border-b-0 focus-visible:ring-2"
     >
       <div className="border-border relative size-9 shrink-0 overflow-hidden rounded-md border">
-        <Image src={image} alt={name} fill className="object-cover" />
+        <Image
+          src={image}
+          alt={name}
+          fill
+          sizes="36px"
+          className="object-cover"
+        />
       </div>
 
       <div className="min-w-0 flex-1">

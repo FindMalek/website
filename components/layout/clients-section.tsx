@@ -33,6 +33,7 @@ function ClientBadge({ client }: { client: Client }) {
           src={client.logo || "/clients/placeholder.ico"}
           alt={`${client.name} logo`}
           fill
+          sizes="14px"
           className="object-contain"
         />
       </div>
