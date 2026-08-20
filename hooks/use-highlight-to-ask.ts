@@ -48,10 +48,7 @@ export function useHighlightToAsk() {
   }, [])
 
   useEffect(() => {
-    if (!enabled) {
-      setSelection(null)
-      return
-    }
+    if (!enabled) return
 
     // mouseup (desktop drag-select) and touchend (mobile long-press-select)
     // -- not selectionchange, which fires continuously mid-drag and would
@@ -62,6 +59,7 @@ export function useHighlightToAsk() {
     return () => {
       document.removeEventListener("mouseup", evaluateSelection)
       document.removeEventListener("touchend", evaluateSelection)
+      setSelection(null)
     }
   }, [enabled, evaluateSelection])
 

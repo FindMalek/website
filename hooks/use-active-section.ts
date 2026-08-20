@@ -16,10 +16,7 @@ export function useActiveSection(sectionIds: SectionId[]): ActiveSection {
   const [activeSection, setActiveSection] = useState<ActiveSection>(null)
 
   useEffect(() => {
-    if (pathname !== "/") {
-      setActiveSection(null)
-      return
-    }
+    if (pathname !== "/") return
 
     const elements = sectionIds
       .map((id) => document.getElementById(id))
@@ -45,7 +42,10 @@ export function useActiveSection(sectionIds: SectionId[]): ActiveSection {
 
     elements.forEach((el) => observer.observe(el))
 
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      setActiveSection(null)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
