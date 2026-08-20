@@ -117,6 +117,10 @@ export function HyperText({
   }, [children, duration, isAnimating, characterSet]);
 
   return (
+    // `as`-style polymorphism needs the tag resolved per-instance from a prop;
+    // motion's own docs use this exact pattern, and it's stable in practice
+    // since `Component` itself only changes if the caller passes a different `as`.
+    // eslint-disable-next-line react-hooks/static-components
     <MotionComponent
       ref={elementRef}
       className={cn("overflow-hidden py-2", className)}

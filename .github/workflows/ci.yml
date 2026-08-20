@@ -1,0 +1,79 @@
+# Runs on every push to main and every PR: install once, then lint and build
+# in parallel jobs so a lint failure doesn't hide a build failure.
+#
+# build uses Turborepo's remote cache (Vercel-backed) when TURBO_TOKEN is set,
+# so a build with no relevant source changes skips re-building entirely.
+# Requires:
+#   - repo secret TURBO_TOKEN: a Vercel access token (vercel.com/account/tokens)
+#   - repo variable TURBO_TEAM: findmalek-team
+# Without them, turbo silently falls back to local-only caching.
+#
+# SKIP_ENV_VALIDATION only skips this app's zod env schema check — the
+# homepage still makes live calls at build time (Spotify playlists via
+# actions/spotify.ts, GitHub contributions) during static generation, which
+# throw and fail the build if those credentials aren't real. So the build job
+# also needs the actual server secrets below (read-only tokens are enough)
+# for `next build` to successfully prerender "/".
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec turbo run lint
+
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SKIP_ENV_VALIDATION: "true"
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      NODE_ENV: production
+      NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+      NEXT_PUBLIC_LOGO_DEV_TOKEN: ${{ secrets.NEXT_PUBLIC_LOGO_DEV_TOKEN }}
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      SPOTIFY_USER_ID: ${{ secrets.SPOTIFY_USER_ID }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm exec turbo run build

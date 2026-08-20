@@ -2,6 +2,7 @@
   "name": "@findmalek/website",
   "version": "0.2.0",
   "private": true,
+  "packageManager": "pnpm@10.33.4",
   "engines": {
     "node": ">=22"
   },
@@ -10,8 +11,8 @@
     "build": "next build",
     "start": "next start",
     "preview": "next build && next start",
-    "lint": "next lint",
-    "format": "prettier . --write && next lint --fix"
+    "lint": "eslint .",
+    "format": "prettier . --write && eslint . --fix"
   },
   "dependencies": {
     "@ai-sdk/groq": "^4.0.13",
@@ -106,6 +107,7 @@
     "prettier-plugin-tailwindcss": "^0.5.14",
     "react-email": "4.0.7",
     "tailwindcss": "^4",
+    "turbo": "^2.5.4",
     "typescript": "^5"
   }
 }

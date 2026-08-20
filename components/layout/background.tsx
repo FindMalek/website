@@ -21,34 +21,37 @@ function generateSquares(
   }))
 }
 
+function getPageLabel(pathname: string): string {
+  // Check if path has more than one segment (has a dynamic part)
+  const pathSegments = pathname.split("/").filter(Boolean)
+
+  if (pathSegments.length > 1) {
+    // Use the last segment as the label
+    return pathSegments[pathSegments.length - 1]
+  }
+
+  const currentPage = Object.values(PAGES).find(
+    (page) => page.path === pathname
+  )
+  return currentPage?.label || PAGES.NOT_FOUND.label
+}
+
 export function Background() {
   const pathname = usePathname()
-  const [pageLabel, setPageLabel] = useState("")
+  const pageLabel = getPageLabel(pathname)
   const [squares, setSquares] = useState<
     Array<{ id: number; pos: [number, number] }>
   >([])
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
+    // Square positions depend on window dimensions, which only exist client-side,
+    // so this can't be computed as a lazy useState initializer without a hydration
+    // mismatch -- an effect-driven mount pass is the documented escape hatch here.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true)
     setSquares(generateSquares(20, window.innerWidth, window.innerHeight))
   }, [])
-
-  useEffect(() => {
-    // Check if path has more than one segment (has a dynamic part)
-    const pathSegments = pathname.split("/").filter(Boolean)
-
-    if (pathSegments.length > 1) {
-      // Use the last segment as the label
-      const dynamicSegment = pathSegments[pathSegments.length - 1]
-      setPageLabel(dynamicSegment)
-    } else {
-      const currentPage = Object.values(PAGES).find(
-        (page) => page.path === pathname
-      )
-      setPageLabel(currentPage?.label || PAGES.NOT_FOUND.label)
-    }
-  }, [pathname])
 
   const updateSquarePosition = (id: number) => {
     if (typeof window === "undefined") return

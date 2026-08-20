@@ -40,7 +40,9 @@ async function getAccessToken(): Promise<string> {
 }
 
 /**
- * Get current user's playlists
+ * Get current user's playlists. Degrades to an empty result on failure
+ * (bad credentials, Spotify outage, etc.) rather than throwing, since this
+ * backs a homepage section that shouldn't take the whole page down.
  */
 export async function getUserPlaylists(
   limit = 20,
@@ -66,6 +68,6 @@ export async function getUserPlaylists(
     return data
   } catch (error) {
     console.error("Error fetching user playlists:", error)
-    throw error
+    return { items: [], total: 0, limit, offset }
   }
 }
