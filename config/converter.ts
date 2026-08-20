@@ -1,4 +1,11 @@
-import { ProjectStatus, ProjectType, ToolName, WorkType } from "@/types/enum"
+import {
+  ProjectStatus,
+  ProjectType,
+  RecommendationRelationship,
+  RecommendationSource,
+  ToolName,
+  WorkType,
+} from "@/types/enum"
 
 export const convertWorkType = (type: WorkType) => {
   switch (type) {
@@ -62,6 +69,36 @@ export const convertProjectType = (type: ProjectType) => {
       return "E-commerce Store"
     case "webapp":
       return "Web Application"
+    case "other":
+      return "Other"
+  }
+}
+
+export const convertRecommendationRelationship = (
+  relationship: RecommendationRelationship
+) => {
+  switch (relationship) {
+    case "manager":
+      return "Former Manager"
+    case "coworker":
+      return "Coworker"
+    case "client":
+      return "Client"
+    case "collaborator":
+      return "Collaborator"
+  }
+}
+
+export const convertRecommendationSource = (source: RecommendationSource) => {
+  switch (source) {
+    case "linkedin":
+      return "LinkedIn"
+    case "x":
+      return "X"
+    case "email":
+      return "Email"
+    case "message":
+      return "Message"
     case "other":
       return "Other"
   }

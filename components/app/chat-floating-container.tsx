@@ -128,7 +128,7 @@ export function ChatFloatingContainer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm print:hidden"
           />
         )}
       </AnimatePresence>
@@ -138,7 +138,7 @@ export function ChatFloatingContainer() {
         layout
         transition={{ type: "spring", bounce: 0.15, duration: 0.4 }}
         className={cn(
-          "fixed inset-x-0 z-50 mx-auto flex w-full flex-col px-4",
+          "fixed inset-x-0 z-50 mx-auto flex w-full flex-col px-4 print:hidden",
           isDocked
             ? "bottom-0 max-w-2xl pb-[calc(env(safe-area-inset-bottom)+1rem)]"
             : "bottom-6 max-w-lg"

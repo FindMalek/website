@@ -24,3 +24,22 @@ export const projectType = z.enum([
 ])
 export type ProjectType = z.infer<typeof projectType>
 export const PROJECT_TYPE_OPTIONS = projectType.options
+
+export const recommendationRelationship = z.enum([
+  "manager",
+  "coworker",
+  "client",
+  "collaborator",
+])
+export type RecommendationRelationship = z.infer<
+  typeof recommendationRelationship
+>
+
+export const recommendationSource = z.enum([
+  "linkedin",
+  "x",
+  "email",
+  "message",
+  "other",
+])
+export type RecommendationSource = z.infer<typeof recommendationSource>

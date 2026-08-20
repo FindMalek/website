@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import Link from "next/link"
-import { allProjects, allWorks } from "content-collections"
+import { allProjects, allRecommendations, allWorks } from "content-collections"
 
 import { REPOSITORIES } from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
@@ -33,6 +33,7 @@ import {
 import { ProjectItem } from "@/components/app/project-item"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
+import { TestimonialsMarquee } from "@/components/app/testimonials-marquee"
 import { WorkExperienceItem } from "@/components/app/work-experience-item"
 
 import { getMultipleRepoInfo } from "@/actions/github"
@@ -169,6 +170,22 @@ export default async function Home() {
           <ClientsMarquee />
         </PanelContent>
       </Panel>
+
+      {allRecommendations.length > 0 && (
+        <>
+          <div className="stripe-divider" />
+
+          <Panel>
+            <PanelHeader>
+              <PanelTitle className="text-lg">What people say</PanelTitle>
+            </PanelHeader>
+
+            <PanelContent className="overflow-hidden p-0">
+              <TestimonialsMarquee recommendations={allRecommendations} />
+            </PanelContent>
+          </Panel>
+        </>
+      )}
 
       <div className="stripe-divider" />
 
