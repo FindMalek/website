@@ -37,15 +37,10 @@ function ClientBadge({ client }: { client: Client }) {
   )
 }
 
-/**
- * Homepage-only, rendered directly under the "work" Panel in app/page.tsx.
- * Previously a global ClientsSection repeated on every route above Footer --
- * see issue #67.
- */
-export function ClientsMarquee() {
+function ClientBadgeRow({ clients }: { clients: Client[] }) {
   return (
-    <Marquee pauseOnHover className="[--duration:30s]">
-      {CLIENTS.map((client, index) =>
+    <>
+      {clients.map((client, index) =>
         client.href ? (
           <Link href={client.href} key={index} target="_blank">
             <ClientBadge client={client} />
@@ -56,6 +51,28 @@ export function ClientsMarquee() {
           </div>
         )
       )}
-    </Marquee>
+    </>
+  )
+}
+
+/**
+ * Homepage-only, rendered directly under the "work" Panel in app/page.tsx.
+ * Previously a global ClientsSection repeated on every route above Footer --
+ * see issue #67. Two rows scrolling in opposite directions, per feedback on #70.
+ */
+export function ClientsMarquee() {
+  const midpoint = Math.ceil(CLIENTS.length / 2)
+  const firstRow = CLIENTS.slice(0, midpoint)
+  const secondRow = CLIENTS.slice(midpoint)
+
+  return (
+    <div className="flex flex-col gap-2">
+      <Marquee pauseOnHover className="[--duration:30s]">
+        <ClientBadgeRow clients={firstRow} />
+      </Marquee>
+      <Marquee reverse pauseOnHover className="[--duration:30s]">
+        <ClientBadgeRow clients={secondRow} />
+      </Marquee>
+    </div>
   )
 }
