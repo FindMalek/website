@@ -15,6 +15,7 @@ import {
 import { AboutBooks } from "@/components/app/about-books"
 import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
+import { ClientsMarquee } from "@/components/app/clients-marquee"
 import { CollapsibleList } from "@/components/app/collapsible-list"
 import {
   GitHubContributions,
@@ -152,6 +153,20 @@ export default async function Home() {
             step={2}
             className="flex flex-col"
           />
+        </PanelContent>
+      </Panel>
+
+      <div className="stripe-divider" />
+
+      <Panel>
+        <PanelHeader>
+          <PanelTitle className="text-lg">
+            Companies I&apos;ve worked with
+          </PanelTitle>
+        </PanelHeader>
+
+        <PanelContent className="overflow-hidden p-0">
+          <ClientsMarquee />
         </PanelContent>
       </Panel>
 

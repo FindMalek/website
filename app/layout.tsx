@@ -12,7 +12,6 @@ import { HighlightAskAction } from "@/components/app/highlight-ask-action"
 import { ScrollToTop } from "@/components/app/scroll-to-top"
 import { Analytics } from "@/components/layout/analytics"
 import { Background } from "@/components/layout/background"
-import { ClientsSection } from "@/components/layout/clients-section"
 import { Footer } from "@/components/layout/footer"
 import { Header } from "@/components/layout/header"
 import { LayoutWrapper } from "@/components/layout/layout-wrapper"
@@ -95,7 +94,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <ChatProvider>
             <Header />
             <main className="flex-1">{children}</main>
-            <ClientsSection />
             <Footer />
             <Background />
             <Analytics />
