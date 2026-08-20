@@ -141,9 +141,9 @@
             "showLinkInTitle": false
           },
           "company": "Function03 Labs",
-          "position": "UX Engineer & Blockchain Developer",
+          "position": "UX Engineer & Blockchain Developer (Part-time)",
           "location": "USA, San Fransico (Remote)",
-          "period": "June 2023 – August 2024",
+          "period": "2021 – August 2024",
           "website": {
             "url": "https://fn03-new-brand-gold.vercel.app/",
             "label": "fn03.xyz"
@@ -402,6 +402,6 @@
         "lineHeight": 1.5
       }
     },
-    "notes": ""
+    "notes": "TODO(#66): Content still needed from Malek before this CV is fully up to date - see github.com/findmalek/website/issues/66. Not rendered anywhere in the app; internal tracking only.\n- Add Harmonia (new experience): needs dates, title, and description.\n- Add The Fund (new experience): dates confirmed ~Aug 2024 - May 2025, co-founder then founder & CTO for the final ~2 months; still needs a description before adding a full entry.\n- Digital Army: issue's approximate range (~2021-2023) conflicts with the existing portfolio entry (Feb-Apr 2023, see data/work/5-digital-army.mdx) and this file has no Digital Army entry at all; needs Malek to confirm the correct range before either is added/changed.\n- Update JobFlow scope/responsibilities; note the position title here ('Senior Full-Stack Engineer (Contract)') doesn't match data/work/1-jobflow-gmbh.mdx ('Senior Full Stack Engineer (AI Systems)') - reconcile once accurate copy is provided.\n- Update Kenny experience/link: no existing entry anywhere in this repo (CV or portfolio) - needs full details (dates, role, link, project vs employer) before it can be added.\n- Expand Zero Locker with stronger, more specific accomplishments/technical scope (current project entry is a single line).\n- Verify QTech AI / Krollo naming and history; the qtech.mdx link intentionally redirects to Krollo, don't change blindly.\n- Wire up case-study links from CV entries once stable case-study URLs are confirmed.\n- Full consistency pass across this file vs the portfolio work timeline once the above is resolved."
   }
 }
