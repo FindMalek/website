@@ -40,6 +40,15 @@ const projectFrontmatterSchema = z.object({
   endDate: z.string().optional(),
 })
 
+// TODO(#66): New work entries (Harmonia, The Fund) are intentionally not
+// added here yet. Every field in workFrontmatterSchema below is required
+// (company, position, overview, type, startDate, endDate, place, href), and
+// `overview`/`position` render directly on the public timeline, so a stub
+// entry with placeholder copy would ship fabricated-looking text to
+// visitors. Add new `../data/work/*.mdx` files once real company details,
+// dates, title, and a genuine overview are available - see
+// data/resume.json's metadata.notes and github.com/findmalek/website/issues/66
+// for the full list of what's still missing (Harmonia, The Fund, Kenny).
 const work = defineCollection({
   name: "work",
   directory: "../data/work",
