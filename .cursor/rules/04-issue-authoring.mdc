@@ -1,0 +1,28 @@
+---
+description: Standard every GH issue in this repo must meet before being filed
+alwaysApply: true
+---
+
+# Issue authoring standard
+
+Every GitHub issue created in this repo — by a person or an agent — must be genuinely detailed. A one-line ask ("add education section") is not acceptable on its own; it must be turned into a full issue before it's filed. This applies to every kind of work: content, design, features, and infra alike, no exceptions for "small" tasks.
+
+## Required structure
+
+Matches `.github/ISSUE_TEMPLATE/detailed-task.md` — use it as the actual template, not just inspiration:
+
+1. **Context** — why this matters, not just what.
+2. **Current state** — concrete `file:line` references to what exists today. Look at the actual code/data before writing this section; don't guess or paraphrase from memory.
+3. **Proposed change / acceptance criteria** — a checklist, not prose.
+4. **Edge cases and explicitly out of scope** — what NOT to do, and what this issue deliberately doesn't cover.
+5. **Related issues/PRs** — cross-link where relevant.
+
+## Bar to hit
+
+Issues #65 (testimonials/recommendations system spec) and #66 (CV/timeline sync checklist) are the concrete reference examples for the target detail level — both have a real data model or checklist, explicit constraints ("no fabricated endorsements," "no inflated dates"), and enough context that someone with zero prior knowledge of the conversation that spawned them could pick up the work correctly.
+
+## Before filing
+
+- Read the relevant code/data first. An issue built on an assumption about what exists ("there's probably no X yet") is weaker than one built on a verified fact ("confirmed via grep: X does not exist, zero usages").
+- If the issue is one of several similar items (e.g. one work experience among many, one project among many), scope it as its own individually-workable issue — don't bundle multiple companies/projects/experiences into one umbrella issue unless there's a specific reason to (see project convention: one issue per company/project/experience).
+- Apply a label (`area:content`, `area:design`, `area:infra`, or the GitHub defaults) and, if a project board is in use, set an initial status.
