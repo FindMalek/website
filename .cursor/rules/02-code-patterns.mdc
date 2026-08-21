@@ -1,0 +1,32 @@
+---
+description: Code patterns and hard rules for this repo
+alwaysApply: true
+---
+
+# Code patterns
+
+## No comments by default
+
+One-line max, WHY only — never WHAT (identifiers already say that). If removing a comment wouldn't confuse the next reader, don't write it. See `components/app/panel.tsx`'s `Panel` component for the right calibration: a short block explaining why `id` must stay on the wrapper element (scroll-margin-top / anchor offset), not what the component renders.
+
+## No premature abstraction
+
+Don't add a helper, a config flag, or a new prop for a hypothetical future case. Three similar lines beat a wrong abstraction. Don't add error handling for states that can't occur.
+
+## No type assertions
+
+Fix the actual type instead of `as` casting past it. If a Zod schema (`config/schemas.ts`) is the source of truth for a shape, infer types from it (`z.infer<typeof workSchema>`) rather than hand-writing a parallel interface that can drift.
+
+## Content additions are schema-first
+
+New work experience or project → new MDX file under `data/work/` or `data/projects/` conforming to `workSchema` / `projectSchema`. If the new content genuinely doesn't fit the existing schema, extend the schema deliberately — don't stuff mismatched data into an existing field.
+
+## Established component patterns — reuse, don't reinvent
+
+- `Panel` / `PanelHeader` / `PanelTitle` (`components/app/panel.tsx`) — the section-wrapper composition every homepage section uses (`screen-line-top`/`screen-line-bottom` hairline borders, anchor `id` + scroll-margin-top). Any new homepage section should compose these, not build a new wrapper.
+- `groupWorkByCompany()` (`lib/utils.ts`) — the multi-position-per-company grouping pattern. Reuse this shape for any new work-related aggregation rather than writing a parallel grouping function.
+- `cn()` (`lib/utils.ts`) — the `clsx`/`tailwind-merge` className helper used everywhere; don't hand-concatenate className strings.
+
+## Git commits
+
+See `00-project-overview.mdc` for the full commit-prefix convention (including this repo's `content:`/`design:` extensions). No AI/IDE/vendor tool names or `Co-authored-by:` trailers in commits, PR titles, or PR bodies — this applies regardless of which agent or tool made the change.

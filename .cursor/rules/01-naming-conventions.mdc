@@ -1,0 +1,18 @@
+---
+description: Naming conventions for files, components, and constants
+alwaysApply: true
+---
+
+# Naming conventions
+
+Mirrors the site owner's global TypeScript/React conventions — restated here in full because `.cursor/rules/*.mdc` is read by tools (Cursor) that have no visibility into that global config.
+
+- File names: **kebab-case** (`work-experience-item.tsx`, `use-chat-with-tools.ts`)
+- React components: file name kebab-case, exported name **PascalCase**
+- Functions, hooks, variables: **camelCase**
+- Module-level constants: **UPPER_SNAKE_CASE** (e.g. `PAGES`, `NAV_ITEMS` in `config/consts.ts`)
+- MDX content files: `<id>-<kebab-case-slug>.mdx` matching the numeric `id` field in frontmatter (e.g. `5-digital-army.mdx`, `2-findmalek.mdx`) — the leading number controls sort order, keep it in sync with the `id` field, don't let them drift.
+
+## Import aliases
+
+Use the `@/` alias (`@/components/...`, `@/lib/...`, `@/data/...`) — no relative `../../..` chains across top-level directories.

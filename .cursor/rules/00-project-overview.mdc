@@ -1,0 +1,52 @@
+---
+description: Stack, architecture, and dev commands for the website repo
+alwaysApply: true
+---
+
+# Project overview
+
+Malek Gara-Hellal's personal portfolio — `findmalek.com`. Single Next.js app, not a monorepo. No `apps/`/`packages/` split.
+
+## Stack
+
+- Next.js (App Router) + TypeScript + Tailwind CSS
+- `content-collections` for MDX content — `data/work/*.mdx` and `data/projects/*.mdx`, each validated against a Zod schema in `config/schemas.ts` (`workSchema`, `projectSchema`)
+- AI SDK v7 + Groq power the floating chat: `app/api/chat/route.ts`, `providers/chat-provider.tsx`, `hooks/use-chat-with-tools.ts`
+- shadcn/Radix UI primitives under `components/ui/`
+
+## Dev commands
+
+- `pnpm dev` — Turbopack dev server
+- `pnpm build` — production build
+- `pnpm lint` — ESLint
+- `pnpm format` — Prettier + ESLint --fix
+
+## Architecture — read this before touching routing
+
+`config/consts.ts` defines two related-but-different things:
+
+- `PAGES` — a full registry of "real" paths (`/about`, `/work`, `/projects`, `/stack`, `/contact`) with label/name/text metadata. This is NOT the live nav structure.
+- `NAV_ITEMS` — the actual navigation, built by spreading `PAGES` entries and overriding their `path` to homepage anchors (`/#about`, `/#work`, etc.). `CONTACT` is intentionally omitted from `NAV_ITEMS` — contact is the floating-chat trigger, not a nav destination.
+
+The real page structure: `app/page.tsx` is the **only** homepage and renders every section (`#about`, `#work`, `#projects`, `#stack`) as anchored `Panel` components in one file. The only actual sub-routes that exist are:
+
+- `/work/[slug]` — work case-study detail pages
+- `/projects/[slug]` — project case-study detail pages
+- `/api/chat` — the chat endpoint
+
+There is no standalone `/about`, `/work`, `/projects`, `/stack`, or `/contact` route despite what `PAGES` implies. Don't go looking for one, and don't create one without checking whether the request is actually "add a new homepage section" instead.
+
+## Content model
+
+Adding a new work experience or project means **adding an MDX file** under `data/work/` or `data/projects/` with frontmatter matching `workSchema` / `projectSchema` in `config/schemas.ts` — not writing a new component or hardcoding data in TSX.
+
+Multiple positions at the same company are already supported: `lib/utils.ts`'s `groupWorkByCompany()` groups `data/work/*.mdx` entries by `company` field into `WorkExperienceGroup[]`, rendered by `components/app/work-experience-item.tsx` (company header) + `work-position-item.tsx` (per-position accordion row). Don't build a separate mechanism for "same company, new role" — add another MDX file with the same `company` value.
+
+## Commit conventions
+
+Conventional prefixes, same rule as the user's global config: `feat:` `fix:` `chore:` `perf:` `refactor:`. This repo also uses two extra prefixes visible throughout its history — treat them as established convention, not a deviation to correct:
+
+- `content:` — MDX/data/copy changes (e.g. `content: fix Function 03 Labs start date`)
+- `design:` — visual/layout changes with no data model change (e.g. `design: simplify footer and move companies section to homepage marquee`)
+
+No AI assistant, IDE, or vendor tool names in commit messages, PR titles, or PR bodies. No `Co-authored-by:` trailers for AI tools.
