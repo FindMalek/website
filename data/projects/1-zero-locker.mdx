@@ -2,473 +2,101 @@
 id: 1
 image: "/project/zero-locker.png"
 name: "Zero Locker"
-overview: "A modern, secure, and self-hosted password management solution built with Next.js 15, TypeScript, and PostgreSQL — the open-source alternative to LastPass and HashiCorp Vault."
+overview: "A self-hosted, open-source password manager built with Next.js 15, TypeScript, Prisma, and Neon Postgres — encrypting credentials, payment cards, and secrets with AES-256-GCM behind a type-safe oRPC API and BetterAuth authentication."
 status: "published"
 link: "https://www.zero-locker.com"
 href: "/projects/zero-locker"
-tags: ["Next.js", "TypeScript", "PostgreSQL", "Self-Hosted", "Security"]
+tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Self-Hosted", "Security"]
 ---
 
-# 🔐 Zero Locker — Building Trust Through Transparency
+# 🔐 Zero Locker — A Self-Hosted, Open-Source Password Manager
 
-**Zero Locker** is a self-hosted, open-source password management solution designed with security, privacy, and user experience at its core. In an era where digital identity protection is paramount, I set out to create a tool that gives users complete control over their sensitive data without compromising on modern UX or security standards.
+**Zero Locker** is a self-hosted, open-source password management solution I built to give people full control over their credentials, payment cards, and secrets without trusting a third-party vault. The entire codebase — server, database schema, and encryption logic — is public on [GitHub](https://github.com/FindMalek/zero-locker), so anyone can audit exactly how their data is handled instead of taking a vendor's word for it.
 
 ---
 
 ## 🌟 The Problem
 
-Password managers have become essential tools in our digital lives, but they come with significant trust issues:
+Most password managers ask you to trust a closed-source, cloud-hosted vault with your most sensitive data. I wanted an option that was:
 
-- **Proprietary closed-source code** — You're trusting companies with your most sensitive data without knowing what's happening under the hood
-- **Cloud dependency** — Your passwords are stored on someone else's servers
-- **High costs** — Premium features locked behind expensive subscriptions
-- **Limited customization** — One-size-fits-all solutions that don't adapt to your needs
-- **Vendor lock-in** — Difficult to migrate data once you're committed
-
-After experiencing these pain points firsthand, I realized there was a gap in the market for a **truly transparent, self-hosted alternative** that combines enterprise-grade security with modern design.
-
----
-
-## 💡 The Vision
-
-> _"What if password management could be as secure as military-grade encryption, as transparent as open-source code, and as beautiful as modern web apps?"_
-
-My goals for Zero Locker:
-
-1. **Security First** — Implement AES-256-GCM encryption (the same standard used by governments and banks)
-2. **100% Transparent** — Open-source everything, so users can audit and trust the code
-3. **Self-Hosted** — Give users complete control over their data
-4. **Modern UX** — Beautiful, intuitive interface that rivals commercial products
-5. **Feature-Rich** — Support passwords, payment cards, secret notes, and more
-6. **Easy to Deploy** — Docker-based deployment for seamless self-hosting
+- **Auditable** — open-source, so the encryption and storage logic can be inspected line by line
+- **Self-hostable** — runs on your own infrastructure instead of a vendor's servers
+- **Not just passwords** — credentials, payment cards, and arbitrary secrets (API keys, SSH keys, tokens) in one place
+- **Modern to use** — a fast, well-designed dashboard rather than a dated enterprise UI
 
 ---
 
 ## ✨ Core Features
 
-### 🔒 Military-Grade Encryption
+Straight from the project's own feature set:
 
-Every piece of sensitive data is encrypted using **AES-256-GCM encryption** before being stored in the database. The encryption keys are derived from the user's master password using PBKDF2, ensuring that even if the database is compromised, the data remains secure.
-
-**Key security features:**
-
-- End-to-end encryption for all sensitive fields
-- Master password never leaves the client
-- Automatic password history tracking with timestamps
-- Secure session management with BetterAuth
-- Zero-knowledge architecture — even I can't access your data
-
-### 🔑 Comprehensive Credential Management
-
-Zero Locker goes beyond simple password storage:
-
-- **Account Management** — Store usernames, passwords, URLs, and notes
-- **Payment Cards** — Securely store credit/debit card information with encrypted CVV
-- **Secret Notes** — Encrypted storage for API keys, recovery codes, or sensitive information
-- **Tags & Categories** — Organize your credentials with custom tags
-- **Password History** — Automatic tracking of password changes with timestamps
-
-### 🎨 Modern, Intuitive Interface
-
-Built with **Next.js 15**, **React**, **TailwindCSS**, and **shadcn/ui**, Zero Locker offers:
-
-- Lightning-fast performance with React Server Components
-- Responsive design that works beautifully on desktop and mobile
-- Dark mode support out of the box
-- Smart search and filtering capabilities
-- Drag-and-drop organization
-- Quick actions and keyboard shortcuts
-
-### 🚀 Self-Hosted Deployment
-
-Complete control means you decide where your data lives:
-
-- **Docker deployment** — One-command setup with Docker Compose
-- **PostgreSQL database** — Reliable, scalable data storage
-- **Easy migration** — Import credentials from text files or other password managers
-- **Automatic backups** — Schedule regular database backups
-- **Environment-based configuration** — Customize to your infrastructure
+- **End-to-end encryption** — AES-256-GCM for all sensitive fields
+- **Credential storage** — usernames, passwords, and per-credential metadata (recovery email, phone number, whether 2FA is enabled)
+- **Payment card management** — card number and CVV stored encrypted, alongside card metadata like credit limit, rewards program, and contactless/international payment flags
+- **Secret storage** — typed secrets (API keys, database URLs, SSH keys, JWT secrets, OAuth tokens, webhook secrets, general tokens) with expiry tracking
+- **Containers** — group credentials, cards, and secrets into folders; a container can be restricted to a single entity type, including a secrets-only mode built for exporting environment variables
+- **Platforms** — credentials are linked to a platform (e.g. a specific service), with a review workflow (approved/pending/rejected) for platforms submitted by users
+- **Password history** — automatic tracking of credential changes over time
+- **Tagging** — custom tags across credentials, cards, and secrets
+- **Authentication** — session and account management via BetterAuth
+- **Dark/light theme, responsive UI** — built with Tailwind CSS and shadcn/ui
+- **Self-hosted deployment** — Docker Compose for a local PostgreSQL instance, with the app itself deployable to Vercel or any Node host
 
 ---
 
 ## 🏗️ Technical Architecture
 
+### **Data Model**
+
+The schema is split into focused Prisma files rather than one monolith — `credential.prisma`, `cards.prisma`, `secrets.prisma`, `encryption.prisma`, `auth.prisma` — and centers on a few real design decisions:
+
+- **`Credential`, `Card`, and `Secret`** are separate models, each with their own metadata model (`CredentialMetadata`, `CardMetadata`, `SecretMetadata`) rather than one generic "item" table — so a card can carry a credit limit and rewards program while a secret carries a type and expiry date, without either model being forced into a shape it doesn't need.
+- **`EncryptedData`** is a shared table (`iv`, `encryptedValue`, `encryptionKey`) referenced by every sensitive field — a credential's password, a card's number and CVV, and a secret's value all point to their own `EncryptedData` row, so encryption is handled uniformly across entity types instead of being reimplemented per field.
+- **`Container`** groups items into folders, with a `ContainerType` (`MIXED`, `SECRETS_ONLY`, `CREDENTIALS_ONLY`, `CARDS_ONLY`) — a secrets-only container is what backs environment-variable-style operations.
+- **`Platform`** ties a credential to the service it belongs to, with its own approval workflow (`APPROVED` / `PENDING` / `REJECTED`) for platforms added by users rather than pre-seeded.
+- **`UserPlan`** distinguishes `NORMAL` accounts (limited to 3 default containers) from `PRO` accounts (unlimited containers).
+
 ### **Tech Stack**
 
-**Frontend:**
+- **Next.js 15** (App Router, Turbopack dev server) and **React 19**
+- **TypeScript** throughout, validated at the boundaries with **Zod**
+- **Prisma ORM 6** over **Neon serverless Postgres** (`@prisma/adapter-neon`)
+- **oRPC** for a type-safe, contract-first API layer between client and server (`@orpc/server`, `@orpc/client`, `@orpc/react-query`)
+- **BetterAuth** for session and account authentication
+- **TanStack Query** for client-side data fetching and caching
+- **Tailwind CSS** and **shadcn/ui** (Radix primitives) for the interface
+- **Resend** for transactional email, **Vercel Analytics** for usage metrics
 
-- **Next.js 15** — Latest App Router for optimal performance
-- **React 19** — Modern UI with Server Components
-- **TypeScript** — Type safety throughout the codebase
-- **TailwindCSS** — Utility-first styling
-- **shadcn/ui** — Beautiful, accessible components
-- **Zod** — Runtime validation and type safety
+### **Security**
 
-**Backend:**
-
-- **Next.js API Routes** — Serverless API endpoints
-- **Prisma ORM** — Type-safe database queries
-- **PostgreSQL** — Production-grade database
-- **BetterAuth** — Secure authentication system
-- **Node.js Crypto** — Native encryption libraries
-
-**DevOps:**
-
-- **Docker & Docker Compose** — Containerized deployment
-- **GitHub Actions** — CI/CD pipeline
-- **Vercel** — Optional cloud hosting
-- **ESLint & Prettier** — Code quality and formatting
-
-### **Security Implementation**
-
-```typescript
-// Encryption flow
-User Master Password → PBKDF2 Key Derivation → Encryption Key
-↓
-Sensitive Data → AES-256-GCM Encryption → Encrypted Data + IV + Auth Tag
-↓
-PostgreSQL Database (encrypted at rest)
-```
-
-**Key security principles:**
-
-- **Zero-knowledge architecture** — Server never sees unencrypted sensitive data
-- **Salt and IV generation** — Unique per-user and per-record
-- **Authentication tags** — Ensures data integrity
-- **Secure session handling** — HttpOnly cookies, CSRF protection
-- **Rate limiting** — Prevents brute-force attacks
-
-### **Database Schema**
-
-The data model is designed for flexibility and security:
-
-```prisma
-model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  name         String?
-  accounts     Account[]
-  cards        Card[]
-  secrets      Secret[]
-  sessions     Session[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-}
-
-model Account {
-  id              String          @id @default(cuid())
-  userId          String
-  name            String
-  username        String?         // Encrypted
-  password        String          // Encrypted
-  url             String?
-  notes           String?         // Encrypted
-  tags            String[]
-  passwordHistory PasswordHistory[]
-  user            User            @relation(fields: [userId], references: [id])
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-}
-
-model Card {
-  id           String   @id @default(cuid())
-  userId       String
-  cardName     String
-  cardNumber   String   // Encrypted
-  cardHolder   String   // Encrypted
-  expiryDate   String   // Encrypted
-  cvv          String   // Encrypted
-  billingZip   String?  // Encrypted
-  user         User     @relation(fields: [userId], references: [id])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
-```
+- **AES-256-GCM encryption** applied to every sensitive field before it's written to the database — credential passwords, card numbers and CVVs, and secret values
+- Each encrypted value gets its own record in the shared `EncryptedData` table with a unique initialization vector, so encryption isn't reused across fields or users
+- Credential password changes are tracked in a separate `CredentialHistory` model, itself encrypted the same way as the live value
 
 ---
 
-## 📈 Development Journey
+## 🚀 Self-Hosting
 
-### **Phase 1: Research & Planning**
-
-I spent weeks researching existing password managers, analyzing their security models, and identifying gaps:
-
-- Studied **1Password**, **Bitwarden**, **LastPass**, and **HashiCorp Vault**
-- Reviewed NIST guidelines for password storage
-- Analyzed encryption best practices
-- Designed the information architecture in **Excalidraw**
-- Created mockups in **Figma** for the UI
-
-### **Phase 2: Security Foundation**
-
-Security had to be built from the ground up:
-
-- Implemented AES-256-GCM encryption with the Node.js `crypto` module
-- Built a zero-knowledge authentication flow
-- Created secure key derivation using PBKDF2
-- Developed password strength validation
-- Implemented secure random password generation
-
-### **Phase 3: Core Features**
-
-With security locked down, I focused on features:
-
-- Built the credential CRUD operations
-- Added payment card management
-- Implemented secret notes storage
-- Created the password history tracking system
-- Developed the search and filter functionality
-
-### **Phase 4: User Experience**
-
-Making security accessible required thoughtful UX:
-
-- Designed an intuitive dashboard layout
-- Created smooth animations and transitions
-- Built keyboard shortcuts for power users
-- Implemented copy-to-clipboard with feedback
-- Added dark mode support
-- Optimized for mobile responsiveness
-
-### **Phase 5: Deployment & Documentation**
-
-Making it easy for others to self-host:
-
-- Dockerized the entire application
-- Created comprehensive documentation
-- Built automated database migrations
-- Implemented environment-based configuration
-- Set up GitHub Actions for CI/CD
-
----
-
-## 🎯 Key Features Breakdown
-
-### **Landing Page Experience**
-
-The landing page immediately communicates trust and transparency:
-
-- **Hero Section** — Clear value proposition: "The open-source alternative"
-- **Trust Indicators** — User count, secrets protected, 100% open-source badge
-- **Feature Highlights** — Military-grade encryption, open source, lightning fast
-- **Comparison** — Positioned as alternative to LastPass and HashiCorp Vault
-- **Waitlist** — Early adopter signup with real-time counter
-- **How It Works** — 3-step onboarding process visualization
-
-### **Dashboard**
-
-The main dashboard provides quick access to everything:
-
-- **Search Bar** — Global search across all credentials
-- **Quick Stats** — Total accounts, cards, and secrets at a glance
-- **Recent Items** — Quick access to recently used credentials
-- **Categories** — Organized by type (accounts, cards, secrets)
-- **Actions** — One-click copy, edit, or delete
-- **Security Status** — Password strength indicators and reuse warnings
-
-### **Password Generator**
-
-Built-in password generation with customization:
-
-- Length control (8-64 characters)
-- Character set selection (uppercase, lowercase, numbers, symbols)
-- Exclude similar characters option
-- Copy to clipboard
-- Strength indicator
-- Generate history
-
-### **Import/Export**
-
-Easy migration from other password managers:
-
-- **Import** — Support for CSV and JSON formats
-- **Export** — Encrypted backup downloads
-- **Format Converter** — Adapters for popular password managers
-- **Batch Operations** — Import multiple entries at once
-
----
-
-## 🔐 Security Highlights
-
-### **Threat Model**
-
-Zero Locker is designed to protect against:
-
-- **Database breach** — All sensitive data is encrypted
-- **Man-in-the-middle attacks** — HTTPS only, secure session cookies
-- **Brute-force attacks** — Rate limiting, account lockout
-- **XSS attacks** — Input sanitization, CSP headers
-- **CSRF attacks** — Token-based protection
-- **Session hijacking** — Secure session management
-
-### **Encryption Flow**
-
-```typescript
-// Example: Encrypting a password
-const encryptedData = encryptData(password, masterKey)
-// Returns: { encryptedData, iv, authTag }
-
-// Storing in database
-await prisma.account.create({
-  data: {
-    password: encryptedData.encryptedData,
-    iv: encryptedData.iv,
-    authTag: encryptedData.authTag,
-  },
-})
-
-// Decrypting on retrieval
-const decryptedPassword = decryptData(
-  account.password,
-  account.iv,
-  account.authTag,
-  masterKey
-)
-```
-
-### **Authentication Flow**
-
-1. User enters master password
-2. Password is hashed client-side using PBKDF2
-3. Hash is sent to server for authentication
-4. Server validates hash and creates session
-5. Session token stored in HttpOnly cookie
-6. Master key derived from password for encryption/decryption
-
----
-
-## 📊 Impact & Metrics
-
-**Since Launch:**
-
-- ✅ **38+ secrets protected** — Growing user base
-- ✅ **100% open source** — Full transparency
-- ✅ **3 users trusted** — Early adopters from the waitlist
-- ✅ **0 security incidents** — Robust security implementation
-- ✅ **Active community** — Contributors and feature requests
-
-**User Feedback:**
-
-> "_Finally, a password manager I can trust and host myself!_"
-
-> "_The UI is cleaner than commercial alternatives I've paid for._"
-
-> "_Being able to audit the code myself gives me peace of mind._"
-
----
-
-## 🚀 Deployment Guide
-
-### **One-Command Deployment**
+Zero Locker is designed to be run on your own infrastructure:
 
 ```bash
-# Clone the repository
 git clone https://github.com/FindMalek/zero-locker.git
 cd zero-locker
+pnpm install
+cp .env.example .env   # set DATABASE_URL, BETTER_AUTH_SECRET, etc.
 
-# Configure environment variables
-cp .env.example .env
-# Edit .env with your settings
-
-# Start with Docker Compose
-docker-compose up -d
-
-# Your Zero Locker instance is now running at http://localhost:3000
+pnpm docker:up          # starts a local PostgreSQL 15 container
+pnpm db:migrate          # applies the Prisma schema
+pnpm dev                 # starts the Next.js dev server on :3000
 ```
 
-### **Environment Configuration**
-
-```env
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/zero_locker"
-
-# Auth
-AUTH_SECRET="your-super-secret-key"
-NEXTAUTH_URL="http://localhost:3000"
-
-# Encryption
-ENCRYPTION_KEY="your-encryption-master-key"
-```
+The included `docker-compose.yml` handles local Postgres, and the same Prisma schema runs against Neon in production. Project scripts also cover day-to-day operations — `docker:status`, `docker:logs`, `docker:reset`, `db:reset-and-seed` — for resetting or inspecting the local database during development.
 
 ---
 
-## 📚 Lessons Learned
+## 📌 Where It Stands
 
-### **Security is Hard, But Essential**
+Zero Locker is open-source, MIT-licensed, and live at [zero-locker.com](https://www.zero-locker.com). The codebase is primarily TypeScript, with the full schema, oRPC routers, and UI available for anyone to read, run, or contribute to on [GitHub](https://github.com/FindMalek/zero-locker) — issues and pull requests are open.
 
-- Implementing encryption correctly requires deep understanding of cryptography
-- Zero-knowledge architecture adds complexity but provides real user protection
-- Security must be considered at every layer, not bolted on later
-- Regular security audits and updates are crucial
-
-### **Open Source Builds Trust**
-
-- Users are more willing to trust software they can inspect
-- Community contributions improve security through peer review
-- Transparency is a competitive advantage in security software
-
-### **UX Can't Be an Afterthought**
-
-- Even the most secure software is useless if people won't use it
-- Investing time in design pays dividends in user adoption
-- Security features should be invisible when they work correctly
-
-### **Self-Hosting Matters**
-
-- Users increasingly want control over their data
-- Docker makes self-hosting accessible to non-technical users
-- Documentation is as important as the code itself
-
----
-
-## 🔮 Future Roadmap
-
-**Coming Soon:**
-
-- 🔄 **Browser Extension** — Autofill credentials across websites
-- 📱 **Mobile Apps** — Native iOS and Android applications
-- 🔗 **2FA Support** — Store and generate TOTP codes
-- 📤 **Import Wizards** — One-click import from major password managers
-- 🔍 **Security Audit** — Password breach monitoring
-- 🌐 **Multi-language Support** — i18n for global accessibility
-- 👥 **Team Features** — Shared vaults for organizations
-- 🔐 **Hardware Key Support** — YubiKey and other U2F devices
-
----
-
-## 🔗 Resources & Links
-
-- **🌐 Live Demo:** [zero-locker.vercel.app](https://zero-locker.vercel.app)
-- **💻 GitHub Repository:** [github.com/FindMalek/zero-locker](https://github.com/FindMalek/zero-locker)
-- **📖 Documentation:** [docs.zero-locker.dev](https://docs.zero-locker.dev)
-- **🐛 Issue Tracker:** [github.com/FindMalek/zero-locker/issues](https://github.com/FindMalek/zero-locker/issues)
-- **💬 Discussions:** [github.com/FindMalek/zero-locker/discussions](https://github.com/FindMalek/zero-locker/discussions)
-
----
-
-## 📌 Conclusion
-
-**Zero Locker** represents my commitment to building tools that prioritize user privacy without sacrificing user experience. In a world where data breaches are common and trust in tech companies is eroding, open-source, self-hosted solutions are more important than ever.
-
-This project taught me that **security and usability don't have to be at odds**. With thoughtful design, modern tooling, and a commitment to transparency, we can build software that protects users while empowering them.
-
-Whether you're a developer looking to self-host your password manager, a security enthusiast wanting to audit the code, or someone who simply values privacy — Zero Locker is built for you.
-
----
-
-### 🙏 Acknowledgments
-
-Special thanks to:
-
-- The **Bitwarden** team for inspiration and open-source leadership
-- The **Next.js** team for an incredible framework
-- The **shadcn/ui** project for beautiful components
-- The **open-source community** for continuous feedback and contributions
-
----
-
-> "_In security, trust is earned through transparency. Zero Locker is my commitment to that principle._"
-
-👉 [Try Zero Locker](https://www.zero-locker.com)  
-👉 [Star on GitHub](https://github.com/FindMalek/zero-locker)  
-👉 [Join the Community](https://github.com/FindMalek/zero-locker/discussions)
+👉 [Try Zero Locker](https://www.zero-locker.com)
+👉 [Star on GitHub](https://github.com/FindMalek/zero-locker)
