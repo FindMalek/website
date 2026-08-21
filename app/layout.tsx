@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   keywords: siteConfig.keywords,
   authors: [
     {
-      name: "findmalek",
-      url: "https://www.findmalek.com",
+      name: siteConfig.author.name,
+      url: siteConfig.author.url,
     },
   ],
   creator: "findmalek",

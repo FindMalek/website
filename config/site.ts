@@ -3,9 +3,9 @@ import { SiteConfig } from "@/types"
 export const TIMEZONE = "Africa/Tunis"
 
 export const siteConfig: SiteConfig = {
-  name: "Tunisian Design Engineer and Developer",
+  name: "Malek Gara-Hellal — Design Engineer & Developer, Tunisia",
   description:
-    "Expert in web development, design engineering, and creative entrepreneurship. Passionate about turning code into impactful projects. Explore my work and ventures.",
+    "Malek Gara-Hellal is a design engineer and developer based in Tunisia, specialized in web development, design engineering, and creative entrepreneurship. Explore his work and ventures.",
   url: "https://www.findmalek.com",
   images: {
     default: "https://www.findmalek.com/og.png",
