@@ -1,0 +1,40 @@
+---
+description: How to use git worktrees for parallel issue work in this repo
+alwaysApply: true
+---
+
+# Worktree workflow
+
+Use one `git worktree` per issue when working on multiple issues concurrently (or when an issue is substantial enough to isolate from the main working tree), instead of switching branches in place.
+
+## Creating a worktree
+
+```
+git worktree add .claude/worktrees/<short-descriptive-name> -b <prefix>/<issue-number>-<slug> main
+```
+
+- Branch name uses the repo's commit-prefix convention from `00-project-overview.mdc` (`content/`, `design/`, `feat/`, `fix/`, `chore/`, `infra/`), followed by the issue number and a short slug — e.g. `infra/75-claude-rules`, `content/66-cv-timeline`.
+- Worktree directory name should be descriptive of the work, not an opaque generated ID (e.g. `.claude/worktrees/infra-75-claude-rules`, not `.claude/worktrees/agent-a19ca11eec37fb1d4`). Opaque IDs make later cleanup/triage much harder — this happened for real (see below) and cost real time to unwind.
+
+## Mandatory cleanup
+
+**As soon as a worktree's branch is merged (or its PR is closed without merging), remove it immediately:**
+
+```
+git worktree remove .claude/worktrees/<name>
+git branch -d <branch>   # -D only if you've independently confirmed the content landed via a squash-merge (see below)
+```
+
+Do not leave a merged worktree sitting around "just in case." This is not a hypothetical — on 2026-08-21, 10 stale worktrees (plus 2 additional stale non-worktree branches) were found still checked out weeks after their work had already landed on `main`, several with meaningless auto-generated names, requiring a dedicated investigation pass to confirm each one was safe to remove before deleting any of them.
+
+## Verifying a branch is actually safe to delete
+
+A branch that looks unmerged might not be — this repo squash-merges PRs, so `git merge-base --is-ancestor <branch> main` will report **false** even when every commit's content is fully on `main`. Confirmed real examples: the source branches for PRs #61, #62, #69, #70, #71, #72 all reported "not an ancestor" despite being fully landed.
+
+Before deleting a branch/worktree that isn't a clean fast-forward ancestor of `main`:
+
+1. Check whether its tip commit message matches an already-merged commit on `main` (`git log --oneline main` vs. the branch's own log).
+2. If so, diff the actual content: `git diff <branch> <matching-main-commit>` (or `git diff main...<branch> --stat` for a broader check). Identical or fully-subsumed content confirms it's safe.
+3. If the branch has commits with no matching landed content anywhere on `main`, **do not delete** — it's carrying real unmerged work. Flag it for review instead.
+
+When genuinely unsure, diff first. Deleting a branch that turns out to hold real work is much more expensive to recover from than leaving one extra stale worktree around for another day.
