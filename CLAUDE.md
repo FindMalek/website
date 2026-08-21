@@ -7,3 +7,4 @@ Rules are maintained in `.cursor/rules/` as the single source of truth — all a
 @.cursor/rules/02-code-patterns.mdc
 @.cursor/rules/03-worktree-workflow.mdc
 @.cursor/rules/04-issue-authoring.mdc
+@.cursor/rules/05-resume-data-schema.mdc
