@@ -3,7 +3,6 @@ import resumeData from "@/data/resume.json"
 import { siteConfig } from "@/config/site"
 
 import { PronounceNameButton } from "@/components/app/pronounce-name-button"
-import { VerifiedIcon } from "@/components/app/verified-icon"
 import { Avatar } from "@/components/shared/avatar"
 
 export function Hero() {
@@ -17,7 +16,6 @@ export function Hero() {
             <h1 className="text-balance text-2xl font-bold tracking-tight">
               {siteConfig.author.name}
             </h1>
-            <VerifiedIcon className="text-primary size-4.5 shrink-0" />
             <PronounceNameButton name={siteConfig.author.name} />
           </div>
 
