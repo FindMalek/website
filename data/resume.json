@@ -155,26 +155,26 @@
           "hidden": false,
           "company": "Undrstnd Labs",
           "position": "",
-          "location": "Remote",
+          "location": "Italy (Remote)",
           "period": "August 2024 - June 2025",
           "website": {
             "url": "",
             "label": "",
             "inlineLink": false
           },
-          "description": "<p></p>",
+          "description": "<p>Co-founded an AI inference company with Denis Cartin. Applied to Y Combinator and were rejected, so launched independently in Italy instead.</p><ul><li><p>Built fast, significantly cheaper inference than OpenAI, using bigger and better models.</p></li><li><p>Shipped an API with strong developer experience, compatible with the Vercel AI SDK.</p></li></ul><p></p>",
           "roles": [
             {
               "id": "019c90aa-0002-71cb-874f-835885ebf8c6",
               "position": "Founder & CTO",
               "period": "May 2025 - June 2025",
-              "description": ""
+              "description": "Took on the CTO title as the company matured, continuing to lead product and infrastructure."
             },
             {
               "id": "019c90aa-0003-71cb-874f-835885ebf8c7",
               "position": "Co-Founder",
               "period": "August 2024 - May 2025",
-              "description": ""
+              "description": "Co-founded the company with Denis Cartin; applied to Y Combinator (rejected), then launched independently in Italy, building the inference API and infrastructure."
             }
           ]
         },
