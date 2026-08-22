@@ -8,8 +8,8 @@ import { STACK_SECTIONS } from "@/config/stack"
 
 type Project = (typeof allProjects)[number]
 type Work = (typeof allWorks)[number]
-type SkillItem = { name: string; description: string }
-type LanguageItem = { name: string; description: string }
+type SkillItem = { name: string; keywords: string[] }
+type LanguageItem = { language: string; fluency: string }
 
 function stripHtml(html: string): string {
   return html
@@ -52,15 +52,15 @@ function getSkillsData() {
   const skills = resumeData.sections.skills.items as SkillItem[]
   return skills.map((skill) => ({
     name: skill.name,
-    description: skill.description,
+    keywords: (skill.keywords ?? []).join(", "),
   }))
 }
 
 function getLanguagesData() {
   const languages = resumeData.sections.languages.items as LanguageItem[]
   return languages.map((lang) => ({
-    name: lang.name,
-    description: lang.description,
+    name: lang.language ?? "",
+    fluency: lang.fluency ?? "",
   }))
 }
 

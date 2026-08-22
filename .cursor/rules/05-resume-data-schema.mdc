@@ -1,0 +1,63 @@
+---
+description: data/resume.json schema (Reactive Resume format) — structure, gotchas, design guidelines
+alwaysApply: true
+---
+
+# Resume data schema
+
+`data/resume.json` is a **Reactive Resume** (rxresu.me) export — schema version 5.0.0, `$schema: https://rxresu.me/schema.json`. It is the single source of truth consumed by `lib/chatbot-context.ts` (AI chat context) and `components/app/hero.tsx` / `about-facts.tsx` (basic fields). It is edited by exporting/importing through the Reactive Resume app, or by hand-editing the JSON directly — either way it must stay valid against the real schema below, since it's also meant to re-import cleanly into Reactive Resume.
+
+Full docs: https://docs.rxresu.me (start at `/llms.txt` for the complete page index; `/guides/json-resume-schema.md` has the authoritative field-by-field schema). The AI-powered PDF/DOCX parsing and resume-chat API live under `/api-reference/ai/*` — auth via `x-api-key` header, key stored in `.env.local` as `RXRESUME_API_KEY` (never commit this key or print it in issues/PRs/commits).
+
+## Top-level shape
+
+```
+picture, basics, summary, sections, customSections, metadata
+```
+
+## `basics`
+
+`name, headline, email, phone, location, website: {url, label, inlineLink}, customFields: []`
+
+## `summary`
+
+`title, icon, columns (1-6), hidden, keepTogether, startOnNewPage, content` (content is HTML, not markdown).
+
+## `sections` — 12 built-in keys, each `{ title, icon, columns, hidden, keepTogether, startOnNewPage, items: [] }`
+
+`profiles, experience, education, projects, skills, languages, interests, awards, certifications, publications, volunteer, references`
+
+### Item shapes (the ones that matter here — get these field names exactly right, there is no `description` fallback for skills/languages)
+
+- **experience**: `company, position, location, period, website, description (HTML), roles: []`. `roles` is for career progression within one company — each role is `{ id, position, period, description }`. Use this instead of creating multiple top-level entries for the same company; the top-level `position`/`period` become the summary/overall-tenure line.
+- **education**: `school, degree, area, grade, location, period, website, description (HTML)`.
+- **projects**: `name, period, website, description (HTML)`.
+- **skills**: `name, proficiency, level (0-5), keywords: []`. **No `description` field** — group by category (`name`) and list actual technologies in `keywords`. (`lib/chatbot-context.ts`'s `getSkillsData()` was written against a `{name, description}` shape that never matched this schema — silently latent because `skills.items` was empty for a long time. Fixed 2026-08-21 to read `keywords`; don't reintroduce the mismatch.)
+- **languages**: `language, fluency, level (0-5)`. Field is `language`, not `name`. Also fixed 2026-08-21 for the same reason as skills.
+- **awards** / **certifications**: `title, awarder`/`issuer, date, website, description (HTML)`.
+
+Every item with a `website` field uses the shared shape `{ url, label, inlineLink }`.
+
+## `metadata`
+
+- `template`: one of `azurill, bronzor, chikorita, ditgar, ditto, gengar, glalie, kakuna, lapras, leafish, meowth, onyx, pikachu, rhyhorn, scizor` — purely visual, all support the same sections/features. Current: `lapras`.
+- `layout.pages[0].main` / `.sidebar`: array of section keys controlling render order and column placement. An empty `sidebar` means the resume renders effectively single-column regardless of the template's sidebar support — deliberate here, since two-column "skills sidebar" layouts are a known ATS-parsing risk (many parsers scramble column order).
+- `page`: `gapX/gapY` (pt, spacing between sections), `marginX/marginY` (pt, page margins), `format` (`a4`/`letter`), `locale` (pre-translated section headings), `hideIcons`, `hideSectionIcons`.
+- `design.colors`: `primary, text, background` as `rgba()`. Keep `text`/`background` at black-on-white — ATS-safe, no exotic contrast.
+- `typography.body` / `.heading`: `fontFamily, fontWeights: [], fontSize (pt), lineHeight`.
+- `notes`: HTML, internal-only, never rendered on the resume itself.
+- `styleRules`: array, custom per-element style overrides — empty by default, only touch this for a specific targeted override, not general styling (use `typography`/`design`/`page` for that).
+
+### Typography guidelines (from Reactive Resume's own "fitting content on a page" guide + general 2026 ATS/resume research)
+
+- Body font size: stay in **9–12pt**; below 9pt means there's too much content, not that the font is too small.
+- Heading vs. body line-height should differ: headings are almost always one line, so a heading `lineHeight` matching body (e.g. both at 1.5) reads as excessive whitespace above/below every heading. Keep heading `lineHeight` tight (~1.1–1.2) and body slightly looser for readability (~1.35–1.45) — this was the concrete fix applied 2026-08-21 (both were 1.5, heading dropped to 1.15, body to 1.4).
+- Small, additive adjustments compound: a 0.5pt font reduction plus a slightly smaller `gapY` recovers real space without any single change looking drastic.
+
+## ATS / content guidelines (general research, not Reactive-Resume-specific)
+
+- No photo, no graphics, no icon-only content — anything rendered as an image is invisible to a parser. `picture.hidden`/empty `url` already keeps this safe; don't add a real photo without reconsidering this.
+- Single-column layout only (see `layout.pages[0].sidebar: []` above).
+- Use full technology names, not abbreviations, in skills/keywords and descriptions (`PostgreSQL` not `Postgres`, `TypeScript` not `TS`) — modern ATS keyword-matching penalizes inconsistent naming rather than rewarding abbreviation.
+- Populate `skills` — it's checked directly by ATS keyword matching and was empty here for a long time; don't let it go empty again.
+- Never invent metrics, dates, or company facts to fill a gap. If a fact isn't confirmed, leave the item out or flag it explicitly rather than guessing — this file represents a real person's professional history, not sample content.
