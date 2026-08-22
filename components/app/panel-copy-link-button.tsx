@@ -9,11 +9,11 @@ import { cn } from "@/lib/utils"
 import { Icons } from "@/components/shared/icons"
 
 /**
- * Copy-link button for a section's anchor URL. Hidden until the enclosing
- * Panel (a `group/panel`, only set when the Panel has an `id`) is hovered,
- * then fades in slowly -- not hover-on-the-button-itself, hover-anywhere-in-
- * the-section. `focus-visible` still reveals it for keyboard navigation,
- * since focus can't be discovered by hovering.
+ * Copy-link button for a section's anchor URL. Hidden until its nearest
+ * `group/title` ancestor (the title row this button sits next to, not the
+ * whole section) is hovered, then fades in slowly. `focus-visible` still
+ * reveals it for keyboard navigation, since focus can't be discovered by
+ * hovering.
  */
 export function PanelCopyLinkButton({
   sectionId,
@@ -34,7 +34,7 @@ export function PanelCopyLinkButton({
       onClick={handleClick}
       aria-label={`Copy link to this section`}
       className={cn(
-        "text-muted-foreground hover:text-foreground inline-flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover/panel:opacity-100 focus-visible:opacity-100",
+        "text-muted-foreground hover:text-foreground inline-flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover/title:opacity-100 focus-visible:opacity-100",
         className
       )}
     >

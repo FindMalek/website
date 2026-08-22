@@ -21,7 +21,7 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
   return (
     <section
       id="playlists"
-      className="group/panel mb-32 [scroll-margin-top:var(--header-height,6rem)]"
+      className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
     >
       <SectionHeading
         title="Music"

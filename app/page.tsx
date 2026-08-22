@@ -139,7 +139,7 @@ export default async function Home() {
 
       <Panel id="work">
         <PanelHeader>
-          <div className="flex items-center gap-1.5">
+          <div className="group/title flex items-center gap-1.5">
             <PanelTitle>
               Work
               <PanelTitleSup>({workGroups.length})</PanelTitleSup>
@@ -187,7 +187,7 @@ export default async function Home() {
 
       <Panel id="projects">
         <PanelHeader>
-          <div className="flex items-center gap-1.5">
+          <div className="group/title flex items-center gap-1.5">
             <PanelTitle>
               Projects
               <PanelTitleSup>({orderedProjects.length})</PanelTitleSup>
@@ -211,9 +211,9 @@ export default async function Home() {
 
           <div
             id="open-source"
-            className="group/panel [scroll-margin-top:var(--header-height,6rem)]"
+            className="[scroll-margin-top:var(--header-height,6rem)]"
           >
-            <h3 className="mb-4 mt-12 flex items-center gap-1.5 text-xl font-semibold">
+            <h3 className="group/title mb-4 mt-12 flex items-center gap-1.5 text-xl font-semibold">
               Open Source
               <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
               <PanelCopyLinkButton sectionId="open-source" />
@@ -231,7 +231,7 @@ export default async function Home() {
 
       <Panel id="stack">
         <PanelHeader>
-          <div className="flex items-center gap-1.5">
+          <div className="group/title flex items-center gap-1.5">
             <PanelTitle>
               Stack
               <PanelTitleSup>({stackItemCount})</PanelTitleSup>

@@ -46,7 +46,7 @@ export function SectionHeading({
       )}
     >
       <div>
-        <h2 className="mb-2 flex items-center gap-1.5 text-3xl font-bold">
+        <h2 className="group/title mb-2 flex items-center gap-1.5 text-3xl font-bold">
           {title}
           {count !== undefined && (
             <sup className="text-muted-foreground top-[-0.75em] ml-2.5 text-sm font-medium tracking-normal">
