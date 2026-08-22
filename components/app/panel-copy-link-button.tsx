@@ -41,7 +41,7 @@ export function PanelCopyLinkButton({
       {copied ? (
         <Icons.check className="size-3.5" aria-hidden />
       ) : (
-        <Icons.copy className="size-3.5" aria-hidden />
+        <Icons.link className="size-3.5" aria-hidden />
       )}
     </button>
   )

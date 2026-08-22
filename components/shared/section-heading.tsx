@@ -3,6 +3,8 @@ import Link from "next/link"
 import { link } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
+import { PanelCopyLinkButton } from "@/components/app/panel-copy-link-button"
+
 interface Direct {
   href: string
   text: string
@@ -11,6 +13,13 @@ interface Direct {
 
 interface SectionHeadingProps {
   id?: string
+  /**
+   * Section anchor to copy a link to, e.g. "playlists" -> /#playlists.
+   * Separate from `id` (the actual DOM id) since the enclosing <section>
+   * often already owns that id -- setting both here would create a
+   * duplicate DOM id.
+   */
+  copyLinkSectionId?: string
   title: string
   count?: number
   description?: string
@@ -20,6 +29,7 @@ interface SectionHeadingProps {
 
 export function SectionHeading({
   id,
+  copyLinkSectionId,
   title,
   count,
   description,
@@ -36,12 +46,15 @@ export function SectionHeading({
       )}
     >
       <div>
-        <h2 className="mb-2 text-3xl font-bold">
+        <h2 className="mb-2 flex items-center gap-1.5 text-3xl font-bold">
           {title}
           {count !== undefined && (
             <sup className="text-muted-foreground top-[-0.75em] ml-2.5 text-sm font-medium tracking-normal">
               ({count})
             </sup>
+          )}
+          {copyLinkSectionId && (
+            <PanelCopyLinkButton sectionId={copyLinkSectionId} />
           )}
         </h2>
         {description && (

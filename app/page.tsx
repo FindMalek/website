@@ -63,10 +63,7 @@ export default async function Home() {
 
       <Panel id="about">
         <PanelHeader>
-          <div className="flex items-center gap-1.5">
-            <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
-            <PanelCopyLinkButton sectionId="about" />
-          </div>
+          <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
           <PanelDescription>
             I&apos;m a Design Engineer, Founder, and Product Builder based in
             Monastir, Tunisia.
@@ -212,14 +209,20 @@ export default async function Home() {
             className="flex flex-col"
           />
 
-          <h3 className="mb-4 mt-12 text-xl font-semibold">
-            Open Source
-            <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
-          </h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            {sortedOpenSourceProjects.map((project) => (
-              <ProjectOpenSourceCard key={project.name} project={project} />
-            ))}
+          <div
+            id="open-source"
+            className="group/panel [scroll-margin-top:var(--header-height,6rem)]"
+          >
+            <h3 className="mb-4 mt-12 flex items-center gap-1.5 text-xl font-semibold">
+              Open Source
+              <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
+              <PanelCopyLinkButton sectionId="open-source" />
+            </h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              {sortedOpenSourceProjects.map((project) => (
+                <ProjectOpenSourceCard key={project.name} project={project} />
+              ))}
+            </div>
           </div>
         </PanelContent>
       </Panel>
