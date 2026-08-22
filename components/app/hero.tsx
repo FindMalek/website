@@ -3,7 +3,13 @@ import resumeData from "@/data/resume.json"
 import { siteConfig } from "@/config/site"
 
 import { PronounceNameButton } from "@/components/app/pronounce-name-button"
+import { RotatingSubtitle } from "@/components/app/rotating-subtitle"
 import { Avatar } from "@/components/shared/avatar"
+
+const SUBTITLE_LINES = [
+  resumeData.basics.headline,
+  "i like listening to music and coding :)",
+]
 
 export function Hero() {
   return (
@@ -19,9 +25,7 @@ export function Hero() {
             <PronounceNameButton name={siteConfig.author.name} />
           </div>
 
-          <p className="text-muted-foreground text-base">
-            {resumeData.basics.headline}
-          </p>
+          <RotatingSubtitle lines={SUBTITLE_LINES} />
         </div>
       </div>
     </section>
