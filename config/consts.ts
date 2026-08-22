@@ -151,6 +151,7 @@ export const REPOSITORIES = [
   "https://github.com/FindMalek/muslim-fasting",
   "https://github.com/FindMalek/findauth",
   "https://github.com/FindMalek/syncify",
+  "https://github.com/FindMalek/Photomater",
 ]
 
 export const LANGUAGES_COLORS = {
