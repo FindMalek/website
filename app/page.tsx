@@ -29,6 +29,7 @@ import {
   PanelDescription,
   PanelHeader,
   PanelTitle,
+  PanelTitleSup,
 } from "@/components/app/panel"
 import { ProjectItem } from "@/components/app/project-item"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
@@ -48,6 +49,10 @@ export default async function Home() {
   const orderedProjects = sortProjectsByStatus(allProjects)
   const openSourceProjects = await getMultipleRepoInfo(REPOSITORIES)
   const sortedOpenSourceProjects = sortProjectsByStars(openSourceProjects)
+  const stackItemCount = STACK_SECTIONS.reduce(
+    (total, section) => total + section.items.length,
+    0
+  )
 
   return (
     <div className="w-full">
@@ -133,7 +138,10 @@ export default async function Home() {
 
       <Panel id="work">
         <PanelHeader>
-          <PanelTitle>Work</PanelTitle>
+          <PanelTitle>
+            Work
+            <PanelTitleSup>{workGroups.length}</PanelTitleSup>
+          </PanelTitle>
           <PanelDescription>
             I&apos;ve been fortunate to work with some amazing companies and
             people.
@@ -174,7 +182,10 @@ export default async function Home() {
 
       <Panel id="projects">
         <PanelHeader>
-          <PanelTitle>Projects</PanelTitle>
+          <PanelTitle>
+            Projects
+            <PanelTitleSup>{orderedProjects.length}</PanelTitleSup>
+          </PanelTitle>
           <PanelDescription>
             I love shipping products and open source software.
           </PanelDescription>
@@ -203,7 +214,10 @@ export default async function Home() {
 
       <Panel id="stack">
         <PanelHeader>
-          <PanelTitle>Stack</PanelTitle>
+          <PanelTitle>
+            Stack
+            <PanelTitleSup>{stackItemCount}</PanelTitleSup>
+          </PanelTitle>
           <PanelDescription>
             Tools, technology and apps I use every day.
           </PanelDescription>
