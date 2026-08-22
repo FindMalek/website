@@ -22,7 +22,7 @@ export function RotatingSubtitle({ lines }: { lines: string[] }) {
   }
 
   return (
-    <p className="text-muted-foreground relative block h-6 overflow-hidden text-base">
+    <p className="text-muted-foreground min-h-6 text-base">
       <AnimatePresence mode="wait">
         <motion.span
           key={lines[index]}
@@ -30,7 +30,7 @@ export function RotatingSubtitle({ lines }: { lines: string[] }) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -12, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="absolute inset-0"
+          className="block"
         >
           {lines[index]}
         </motion.span>
