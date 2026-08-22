@@ -197,7 +197,7 @@
           "id": "019c80f9-2f7a-723e-9926-fad98306180d",
           "hidden": false,
           "company": "Function03 Labs",
-          "position": "UX Engineer & Blockchain Developer",
+          "position": "",
           "location": "San Francisco, USA (Remote)",
           "period": "June 2023 - August 2024",
           "website": {
@@ -206,7 +206,20 @@
             "inlineLink": false
           },
           "description": "<ul><li><p>Built <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://docs.walletlabels.xyz/endpoint/ethereum/label\">WalletLabels</a> admin dashboard and API tooling.</p></li><li><p>Automated API key generation and blacklist endpoint.</p></li><li><p>Improved UX and architecture of <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://zero.tally.xyz/\">TallyZero</a> voting platform.</p></li><li><p>Contributed to <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://v4.uniswap.org/\">UniswapHooks</a> marketing rebuild.</p></li></ul><p></p>",
-          "roles": []
+          "roles": [
+            {
+              "id": "019c90aa-0021-71cb-874f-835885ebf8e1",
+              "position": "UX Engineer & Blockchain Developer",
+              "period": "February 2024 - August 2024",
+              "description": "Moved to full-time, building WalletLabels, refactoring TallyZero, and contributing to the UniswapHooks rebrand."
+            },
+            {
+              "id": "019c90aa-0022-71cb-874f-835885ebf8e2",
+              "position": "UX Engineer",
+              "period": "June 2023 - February 2024",
+              "description": "Joined part-time, working on front-end and UX improvements before moving to full-time."
+            }
+          ]
         },
         {
           "id": "019c90aa-0004-71cb-874f-835885ebf8c8",
