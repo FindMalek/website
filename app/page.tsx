@@ -31,6 +31,7 @@ import {
   PanelTitle,
   PanelTitleSup,
 } from "@/components/app/panel"
+import { PanelCopyLinkButton } from "@/components/app/panel-copy-link-button"
 import { ProjectItem } from "@/components/app/project-item"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
@@ -62,7 +63,10 @@ export default async function Home() {
 
       <Panel id="about">
         <PanelHeader>
-          <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
+          <div className="flex items-center gap-1.5">
+            <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
+            <PanelCopyLinkButton sectionId="about" />
+          </div>
           <PanelDescription>
             I&apos;m a Design Engineer, Founder, and Product Builder based in
             Monastir, Tunisia.
@@ -138,10 +142,13 @@ export default async function Home() {
 
       <Panel id="work">
         <PanelHeader>
-          <PanelTitle>
-            Work
-            <PanelTitleSup>({workGroups.length})</PanelTitleSup>
-          </PanelTitle>
+          <div className="flex items-center gap-1.5">
+            <PanelTitle>
+              Work
+              <PanelTitleSup>({workGroups.length})</PanelTitleSup>
+            </PanelTitle>
+            <PanelCopyLinkButton sectionId="work" />
+          </div>
           <PanelDescription>
             I&apos;ve been fortunate to work with some amazing companies and
             people.
@@ -183,10 +190,13 @@ export default async function Home() {
 
       <Panel id="projects">
         <PanelHeader>
-          <PanelTitle>
-            Projects
-            <PanelTitleSup>({orderedProjects.length})</PanelTitleSup>
-          </PanelTitle>
+          <div className="flex items-center gap-1.5">
+            <PanelTitle>
+              Projects
+              <PanelTitleSup>({orderedProjects.length})</PanelTitleSup>
+            </PanelTitle>
+            <PanelCopyLinkButton sectionId="projects" />
+          </div>
           <PanelDescription>
             I love shipping products and open source software.
           </PanelDescription>
@@ -218,10 +228,13 @@ export default async function Home() {
 
       <Panel id="stack">
         <PanelHeader>
-          <PanelTitle>
-            Stack
-            <PanelTitleSup>({stackItemCount})</PanelTitleSup>
-          </PanelTitle>
+          <div className="flex items-center gap-1.5">
+            <PanelTitle>
+              Stack
+              <PanelTitleSup>({stackItemCount})</PanelTitleSup>
+            </PanelTitle>
+            <PanelCopyLinkButton sectionId="stack" />
+          </div>
           <PanelDescription>
             Tools, technology and apps I use every day.
           </PanelDescription>
