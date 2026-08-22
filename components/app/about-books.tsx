@@ -9,7 +9,11 @@ export function AboutBooks() {
       id="readings"
       className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
     >
-      <SectionHeading title="Reading list" count={BOOKS.length} />
+      <SectionHeading
+        title="Reading list"
+        count={BOOKS.length}
+        copyLinkSectionId="readings"
+      />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {BOOKS.map((book) => (
           <AboutBooksItem key={book.id} book={book} />

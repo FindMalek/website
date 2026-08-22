@@ -31,6 +31,7 @@ import {
   PanelTitle,
   PanelTitleSup,
 } from "@/components/app/panel"
+import { PanelCopyLinkButton } from "@/components/app/panel-copy-link-button"
 import { ProjectItem } from "@/components/app/project-item"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
@@ -138,10 +139,13 @@ export default async function Home() {
 
       <Panel id="work">
         <PanelHeader>
-          <PanelTitle>
-            Work
-            <PanelTitleSup>({workGroups.length})</PanelTitleSup>
-          </PanelTitle>
+          <div className="group/title flex items-center gap-1.5">
+            <PanelTitle>
+              Work
+              <PanelTitleSup>({workGroups.length})</PanelTitleSup>
+            </PanelTitle>
+            <PanelCopyLinkButton sectionId="work" />
+          </div>
           <PanelDescription>
             I&apos;ve been fortunate to work with some amazing companies and
             people.
@@ -183,10 +187,13 @@ export default async function Home() {
 
       <Panel id="projects">
         <PanelHeader>
-          <PanelTitle>
-            Projects
-            <PanelTitleSup>({orderedProjects.length})</PanelTitleSup>
-          </PanelTitle>
+          <div className="group/title flex items-center gap-1.5">
+            <PanelTitle>
+              Projects
+              <PanelTitleSup>({orderedProjects.length})</PanelTitleSup>
+            </PanelTitle>
+            <PanelCopyLinkButton sectionId="projects" />
+          </div>
           <PanelDescription>
             I love shipping products and open source software.
           </PanelDescription>
@@ -202,14 +209,20 @@ export default async function Home() {
             className="flex flex-col"
           />
 
-          <h3 className="mb-4 mt-12 text-xl font-semibold">
-            Open Source
-            <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
-          </h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            {sortedOpenSourceProjects.map((project) => (
-              <ProjectOpenSourceCard key={project.name} project={project} />
-            ))}
+          <div
+            id="open-source"
+            className="[scroll-margin-top:var(--header-height,6rem)]"
+          >
+            <h3 className="group/title mb-4 mt-12 flex items-center gap-1.5 text-xl font-semibold">
+              Open Source
+              <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
+              <PanelCopyLinkButton sectionId="open-source" />
+            </h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              {sortedOpenSourceProjects.map((project) => (
+                <ProjectOpenSourceCard key={project.name} project={project} />
+              ))}
+            </div>
           </div>
         </PanelContent>
       </Panel>
@@ -218,10 +231,13 @@ export default async function Home() {
 
       <Panel id="stack">
         <PanelHeader>
-          <PanelTitle>
-            Stack
-            <PanelTitleSup>({stackItemCount})</PanelTitleSup>
-          </PanelTitle>
+          <div className="group/title flex items-center gap-1.5">
+            <PanelTitle>
+              Stack
+              <PanelTitleSup>({stackItemCount})</PanelTitleSup>
+            </PanelTitle>
+            <PanelCopyLinkButton sectionId="stack" />
+          </div>
           <PanelDescription>
             Tools, technology and apps I use every day.
           </PanelDescription>

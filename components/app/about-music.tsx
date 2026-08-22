@@ -26,6 +26,7 @@ export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
       <SectionHeading
         title="Music"
         count={playlists.length}
+        copyLinkSectionId="playlists"
         description="I love listening to music and creating playlists"
         direct={{
           href: siteConfig.links.spotify,
