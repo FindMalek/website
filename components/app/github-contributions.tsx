@@ -1,7 +1,7 @@
 "use client"
 
 import { use } from "react"
-import { format } from "date-fns"
+import { format, parseISO } from "date-fns"
 
 import { cn } from "@/lib/utils"
 
@@ -56,7 +56,7 @@ export function GitHubContributions({
             <TooltipContent className="font-sans">
               <p>
                 {activity.count} contribution{activity.count > 1 ? "s" : null}{" "}
-                on {format(new Date(activity.date), "MMM d, yyyy")}
+                on {format(parseISO(activity.date), "MMM d, yyyy")}
               </p>
             </TooltipContent>
           </Tooltip>
