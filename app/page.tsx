@@ -210,9 +210,14 @@ export default async function Home() {
         </PanelHeader>
 
         <PanelContent>
-          {STACK_SECTIONS.map((section, index) => (
-            <StackSection key={index} section={section} index={index} />
-          ))}
+          <CollapsibleList
+            items={STACK_SECTIONS.map((section, index) => (
+              <StackSection key={index} section={section} index={index} />
+            ))}
+            initialCount={5}
+            step={4}
+            className="flex flex-col"
+          />
         </PanelContent>
       </Panel>
     </div>
