@@ -5,7 +5,6 @@ import Link from "next/link"
 import { OpenSourceProject } from "@/types"
 
 import { Icons } from "@/components/shared/icons"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
 export function ProjectOpenSourceCard({
   project,
@@ -22,35 +21,24 @@ export function ProjectOpenSourceCard({
       href={project.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-foreground block h-full no-underline"
+      className="text-foreground group bg-secondary/30 border-foreground/20 hover:border-primary/30 hover:bg-muted/50 flex items-center justify-between gap-3 rounded-lg border px-3 py-2 no-underline transition-colors duration-300"
     >
-      <Card className="bg-secondary/30 border-foreground/20 hover:border-primary/30 hover:bg-muted/50 group h-full w-full max-w-md border transition-all duration-300 hover:shadow-md">
-        <CardHeader className="px-4 md:px-5">
-          <h3 className="flex items-center text-base font-semibold md:text-lg">
-            {project.name}
-          </h3>
-        </CardHeader>
-        <CardContent className="-mt-6 space-y-3 px-4 md:px-5">
-          <p className="text-muted-foreground line-clamp-2 text-sm">
-            {project.description}
-          </p>
-          <div className="flex items-center gap-3 text-xs md:text-sm">
-            {project.language && (
-              <div className="flex items-center gap-1.5">
-                <span
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: project.languageColor }}
-                />
-                <span>{project.language}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-1">
-              <Icons.star className="h-3.5 w-3.5 fill-amber-400/90 stroke-amber-400 transition-all duration-300 group-hover:rotate-[8deg] group-hover:scale-110 group-hover:fill-amber-400 md:h-4 md:w-4" />
-              <span className="font-medium">{formattedStars}</span>
-            </div>
+      <h3 className="truncate text-sm font-medium">{project.name}</h3>
+      <div className="flex shrink-0 items-center gap-3 text-xs">
+        {project.language && (
+          <div className="flex items-center gap-1.5">
+            <span
+              className="h-2 w-2 rounded-full"
+              style={{ backgroundColor: project.languageColor }}
+            />
+            <span className="text-muted-foreground">{project.language}</span>
           </div>
-        </CardContent>
-      </Card>
+        )}
+        <div className="flex items-center gap-1">
+          <Icons.star className="h-3 w-3 fill-amber-400/90 stroke-amber-400 transition-all duration-300 group-hover:rotate-[8deg] group-hover:scale-110 group-hover:fill-amber-400" />
+          <span className="font-medium">{formattedStars}</span>
+        </div>
+      </div>
     </Link>
   )
 }

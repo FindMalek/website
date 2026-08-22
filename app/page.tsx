@@ -218,10 +218,10 @@ export default async function Home() {
               <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
               <PanelCopyLinkButton sectionId="open-source" />
             </h3>
-            <div className="grid gap-4 md:grid-cols-2">
-              {sortedOpenSourceProjects.map((project) => (
-                <ProjectOpenSourceCard key={project.name} project={project} />
-              ))}
+           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {sortedOpenSourceProjects.map((project) => (
+              <ProjectOpenSourceCard key={project.name} project={project} />
+            ))}
             </div>
           </div>
         </PanelContent>
