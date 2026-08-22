@@ -66,6 +66,19 @@
             "label": "",
             "inlineLink": false
           }
+        },
+        {
+          "id": "019c90aa-0020-71cb-874f-835885ebf8e0",
+          "hidden": false,
+          "icon": "instagram-logo",
+          "iconColor": "",
+          "network": "Instagram",
+          "username": "findmalek",
+          "website": {
+            "url": "https://go.findmalek.com/ig",
+            "label": "",
+            "inlineLink": false
+          }
         }
       ]
     },
@@ -134,14 +147,14 @@
             "label": "qtech-company.com",
             "inlineLink": false
           },
-          "description": "<ul><li><p>Developed the company's marketing website and built RAG-based document-processing systems for enterprise clients.</p></li></ul><p></p>",
+          "description": "<ul><li><p>Developed the company's marketing website and built RAG-based document-processing systems for enterprise clients.</p></li><li><p>Built a context-aware support chatbot: parses uploaded PDFs, vectorizes content, and retrieves across multiple knowledge sources, with a router agent selecting which source to query per question.</p></li><li><p>Designed a multi-agent pipeline that retrieves, enhances, and self-improves its own context from user questions over time.</p></li></ul><p></p>",
           "roles": []
         },
         {
           "id": "019c8102-56be-736d-bd30-7361b8ca8b14",
           "hidden": false,
           "company": "Undrstnd Labs",
-          "position": "Founder & CTO",
+          "position": "",
           "location": "Remote",
           "period": "August 2024 - June 2025",
           "website": {
@@ -196,21 +209,6 @@
           "roles": []
         },
         {
-          "id": "019c90aa-0008-71cb-874f-835885ebf8cc",
-          "hidden": false,
-          "company": "Digital Army",
-          "position": "Web Developer",
-          "location": "Ariana, Tunisia (Remote)",
-          "period": "February 2021 - May 2023",
-          "website": {
-            "url": "https://digital-army.clients.malek.engineering",
-            "label": "",
-            "inlineLink": false
-          },
-          "description": "<ul><li><p>Built a professional portfolio website using React, Next.js, and Tailwind CSS.</p></li><li><p>Built a custom Shopify template and AI-assisted product pipeline for LilyPharma, an e-commerce client — uploaded 1,000+ products with AI-generated images and descriptions.</p></li></ul><p></p>",
-          "roles": []
-        },
-        {
           "id": "019c80f9-2f7a-723e-9926-fad98306180d",
           "hidden": false,
           "company": "Function03 Labs",
@@ -223,6 +221,21 @@
             "inlineLink": false
           },
           "description": "<ul><li><p>Built <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://docs.walletlabels.xyz/endpoint/ethereum/label\">WalletLabels</a> admin dashboard and API tooling.</p></li><li><p>Automated API key generation and blacklist endpoint.</p></li><li><p>Improved UX and architecture of <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://zero.tally.xyz/\">TallyZero</a> voting platform.</p></li><li><p>Contributed to <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://v4.uniswap.org/\">UniswapHooks</a> marketing rebuild.</p></li></ul><p></p>",
+          "roles": []
+        },
+        {
+          "id": "019c90aa-0008-71cb-874f-835885ebf8cc",
+          "hidden": false,
+          "company": "Digital Army",
+          "position": "Web Developer",
+          "location": "Ariana, Tunisia (Remote)",
+          "period": "February 2021 - May 2023",
+          "website": {
+            "url": "https://digital-army.clients.malek.engineering",
+            "label": "",
+            "inlineLink": false
+          },
+          "description": "<ul><li><p>Built a professional portfolio website using React, Next.js, and Tailwind CSS.</p></li><li><p>Built a custom Shopify template and AI-assisted product pipeline for LilyPharma, an e-commerce client — uploaded 1,000+ products with AI-generated images and descriptions.</p></li></ul><p></p>",
           "roles": []
         }
       ]
@@ -335,7 +348,7 @@
           "name": "Harmonia",
           "period": "",
           "website": {
-            "url": "https://harmonia-api.vercel.app",
+            "url": "https://harmonia.malek.engineering",
             "label": "",
             "inlineLink": false
           },
@@ -356,10 +369,20 @@
           "hidden": false,
           "icon": "",
           "iconColor": "",
+          "name": "Languages",
+          "proficiency": "",
+          "level": 0,
+          "keywords": ["TypeScript", "JavaScript", "Go", "Python", "Java", "C", "C++"]
+        },
+        {
+          "id": "019c90aa-0016-71cb-874f-835885ebf8d6",
+          "hidden": false,
+          "icon": "",
+          "iconColor": "",
           "name": "Frontend",
           "proficiency": "",
           "level": 0,
-          "keywords": ["React", "Next.js", "TypeScript", "Svelte", "TailwindCSS"]
+          "keywords": ["React", "Next.js", "Svelte", "TailwindCSS", "shadcn/ui"]
         },
         {
           "id": "019c90aa-0011-71cb-874f-835885ebf8d1",
@@ -369,17 +392,17 @@
           "name": "AI / LLM Engineering",
           "proficiency": "",
           "level": 0,
-          "keywords": ["Vercel AI SDK", "Mastra", "Braintrust", "Groq", "LangChain", "Prompt Engineering", "Evaluation Frameworks", "Retrieval-Augmented Generation (RAG)"]
+          "keywords": ["Vercel AI SDK", "Mastra", "Braintrust", "Groq", "LangChain", "Retrieval-Augmented Generation (RAG)", "Vector Databases (Pinecone)", "Prompt Engineering", "Evaluation Frameworks", "LLM Pipelines", "Multi-Agent Systems"]
         },
         {
           "id": "019c90aa-0012-71cb-874f-835885ebf8d2",
           "hidden": false,
           "icon": "",
           "iconColor": "",
-          "name": "Backend & Data",
+          "name": "Backend & Databases",
           "proficiency": "",
           "level": 0,
-          "keywords": ["Node.js", "Go", "PostgreSQL", "Prisma", "oRPC", "BetterAuth"]
+          "keywords": ["Node.js", "PostgreSQL", "MongoDB", "Prisma", "Supabase", "Neon", "oRPC", "BetterAuth"]
         },
         {
           "id": "019c90aa-0013-71cb-874f-835885ebf8d3",
@@ -396,20 +419,40 @@
           "hidden": false,
           "icon": "",
           "iconColor": "",
-          "name": "Infrastructure & Tooling",
+          "name": "Infrastructure & DevOps",
           "proficiency": "",
           "level": 0,
-          "keywords": ["Docker", "Coolify", "Trigger.dev", "Turborepo"]
+          "keywords": ["Docker", "Coolify", "Trigger.dev", "Turborepo", "pnpm", "GitHub Actions", "CI/CD", "Vercel", "IPFS (Fleek)"]
         },
         {
           "id": "019c90aa-0015-71cb-874f-835885ebf8d5",
           "hidden": false,
           "icon": "",
           "iconColor": "",
-          "name": "Commerce Platforms",
+          "name": "Commerce & Payments",
           "proficiency": "",
           "level": 0,
           "keywords": ["Shopify", "Stripe"]
+        },
+        {
+          "id": "019c90aa-0017-71cb-874f-835885ebf8d7",
+          "hidden": false,
+          "icon": "",
+          "iconColor": "",
+          "name": "Web3 / Blockchain",
+          "proficiency": "",
+          "level": 0,
+          "keywords": ["Ethers.js", "Web3Modal"]
+        },
+        {
+          "id": "019c90aa-0018-71cb-874f-835885ebf8d8",
+          "hidden": false,
+          "icon": "",
+          "iconColor": "",
+          "name": "Automation & Tooling",
+          "proficiency": "",
+          "level": 0,
+          "keywords": ["Web Scraping", "CLI Development", "Adobe Photoshop Automation"]
         }
       ]
     },
@@ -535,7 +578,7 @@
   "metadata": {
     "template": "lapras",
     "layout": {
-      "sidebarWidth": 45.17,
+      "sidebarWidth": 10,
       "pages": [
         {
           "fullWidth": false,
@@ -565,7 +608,7 @@
     "page": {
       "gapX": 4,
       "gapY": 5,
-      "marginX": 14,
+      "marginX": 11,
       "marginY": 12,
       "format": "a4",
       "locale": "en-US",
@@ -588,7 +631,7 @@
         "fontFamily": "Inter",
         "fontWeights": ["400", "600"],
         "fontSize": 10.5,
-        "lineHeight": 1.4
+        "lineHeight": 1.3
       },
       "heading": {
         "fontFamily": "Inter",
