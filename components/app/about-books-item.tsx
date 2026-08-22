@@ -41,9 +41,9 @@ export function AboutBooksItem({ book }: { book: Book }) {
 
         <div
           className={cn(
-            "relative overflow-hidden rounded-sm shadow-[0_1px_2px_rgba(0,0,0,0.15)] transition-transform duration-300",
+            "relative origin-left overflow-hidden rounded-sm shadow-[0_1px_2px_rgba(0,0,0,0.15)] transition-transform duration-500 ease-out",
             "after:pointer-events-none after:absolute after:inset-0 after:rounded-sm after:bg-[linear-gradient(90deg,rgba(0,0,0,0.118)_0.65%,rgba(255,255,255,0.2)_1.53%,rgba(255,255,255,0.1)_2.38%,rgba(0,0,0,0.05)_3.26%,rgba(255,255,255,0.14)_5.68%,rgba(244,244,244,0)_6.96%)] after:shadow-[inset_0_0_0_1px_rgba(15,15,15,0.1)] after:content-['']",
-            "group-hover:[transform:rotateY(-8deg)]"
+            "group-hover:shadow-[4px_4px_10px_rgba(0,0,0,0.2)] group-hover:[transform:rotateY(-25deg)]"
           )}
         >
           {book.image ? (
