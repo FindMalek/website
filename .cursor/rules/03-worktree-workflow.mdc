@@ -16,6 +16,15 @@ git worktree add .claude/worktrees/<short-descriptive-name> -b <prefix>/<issue-n
 - Branch name uses the repo's commit-prefix convention from `00-project-overview.mdc` (`content/`, `design/`, `feat/`, `fix/`, `chore/`, `infra/`), followed by the issue number and a short slug — e.g. `infra/75-claude-rules`, `content/66-cv-timeline`.
 - Worktree directory name should be descriptive of the work, not an opaque generated ID (e.g. `.claude/worktrees/infra-75-claude-rules`, not `.claude/worktrees/agent-a19ca11eec37fb1d4`). Opaque IDs make later cleanup/triage much harder — this happened for real (see below) and cost real time to unwind.
 
+## Installing dependencies in a worktree
+
+Worktrees don't share `node_modules`/`.env.local` with the main tree (gitignored, not copied by `git worktree add`). Since the pnpm 11 upgrade (#85/#87), **do not symlink `node_modules` from the main tree** — pnpm 11 refuses to operate through a symlink whose target isn't a strict subdirectory of the project root (`ERR_PNPM_UNSAFE_MODULES_DIR`), and Turbopack has its own, separate rejection of the same pattern if the symlink's path casing doesn't exactly match (`Symlink [...] is invalid, it points out of the filesystem root` — hit for real on 2026-08-21 from a lowercase/uppercase `Projects` vs `projects` path mismatch). Run a real `pnpm install` in each worktree instead:
+
+```
+ln -s /Users/findmalek/Projects/findmalek/.env.local .env.local   # env vars are fine to symlink, no pnpm/Turbopack involvement
+pnpm install                                                       # real, independent install -- do not symlink node_modules
+```
+
 ## Mandatory cleanup
 
 **As soon as a worktree's branch is merged (or its PR is closed without merging), remove it immediately:**
