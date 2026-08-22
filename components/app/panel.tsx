@@ -17,7 +17,7 @@ export function Panel({ id, className, ...props }: PanelProps) {
       id={id}
       className={cn(
         "screen-line-top screen-line-bottom border-line border-x",
-        id && "[scroll-margin-top:var(--header-height,6rem)]",
+        id && "group/panel [scroll-margin-top:var(--header-height,6rem)]",
         className
       )}
       {...props}
