@@ -12,6 +12,7 @@ interface Direct {
 interface SectionHeadingProps {
   id?: string
   title: string
+  count?: number
   description?: string
   direct?: Direct
   className?: string
@@ -20,6 +21,7 @@ interface SectionHeadingProps {
 export function SectionHeading({
   id,
   title,
+  count,
   description,
   direct,
   className,
@@ -34,7 +36,14 @@ export function SectionHeading({
       )}
     >
       <div>
-        <h2 className="mb-2 text-3xl font-bold">{title}</h2>
+        <h2 className="mb-2 text-3xl font-bold">
+          {title}
+          {count !== undefined && (
+            <sup className="text-muted-foreground top-[-0.75em] ml-2.5 text-sm font-medium tracking-normal">
+              ({count})
+            </sup>
+          )}
+        </h2>
         {description && (
           <p className="text-secondary-foreground/80">{description}</p>
         )}

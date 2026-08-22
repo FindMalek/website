@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import Link from "next/link"
 import { allProjects, allWorks } from "content-collections"
 
-import { REPOSITORIES } from "@/config/consts"
+import { CLIENTS, REPOSITORIES } from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
 import { getCachedContributions } from "@/lib/get-cached-contributions"
 import {
@@ -140,7 +140,7 @@ export default async function Home() {
         <PanelHeader>
           <PanelTitle>
             Work
-            <PanelTitleSup>{workGroups.length}</PanelTitleSup>
+            <PanelTitleSup>({workGroups.length})</PanelTitleSup>
           </PanelTitle>
           <PanelDescription>
             I&apos;ve been fortunate to work with some amazing companies and
@@ -170,6 +170,7 @@ export default async function Home() {
         <PanelHeader>
           <PanelTitle className="text-lg">
             Companies I&apos;ve worked with
+            <PanelTitleSup>({CLIENTS.length})</PanelTitleSup>
           </PanelTitle>
         </PanelHeader>
 
@@ -184,7 +185,7 @@ export default async function Home() {
         <PanelHeader>
           <PanelTitle>
             Projects
-            <PanelTitleSup>{orderedProjects.length}</PanelTitleSup>
+            <PanelTitleSup>({orderedProjects.length})</PanelTitleSup>
           </PanelTitle>
           <PanelDescription>
             I love shipping products and open source software.
@@ -201,7 +202,10 @@ export default async function Home() {
             className="flex flex-col"
           />
 
-          <h3 className="mb-4 mt-12 text-xl font-semibold">Open Source</h3>
+          <h3 className="mb-4 mt-12 text-xl font-semibold">
+            Open Source
+            <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
+          </h3>
           <div className="grid gap-4 md:grid-cols-2">
             {sortedOpenSourceProjects.map((project) => (
               <ProjectOpenSourceCard key={project.name} project={project} />
@@ -216,7 +220,7 @@ export default async function Home() {
         <PanelHeader>
           <PanelTitle>
             Stack
-            <PanelTitleSup>{stackItemCount}</PanelTitleSup>
+            <PanelTitleSup>({stackItemCount})</PanelTitleSup>
           </PanelTitle>
           <PanelDescription>
             Tools, technology and apps I use every day.
