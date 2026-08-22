@@ -206,7 +206,7 @@ export default async function Home() {
             Open Source
             <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
           </h3>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {sortedOpenSourceProjects.map((project) => (
               <ProjectOpenSourceCard key={project.name} project={project} />
             ))}
