@@ -52,15 +52,15 @@ function getSkillsData() {
   const skills = resumeData.sections.skills.items as SkillItem[]
   return skills.map((skill) => ({
     name: skill.name,
-    keywords: skill.keywords.join(", "),
+    keywords: (skill.keywords ?? []).join(", "),
   }))
 }
 
 function getLanguagesData() {
   const languages = resumeData.sections.languages.items as LanguageItem[]
   return languages.map((lang) => ({
-    name: lang.language,
-    fluency: lang.fluency,
+    name: lang.language ?? "",
+    fluency: lang.fluency ?? "",
   }))
 }
 
