@@ -148,6 +148,7 @@ export const REPOSITORIES = [
   "https://github.com/undrstnd-labs/developers",
   "https://github.com/FindMalek/dukkani",
   "https://github.com/FindMalek/zero-locker",
+  "https://github.com/FindMalek/harmonia",
   "https://github.com/FindMalek/muslim-fasting",
   "https://github.com/FindMalek/findauth",
   "https://github.com/FindMalek/syncify",

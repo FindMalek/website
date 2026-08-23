@@ -66,7 +66,7 @@ export default async function Home() {
           <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
           <PanelDescription>
             I&apos;m a Design Engineer, Founder, and Product Builder based in
-            Monastir, Tunisia.
+            🇹🇳 Monastir, Tunisia.
           </PanelDescription>
         </PanelHeader>
 
