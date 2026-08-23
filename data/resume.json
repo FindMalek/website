@@ -13,7 +13,7 @@
   },
   "basics": {
     "name": "Malek Gara-Hellal",
-    "headline": "Product Engineer | Senior Full-Stack (React/Next.js + AI)",
+    "headline": "Senior Full-Stack Engineer | AI Automation, Data & Agentic Systems",
     "email": "hi@findmalek.com",
     "phone": "",
     "location": "Monastir, Tunisia (Remote)",
@@ -30,7 +30,7 @@
     "hidden": false,
     "keepTogether": false,
     "startOnNewPage": false,
-    "content": "<p>Product-focused Full-Stack Engineer building AI-powered SaaS products end-to-end. Strong in React/Next.js, TypeScript, monorepos, and LLM integrations (Vercel AI SDK, Mastra, Braintrust). High-volume open-source contributor (~7,000 GitHub contributions) with ownership across architecture, prompting, evaluation frameworks, automation pipelines, and reliability engineering. Experience working remotely with Berlin and US teams.</p>"
+    "content": "<p>Full-Stack Engineer building AI-native products end-to-end — automated workflows, data analysis pipelines, and agentic systems on top of React/Next.js and TypeScript. Recent work spans LLM-driven automation (Jobflow, 8Returns), RAG and multi-agent pipelines (QTech AI), and a self-built inference API (Undrstnd Labs), using the Vercel AI SDK, Mastra, and Braintrust for evaluation. High-volume open-source contributor (~7,000 GitHub contributions). Experience working remotely with Berlin and US teams.</p>"
   },
   "sections": {
     "profiles": {
@@ -94,7 +94,7 @@
           "id": "019c8102-56be-736d-bd30-7361b8ca8b13",
           "hidden": false,
           "company": "Jobflow GmbH",
-          "position": "Senior Full-Stack Engineer",
+          "position": "Senior Full-Stack Engineer (AI Systems)",
           "location": "Berlin, Germany",
           "period": "September 2024 - Present",
           "website": {
@@ -109,7 +109,7 @@
           "id": "019c80ff-ec34-730b-a667-91ffd584e0e3",
           "hidden": false,
           "company": "8Returns UG",
-          "position": "Senior Frontend Engineer",
+          "position": "Senior Frontend Engineer (AI Systems & Shopify)",
           "location": "Berlin, Germany",
           "period": "December 2025 - April 2026",
           "website": {
@@ -213,7 +213,7 @@
           "hidden": false,
           "company": "Endless Byte",
           "position": "Founder",
-          "location": "Sfax, Tunisia",
+          "location": "Monastir, Tunisia",
           "period": "May 2023 - March 2024",
           "website": {
             "url": "",
