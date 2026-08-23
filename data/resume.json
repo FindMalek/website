@@ -36,7 +36,7 @@
     "profiles": {
       "title": "",
       "icon": "",
-      "columns": 2,
+      "columns": 3,
       "hidden": false,
       "keepTogether": false,
       "startOnNewPage": false,
@@ -100,9 +100,9 @@
           "website": {
             "url": "https://www.jobflow.de",
             "label": "jobflow.de",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<ul><li><p>Delivered AI-driven automation features across recruiter–candidate workflows.</p></li><li><p>Built interview confirmation detection system (message → backend event → calendar integration + notifications).</p></li><li><p>Implemented AI task extraction from recruiter conversations into structured candidate tasks with reminders.</p></li><li><p>Designed prompting strategies and evaluation frameworks for LLM workflows in production.</p></li><li><p>Refactored scraping infrastructure using Effect &amp; <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://Trigger.dev\">Trigger.dev</a> to improve maintainability and resilience.</p></li><li><p>Introduced automated smoke testing for CV rendering, eliminating recurring production issues.</p></li><li><p>400+ merged PRs; ranked among top active contributors in repository.</p></li></ul><p></p>",
+          "description": "<p>Delivered AI-driven automation features across recruiter–candidate workflows.<br>Built interview confirmation detection system (message → backend event → calendar integration + notifications).<br>Implemented AI task extraction from recruiter conversations into structured candidate tasks with reminders.<br>Designed prompting strategies and evaluation frameworks for LLM workflows in production.<br>Refactored scraping infrastructure using Effect &amp; <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://Trigger.dev\">Trigger.dev</a> to improve maintainability and resilience.<br>Introduced automated smoke testing for CV rendering, eliminating recurring production issues.<br>400+ merged PRs; ranked among top active contributors in repository.</p>",
           "roles": []
         },
         {
@@ -115,9 +115,9 @@
           "website": {
             "url": "https://www.8returns.com",
             "label": "8returns.com",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<ul><li><p>Built Shopify-embedded return experience powered by AI chatbot (refund, exchange, store credit flows).</p></li><li><p>Used TanStack Query for data fetching, caching, and real-time updates across the chatbot's streaming UI.</p></li><li><p>Reduced chatbot reply delay from ~10s to ~3s through frontend optimization and API orchestration improvements.</p></li><li><p>Implemented complex UI state management and Rails API integrations.</p></li><li><p>Collaborated closely with backend team (Ruby on Rails) on data contracts and flow reliability.</p></li><li><p>Contributed to AI flow design and merchant-facing UX improvements.</p></li></ul><p></p>",
+          "description": "<p>Built Shopify-embedded return experience powered by AI chatbot (refund, exchange, store credit flows).<br>Used TanStack Query for data fetching, caching, and real-time updates across the chatbot's streaming UI.<br>Reduced chatbot reply delay from ~10s to ~3s through frontend optimization and API orchestration improvements.<br>Implemented complex UI state management and Rails API integrations.<br>Collaborated closely with backend team (Ruby on Rails) on data contracts and flow reliability.<br>Contributed to AI flow design and merchant-facing UX improvements.</p>",
           "roles": []
         },
         {
@@ -130,9 +130,9 @@
           "website": {
             "url": "https://deepmetis.com",
             "label": "deepmetis.com",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<ul><li><p>Built responsive frontend interfaces using Svelte across multiple production projects.</p></li><li><p>Designed and implemented backend services in Go, improving performance and system reliability.</p></li><li><p>Managed and optimized PostgreSQL databases to ensure data integrity and efficient query performance.</p></li><li><p>Led technical direction for Project Dori, coordinating cross-functional teams and driving milestone delivery.</p></li></ul><p></p>",
+          "description": "<p>Built responsive frontend interfaces using Svelte across multiple production projects.<br>Designed and implemented backend services in Go, improving performance and system reliability.<br>Managed and optimized PostgreSQL databases to ensure data integrity and efficient query performance.<br>Led technical direction for Project Dori, coordinating cross-functional teams and driving milestone delivery.</p>",
           "roles": []
         },
         {
@@ -145,9 +145,9 @@
           "website": {
             "url": "https://www.qtech-company.com",
             "label": "qtech-company.com",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<ul><li><p>Developed the company's marketing website and built RAG-based document-processing systems for enterprise clients.</p></li><li><p>Built a context-aware support chatbot: parses uploaded PDFs, vectorizes content, and retrieves across multiple knowledge sources, with a router agent selecting which source to query per question.</p></li><li><p>Designed a multi-agent pipeline that retrieves, enhances, and self-improves its own context from user questions over time.</p></li></ul><p></p>",
+          "description": "<p>Developed the company's marketing website and built RAG-based document-processing systems for enterprise clients.<br>Built a context-aware support chatbot: parses uploaded PDFs, vectorizes content, and retrieves across multiple knowledge sources, with a router agent selecting which source to query per question.<br>Designed a multi-agent pipeline that retrieves, enhances, and self-improves its own context from user questions over time.</p>",
           "roles": []
         },
         {
@@ -160,9 +160,9 @@
           "website": {
             "url": "",
             "label": "",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<p>Co-founded an AI inference company with Denis Cartin, starting as Co-Founder before taking on the CTO title as the company matured. Applied to Y Combinator and were rejected, so launched independently in Italy instead.</p><ul><li><p>Built fast, significantly cheaper inference than OpenAI, using bigger and better models.</p></li><li><p>Shipped an API with strong developer experience, compatible with the Vercel AI SDK.</p></li></ul><p></p>",
+          "description": "<p>Co-founded an AI inference company with Denis Cartin, starting as Co-Founder before taking on the CTO title as the company matured. Applied to Y Combinator and were rejected, so launched independently in Italy instead.<br>Built fast, significantly cheaper inference than OpenAI, using bigger and better models.<br>Shipped an API with strong developer experience, compatible with the Vercel AI SDK.</p>",
           "roles": []
         },
         {
@@ -175,9 +175,9 @@
           "website": {
             "url": "https://hortensia-agency.com/",
             "label": "hortensia-agency.com",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<ul><li><p>Built Stelify real-time music analytics dashboard.</p></li><li><p>Delivered Primevera e-learning platform with Stripe payments.</p></li><li><p>Managed deployments via Docker &amp; Coolify.</p></li></ul><p></p>",
+          "description": "<p>Built Stelify real-time music analytics dashboard.<br>Delivered Primevera e-learning platform with Stripe payments.<br>Managed deployments via Docker &amp; Coolify.</p>",
           "roles": []
         },
         {
@@ -190,9 +190,9 @@
           "website": {
             "url": "https://fn03.xyz",
             "label": "fn03.xyz",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<ul><li><p>Built <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://docs.walletlabels.xyz/endpoint/ethereum/label\">WalletLabels</a> admin dashboard and API tooling.</p></li><li><p>Automated API key generation and blacklist endpoint.</p></li><li><p>Improved UX and architecture of <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://zero.tally.xyz/\">TallyZero</a> voting platform.</p></li><li><p>Contributed to <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://v4.uniswap.org/\">UniswapHooks</a> marketing rebuild.</p></li></ul><p></p>",
+          "description": "<p>Built <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://docs.walletlabels.xyz/endpoint/ethereum/label\">WalletLabels</a> admin dashboard and API tooling.<br>Automated API key generation and blacklist endpoint.<br>Improved UX and architecture of <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://zero.tally.xyz/\">TallyZero</a> voting platform.<br>Contributed to <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://v4.uniswap.org/\">UniswapHooks</a> marketing rebuild.</p>",
           "roles": [
             {
               "id": "019c90aa-0021-71cb-874f-835885ebf8e1",
@@ -218,9 +218,9 @@
           "website": {
             "url": "",
             "label": "",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<ul><li><p>Founded a software agency with university coworkers, delivering client projects end-to-end.</p></li><li><p>Built Promolab, a CRM and marketing platform for a client serving major accounts including STEG-affiliated business in Tunisia.</p></li><li><p>Delivered a membership-management CRM for gym chains (including California Gym), covering subscriptions across multiple locations nationwide plus WhatsApp-based promotional messaging to members.</p></li></ul><p></p>",
+          "description": "<p>Founded a software agency with university coworkers, delivering client projects end-to-end.<br>Built Promolab, a CRM and marketing platform for a client serving major accounts including STEG-affiliated business in Tunisia.<br>Delivered a membership-management CRM for gym chains (including California Gym), covering subscriptions across multiple locations nationwide plus WhatsApp-based promotional messaging to members.</p>",
           "roles": []
         },
         {
@@ -233,9 +233,9 @@
           "website": {
             "url": "https://digital-army.clients.malek.engineering",
             "label": "",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<ul><li><p>Built a professional portfolio website using React, Next.js, and Tailwind CSS.</p></li><li><p>Built a custom Shopify template and AI-assisted product pipeline for LilyPharma, an e-commerce client — uploaded 1,000+ products with AI-generated images and descriptions.</p></li></ul><p></p>",
+          "description": "<p>Built a professional portfolio website using React, Next.js, and Tailwind CSS.<br>Built a custom Shopify template and AI-assisted product pipeline for LilyPharma, an e-commerce client — uploaded 1,000+ products with AI-generated images and descriptions.</p>",
           "roles": []
         }
       ]
@@ -260,7 +260,7 @@
           "website": {
             "url": "https://isimm.rnu.tn/public/",
             "label": "",
-            "inlineLink": false
+            "inlineLink": true
           },
           "description": "<p>Throughout my university years, I consistently ranked at the top of my cohort. My academic focus included low-level</p><p>languages like C and C++ and in-depth studies of algorithms, Java, and complex software engineering principles. This</p><p>foundational knowledge laid the groundwork for my ability to design scalable systems and contribute to innovative</p><p>projects.</p>"
         },
@@ -276,7 +276,7 @@
           "website": {
             "url": "",
             "label": "",
-            "inlineLink": false
+            "inlineLink": true
           },
           "description": ""
         },
@@ -292,7 +292,7 @@
           "website": {
             "url": "",
             "label": "",
-            "inlineLink": false
+            "inlineLink": true
           },
           "description": ""
         }
@@ -319,10 +319,22 @@
           "description": "<p>Lightweight commerce infrastructure for social sellers (Instagram/Facebook merchants).</p><ul><li><p>Designed multi-tenant storefront architecture.</p></li><li><p>Built onboarding → product management → order routing pipeline.</p></li><li><p>Hired and manage contributor; review PRs and define technical roadmap.</p></li><li><p>Built with Next.js, TurboRepo, TypeScript, PostgreSQL.</p></li></ul><p></p>"
         },
         {
+          "id": "019c90aa-0007-71cb-874f-835885ebf8cb",
+          "hidden": false,
+          "name": "Harmonia",
+          "period": "March 2026 - Present",
+          "website": {
+            "url": "https://harmonia.malek.engineering",
+            "label": "",
+            "inlineLink": false
+          },
+          "description": "<p>Personal music-intelligence system: syncs a Spotify library, classifies every track with an LLM, clusters by similarity, and generates mood-based playlists.</p><ul><li><p>Six-stage durable pipeline (sync → classify → embed → cluster → generate → export) on Trigger.dev.</p></li><li><p>Pre-launch — full write-up pending final review.</p></li></ul><p></p>"
+        },
+        {
           "id": "019c8105-bb60-7274-9a38-f7687981cf16",
           "hidden": false,
           "name": "Zero Locker",
-          "period": "",
+          "period": "May 2025 - Present",
           "website": {
             "url": "https://www.zero-locker.com",
             "label": "",
@@ -334,32 +346,20 @@
           "id": "019c8106-250a-7316-a74d-79f8dcbb6462",
           "hidden": false,
           "name": "Undrstnd Education",
-          "period": "",
+          "period": "August 2024",
           "website": {
             "url": "https://undrstnd.vercel.app",
             "label": "",
             "inlineLink": false
           },
           "description": "<p>AI-powered learning platform giving students instant, sourced answers over their own course material.</p><ul><li><p>RAG pipeline built on LangChain with Pinecone as the vector store.</p></li><li><p>Built with Next.js, Prisma, and NextAuth.</p></li></ul><p></p>"
-        },
-        {
-          "id": "019c90aa-0007-71cb-874f-835885ebf8cb",
-          "hidden": false,
-          "name": "Harmonia",
-          "period": "",
-          "website": {
-            "url": "https://harmonia.malek.engineering",
-            "label": "",
-            "inlineLink": false
-          },
-          "description": "<p>Personal music-intelligence system: syncs a Spotify library, classifies every track with an LLM, clusters by similarity, and generates mood-based playlists.</p><ul><li><p>Six-stage durable pipeline (sync → classify → embed → cluster → generate → export) on Trigger.dev.</p></li><li><p>Pre-launch — full write-up pending final review.</p></li></ul><p></p>"
         }
       ]
     },
     "skills": {
       "title": "",
       "icon": "",
-      "columns": 1,
+      "columns": 3,
       "hidden": false,
       "keepTogether": false,
       "startOnNewPage": false,
@@ -382,7 +382,7 @@
           "name": "Frontend",
           "proficiency": "",
           "level": 0,
-          "keywords": ["React", "Next.js", "Svelte", "Tailwind CSS", "shadcn/ui"]
+          "keywords": ["React", "Next.js", "Svelte", "Tailwind CSS", "shadcn/ui", "Motion (Framer Motion)"]
         },
         {
           "id": "019c90aa-0011-71cb-874f-835885ebf8d1",
@@ -392,7 +392,7 @@
           "name": "AI / LLM Engineering",
           "proficiency": "",
           "level": 0,
-          "keywords": ["Vercel AI SDK", "Mastra", "Braintrust", "Groq", "LangChain", "Retrieval-Augmented Generation (RAG)", "Vector Databases (Pinecone)", "Prompt Engineering", "Evaluation Frameworks", "LLM Pipelines", "Multi-Agent Systems"]
+          "keywords": ["Vercel AI SDK", "Mastra", "Braintrust", "Groq", "LangChain", "Retrieval-Augmented Generation (RAG)", "Vector Databases (Pinecone)", "Prompt Engineering", "Evaluation Frameworks", "LLM Pipelines", "Multi-Agent Systems", "AI Image Generation"]
         },
         {
           "id": "019c90aa-0012-71cb-874f-835885ebf8d2",
@@ -402,7 +402,7 @@
           "name": "Backend & Databases",
           "proficiency": "",
           "level": 0,
-          "keywords": ["Node.js", "PostgreSQL", "MongoDB", "Prisma", "Supabase", "Neon", "oRPC", "BetterAuth"]
+          "keywords": ["Node.js", "PostgreSQL", "MongoDB", "Prisma", "Supabase", "Neon", "oRPC", "BetterAuth", "NextAuth", "Ruby on Rails", "Zod"]
         },
         {
           "id": "019c90aa-0013-71cb-874f-835885ebf8d3",
@@ -432,7 +432,7 @@
           "name": "Commerce & Payments",
           "proficiency": "",
           "level": 0,
-          "keywords": ["Shopify", "Stripe"]
+          "keywords": ["Shopify", "Shopify Liquid", "Stripe", "WhatsApp Business API"]
         },
         {
           "id": "019c90aa-0017-71cb-874f-835885ebf8d7",
@@ -443,6 +443,16 @@
           "proficiency": "",
           "level": 0,
           "keywords": ["Ethers.js", "Web3Modal"]
+        },
+        {
+          "id": "019c90aa-0019-71cb-874f-835885ebf8d9",
+          "hidden": false,
+          "icon": "",
+          "iconColor": "",
+          "name": "Architecture & Patterns",
+          "proficiency": "",
+          "level": 0,
+          "keywords": ["Multi-Tenant Architecture", "API Design", "System Design"]
         },
         {
           "id": "019c90aa-0018-71cb-874f-835885ebf8d8",
@@ -459,11 +469,33 @@
     "languages": {
       "title": "",
       "icon": "",
-      "columns": 1,
+      "columns": 3,
       "hidden": false,
       "keepTogether": false,
       "startOnNewPage": false,
-      "items": []
+      "items": [
+        {
+          "id": "019c90aa-0023-71cb-874f-835885ebf8e3",
+          "hidden": false,
+          "language": "Arabic",
+          "fluency": "Native",
+          "level": 5
+        },
+        {
+          "id": "019c90aa-0024-71cb-874f-835885ebf8e4",
+          "hidden": false,
+          "language": "French",
+          "fluency": "Fluent",
+          "level": 4
+        },
+        {
+          "id": "019c90aa-0025-71cb-874f-835885ebf8e5",
+          "hidden": false,
+          "language": "English",
+          "fluency": "Fluent",
+          "level": 4
+        }
+      ]
     },
     "interests": {
       "title": "",
@@ -477,7 +509,7 @@
     "awards": {
       "title": "",
       "icon": "",
-      "columns": 1,
+      "columns": 2,
       "hidden": false,
       "keepTogether": false,
       "startOnNewPage": false,
@@ -513,7 +545,7 @@
     "certifications": {
       "title": "",
       "icon": "",
-      "columns": 1,
+      "columns": 2,
       "hidden": false,
       "keepTogether": false,
       "startOnNewPage": false,
