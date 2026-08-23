@@ -15,13 +15,6 @@ import { Icons } from "@/components/shared/icons"
 export function AboutFacts() {
   return (
     <div className="mb-8 grid gap-x-4 gap-y-2.5 sm:grid-cols-2">
-      <IntroItem className="sm:col-span-2">
-        <IntroItemIcon>
-          <Icons.briefcase />
-        </IntroItemIcon>
-        <IntroItemContent>{resumeData.basics.headline}</IntroItemContent>
-      </IntroItem>
-
       <IntroItem>
         <IntroItemIcon>
           <Icons.location />
