@@ -30,7 +30,7 @@ export function RotatingSubtitle({ lines }: { lines: string[] }) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -12, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="block"
+          className="animate-shine block w-fit bg-[length:200%_100%] bg-clip-text text-transparent [background-image:linear-gradient(110deg,var(--muted-foreground)_40%,var(--foreground)_50%,var(--muted-foreground)_60%)]"
         >
           {lines[index]}
         </motion.span>
