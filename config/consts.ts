@@ -79,6 +79,27 @@ export const BOOKS = [
     title: "The Brothers Karamazov",
     author: "Fyodor Dostoevsky",
   },
+  {
+    id: "4",
+    link: "https://www.goodreads.com/book/show/4069.Man_s_Search_for_Meaning",
+    image: "/books/mans-search-for-meaning.jpg",
+    title: "Man's Search for Meaning",
+    author: "Viktor Frankl",
+  },
+  {
+    id: "5",
+    link: "https://www.goodreads.com/book/show/7144.Crime_and_Punishment",
+    image: "/books/crime-and-punishment.jpg",
+    title: "Crime and Punishment",
+    author: "Fyodor Dostoevsky",
+  },
+  {
+    id: "6",
+    link: "https://www.goodreads.com/book/show/28862.The_Prince",
+    image: "/books/the-prince.jpg",
+    title: "The Prince",
+    author: "Niccolò Machiavelli",
+  },
 ]
 
 export const CLIENTS: Client[] = [
