@@ -94,8 +94,8 @@
           "id": "019c8102-56be-736d-bd30-7361b8ca8b13",
           "hidden": false,
           "company": "Jobflow GmbH",
-          "position": "Senior Full-Stack Engineer (Contract)",
-          "location": "Berlin, Germany (Remote)",
+          "position": "Senior Full-Stack Engineer",
+          "location": "Berlin, Germany",
           "period": "September 2024 - Present",
           "website": {
             "url": "https://www.jobflow.de",
@@ -109,8 +109,8 @@
           "id": "019c80ff-ec34-730b-a667-91ffd584e0e3",
           "hidden": false,
           "company": "8Returns UG",
-          "position": "Senior Frontend Engineer (Contract)",
-          "location": "Berlin, Germany (Remote)",
+          "position": "Senior Frontend Engineer",
+          "location": "Berlin, Germany",
           "period": "December 2025 - April 2026",
           "website": {
             "url": "https://www.8returns.com",
@@ -124,8 +124,8 @@
           "id": "019c80fd-2ba2-71cb-874f-835885ebf8c4",
           "hidden": false,
           "company": "DeepMetis UG",
-          "position": "Senior Full Stack Engineer (Contract)",
-          "location": "Berlin, Germany - Remote",
+          "position": "Senior Full Stack Engineer",
+          "location": "Berlin, Germany",
           "period": "June 2025 - August 2025",
           "website": {
             "url": "https://deepmetis.com",
@@ -140,7 +140,7 @@
           "hidden": false,
           "company": "QTech AI",
           "position": "Chief Technology Officer (Self-employed)",
-          "location": "Germany (Remote)",
+          "location": "Germany",
           "period": "April 2025 - July 2025",
           "website": {
             "url": "https://www.qtech-company.com",
@@ -155,14 +155,14 @@
           "hidden": false,
           "company": "Undrstnd Labs",
           "position": "Founder & CTO",
-          "location": "Italy (Remote)",
+          "location": "Rome, Italy",
           "period": "August 2024 - June 2025",
           "website": {
             "url": "",
             "label": "",
             "inlineLink": true
           },
-          "description": "<p>Co-founded an AI inference company with Denis Cartin, starting as Co-Founder before taking on the CTO title as the company matured. Applied to Y Combinator and were rejected, so launched independently in Italy instead.<br>Built fast, significantly cheaper inference than OpenAI, using bigger and better models.<br>Shipped an API with strong developer experience, compatible with the Vercel AI SDK.</p>",
+          "description": "<p>Co-founded an AI inference company with Denis Cartin, starting as Co-Founder before taking on the CTO title as the company matured. Applied to Y Combinator and were rejected, so launched independently in Rome, Italy instead.<br>Built fast, significantly cheaper inference than OpenAI, using bigger and better models.<br>Shipped an API with strong developer experience, compatible with the Vercel AI SDK.<br>Hosted 2 events in Tunisia, giving free platform credits to participating teams.</p>",
           "roles": []
         },
         {
@@ -170,7 +170,7 @@
           "hidden": false,
           "company": "Hortensia Agency",
           "position": "Full Stack Developer",
-          "location": "Ariana, Tunisia (Remote)",
+          "location": "Ariana, Tunisia",
           "period": "May 2024 - September 2024",
           "website": {
             "url": "https://hortensia-agency.com/",
@@ -185,7 +185,7 @@
           "hidden": false,
           "company": "Function03 Labs",
           "position": "",
-          "location": "San Francisco, USA (Remote)",
+          "location": "San Francisco, USA",
           "period": "June 2023 - August 2024",
           "website": {
             "url": "https://fn03.xyz",
@@ -213,7 +213,7 @@
           "hidden": false,
           "company": "Endless Byte",
           "position": "Founder",
-          "location": "Remote",
+          "location": "Sfax, Tunisia",
           "period": "May 2023 - March 2024",
           "website": {
             "url": "",
@@ -228,7 +228,7 @@
           "hidden": false,
           "company": "Digital Army",
           "position": "Web Developer",
-          "location": "Ariana, Tunisia (Remote)",
+          "location": "Ariana, Tunisia",
           "period": "February 2021 - May 2023",
           "website": {
             "url": "https://digital-army.clients.malek.engineering",
@@ -316,7 +316,7 @@
             "label": "dukkani.co",
             "inlineLink": false
           },
-          "description": "<p>Lightweight commerce infrastructure for social sellers (Instagram/Facebook merchants).</p><ul><li><p>Designed multi-tenant storefront architecture.</p></li><li><p>Built onboarding → product management → order routing pipeline.</p></li><li><p>Hired and manage contributor; review PRs and define technical roadmap.</p></li><li><p>Built with Next.js, TurboRepo, TypeScript, PostgreSQL.</p></li></ul><p></p>"
+          "description": "<p>Lightweight commerce infrastructure for social sellers (Instagram/Facebook merchants).<br>Designed multi-tenant storefront architecture.<br>Built onboarding → product management → order routing pipeline.<br>Hired and manage contributor; review PRs and define technical roadmap.<br>Built with Next.js, TurboRepo, TypeScript, PostgreSQL.</p>"
         },
         {
           "id": "019c90aa-0007-71cb-874f-835885ebf8cb",
@@ -328,7 +328,7 @@
             "label": "",
             "inlineLink": false
           },
-          "description": "<p>Personal music-intelligence system: syncs a Spotify library, classifies every track with an LLM, clusters by similarity, and generates mood-based playlists.</p><ul><li><p>Six-stage durable pipeline (sync → classify → embed → cluster → generate → export) on Trigger.dev.</p></li><li><p>Pre-launch — full write-up pending final review.</p></li></ul><p></p>"
+          "description": "<p>Personal music-intelligence system: syncs a Spotify library, classifies every track with an LLM, clusters by similarity, and generates mood-based playlists.<br>Six-stage durable pipeline (sync → classify → embed → cluster → generate → export) on Trigger.dev.<br>Pre-launch — full write-up pending final review.</p>"
         },
         {
           "id": "019c8105-bb60-7274-9a38-f7687981cf16",
@@ -340,7 +340,7 @@
             "label": "",
             "inlineLink": false
           },
-          "description": "<p>Self-hosted credential, card, and secret vault for developers with end-to-end encryption.</p><ul><li><p>Data model supports credentials, cards, and secrets, sharded across containers with per-item encryption.</p></li><li><p>Built platform-approval workflow and NORMAL/PRO plan tiers.</p></li><li><p>Built with Next.js 15, Prisma + Neon Postgres, oRPC, BetterAuth, and TanStack Query.</p></li></ul><p></p>"
+          "description": "<p>Self-hosted credential, card, and secret vault for developers with end-to-end encryption.<br>Data model supports credentials, cards, and secrets, sharded across containers with per-item encryption.<br>Built platform-approval workflow and NORMAL/PRO plan tiers.<br>Built with Next.js 15, Prisma + Neon Postgres, oRPC, BetterAuth, and TanStack Query.</p>"
         },
         {
           "id": "019c8106-250a-7316-a74d-79f8dcbb6462",
@@ -352,7 +352,7 @@
             "label": "",
             "inlineLink": false
           },
-          "description": "<p>AI-powered learning platform giving students instant, sourced answers over their own course material.</p><ul><li><p>RAG pipeline built on LangChain with Pinecone as the vector store.</p></li><li><p>Built with Next.js, Prisma, and NextAuth.</p></li></ul><p></p>"
+          "description": "<p>AI-powered learning platform giving students instant, sourced answers over their own course material.<br>RAG pipeline built on LangChain with Pinecone as the vector store.<br>Built with Next.js, Prisma, and NextAuth.</p>"
         }
       ]
     },
