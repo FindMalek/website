@@ -2,6 +2,7 @@ import type { UIMessage } from "ai"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+import { FEATURED_PROJECT_ORDER } from "@/config/consts"
 import { ProjectStatus } from "@/types/enum"
 
 export function cn(...inputs: ClassValue[]) {
@@ -34,17 +35,26 @@ export const statusPriority: Record<ProjectStatus, number> = {
 }
 
 /**
- * Sort projects by status priority (published first) then by id
+ * Sort projects: FEATURED_PROJECT_ORDER pinned first in that exact order,
+ * then everything else by status priority (published first), then by id.
  */
 export function sortProjectsByStatus<
-  T extends { status: ProjectStatus; id: number },
+  T extends { status: ProjectStatus; id: number; name: string },
 >(projects: T[]): T[] {
-  return [...projects].sort((a, b) => {
-    // Compare by status priority (lower value = higher priority)
-    const statusDiff = statusPriority[a.status] - statusPriority[b.status]
-    // If same status, sort by id
-    return statusDiff !== 0 ? statusDiff : a.id - b.id
-  })
+  const featured = FEATURED_PROJECT_ORDER.map((name) =>
+    projects.find((project) => project.name === name)
+  ).filter((project): project is T => project !== undefined)
+
+  const rest = projects
+    .filter((project) => !FEATURED_PROJECT_ORDER.includes(project.name))
+    .sort((a, b) => {
+      // Compare by status priority (lower value = higher priority)
+      const statusDiff = statusPriority[a.status] - statusPriority[b.status]
+      // If same status, sort by id
+      return statusDiff !== 0 ? statusDiff : a.id - b.id
+    })
+
+  return [...featured, ...rest]
 }
 
 /**
