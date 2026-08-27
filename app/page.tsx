@@ -99,26 +99,6 @@ export default async function Home() {
               </Link>{" "}
               to see how I bring ideas to life.
             </p>
-
-            <p className="text-base leading-relaxed">
-              Beyond code, I find creative inspiration in diverse music genres
-              from Metal to Ambient, and maintain a curated collection of books
-              that fuel my innovative thinking. Explore my{" "}
-              <Link
-                href="/#playlists"
-                className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"
-              >
-                PLAYLISTS
-              </Link>{" "}
-              or browse my recommended{" "}
-              <Link
-                href="/#readings"
-                className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"
-              >
-                BOOKS
-              </Link>{" "}
-              that shape my perspective.
-            </p>
           </div>
 
           <div className="mb-8">
@@ -130,8 +110,6 @@ export default async function Home() {
           </div>
 
           <AboutOverview />
-          <AboutMusic playlists={playlists.items} />
-          <AboutBooks />
         </PanelContent>
       </Panel>
 
@@ -239,7 +217,8 @@ export default async function Home() {
             <PanelCopyLinkButton sectionId="stack" />
           </div>
           <PanelDescription>
-            Tools, technology and apps I use every day.
+            Tools, technology and apps I use every day — plus the music and
+            books that shape my thinking beyond code.
           </PanelDescription>
         </PanelHeader>
 
@@ -252,6 +231,9 @@ export default async function Home() {
             step={4}
             className="flex flex-col"
           />
+
+          <AboutMusic playlists={playlists.items} />
+          <AboutBooks />
         </PanelContent>
       </Panel>
     </div>
