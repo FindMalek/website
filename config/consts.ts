@@ -176,6 +176,17 @@ export const CLIENTS: Client[] = [
   },
 ]
 
+// Manually curated display order for the top of the /projects grid --
+// listed projects are pinned in this exact order (matched by `name`),
+// everything else falls back to the existing status-then-id sort. See
+// sortProjectsByStatus() in lib/utils.ts.
+export const FEATURED_PROJECT_ORDER = [
+  "Harmonia",
+  "Dukkani",
+  "Zero Locker",
+  "FindMalek",
+]
+
 export const REPOSITORIES = [
   "https://github.com/findmalek/website",
   "https://github.com/undrstnd-labs/education",
