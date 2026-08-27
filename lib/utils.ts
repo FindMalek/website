@@ -8,6 +8,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Steady-state sticky header height, once scrolled -- matches the
+// `scroll-margin-top` fallback used everywhere else (Panel, SectionHeading,
+// PageHeading all fall back to 6rem). Deliberately NOT read from the live
+// `--header-height` CSS variable: that variable is scroll-position-dependent
+// (hooks/use-header-animation.ts recomputes it on every scroll event, and
+// near the top of the page it includes the full expanded hero/avatar area,
+// not just the header). scrollIntoView()'s `scroll-margin-top` offset is
+// computed once at call time, so reading the live variable from wherever
+// the click happened to originate baked in whatever oversized offset was
+// current at the top of the page -- under-scrolling by that whole amount.
+const STICKY_HEADER_OFFSET_PX = 96
+
 /**
  * Handles a nav click on a homepage-anchor href (e.g. "/#work") when the
  * visitor is already on the target path. next/link's built-in hash
@@ -25,9 +37,12 @@ export function scrollToAnchorSection(href: string, pathname: string) {
   if (targetPath !== pathname) return false
 
   const targetId = href.slice(hashIndex + 1)
-  document
-    .getElementById(targetId)
-    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+  const target = document.getElementById(targetId)
+  if (!target) return false
+
+  const top =
+    target.getBoundingClientRect().top + window.scrollY - STICKY_HEADER_OFFSET_PX
+  window.scrollTo({ top, behavior: "smooth" })
   return true
 }
 
