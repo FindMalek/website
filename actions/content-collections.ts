@@ -49,6 +49,35 @@ const projectFrontmatterSchema = z.object({
 // dates, title, and a genuine overview are available - see
 // data/resume.json's metadata.notes and github.com/findmalek/website/issues/66
 // for the full list of what's still missing (Harmonia, The Fund, Kenny).
+
+// The MDX body is the full recommendation text (mirrors how work/project case
+// studies use their body as the long-form write-up) -- `excerpt` is the short
+// pull-quote used on work-experience pages and the landing marquee, `content`
+// carries the raw MDX so the full recommendation page can render it in full.
+const recommendationFrontmatterSchema = z.object({
+  content: z.string(),
+  id: z.number(),
+  href: z.string(),
+  recommenderName: z.string().min(1),
+  role: z.string().min(1),
+  company: z.string().min(1),
+  companyLogo: z.string().optional(),
+  photo: z.string().optional(),
+  excerpt: z.string().min(1),
+  date: z.string(),
+  relationship: z.enum(["manager", "coworker", "client", "collaborator"]),
+  source: z.enum(["linkedin", "x", "email", "message", "other"]),
+  linkedinUrl: z.url().optional(),
+  otherLinks: z
+    .array(z.object({ label: z.string().min(1), url: z.url() }))
+    .optional(),
+  signatureImage: z.string().optional(),
+  relatedWorkHref: z.string().optional(),
+  // Marks entries that are NOT real, approved recommendations -- structural
+  // placeholders only. Must never be unset for fabricated/unapproved content.
+  isPlaceholder: z.boolean().optional(),
+})
+
 const work = defineCollection({
   name: "work",
   directory: "../data/work",
@@ -77,6 +106,20 @@ const projects = defineCollection({
   },
 })
 
+const recommendations = defineCollection({
+  name: "recommendations",
+  directory: "../data/recommendations",
+  include: "**/*.mdx",
+  schema: recommendationFrontmatterSchema,
+  transform: async (document, context) => {
+    const html = await compileMDX(context, document)
+    return {
+      ...document,
+      html,
+    }
+  },
+})
+
 export default defineConfig({
-  content: [work, projects],
+  content: [work, projects, recommendations],
 })

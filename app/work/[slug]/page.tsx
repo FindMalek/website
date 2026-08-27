@@ -2,13 +2,14 @@ import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MDXContent } from "@content-collections/mdx/react"
-import { allWorks } from "content-collections"
+import { allRecommendations, allWorks } from "content-collections"
 
 import { convertWorkType } from "@/config/converter"
 import { link as linkStyle } from "@/config/styles"
 import { cn } from "@/lib/utils"
 
 import { ArticleContent } from "@/components/app/article-content"
+import { TestimonialCard } from "@/components/app/testimonial-card"
 import { WorkDateWithTooltip } from "@/components/app/work-date-with-tooltip"
 import { Icons } from "@/components/shared/icons"
 import { buttonVariants } from "@/components/ui/button"
@@ -59,7 +60,15 @@ export default async function WorkPageById({ params }: WorkPageByIdProps) {
     link,
     html,
     overview,
+    href,
   } = work
+
+  // Only render the testimonial section when a real (or placeholder)
+  // recommendation is actually linked to this experience -- never forced
+  // onto every case-study page (see #65).
+  const recommendation = allRecommendations.find(
+    (recommendation) => recommendation.relatedWorkHref === href
+  )
 
   return (
     <div className="container max-w-4xl px-4 py-16 md:py-24">
@@ -127,6 +136,19 @@ export default async function WorkPageById({ params }: WorkPageByIdProps) {
         <ArticleContent className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
           <MDXContent code={html} />
         </ArticleContent>
+
+        {recommendation && (
+          <div className="mx-auto mt-16 max-w-3xl">
+            <h2 className="text-muted-foreground mb-4 text-center text-sm font-semibold uppercase tracking-wide">
+              What people say
+            </h2>
+            <div className="flex justify-center">
+              {/* The company is already shown throughout this page, so the
+                  card only needs the recommender's role. */}
+              <TestimonialCard recommendation={recommendation} hideCompany />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

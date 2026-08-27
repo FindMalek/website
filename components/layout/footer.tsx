@@ -9,7 +9,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="border-secondary-foreground/20 w-full space-y-4 border-t px-2 py-4">
+    <footer className="border-secondary-foreground/20 w-full space-y-4 border-t px-2 py-4 print:hidden">
       <div className="container flex items-center gap-4">
         <Link href={siteConfig.links.facebook} target="_blank">
           <Icons.facebook className="text-foreground/80 hover:text-foreground size-4 transition-all duration-200" />

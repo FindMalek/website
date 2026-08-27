@@ -1,4 +1,4 @@
-import { allProjects, allWorks } from "content-collections"
+import { allProjects, allRecommendations, allWorks } from "content-collections"
 
 export default async function sitemap() {
   try {
@@ -27,7 +27,18 @@ export default async function sitemap() {
       priority: 0.7,
     }))
 
-    return [...baseUrls, ...workUrls, ...projectUrls]
+    // Placeholder entries (see #65) are structural only and must never be
+    // indexed as if they were a real, publishable recommendation.
+    const recommendationUrls = allRecommendations
+      .filter((recommendation) => !recommendation.isPlaceholder)
+      .map((recommendation) => ({
+        url: `https://www.findmalek.com${recommendation.href}`,
+        lastModified: currentDate,
+        changeFrequency: "monthly",
+        priority: 0.5,
+      }))
+
+    return [...baseUrls, ...workUrls, ...projectUrls, ...recommendationUrls]
   } catch (error) {
     console.error("Error generating sitemap:", error)
     return []

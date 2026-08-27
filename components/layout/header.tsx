@@ -15,7 +15,9 @@ export function Header() {
   return (
     <>
       <header
-        className={cn("pointer-events-none relative z-50 flex flex-col")}
+        className={cn(
+          "pointer-events-none relative z-50 flex flex-col print:hidden"
+        )}
         style={{
           height: "var(--header-height)",
           marginBottom: "var(--header-mb)",

@@ -72,7 +72,7 @@ export function Background() {
   }
 
   return (
-    <div className="fixed left-0 top-0 isolate -z-50 h-full w-full overflow-hidden dark:bg-gray-950">
+    <div className="fixed left-0 top-0 isolate -z-50 h-full w-full overflow-hidden dark:bg-gray-950 print:hidden">
       <svg
         className="absolute inset-0 -z-10 h-full w-full stroke-gray-900/10 [mask-image:radial-gradient(110%_120%_at_top_right,white,transparent)] dark:stroke-white/10"
         aria-hidden="true"
