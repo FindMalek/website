@@ -14,8 +14,8 @@ const SUBTITLE_LINES = [
 export function Hero() {
   return (
     <section className="screen-line-bottom px-4 pb-6 pt-12">
-      <div className="flex items-center gap-3">
-        <Avatar large />
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+        <Avatar large className="shrink-0" />
 
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
