@@ -6,10 +6,29 @@ import { RESUME_SLUG, RESUME_USERNAME } from "@/config/consts"
 
 export type ResumeData = typeof resumeFallback
 
+/**
+ * Just enough of a shape check to catch a malformed/truncated response
+ * before it reaches call sites that assume these fields exist (e.g.
+ * stripHtml(resumeData.summary.content) in lib/chatbot-context.ts) --
+ * not a full schema validation, this only guards what's actually
+ * dereferenced unconditionally downstream.
+ */
+function isValidResumeData(data: unknown): data is ResumeData {
+  if (!data || typeof data !== "object") return false
+  const candidate = data as Partial<ResumeData>
+  return (
+    typeof candidate.basics?.name === "string" &&
+    typeof candidate.summary?.content === "string" &&
+    typeof candidate.sections === "object" &&
+    candidate.sections !== null
+  )
+}
+
 async function fetchLiveResumeData(): Promise<ResumeData | null> {
   try {
     const res = await fetch(
-      `https://rxresu.me/api/openapi/resumes/${RESUME_USERNAME}/${RESUME_SLUG}`
+      `https://rxresu.me/api/openapi/resumes/${RESUME_USERNAME}/${RESUME_SLUG}`,
+      { signal: AbortSignal.timeout(5000) }
     )
 
     if (!res.ok) {
@@ -17,7 +36,7 @@ async function fetchLiveResumeData(): Promise<ResumeData | null> {
     }
 
     const json = await res.json()
-    return json.data as ResumeData
+    return isValidResumeData(json.data) ? json.data : null
   } catch (error) {
     // Handled: falls back to the source-controlled snapshot below, so this
     // doesn't need to surface as a "Console Error" in Next's overlay.
