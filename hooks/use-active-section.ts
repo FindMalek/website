@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 
-export type SectionId = "work" | "projects" | "stack" | "about"
+export type SectionId = "work" | "education" | "projects" | "stack" | "about"
 export type ActiveSection = SectionId | null
 
 /**

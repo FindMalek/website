@@ -42,7 +42,13 @@ export function useChatDock() {
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const activeSection = useActiveSection(["work", "projects", "stack", "about"])
+  const activeSection = useActiveSection([
+    "work",
+    "education",
+    "projects",
+    "stack",
+    "about",
+  ])
 
   const pageContext = useMemo<PageContext>(() => {
     const slugMatch = pathname.match(/^\/(?:work|projects)\/(.+)$/)
