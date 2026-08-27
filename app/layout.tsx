@@ -87,6 +87,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           "bg-background min-h-screen font-sans antialiased",
           "mx-auto flex w-full flex-col overflow-x-clip",
           "sm:max-w-lg md:max-w-2xl xl:max-w-3xl",
+          "print:max-w-none",
           poppins
         )}
       >
@@ -95,13 +96,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
-            <Background />
-            <Analytics />
-            <Toaster />
-            <TailwindIndicator />
-            <ChatFloatingContainer />
-            <HighlightAskAction />
-            <ScrollToTop />
+            {/* Site chrome has no place on a printed/PDF'd page (e.g. /resume) --
+                Header/Footer are covered by the tag-selector print rule in
+                globals.css, this wraps everything else that isn't. */}
+            <div className="print:hidden">
+              <Background />
+              <Analytics />
+              <Toaster />
+              <TailwindIndicator />
+              <ChatFloatingContainer />
+              <HighlightAskAction />
+              <ScrollToTop />
+            </div>
           </ChatProvider>
         </LayoutWrapper>
       </body>

@@ -254,3 +254,13 @@
 @utility link-underline {
   @apply decoration-current/30 underline-offset-3 underline decoration-1 transition-colors hover:decoration-current;
 }
+
+/* Site chrome (floating nav, footer) has no place on a printed page --
+   see also the print:hidden wrapper in app/layout.tsx for elements that
+   aren't a <header>/<footer> tag. */
+@media print {
+  header,
+  footer {
+    display: none !important;
+  }
+}

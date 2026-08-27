@@ -1,0 +1,337 @@
+import Link from "next/link"
+
+import { getResumeData } from "@/lib/get-resume-data"
+import { cn } from "@/lib/utils"
+
+import { ArticleContent } from "@/components/app/article-content"
+import { ResumeActions } from "@/components/app/resume-actions"
+import { Icons } from "@/components/shared/icons"
+
+const NETWORK_ICONS: Record<string, keyof typeof Icons> = {
+  github: "github",
+  linkedin: "linkedin",
+  twitter: "x",
+  x: "x",
+  instagram: "instagram",
+  facebook: "facebook",
+  spotify: "spotify",
+}
+
+function networkIcon(network: string) {
+  const Icon = Icons[NETWORK_ICONS[network.toLowerCase()] ?? "globe"]
+  return <Icon className="size-4" aria-hidden />
+}
+
+function Html({ html, className }: { html: string; className?: string }) {
+  // Trusted content: authored by the site owner via their own Reactive
+  // Resume account, same trust boundary as the MDX case-study content
+  // rendered elsewhere -- not user-submitted input.
+  return (
+    <div
+      className={cn(
+        "[&_p:last-child]:mb-0 [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5",
+        className
+      )}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  )
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="border-border mb-4 border-b pb-1.5 text-lg font-bold tracking-tight">
+      {children}
+    </h2>
+  )
+}
+
+export async function generateMetadata() {
+  const resumeData = await getResumeData()
+
+  return {
+    title: "Resume",
+    description: `${resumeData.basics.name} — ${resumeData.basics.headline}`,
+  }
+}
+
+export default async function ResumePage() {
+  const resumeData = await getResumeData()
+  const { basics, summary, sections } = resumeData
+
+  return (
+    <div className="container max-w-3xl px-4 py-16 md:py-24 print:max-w-none print:py-0">
+      <ResumeActions />
+
+      <ArticleContent className="print:text-black">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight">{basics.name}</h1>
+          <p className="text-muted-foreground mt-1 text-lg print:text-black">
+            {basics.headline}
+          </p>
+
+          <div className="text-muted-foreground mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm print:text-black">
+            {basics.location && (
+              <span className="inline-flex items-center gap-1.5">
+                <Icons.location className="size-4" aria-hidden />
+                {basics.location}
+              </span>
+            )}
+            {basics.email && (
+              <a
+                href={`mailto:${basics.email}`}
+                className="hover:text-foreground inline-flex items-center gap-1.5"
+              >
+                <Icons.mail className="size-4" aria-hidden />
+                {basics.email}
+              </a>
+            )}
+            {basics.phone && (
+              <span className="inline-flex items-center gap-1.5">
+                <Icons.phone className="size-4" aria-hidden />
+                {basics.phone}
+              </span>
+            )}
+            {basics.website?.url && (
+              <a
+                href={basics.website.url}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-foreground inline-flex items-center gap-1.5"
+              >
+                <Icons.globe className="size-4" aria-hidden />
+                {basics.website.label || basics.website.url}
+              </a>
+            )}
+            {sections.profiles.items
+              .filter((item) => !item.hidden)
+              .map((item) => (
+                <a
+                  key={item.id}
+                  href={item.website.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-foreground inline-flex items-center gap-1.5"
+                >
+                  {networkIcon(item.network)}
+                  {item.username}
+                </a>
+              ))}
+          </div>
+        </header>
+
+        {summary?.content && (
+          <section className="mb-8">
+            <Html html={summary.content} className="text-base" />
+          </section>
+        )}
+
+        {sections.experience.items.length > 0 && (
+          <section className="mb-8">
+            <SectionTitle>Experience</SectionTitle>
+            <div className="space-y-6">
+              {sections.experience.items
+                .filter((item) => !item.hidden)
+                .map((item) => (
+                  <div key={item.id}>
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                      <h3 className="font-semibold">
+                        {item.position} · {item.company}
+                      </h3>
+                      <span className="text-muted-foreground text-sm print:text-black">
+                        {item.period}
+                      </span>
+                    </div>
+                    {item.location && (
+                      <p className="text-muted-foreground text-sm print:text-black">
+                        {item.location}
+                      </p>
+                    )}
+                    {item.description && (
+                      <Html
+                        html={item.description}
+                        className="text-muted-foreground mt-1.5 text-sm print:text-black"
+                      />
+                    )}
+                    {item.roles && item.roles.length > 0 && (
+                      <div className="mt-3 space-y-3 border-l pl-4">
+                        {item.roles.map((role) => (
+                          <div key={role.id}>
+                            <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                              <h4 className="text-sm font-medium">
+                                {role.position}
+                              </h4>
+                              <span className="text-muted-foreground text-xs print:text-black">
+                                {role.period}
+                              </span>
+                            </div>
+                            {role.description && (
+                              <Html
+                                html={role.description}
+                                className="text-muted-foreground mt-1 text-sm print:text-black"
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+            </div>
+          </section>
+        )}
+
+        {sections.education.items.length > 0 && (
+          <section className="mb-8">
+            <SectionTitle>Education</SectionTitle>
+            <div className="space-y-4">
+              {sections.education.items
+                .filter((item) => !item.hidden)
+                .map((item) => (
+                  <div key={item.id}>
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                      <h3 className="font-semibold">
+                        {item.degree}
+                        {item.area ? `, ${item.area}` : ""} · {item.school}
+                      </h3>
+                      <span className="text-muted-foreground text-sm print:text-black">
+                        {item.period}
+                      </span>
+                    </div>
+                    {item.grade && (
+                      <p className="text-muted-foreground text-sm print:text-black">
+                        {item.grade}
+                      </p>
+                    )}
+                    {item.description && (
+                      <Html
+                        html={item.description}
+                        className="text-muted-foreground mt-1.5 text-sm print:text-black"
+                      />
+                    )}
+                  </div>
+                ))}
+            </div>
+          </section>
+        )}
+
+        {sections.projects.items.length > 0 && (
+          <section className="mb-8">
+            <SectionTitle>Projects</SectionTitle>
+            <div className="space-y-4">
+              {sections.projects.items
+                .filter((item) => !item.hidden)
+                .map((item) => (
+                  <div key={item.id}>
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                      <h3 className="font-semibold">
+                        {item.website?.url ? (
+                          <Link
+                            href={item.website.url}
+                            target="_blank"
+                            className="hover:underline"
+                          >
+                            {item.name}
+                          </Link>
+                        ) : (
+                          item.name
+                        )}
+                      </h3>
+                      {item.period && (
+                        <span className="text-muted-foreground text-sm print:text-black">
+                          {item.period}
+                        </span>
+                      )}
+                    </div>
+                    {item.description && (
+                      <Html
+                        html={item.description}
+                        className="text-muted-foreground mt-1.5 text-sm print:text-black"
+                      />
+                    )}
+                  </div>
+                ))}
+            </div>
+          </section>
+        )}
+
+        {sections.skills.items.length > 0 && (
+          <section className="mb-8">
+            <SectionTitle>Skills</SectionTitle>
+            <div className="space-y-2">
+              {sections.skills.items
+                .filter((item) => !item.hidden)
+                .map((item) => (
+                  <p key={item.id} className="text-sm">
+                    <span className="font-semibold">{item.name}:</span>{" "}
+                    <span className="text-muted-foreground print:text-black">
+                      {(item.keywords ?? []).join(", ")}
+                    </span>
+                  </p>
+                ))}
+            </div>
+          </section>
+        )}
+
+        {sections.awards.items.length > 0 && (
+          <section className="mb-8">
+            <SectionTitle>Awards</SectionTitle>
+            <div className="space-y-3">
+              {sections.awards.items
+                .filter((item) => !item.hidden)
+                .map((item) => (
+                  <div key={item.id}>
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                      <h3 className="font-semibold">
+                        {item.title} · {item.awarder}
+                      </h3>
+                      {item.date && (
+                        <span className="text-muted-foreground text-sm print:text-black">
+                          {item.date}
+                        </span>
+                      )}
+                    </div>
+                    {item.description && (
+                      <Html
+                        html={item.description}
+                        className="text-muted-foreground mt-1.5 text-sm print:text-black"
+                      />
+                    )}
+                  </div>
+                ))}
+            </div>
+          </section>
+        )}
+
+        {sections.certifications.items.length > 0 && (
+          <section className="mb-8">
+            <SectionTitle>Certifications</SectionTitle>
+            <div className="space-y-3">
+              {sections.certifications.items
+                .filter((item) => !item.hidden)
+                .map((item) => (
+                  <div key={item.id}>
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                      <h3 className="font-semibold">
+                        {item.title} · {item.issuer}
+                      </h3>
+                      {item.date && (
+                        <span className="text-muted-foreground text-sm print:text-black">
+                          {item.date}
+                        </span>
+                      )}
+                    </div>
+                    {item.description && (
+                      <Html
+                        html={item.description}
+                        className="text-muted-foreground mt-1.5 text-sm print:text-black"
+                      />
+                    )}
+                  </div>
+                ))}
+            </div>
+          </section>
+        )}
+      </ArticleContent>
+    </div>
+  )
+}

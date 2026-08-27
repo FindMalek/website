@@ -1,5 +1,4 @@
 import { unstable_cache } from "next/cache"
-
 import resumeFallback from "@/data/resume.json"
 
 import { RESUME_SLUG, RESUME_USERNAME } from "@/config/consts"
