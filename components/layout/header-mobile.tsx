@@ -1,17 +1,30 @@
 import { Fragment } from "react"
 import Link from "next/link"
-import { Popover, Transition } from "@headlessui/react"
+import { usePathname } from "next/navigation"
+import { Popover, Transition, useClose } from "@headlessui/react"
 
 import { MobileNavigationType, NavItemType } from "@/types"
 
 import { NAV_ITEMS } from "@/config/consts"
+import { scrollToAnchorSection } from "@/lib/utils"
 
 import { Icons } from "@/components/shared/icons"
 
 function MobileNavItem({ href, children }: NavItemType) {
+  const pathname = usePathname()
+  const close = useClose()
+
   return (
     <li>
-      <Popover.Button as={Link} href={href} className="block py-2">
+      <Popover.Button
+        as={Link}
+        href={href}
+        className="block py-2"
+        onClick={(e: React.MouseEvent) => {
+          close()
+          if (scrollToAnchorSection(href, pathname)) e.preventDefault()
+        }}
+      >
         {children}
       </Popover.Button>
     </li>
