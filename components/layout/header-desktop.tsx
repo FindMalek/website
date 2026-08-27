@@ -1,16 +1,22 @@
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 import { DesktopNavigationType, NavItemType } from "@/types"
 
 import { NAV_ITEMS } from "@/config/consts"
-import { cn } from "@/lib/utils"
+import { cn, scrollToAnchorSection } from "@/lib/utils"
 import { useActiveSection } from "@/hooks/use-active-section"
 
 function NavItem({ href, children, isActive }: NavItemType) {
+  const pathname = usePathname()
+
   return (
     <li>
       <Link
         href={href}
+        onClick={(e) => {
+          if (scrollToAnchorSection(href, pathname)) e.preventDefault()
+        }}
         className={cn(
           "relative block px-2 py-1.5 text-base transition",
           isActive

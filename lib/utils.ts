@@ -8,6 +8,29 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+/**
+ * Handles a nav click on a homepage-anchor href (e.g. "/#work") when the
+ * visitor is already on the target path. next/link's built-in hash
+ * scrolling only fires on an actual route transition -- a same-pathname,
+ * hash-only click (already on "/", clicking "/#work") doesn't reliably
+ * scroll, since the router sees no navigation to act on. Returns true if
+ * it handled the scroll (caller should preventDefault), false if this
+ * wasn't a same-page hash link and next/link should handle it normally.
+ */
+export function scrollToAnchorSection(href: string, pathname: string) {
+  const hashIndex = href.indexOf("#")
+  if (hashIndex === -1) return false
+
+  const targetPath = href.slice(0, hashIndex) || "/"
+  if (targetPath !== pathname) return false
+
+  const targetId = href.slice(hashIndex + 1)
+  document
+    .getElementById(targetId)
+    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+  return true
+}
+
 export function clamp(number: number, a: number, b: number) {
   const min = Math.min(a, b)
   const max = Math.max(a, b)
