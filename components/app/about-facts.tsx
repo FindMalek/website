@@ -1,5 +1,4 @@
 import { siteConfig, TIMEZONE } from "@/config/site"
-
 import { getResumeData } from "@/lib/get-resume-data"
 
 import { CurrentLocalTimeItem } from "@/components/app/current-local-time-item"

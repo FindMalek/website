@@ -1,5 +1,4 @@
 import { siteConfig } from "@/config/site"
-
 import { getResumeData } from "@/lib/get-resume-data"
 
 import { PronounceNameButton } from "@/components/app/pronounce-name-button"

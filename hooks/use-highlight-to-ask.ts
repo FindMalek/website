@@ -12,13 +12,15 @@ interface HighlightSelection {
 
 /**
  * Selection-listener for highlight-to-ask, scoped to [data-ask-enabled]
- * content (see components/app/article-content.tsx). Only case-study pages
- * (/work/[slug], /projects/[slug]) render that wrapper, and this hook
- * gates on the route too rather than relying on DOM-query timing alone.
+ * content (see components/app/article-content.tsx). Case-study pages
+ * (/work/[slug], /projects/[slug]) and the /resume page render that
+ * wrapper, and this hook gates on the route too rather than relying on
+ * DOM-query timing alone.
  */
 export function useHighlightToAsk() {
   const pathname = usePathname()
-  const enabled = /^\/(work|projects)\/.+/.test(pathname)
+  const enabled =
+    /^\/(work|projects)\/.+/.test(pathname) || pathname === "/resume"
   const [selection, setSelection] = useState<HighlightSelection | null>(null)
 
   const evaluateSelection = useCallback(() => {
