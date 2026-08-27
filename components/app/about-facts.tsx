@@ -1,6 +1,6 @@
-import resumeData from "@/data/resume.json"
-
 import { siteConfig, TIMEZONE } from "@/config/site"
+
+import { getResumeData } from "@/lib/get-resume-data"
 
 import { CurrentLocalTimeItem } from "@/components/app/current-local-time-item"
 import {
@@ -12,7 +12,9 @@ import {
 import { CopyText } from "@/components/shared/copy-text"
 import { Icons } from "@/components/shared/icons"
 
-export function AboutFacts() {
+export async function AboutFacts() {
+  const resumeData = await getResumeData()
+
   return (
     <div className="mb-8 grid gap-x-4 gap-y-2.5 sm:grid-cols-2">
       <IntroItem>

@@ -57,6 +57,12 @@ export const NAV_ITEMS = {
 export type PagePath = (typeof PAGES)[keyof typeof PAGES]["path"]
 export type PageLabel = (typeof PAGES)[keyof typeof PAGES]["label"]
 
+// Reactive Resume public-sharing identifiers -- the resume must be marked
+// public with this exact slug in the RxResume account itself (a manual,
+// account-side step; nothing here can set it). See lib/get-resume-data.ts.
+export const RESUME_USERNAME = "findmalek"
+export const RESUME_SLUG = "findmalek-resume"
+
 export const BOOKS = [
   {
     id: "1",
