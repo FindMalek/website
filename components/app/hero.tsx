@@ -1,17 +1,19 @@
-import resumeData from "@/data/resume.json"
-
 import { siteConfig } from "@/config/site"
+
+import { getResumeData } from "@/lib/get-resume-data"
 
 import { PronounceNameButton } from "@/components/app/pronounce-name-button"
 import { RotatingSubtitle } from "@/components/app/rotating-subtitle"
 import { Avatar } from "@/components/shared/avatar"
 
-const SUBTITLE_LINES = [
-  resumeData.basics.headline,
-  "i like listening to music and coding :)",
-]
+export async function Hero() {
+  const resumeData = await getResumeData()
 
-export function Hero() {
+  const SUBTITLE_LINES = [
+    resumeData.basics.headline,
+    "i like listening to music and coding :)",
+  ]
+
   return (
     <section className="screen-line-bottom px-4 pb-6 pt-12">
       <div className="flex items-center gap-3">

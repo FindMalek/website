@@ -5,7 +5,9 @@ alwaysApply: true
 
 # Resume data schema
 
-`data/resume.json` is a **Reactive Resume** (rxresu.me) export — schema version 5.0.0, `$schema: https://rxresu.me/schema.json`. It is the single source of truth consumed by `lib/chatbot-context.ts` (AI chat context) and `components/app/hero.tsx` / `about-facts.tsx` (basic fields). It is edited by exporting/importing through the Reactive Resume app, or by hand-editing the JSON directly — either way it must stay valid against the real schema below, since it's also meant to re-import cleanly into Reactive Resume.
+The **live Reactive Resume account** (`rxresu.me`, username `findmalek`, slug `findmalek-resume` — see `RESUME_USERNAME`/`RESUME_SLUG` in `config/consts.ts`) is the actual source of truth as of the live-API migration (#107). `lib/get-resume-data.ts` fetches it server-side (`GET /resumes/{username}/{slug}`, no auth needed for a public resume), cached 6h, and is what `lib/chatbot-context.ts` and `components/app/hero.tsx` / `about-facts.tsx` consume — none of them read `data/resume.json` directly anymore.
+
+`data/resume.json` is kept as a **build-time fallback only**, used automatically if the live API is unreachable. It's a Reactive Resume export — schema version 5.0.0, `$schema: https://rxresu.me/schema.json` — same shape documented below, since the live API's `data` field returns the identical structure. Re-export it from the RxResume app periodically to keep the fallback from drifting too far from what's actually live; it does not need to be updated on every CV change the way it used to.
 
 Full docs: https://docs.rxresu.me (start at `/llms.txt` for the complete page index; `/guides/json-resume-schema.md` has the authoritative field-by-field schema). The AI-powered PDF/DOCX parsing and resume-chat API live under `/api-reference/ai/*` — auth via `x-api-key` header, key stored in `.env.local` as `RXRESUME_API_KEY` (never commit this key or print it in issues/PRs/commits).
 
