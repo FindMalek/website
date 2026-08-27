@@ -14,7 +14,7 @@ export function ResumeActions() {
   const { copied, copy } = useCopyClipboard()
 
   return (
-    <div className="mb-8 flex items-center gap-2 print:hidden">
+    <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8 print:hidden">
       <Button variant="outline" size="sm" onClick={() => window.print()}>
         <Icons.download className="mr-1.5 size-4" />
         Download PDF

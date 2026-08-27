@@ -19,7 +19,7 @@ const NETWORK_ICONS: Record<string, keyof typeof Icons> = {
 
 function networkIcon(network: string) {
   const Icon = Icons[NETWORK_ICONS[network.toLowerCase()] ?? "globe"]
-  return <Icon className="size-4" aria-hidden />
+  return <Icon className="size-4 shrink-0" aria-hidden />
 }
 
 function Html({ html, className }: { html: string; className?: string }) {
@@ -29,7 +29,7 @@ function Html({ html, className }: { html: string; className?: string }) {
   return (
     <div
       className={cn(
-        "[&_p:last-child]:mb-0 [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5",
+        "[&_p]:mb-2 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5",
         className
       )}
       dangerouslySetInnerHTML={{ __html: html }}
@@ -39,9 +39,29 @@ function Html({ html, className }: { html: string; className?: string }) {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="border-border mb-4 border-b pb-1.5 text-lg font-bold tracking-tight">
+    <h2 className="border-border mb-4 border-b pb-1.5 text-base font-bold tracking-tight sm:text-lg">
       {children}
     </h2>
+  )
+}
+
+/** Title (bold) + date (muted, smaller) -- stacked on mobile, side by side from sm: up. */
+function ItemHeader({
+  title,
+  date,
+}: {
+  title: React.ReactNode
+  date?: React.ReactNode
+}) {
+  return (
+    <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-x-4">
+      <h3 className="text-sm font-semibold sm:text-base">{title}</h3>
+      {date && (
+        <span className="text-muted-foreground shrink-0 text-xs print:text-black sm:text-sm">
+          {date}
+        </span>
+      )}
+    </div>
   )
 }
 
@@ -59,20 +79,22 @@ export default async function ResumePage() {
   const { basics, summary, sections } = resumeData
 
   return (
-    <div className="container max-w-3xl px-4 py-16 md:py-24 print:max-w-none print:py-0">
+    <div className="container max-w-3xl px-4 py-10 sm:py-16 md:py-24 print:max-w-none print:py-0">
       <ResumeActions />
 
       <ArticleContent className="print:text-black">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">{basics.name}</h1>
-          <p className="text-muted-foreground mt-1 text-lg print:text-black">
+        <header className="mb-8 sm:mb-10">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            {basics.name}
+          </h1>
+          <p className="text-muted-foreground mt-1 text-base print:text-black sm:text-lg">
             {basics.headline}
           </p>
 
-          <div className="text-muted-foreground mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm print:text-black">
+          <div className="text-muted-foreground mt-4 flex flex-col gap-1.5 text-sm print:text-black sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
             {basics.location && (
               <span className="inline-flex items-center gap-1.5">
-                <Icons.location className="size-4" aria-hidden />
+                <Icons.location className="size-4 shrink-0" aria-hidden />
                 {basics.location}
               </span>
             )}
@@ -81,13 +103,13 @@ export default async function ResumePage() {
                 href={`mailto:${basics.email}`}
                 className="hover:text-foreground inline-flex items-center gap-1.5"
               >
-                <Icons.mail className="size-4" aria-hidden />
+                <Icons.mail className="size-4 shrink-0" aria-hidden />
                 {basics.email}
               </a>
             )}
             {basics.phone && (
               <span className="inline-flex items-center gap-1.5">
-                <Icons.phone className="size-4" aria-hidden />
+                <Icons.phone className="size-4 shrink-0" aria-hidden />
                 {basics.phone}
               </span>
             )}
@@ -98,7 +120,7 @@ export default async function ResumePage() {
                 rel="noreferrer"
                 className="hover:text-foreground inline-flex items-center gap-1.5"
               >
-                <Icons.globe className="size-4" aria-hidden />
+                <Icons.globe className="size-4 shrink-0" aria-hidden />
                 {basics.website.label || basics.website.url}
               </a>
             )}
@@ -120,29 +142,25 @@ export default async function ResumePage() {
         </header>
 
         {summary?.content && (
-          <section className="mb-8">
-            <Html html={summary.content} className="text-base" />
+          <section className="mb-8 sm:mb-10">
+            <Html html={summary.content} className="text-sm sm:text-base" />
           </section>
         )}
 
         {sections.experience.items.length > 0 && (
-          <section className="mb-8">
+          <section className="mb-8 sm:mb-10">
             <SectionTitle>Experience</SectionTitle>
-            <div className="space-y-6">
+            <div className="space-y-5 sm:space-y-6">
               {sections.experience.items
                 .filter((item) => !item.hidden)
                 .map((item) => (
                   <div key={item.id}>
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                      <h3 className="font-semibold">
-                        {item.position} · {item.company}
-                      </h3>
-                      <span className="text-muted-foreground text-sm print:text-black">
-                        {item.period}
-                      </span>
-                    </div>
+                    <ItemHeader
+                      title={`${item.position} · ${item.company}`}
+                      date={item.period}
+                    />
                     {item.location && (
-                      <p className="text-muted-foreground text-sm print:text-black">
+                      <p className="text-muted-foreground text-xs print:text-black sm:text-sm">
                         {item.location}
                       </p>
                     )}
@@ -153,17 +171,17 @@ export default async function ResumePage() {
                       />
                     )}
                     {item.roles && item.roles.length > 0 && (
-                      <div className="mt-3 space-y-3 border-l pl-4">
+                      <div className="mt-3 space-y-3 border-l pl-3 sm:pl-4">
                         {item.roles.map((role) => (
                           <div key={role.id}>
-                            <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                              <h4 className="text-sm font-medium">
-                                {role.position}
-                              </h4>
-                              <span className="text-muted-foreground text-xs print:text-black">
-                                {role.period}
-                              </span>
-                            </div>
+                            <ItemHeader
+                              title={
+                                <span className="font-medium">
+                                  {role.position}
+                                </span>
+                              }
+                              date={role.period}
+                            />
                             {role.description && (
                               <Html
                                 html={role.description}
@@ -181,24 +199,24 @@ export default async function ResumePage() {
         )}
 
         {sections.education.items.length > 0 && (
-          <section className="mb-8">
+          <section className="mb-8 sm:mb-10">
             <SectionTitle>Education</SectionTitle>
             <div className="space-y-4">
               {sections.education.items
                 .filter((item) => !item.hidden)
                 .map((item) => (
                   <div key={item.id}>
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                      <h3 className="font-semibold">
-                        {item.degree}
-                        {item.area ? `, ${item.area}` : ""} · {item.school}
-                      </h3>
-                      <span className="text-muted-foreground text-sm print:text-black">
-                        {item.period}
-                      </span>
-                    </div>
+                    <ItemHeader
+                      title={
+                        <>
+                          {item.degree}
+                          {item.area ? `, ${item.area}` : ""} · {item.school}
+                        </>
+                      }
+                      date={item.period}
+                    />
                     {item.grade && (
-                      <p className="text-muted-foreground text-sm print:text-black">
+                      <p className="text-muted-foreground text-xs print:text-black sm:text-sm">
                         {item.grade}
                       </p>
                     )}
@@ -215,16 +233,16 @@ export default async function ResumePage() {
         )}
 
         {sections.projects.items.length > 0 && (
-          <section className="mb-8">
+          <section className="mb-8 sm:mb-10">
             <SectionTitle>Projects</SectionTitle>
             <div className="space-y-4">
               {sections.projects.items
                 .filter((item) => !item.hidden)
                 .map((item) => (
                   <div key={item.id}>
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                      <h3 className="font-semibold">
-                        {item.website?.url ? (
+                    <ItemHeader
+                      title={
+                        item.website?.url ? (
                           <Link
                             href={item.website.url}
                             target="_blank"
@@ -234,14 +252,10 @@ export default async function ResumePage() {
                           </Link>
                         ) : (
                           item.name
-                        )}
-                      </h3>
-                      {item.period && (
-                        <span className="text-muted-foreground text-sm print:text-black">
-                          {item.period}
-                        </span>
-                      )}
-                    </div>
+                        )
+                      }
+                      date={item.period}
+                    />
                     {item.description && (
                       <Html
                         html={item.description}
@@ -255,7 +269,7 @@ export default async function ResumePage() {
         )}
 
         {sections.skills.items.length > 0 && (
-          <section className="mb-8">
+          <section className="mb-8 sm:mb-10">
             <SectionTitle>Skills</SectionTitle>
             <div className="space-y-2">
               {sections.skills.items
@@ -273,23 +287,17 @@ export default async function ResumePage() {
         )}
 
         {sections.awards.items.length > 0 && (
-          <section className="mb-8">
+          <section className="mb-8 sm:mb-10">
             <SectionTitle>Awards</SectionTitle>
             <div className="space-y-3">
               {sections.awards.items
                 .filter((item) => !item.hidden)
                 .map((item) => (
                   <div key={item.id}>
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                      <h3 className="font-semibold">
-                        {item.title} · {item.awarder}
-                      </h3>
-                      {item.date && (
-                        <span className="text-muted-foreground text-sm print:text-black">
-                          {item.date}
-                        </span>
-                      )}
-                    </div>
+                    <ItemHeader
+                      title={`${item.title} · ${item.awarder}`}
+                      date={item.date}
+                    />
                     {item.description && (
                       <Html
                         html={item.description}
@@ -303,23 +311,17 @@ export default async function ResumePage() {
         )}
 
         {sections.certifications.items.length > 0 && (
-          <section className="mb-8">
+          <section className="mb-8 sm:mb-10">
             <SectionTitle>Certifications</SectionTitle>
             <div className="space-y-3">
               {sections.certifications.items
                 .filter((item) => !item.hidden)
                 .map((item) => (
                   <div key={item.id}>
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                      <h3 className="font-semibold">
-                        {item.title} · {item.issuer}
-                      </h3>
-                      {item.date && (
-                        <span className="text-muted-foreground text-sm print:text-black">
-                          {item.date}
-                        </span>
-                      )}
-                    </div>
+                    <ItemHeader
+                      title={`${item.title} · ${item.issuer}`}
+                      date={item.date}
+                    />
                     {item.description && (
                       <Html
                         html={item.description}
