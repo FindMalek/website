@@ -1,5 +1,7 @@
 "use client"
 
+import { useRef } from "react"
+
 import { cn } from "@/lib/utils"
 
 import { Icons } from "@/components/shared/icons"
@@ -9,27 +11,32 @@ interface PronounceNameButtonProps {
   className?: string
 }
 
-/**
- * chanhdai's version plays a real recording of his own voice. No recording
- * exists for this site, so this uses the browser's native speechSynthesis
- * API instead -- a generic TTS voice, not the site owner's actual voice.
- * There's no realistic pronunciation-hint mechanism available without a
- * real audio file; that's an accepted trade-off of this approach, not a
- * bug to chase.
- *
- * Support is feature-detected inside the click handler, not during render --
- * branching render output on `typeof window`/`"speechSynthesis" in window`
- * would make the client's first render disagree with the server-rendered
- * HTML (which always runs with no `window`), causing a hydration mismatch.
- */
+const AUDIO_SRC = "/audio/name-pronunciation.mp3"
+
+function speakFallback(name: string) {
+  if (!("speechSynthesis" in window)) return
+  window.speechSynthesis.cancel()
+  window.speechSynthesis.speak(new SpeechSynthesisUtterance(name))
+}
+
 export function PronounceNameButton({
   name,
   className,
 }: PronounceNameButtonProps) {
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
   const handleClick = () => {
-    if (!("speechSynthesis" in window)) return
-    window.speechSynthesis.cancel()
-    window.speechSynthesis.speak(new SpeechSynthesisUtterance(name))
+    const audio = audioRef.current
+    if (!audio) {
+      speakFallback(name)
+      return
+    }
+
+    audio.currentTime = 0
+    // play() returns a rejectable promise (autoplay policies, network
+    // failure loading the file, etc.) -- fall back to speechSynthesis
+    // rather than leaving the click silently do nothing.
+    audio.play().catch(() => speakFallback(name))
   }
 
   return (
@@ -42,6 +49,7 @@ export function PronounceNameButton({
         className
       )}
     >
+      <audio ref={audioRef} src={AUDIO_SRC} preload="none" />
       <Icons.volume className="size-4.5" aria-hidden />
     </button>
   )
