@@ -22,7 +22,7 @@ const SOCIAL_LINKS = [
 
 export function AboutOverview() {
   return (
-    <section className="mb-32" id="overview">
+    <section id="overview">
       <AboutFacts />
 
       <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">

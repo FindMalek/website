@@ -7,7 +7,7 @@ export function AboutBooks() {
   return (
     <section
       id="readings"
-      className="mb-32 [scroll-margin-top:var(--header-height,6rem)]"
+      className="[scroll-margin-top:var(--header-height,6rem)]"
     >
       <SectionHeading
         title="Reading list"

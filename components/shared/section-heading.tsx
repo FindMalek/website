@@ -46,10 +46,10 @@ export function SectionHeading({
       )}
     >
       <div>
-        <h2 className="group/title mb-2 flex items-center gap-1.5 text-3xl font-bold">
+        <h2 className="group/title mb-2 flex items-center gap-1.5 text-lg font-semibold">
           {title}
           {count !== undefined && (
-            <sup className="text-muted-foreground top-[-0.75em] ml-2.5 text-sm font-medium tracking-normal">
+            <sup className="text-muted-foreground top-[-0.75em] ml-2.5 text-xs font-medium tracking-normal">
               ({count})
             </sup>
           )}
@@ -58,7 +58,9 @@ export function SectionHeading({
           )}
         </h2>
         {description && (
-          <p className="text-secondary-foreground/80">{description}</p>
+          <p className="text-secondary-foreground/80 text-sm">
+            {description}
+          </p>
         )}
       </div>
       {direct && (

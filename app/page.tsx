@@ -232,8 +232,17 @@ export default async function Home() {
             className="flex flex-col"
           />
 
-          <AboutMusic playlists={playlists.items} />
-          <AboutBooks />
+          <div className="border-line mt-8 border-t pt-8">
+            <h3 className="mb-4 text-xl font-semibold">Personal</h3>
+
+            <div className="space-y-8">
+              <AboutMusic playlists={playlists.items} />
+
+              <div className="border-line border-t pt-8">
+                <AboutBooks />
+              </div>
+            </div>
+          </div>
         </PanelContent>
       </Panel>
     </div>
