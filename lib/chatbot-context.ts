@@ -1,24 +1,24 @@
-import resumeData from "@/data/resume.json"
 import { llml } from "@zenbase/llml"
 import { allProjects, allWorks } from "content-collections"
 
 import { PageContext } from "@/types"
 
 import { STACK_SECTIONS } from "@/config/stack"
+import { getResumeData, type ResumeData } from "@/lib/get-resume-data"
 
 type Project = (typeof allProjects)[number]
 type Work = (typeof allWorks)[number]
 type SkillItem = { name: string; keywords: string[] }
 type LanguageItem = { language: string; fluency: string }
 
-function stripHtml(html: string): string {
+export function stripHtml(html: string): string {
   return html
     .replace(/<[^>]*>/g, "")
     .replace(/\n+/g, " ")
     .trim()
 }
 
-function getExperienceData() {
+function getExperienceData(resumeData: ResumeData) {
   return resumeData.sections.experience.items.map((exp) => ({
     position: exp.position,
     company: exp.company,
@@ -28,7 +28,7 @@ function getExperienceData() {
   }))
 }
 
-function getEducationData() {
+function getEducationData(resumeData: ResumeData) {
   return resumeData.sections.education.items.map((edu) => ({
     degree: edu.degree,
     area: edu.area,
@@ -39,7 +39,7 @@ function getEducationData() {
   }))
 }
 
-function getAwardsData() {
+function getAwardsData(resumeData: ResumeData) {
   return resumeData.sections.awards.items.map((award) => ({
     title: award.title,
     awarder: award.awarder,
@@ -48,7 +48,7 @@ function getAwardsData() {
   }))
 }
 
-function getSkillsData() {
+function getSkillsData(resumeData: ResumeData) {
   const skills = resumeData.sections.skills.items as SkillItem[]
   return skills.map((skill) => ({
     name: skill.name,
@@ -56,7 +56,7 @@ function getSkillsData() {
   }))
 }
 
-function getLanguagesData() {
+function getLanguagesData(resumeData: ResumeData) {
   const languages = resumeData.sections.languages.items as LanguageItem[]
   return languages.map((lang) => ({
     name: lang.language ?? "",
@@ -135,7 +135,9 @@ function describePageContext(pageContext?: PageContext): string | undefined {
  * Generates the complete context for the chatbot using LLML
  * Transforms structured data into VibeXML optimized for AI attention
  */
-export function generateChatbotContext(pageContext?: PageContext) {
+export async function generateChatbotContext(pageContext?: PageContext) {
+  const resumeData = await getResumeData()
+
   const context = {
     professionalBackground: {
       summary: stripHtml(resumeData.summary.content),
@@ -149,11 +151,11 @@ export function generateChatbotContext(pageContext?: PageContext) {
         twitter: "https://x.com/foundmalek",
         birthdate: "July 31, 2001",
       },
-      education: getEducationData(),
-      experience: getExperienceData(),
-      awards: getAwardsData(),
-      skills: getSkillsData(),
-      languages: getLanguagesData(),
+      education: getEducationData(resumeData),
+      experience: getExperienceData(resumeData),
+      awards: getAwardsData(resumeData),
+      skills: getSkillsData(resumeData),
+      languages: getLanguagesData(resumeData),
     },
     workExperience: getWorkExperienceData(),
     projects: getProjectsData(),

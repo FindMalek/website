@@ -5,6 +5,7 @@ import { allProjects, allWorks } from "content-collections"
 import { CLIENTS, REPOSITORIES } from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
 import { getCachedContributions } from "@/lib/get-cached-contributions"
+import { getResumeData } from "@/lib/get-resume-data"
 import {
   groupWorkByCompany,
   sortProjectsByStars,
@@ -17,6 +18,7 @@ import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
 import { ClientsMarquee } from "@/components/app/clients-marquee"
 import { CollapsibleList } from "@/components/app/collapsible-list"
+import { EducationItem } from "@/components/app/education-item"
 import {
   GitHubContributions,
   GitHubContributionsFallback,
@@ -45,6 +47,10 @@ const GITHUB_USERNAME = SOURCE_REPO_URL.split("/").at(-2) ?? "findmalek"
 
 export default async function Home() {
   const playlists = await getUserPlaylists(20, 0)
+  const resumeData = await getResumeData()
+  const educationItems = resumeData.sections.education.items.filter(
+    (item) => !item.hidden
+  )
   const orderedWorks = sortWorkExperiences(allWorks)
   const workGroups = groupWorkByCompany(orderedWorks)
   const orderedProjects = sortProjectsByStatus(allProjects)
@@ -143,6 +149,29 @@ export default async function Home() {
             step={2}
             className="flex flex-col"
           />
+        </PanelContent>
+      </Panel>
+
+      <div className="stripe-divider" />
+
+      <Panel id="education">
+        <PanelHeader>
+          <div className="group/title flex items-center gap-1.5">
+            <PanelTitle>
+              Education
+              <PanelTitleSup>({educationItems.length})</PanelTitleSup>
+            </PanelTitle>
+            <PanelCopyLinkButton sectionId="education" />
+          </div>
+          <PanelDescription>My academic background.</PanelDescription>
+        </PanelHeader>
+
+        <PanelContent>
+          <div className="flex flex-col">
+            {educationItems.map((item) => (
+              <EducationItem key={item.id} item={item} />
+            ))}
+          </div>
         </PanelContent>
       </Panel>
 

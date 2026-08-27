@@ -19,6 +19,12 @@ export const PAGES = {
     name: "Work",
     text: "Have a look at my work",
   },
+  EDUCATION: {
+    path: "/education",
+    label: "Education.",
+    name: "Education",
+    text: "See my academic background",
+  },
   PROJECTS: {
     path: "/projects",
     label: "Projects.",
@@ -48,6 +54,7 @@ export const PAGES = {
 export const NAV_ITEMS = {
   ABOUT: { ...PAGES.ABOUT, path: "/#about" },
   WORK: { ...PAGES.WORK, path: "/#work" },
+  EDUCATION: { ...PAGES.EDUCATION, path: "/#education" },
   PROJECTS: { ...PAGES.PROJECTS, path: "/#projects" },
   STACK: { ...PAGES.STACK, path: "/#stack" },
   // CONTACT intentionally omitted: contact is no longer a nav destination,
@@ -56,6 +63,12 @@ export const NAV_ITEMS = {
 
 export type PagePath = (typeof PAGES)[keyof typeof PAGES]["path"]
 export type PageLabel = (typeof PAGES)[keyof typeof PAGES]["label"]
+
+// Reactive Resume public-sharing identifiers -- the resume must be marked
+// public with this exact slug in the RxResume account itself (a manual,
+// account-side step; nothing here can set it). See lib/get-resume-data.ts.
+export const RESUME_USERNAME = "findmalek"
+export const RESUME_SLUG = "findmalek-resume"
 
 export const BOOKS = [
   {

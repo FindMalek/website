@@ -5,7 +5,10 @@ import { z } from "zod/v3"
 
 import { PageContext } from "@/types"
 
-import { generateChatbotContext } from "@/lib/chatbot-context"
+import { siteConfig } from "@/config/site"
+
+import { generateChatbotContext, stripHtml } from "@/lib/chatbot-context"
+import { getResumeData } from "@/lib/get-resume-data"
 import { sanitizeMessages } from "@/lib/utils"
 
 export const maxDuration = 20
@@ -15,7 +18,7 @@ export async function POST(req: Request) {
     const body = await req.json()
     const rawMessages: UIMessage[] = body.messages || []
     const pageContext: PageContext | undefined = body.pageContext
-    const contextualKnowledge = generateChatbotContext(pageContext)
+    const contextualKnowledge = await generateChatbotContext(pageContext)
     const uiMessages = sanitizeMessages(rawMessages)
     const messages = await convertToModelMessages(uiMessages)
 
@@ -112,6 +115,14 @@ export async function POST(req: Request) {
               .optional()
               .describe("The purpose for wanting to view the resume"),
           }),
+          execute: async () => {
+            const resumeData = await getResumeData()
+            return {
+              resumeUrl: siteConfig.links.resume,
+              headline: resumeData.basics.headline,
+              summary: stripHtml(resumeData.summary.content),
+            }
+          },
         },
       },
 

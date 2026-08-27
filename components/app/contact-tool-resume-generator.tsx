@@ -1,7 +1,6 @@
 "use client"
 
 import { type ToolCallLike } from "@/lib/tool-helpers"
-import { useResumeGenerator } from "@/hooks/use-resume-generator"
 
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
@@ -10,14 +9,13 @@ interface ResumeGeneratorProps {
   toolCall: ToolCallLike
 }
 
+/**
+ * getResume runs server-side (see app/api/chat/route.ts) and streams its
+ * result straight to this card -- no client-triggered fetch step, the
+ * button just opens the link once the tool call has resolved.
+ */
 export function ContactToolResumeGenerator({ toolCall }: ResumeGeneratorProps) {
-  const { state, generateResume } = useResumeGenerator(toolCall)
-
-  const handleOpenResume = () => {
-    if (state.resumeUrl) {
-      window.open(state.resumeUrl, "_blank")
-    }
-  }
+  const resumeUrl = toolCall.output?.resumeUrl as string | undefined
 
   return (
     <div className="bg-muted/30 space-y-4 rounded-lg border p-4">
@@ -26,30 +24,24 @@ export function ContactToolResumeGenerator({ toolCall }: ResumeGeneratorProps) {
         Access my resume to see my professional experience and qualifications.
       </p>
 
-      {state.resumeUrl ? (
-        <Button variant="outline" className="w-full" onClick={handleOpenResume}>
-          <Icons.download className="mr-2 h-4 w-4" />
-          View Resume
-        </Button>
-      ) : (
-        <Button
-          onClick={generateResume}
-          disabled={state.isGenerating}
-          className="w-full"
-        >
-          {state.isGenerating ? (
-            <>
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              Loading...
-            </>
-          ) : (
-            <>
-              <Icons.file className="mr-2 h-4 w-4" />
-              Get Resume
-            </>
-          )}
-        </Button>
-      )}
+      <Button
+        variant="outline"
+        className="w-full"
+        disabled={!resumeUrl}
+        onClick={() => resumeUrl && window.open(resumeUrl, "_blank")}
+      >
+        {resumeUrl ? (
+          <>
+            <Icons.download className="mr-2 h-4 w-4" />
+            View Resume
+          </>
+        ) : (
+          <>
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            Loading...
+          </>
+        )}
+      </Button>
     </div>
   )
 }

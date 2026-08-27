@@ -120,7 +120,7 @@ export interface ConversationHistory {
  */
 export interface PageContext {
   route: string
-  section: "work" | "projects" | "stack" | "about" | null
+  section: "work" | "education" | "projects" | "stack" | "about" | null
   slug?: string
 }
 
