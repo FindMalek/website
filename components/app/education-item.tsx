@@ -18,20 +18,38 @@ export function EducationItem({ item }: { item: EducationEntry }) {
     item
 
   const degreeLine = area ? `${degree}, ${area}` : degree
+  const hasExpandableContent = Boolean(grade || description || website?.url)
+
+  const header = (
+    <>
+      <Icons.graduationCap className="text-muted-foreground size-4 shrink-0" />
+
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-semibold">{school}</p>
+        <p className="text-muted-foreground text-xs">
+          {degreeLine}
+          {period ? ` · ${period}` : ""}
+          {location ? ` · ${location}` : ""}
+        </p>
+      </div>
+    </>
+  )
+
+  // No grade/description/website to show on expand -- render a plain row
+  // instead of a Collapsible, so there's no dead chevron that opens onto
+  // nothing (e.g. the two secondary schools, which have neither field set).
+  if (!hasExpandableContent) {
+    return (
+      <div className="border-foreground/10 flex items-center gap-3 border-b px-2 py-4 last:border-b-0">
+        {header}
+      </div>
+    )
+  }
 
   return (
     <Collapsible className="group/education border-foreground/10 border-b py-4 last:border-b-0">
       <CollapsibleTrigger className="hover:bg-muted/50 -mx-2 flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors">
-        <Icons.graduationCap className="text-muted-foreground size-4 shrink-0" />
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold">{school}</p>
-          <p className="text-muted-foreground text-xs">
-            {degreeLine}
-            {period ? ` · ${period}` : ""}
-            {location ? ` · ${location}` : ""}
-          </p>
-        </div>
+        {header}
 
         <Icons.chevronDown className="text-muted-foreground size-4 shrink-0 transition-transform group-data-[state=open]/education:rotate-180" />
       </CollapsibleTrigger>
