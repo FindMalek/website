@@ -19,7 +19,7 @@ const NETWORK_ICONS: Record<string, keyof typeof Icons> = {
 
 function networkIcon(network: string) {
   const Icon = Icons[NETWORK_ICONS[network.toLowerCase()] ?? "globe"]
-  return <Icon className="size-4 shrink-0" aria-hidden />
+  return <Icon className="text-primary size-4 shrink-0" aria-hidden />
 }
 
 function Html({ html, className }: { html: string; className?: string }) {
@@ -39,8 +39,9 @@ function Html({ html, className }: { html: string; className?: string }) {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="border-border mb-4 border-b pb-1.5 text-base font-bold tracking-tight sm:text-lg">
+    <h2 className="mb-5 text-base font-bold tracking-tight sm:text-lg">
       {children}
+      <span className="bg-primary mt-1.5 block h-0.5 w-8 rounded-full print:hidden" />
     </h2>
   )
 }
@@ -83,7 +84,7 @@ export default async function ResumePage() {
       <ResumeActions />
 
       <ArticleContent className="print:text-black">
-        <header className="mb-8 sm:mb-10">
+        <header className="mb-10 sm:mb-12">
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
             {basics.name}
           </h1>
@@ -91,25 +92,25 @@ export default async function ResumePage() {
             {basics.headline}
           </p>
 
-          <div className="text-muted-foreground mt-4 flex flex-col gap-1.5 text-sm print:text-black sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2">
+          <div className="text-muted-foreground mt-4 flex flex-col gap-2 text-sm print:text-black sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
             {basics.location && (
               <span className="inline-flex items-center gap-1.5">
-                <Icons.location className="size-4 shrink-0" aria-hidden />
+                <Icons.location className="text-primary size-4 shrink-0" aria-hidden />
                 {basics.location}
               </span>
             )}
             {basics.email && (
               <a
                 href={`mailto:${basics.email}`}
-                className="hover:text-foreground inline-flex items-center gap-1.5"
+                className="hover:text-primary inline-flex items-center gap-1.5 transition-colors"
               >
-                <Icons.mail className="size-4 shrink-0" aria-hidden />
+                <Icons.mail className="text-primary size-4 shrink-0" aria-hidden />
                 {basics.email}
               </a>
             )}
             {basics.phone && (
               <span className="inline-flex items-center gap-1.5">
-                <Icons.phone className="size-4 shrink-0" aria-hidden />
+                <Icons.phone className="text-primary size-4 shrink-0" aria-hidden />
                 {basics.phone}
               </span>
             )}
@@ -118,9 +119,9 @@ export default async function ResumePage() {
                 href={basics.website.url}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-foreground inline-flex items-center gap-1.5"
+                className="hover:text-primary inline-flex items-center gap-1.5 transition-colors"
               >
-                <Icons.globe className="size-4 shrink-0" aria-hidden />
+                <Icons.globe className="text-primary size-4 shrink-0" aria-hidden />
                 {basics.website.label || basics.website.url}
               </a>
             )}
@@ -132,7 +133,7 @@ export default async function ResumePage() {
                   href={item.website.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-foreground inline-flex items-center gap-1.5"
+                  className="hover:text-primary inline-flex items-center gap-1.5 transition-colors"
                 >
                   {networkIcon(item.network)}
                   {item.username}
@@ -142,15 +143,15 @@ export default async function ResumePage() {
         </header>
 
         {summary?.content && (
-          <section className="mb-8 sm:mb-10">
+          <section className="mb-10 sm:mb-12">
             <Html html={summary.content} className="text-sm sm:text-base" />
           </section>
         )}
 
         {sections.experience.items.length > 0 && (
-          <section className="mb-8 sm:mb-10">
+          <section className="mb-10 sm:mb-12">
             <SectionTitle>Experience</SectionTitle>
-            <div className="space-y-5 sm:space-y-6">
+            <div className="space-y-6 sm:space-y-7">
               {sections.experience.items
                 .filter((item) => !item.hidden)
                 .map((item) => (
@@ -171,7 +172,7 @@ export default async function ResumePage() {
                       />
                     )}
                     {item.roles && item.roles.length > 0 && (
-                      <div className="mt-3 space-y-3 border-l pl-3 sm:pl-4">
+                      <div className="border-primary/30 mt-3 space-y-3 border-l pl-3 sm:pl-4">
                         {item.roles.map((role) => (
                           <div key={role.id}>
                             <ItemHeader
@@ -199,7 +200,7 @@ export default async function ResumePage() {
         )}
 
         {sections.education.items.length > 0 && (
-          <section className="mb-8 sm:mb-10">
+          <section className="mb-10 sm:mb-12">
             <SectionTitle>Education</SectionTitle>
             <div className="space-y-4">
               {sections.education.items
@@ -233,7 +234,7 @@ export default async function ResumePage() {
         )}
 
         {sections.projects.items.length > 0 && (
-          <section className="mb-8 sm:mb-10">
+          <section className="mb-10 sm:mb-12">
             <SectionTitle>Projects</SectionTitle>
             <div className="space-y-4">
               {sections.projects.items
@@ -246,7 +247,7 @@ export default async function ResumePage() {
                           <Link
                             href={item.website.url}
                             target="_blank"
-                            className="hover:underline"
+                            className="hover:text-primary transition-colors hover:underline"
                           >
                             {item.name}
                           </Link>
@@ -269,14 +270,16 @@ export default async function ResumePage() {
         )}
 
         {sections.skills.items.length > 0 && (
-          <section className="mb-8 sm:mb-10">
+          <section className="mb-10 sm:mb-12">
             <SectionTitle>Skills</SectionTitle>
             <div className="space-y-2">
               {sections.skills.items
                 .filter((item) => !item.hidden)
                 .map((item) => (
                   <p key={item.id} className="text-sm">
-                    <span className="font-semibold">{item.name}:</span>{" "}
+                    <span className="text-primary font-semibold">
+                      {item.name}:
+                    </span>{" "}
                     <span className="text-muted-foreground print:text-black">
                       {(item.keywords ?? []).join(", ")}
                     </span>
@@ -287,7 +290,7 @@ export default async function ResumePage() {
         )}
 
         {sections.awards.items.length > 0 && (
-          <section className="mb-8 sm:mb-10">
+          <section className="mb-10 sm:mb-12">
             <SectionTitle>Awards</SectionTitle>
             <div className="space-y-3">
               {sections.awards.items
@@ -311,7 +314,7 @@ export default async function ResumePage() {
         )}
 
         {sections.certifications.items.length > 0 && (
-          <section className="mb-8 sm:mb-10">
+          <section className="mb-10 sm:mb-12">
             <SectionTitle>Certifications</SectionTitle>
             <div className="space-y-3">
               {sections.certifications.items
