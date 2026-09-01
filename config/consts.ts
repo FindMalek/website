@@ -181,7 +181,7 @@ export const CLIENTS: Client[] = [
 // everything else falls back to the existing status-then-id sort. See
 // sortProjectsByStatus() in lib/utils.ts.
 export const FEATURED_PROJECT_ORDER = [
-  "Harmonia",
+  "Sonaraem",
   "Dukkani",
   "Zero Locker",
   "FindMalek",
@@ -193,7 +193,7 @@ export const REPOSITORIES = [
   "https://github.com/undrstnd-labs/developers",
   "https://github.com/FindMalek/dukkani",
   "https://github.com/FindMalek/zero-locker",
-  "https://github.com/FindMalek/harmonia",
+  "https://github.com/FindMalek/sonaraem",
   "https://github.com/FindMalek/muslim-fasting",
   "https://github.com/FindMalek/findauth",
   "https://github.com/FindMalek/syncify",
