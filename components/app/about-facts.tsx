@@ -47,6 +47,18 @@ export async function AboutFacts() {
           </IntroItemLink>
         </IntroItemContent>
       </IntroItem>
+
+      <IntroItem className="sm:col-span-2">
+        <IntroItemIcon>
+          <Icons.trophy />
+        </IntroItemIcon>
+        <IntroItemContent>
+          <IntroItemLink href="https://gitista.com/search/?country=TN&handle=FindMalek">
+            #1 open-source contributor in Tunisia
+          </IntroItemLink>{" "}
+          — Gitista
+        </IntroItemContent>
+      </IntroItem>
     </div>
   )
 }
