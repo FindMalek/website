@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="700" height="380" viewBox="0 0 700 380" role="img" aria-labelledby="harmonia-clustering-title">
-  <title id="harmonia-clustering-title">Playlists produced from a 2,500+ track library: 2 to 3 before the adaptive-eps fix, versus 25 to 35 expected after</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="380" viewBox="0 0 700 380" role="img" aria-labelledby="sonaraem-clustering-title">
+  <title id="sonaraem-clustering-title">Playlists produced from a 2,500+ track library: 2 to 3 before the adaptive-eps fix, versus 25 to 35 expected after</title>
 
   <rect width="700" height="380" fill="#ffffff" />
 
   <text x="350" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="16.5" font-weight="700" fill="#0f172a">Playlists produced from a 2,500+ track library</text>
-  <text x="350" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="12.5" fill="#64748b">Fixed dbscan eps vs. the per-user adaptive heuristic (harmonia#111 → #329)</text>
+  <text x="350" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="12.5" fill="#64748b">Fixed dbscan eps vs. the per-user adaptive heuristic (sonaraem#111 → #329)</text>
 
   <!-- gridlines -->
   <line x1="100" y1="320" x2="600" y2="320" stroke="#cbd5e1" stroke-width="1.5" />
