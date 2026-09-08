@@ -17,12 +17,6 @@ tags: ["AI/LLM", "Music", "Data Pipeline", "Spotify"]
 
 It's a solo-built monorepo with four apps — `api`, `dashboard`, `web` (the public waitlist/marketing site), and `admin` (waitlist approval) — sharing packages for auth, database, schemas, logging, and tracing. Access is invite-only right now: signup → email confirmation → admin approval → invite → Spotify OAuth → onboarding.
 
-![Sonaraem dashboard: synced library stats, pipeline run status, and generated playlists](/project/sonaraem-dashboard.png)
-_The dashboard after a sync — library stats, the current pipeline run, and the playlists generated from it._
-
-![Connecting a Spotify account through Sonaraem's invite-gated onboarding flow](/project/sonaraem-onboarding.png)
-_Onboarding: redeem an invite, connect Spotify, land on a library that's already being organized._
-
 ---
 
 ## 🌟 The Problem
@@ -149,9 +143,6 @@ Sonaraem is built as an eight-stage pipeline, each stage a discrete, resumable T
 Everything from lyrics through match runs entirely against rows already sitting in Postgres — no Spotify calls in between. That split turns out to matter a lot; it's the whole premise behind the platform-constraint story below.
 
 The pipeline runs as background jobs on Trigger.dev v4, not inline in a request — classification alone means hundreds to thousands of LLM calls per library sync, so this has to be a durable, retryable job graph rather than a single API request.
-
-![A Sonaraem-generated playlist view showing its AI-assigned name and tracklist](/project/sonaraem-playlist.png)
-_One output of a `generate` run — an AI-named, mood-clustered playlist, ready to export back to Spotify._
 
 ---
 
