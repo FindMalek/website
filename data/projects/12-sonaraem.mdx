@@ -29,16 +29,118 @@ I wanted the equivalent of a friend who's heard your whole collection and can sa
 
 ## 🧠 The Pipeline
 
-Sonaraem is built as a six-stage pipeline, each stage a discrete, resumable step rather than one monolithic job:
+Sonaraem is built as an eight-stage pipeline, each stage a discrete, resumable Trigger.dev job rather than one monolithic function. Only two of them ever talk to Spotify:
 
-![Sonaraem six-stage pipeline: Sync, Classify, Embed, Cluster, Generate, Export](/project/sonaraem.svg)
+<div style={{ overflowX: "auto" }}>
+<svg width="100%" height="auto" viewBox="0 0 860 460" role="img" ariaLabelledby="sonaraem-pipeline-inline-title">
+<title id="sonaraem-pipeline-inline-title">Sonaraem eight-stage pipeline: sync, lyrics, classify, embed, cluster, generate, match, export — only sync and export call the Spotify API</title>
+<defs>
+<marker id="pipelineArrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 Z" fill="var(--muted-foreground)" />
+</marker>
+</defs>
+<g fontFamily="ui-sans-serif, system-ui, sans-serif">
+<text x="430" y="32" textAnchor="middle" fontSize="20" fontWeight="700" fill="var(--foreground)">Sonaraem — Eight-Stage Pipeline</text>
+<text x="430" y="52" textAnchor="middle" fontSize="12" fill="var(--muted-foreground)">Trigger.dev v4 background jobs — only 2 of 8 stages call Spotify</text>
+
+<rect x="30" y="78" width="185" height="112" rx="12" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="2" />
+<circle cx="57" cy="104" r="13" fill="var(--primary)" />
+<text x="57" y="108" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary-foreground)">1</text>
+<text x="78" y="109" fontSize="15" fontWeight="700" fill="var(--foreground)">Sync</text>
+<text x="48" y="136" fontSize="11.5" fill="var(--muted-foreground)">Pull saved tracks +</text>
+<text x="48" y="152" fontSize="11.5" fill="var(--muted-foreground)">playlists from Spotify</text>
+<text x="48" y="174" fontSize="10.5" fontWeight="700" fill="var(--primary)">Spotify Web API</text>
+
+<line x1="215" y1="134" x2="233" y2="134" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#pipelineArrowHead)" />
+
+<rect x="235" y="78" width="185" height="112" rx="12" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<circle cx="262" cy="104" r="13" fill="var(--primary)" />
+<text x="262" y="108" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary-foreground)">2</text>
+<text x="283" y="109" fontSize="15" fontWeight="700" fill="var(--foreground)">Lyrics</text>
+<text x="253" y="136" fontSize="11.5" fill="var(--muted-foreground)">Fetch lyrics for</text>
+<text x="253" y="152" fontSize="11.5" fill="var(--muted-foreground)">every track</text>
+<text x="253" y="174" fontSize="10.5" fontWeight="600" fill="var(--muted-foreground)">Local — LRCLib</text>
+
+<line x1="420" y1="134" x2="438" y2="134" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#pipelineArrowHead)" />
+
+<rect x="440" y="78" width="185" height="112" rx="12" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<circle cx="467" cy="104" r="13" fill="var(--primary)" />
+<text x="467" y="108" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary-foreground)">3</text>
+<text x="488" y="109" fontSize="15" fontWeight="700" fill="var(--foreground)">Classify</text>
+<text x="458" y="136" fontSize="11.5" fill="var(--muted-foreground)">Mood, theme, energy,</text>
+<text x="458" y="152" fontSize="11.5" fill="var(--muted-foreground)">era, genre per track</text>
+<text x="458" y="174" fontSize="10.5" fontWeight="600" fill="var(--muted-foreground)">Local — Groq gpt-oss-20b</text>
+
+<line x1="625" y1="134" x2="643" y2="134" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#pipelineArrowHead)" />
+
+<rect x="645" y="78" width="185" height="112" rx="12" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<circle cx="672" cy="104" r="13" fill="var(--primary)" />
+<text x="672" y="108" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary-foreground)">4</text>
+<text x="693" y="109" fontSize="15" fontWeight="700" fill="var(--foreground)">Embed</text>
+<text x="663" y="136" fontSize="11.5" fill="var(--muted-foreground)">Classification becomes</text>
+<text x="663" y="152" fontSize="11.5" fill="var(--muted-foreground)">a semantic vector</text>
+<text x="663" y="174" fontSize="10.5" fontWeight="600" fill="var(--muted-foreground)">Local — OpenAI embeddings</text>
+
+<path d="M737.5,190 L737.5,208 L737.5,226" fill="none" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#pipelineArrowHead)" />
+
+<rect x="645" y="228" width="185" height="112" rx="12" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<circle cx="672" cy="254" r="13" fill="var(--primary)" />
+<text x="672" y="258" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary-foreground)">5</text>
+<text x="693" y="259" fontSize="15" fontWeight="700" fill="var(--foreground)">Cluster</text>
+<text x="663" y="286" fontSize="11.5" fill="var(--muted-foreground)">Group tracks by</text>
+<text x="663" y="302" fontSize="11.5" fill="var(--muted-foreground)">embedding similarity</text>
+<text x="663" y="324" fontSize="10.5" fontWeight="600" fill="var(--muted-foreground)">Local — DBSCAN</text>
+
+<line x1="643" y1="284" x2="627" y2="284" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#pipelineArrowHead)" />
+
+<rect x="440" y="228" width="185" height="112" rx="12" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<circle cx="467" cy="254" r="13" fill="var(--primary)" />
+<text x="467" y="258" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary-foreground)">6</text>
+<text x="488" y="259" fontSize="15" fontWeight="700" fill="var(--foreground)">Generate</text>
+<text x="458" y="286" fontSize="11.5" fill="var(--muted-foreground)">Name each cluster,</text>
+<text x="458" y="302" fontSize="11.5" fill="var(--muted-foreground)">diversify artists</text>
+<text x="458" y="324" fontSize="10.5" fontWeight="600" fill="var(--muted-foreground)">Local — Groq gpt-oss-120b</text>
+
+<line x1="438" y1="284" x2="422" y2="284" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#pipelineArrowHead)" />
+
+<rect x="235" y="228" width="185" height="112" rx="12" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<circle cx="262" cy="254" r="13" fill="var(--primary)" />
+<text x="262" y="258" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary-foreground)">7</text>
+<text x="283" y="259" fontSize="15" fontWeight="700" fill="var(--foreground)">Match</text>
+<text x="253" y="286" fontSize="11.5" fill="var(--muted-foreground)">Fit new tracks into</text>
+<text x="253" y="302" fontSize="11.5" fill="var(--muted-foreground)">existing playlists</text>
+<text x="253" y="324" fontSize="10.5" fontWeight="600" fill="var(--muted-foreground)">Local — embedding similarity</text>
+
+<line x1="233" y1="284" x2="217" y2="284" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#pipelineArrowHead)" />
+
+<rect x="30" y="228" width="185" height="112" rx="12" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="2" />
+<circle cx="57" cy="254" r="13" fill="var(--primary)" />
+<text x="57" y="258" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary-foreground)">8</text>
+<text x="78" y="259" fontSize="15" fontWeight="700" fill="var(--foreground)">Export</text>
+<text x="48" y="286" fontSize="11.5" fill="var(--muted-foreground)">Write playlists back</text>
+<text x="48" y="302" fontSize="11.5" fill="var(--muted-foreground)">to the user's account</text>
+<text x="48" y="324" fontSize="10.5" fontWeight="700" fill="var(--primary)">Spotify Web API</text>
+
+<rect x="30" y="392" width="18" height="18" rx="4" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="1.5" />
+<text x="54" y="406" fontSize="12" fill="var(--foreground)">Touches Spotify — sync, export</text>
+<rect x="330" y="392" width="18" height="18" rx="4" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="354" y="406" fontSize="12" fill="var(--foreground)">Local — runs on already-synced data</text>
+
+<text x="430" y="440" textAnchor="middle" fontSize="11.5" fill="var(--muted-foreground)">Six of eight stages never leave Postgres — only sync and export ever call the Spotify API.</text>
+</g>
+</svg>
+</div>
 
 1. **Sync** — pulls the full Spotify saved-tracks + playlists graph for the user
-2. **Classify** — every track goes through Groq's `gpt-oss-20b` to extract mood, themes, vibe, energy, era, and genre as structured output
-3. **Embed** — the classification result is turned into a semantic vector via OpenAI's `text-embedding-3-small`
-4. **Cluster** — tracks are grouped by embedding similarity using DBSCAN (density-based clustering — no need to pre-specify how many playlists should come out, unlike k-means)
-5. **Generate** — each cluster gets an AI-named playlist (Groq `gpt-oss-120b`), with artist-diversity constraints so one artist can't dominate a cluster
-6. **Export** — playlists are written back to Spotify via the API
+2. **Lyrics** — fetches lyrics for every track from LRCLib
+3. **Classify** — every track goes through Groq's `gpt-oss-20b` to extract mood, themes, vibe, energy, era, and genre as structured output
+4. **Embed** — the classification result is turned into a semantic vector via OpenAI's `text-embedding-3-small`
+5. **Cluster** — tracks are grouped by embedding similarity using DBSCAN (density-based clustering — no need to pre-specify how many playlists should come out, unlike k-means)
+6. **Generate** — each cluster gets an AI-named playlist (Groq `gpt-oss-120b`), with artist-diversity constraints so one artist can't dominate a cluster
+7. **Match** — tracks synced after the last run are fit into already-generated playlists by embedding similarity, so a playlist doesn't go stale just because clustering only ran once
+8. **Export** — playlists are written back to Spotify via the API
+
+Everything from lyrics through match runs entirely against rows already sitting in Postgres — no Spotify calls in between. That split turns out to matter a lot; it's the whole premise behind the platform-constraint story below.
 
 The pipeline runs as background jobs on Trigger.dev v4, not inline in a request — classification alone means hundreds to thousands of LLM calls per library sync, so this has to be a durable, retryable job graph rather than a single API request.
 
@@ -61,6 +163,14 @@ The pipeline runs as background jobs on Trigger.dev v4, not inline in a request 
 
 ---
 
+## 🔁 CI & Background Jobs
+
+Every push and PR runs through GitHub Actions as parallel jobs — lint (Biome), a typecheck+build job, tests, and a separate commit-lint check enforcing conventional commits — so one failing check doesn't block visibility into the others. Trigger.dev tasks deploy to production automatically on merge to main.
+
+Beyond the on-demand pipeline a user triggers by reconnecting or asking for a re-analysis, a Monday-morning cron re-runs `organize` for every eligible user in the background. On a clean completion it queues a weekly digest email — created/updated playlist counts, tracks organized, and the new playlist names — so nobody has to open the dashboard to notice their library got reorganized.
+
+---
+
 ## ⚙️ Engineering Challenges (the honest part)
 
 A few things that didn't work on the first attempt — the actual interesting part of building an LLM-in-the-loop data pipeline rather than a CRUD app. Each one below is a real bug, filed, diagnosed, and fixed against a real library:
@@ -80,11 +190,123 @@ One limitation I haven't fixed yet, in the interest of being honest about it: ra
 
 ---
 
+## 🔒 Hitting Spotify's Platform Ceiling
+
+The engineering challenges above are the kind you fix and move past. This one I designed around, tested, and then reversed — which is its own kind of engineering decision, and worth writing up honestly rather than quietly editing out of the story.
+
+### The constraint
+
+Spotify's Developer Dashboard has a "Dev Mode" that caps an app at **5 total allowlisted users** before Spotify grants full production access. Getting past that — Extended Quota Mode — requires a registered business entity, which isn't realistic for a solo side project. That's not a soft limit to grow into later; it's the actual ceiling unless something else is built on top of it.
+
+### The idea: rotate the allowlist
+
+Looking at the pipeline above, only **sync** and **export** ever touch the Spotify API — the six stages in between run entirely against tracks and embeddings already sitting in Postgres. That split made an automation idea look viable: if a user's allowlist slot only needs to be occupied for the few seconds it takes to sync or export, not for the whole multi-minute pipeline run, then 5 slots don't have to mean 5 users forever — they could mean 5 users *at a time*, cycled through a queue.
+
+I built it. Spotify has no API for managing the Dev Mode allowlist, so a Playwright bot drove the Developer Dashboard directly — add an email, wait for sync or export to finish, remove it again. This was only worth building once I'd confirmed it was safe: revoking allowlist access blocks new `/authorize` attempts but doesn't revoke a refresh token already issued, so a user's session survives their slot being freed for someone else. On top of that went a slot/queue table, a priority tier for interactive logins over background cron syncs, and a reclaim sweep for slots left occupied by a crashed job. [sonaraem#290](https://github.com/FindMalek/sonaraem/issues/290) has the full design; [sonaraem#371](https://github.com/FindMalek/sonaraem/issues/371) and [sonaraem#373](https://github.com/FindMalek/sonaraem/pull/373) are the queue infrastructure that actually merged; [sonaraem#372](https://github.com/FindMalek/sonaraem/issues/372) and [sonaraem#385](https://github.com/FindMalek/sonaraem/pull/385) are the OAuth-gating hook that wired real logins into it.
+
+### What live-testing found
+
+Wiring #385's login gate into a real flow surfaced a constraint Spotify doesn't document anywhere. Allowlist **add operations are throttled to roughly 5 per 24 hours, app-wide** — not per user, the whole app. Spotify's dashboard returns it inline, on the add call itself:
+
+> You can't add more than 5 users to an App in a 24 hour period.
+
+That's a materially different ceiling than the one the rotation design assumed. Every first-time login, every reconnect, every background sync-and-export cycle each does one add — and every one of them draws from the same tiny daily budget. In practice that's roughly **5 login/reconnect/sync events per day, app-wide**, not 5 concurrent users. A single day of ordinary usage — a handful of logins plus a couple of scheduled syncs — was enough to exhaust it, which is exactly what happened testing it. [sonaraem#390](https://github.com/FindMalek/sonaraem/issues/390) has the full repro.
+
+### The pivot
+
+<div style={{ overflowX: "auto" }}>
+<svg width="100%" height="auto" viewBox="0 0 860 470" role="img" ariaLabelledby="sonaraem-allowlist-model-title">
+<title id="sonaraem-allowlist-model-title">Before and after: a rotating five-slot allowlist queue versus a fixed, permanent four-user allowlist plus one reserved admin seat</title>
+<defs>
+<marker id="modelArrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 Z" fill="var(--muted-foreground)" />
+</marker>
+</defs>
+<g fontFamily="ui-sans-serif, system-ui, sans-serif">
+<text x="430" y="30" textAnchor="middle" fontSize="19" fontWeight="700" fill="var(--foreground)">Two Designs for a 5-User Allowlist</text>
+<text x="430" y="49" textAnchor="middle" fontSize="12" fill="var(--muted-foreground)">Same Spotify Dev Mode cap — different architecture built around it</text>
+
+<line x1="430" y1="66" x2="430" y2="440" stroke="var(--border)" strokeWidth="1" />
+
+<text x="215" y="82" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--destructive)">Tried: Rotation Queue</text>
+
+<circle cx="215" cy="140" r="30" fill="none" stroke="var(--destructive)" strokeWidth="3" strokeDasharray="10,7" />
+<path d="M215,110 L224,116 L212,120 Z" fill="var(--destructive)" />
+<text x="215" y="195" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">Same slot reused per session:</text>
+<text x="215" y="211" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">add → sync → remove → export → remove</text>
+
+<rect x="45" y="228" width="100" height="28" rx="6" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="95" y="246" textAnchor="middle" fontSize="11" fill="var(--foreground)">Login</text>
+<rect x="165" y="228" width="100" height="28" rx="6" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="215" y="246" textAnchor="middle" fontSize="11" fill="var(--foreground)">Reconnect</text>
+<rect x="285" y="228" width="100" height="28" rx="6" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="335" y="246" textAnchor="middle" fontSize="11" fill="var(--foreground)">Sync / Export</text>
+
+<path d="M95,256 L95,270 L215,270" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" />
+<path d="M215,256 L215,270" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" />
+<path d="M335,256 L335,270 L215,270" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" />
+<line x1="215" y1="270" x2="215" y2="282" stroke="var(--muted-foreground)" strokeWidth="1.5" markerEnd="url(#modelArrowHead)" />
+
+<text x="215" y="300" textAnchor="middle" fontSize="11.5" fontWeight="700" fill="var(--destructive)">~5 ADD calls / 24h, app-wide</text>
+<rect x="65" y="308" width="300" height="20" rx="4" fill="var(--destructive)" fillOpacity="0.85" />
+<rect x="65" y="308" width="300" height="20" rx="4" fill="none" stroke="var(--destructive)" strokeWidth="1.5" />
+
+<rect x="105" y="340" width="220" height="28" rx="4" fill="none" stroke="var(--destructive)" strokeWidth="1.5" strokeDasharray="4,3" />
+<text x="215" y="358" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--destructive)">429 Too Many Requests</text>
+
+<text x="215" y="392" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">Every login, reconnect, sync, and export</text>
+<text x="215" y="408" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">drew from the same tiny daily budget</text>
+
+<text x="645" y="82" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--primary)">Decided: Fixed Allowlist</text>
+
+<rect x="470" y="106" width="60" height="50" rx="8" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="1.5" />
+<text x="500" y="136" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary)">User</text>
+<rect x="542" y="106" width="60" height="50" rx="8" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="1.5" />
+<text x="572" y="136" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary)">User</text>
+<rect x="614" y="106" width="60" height="50" rx="8" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="1.5" />
+<text x="644" y="136" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary)">User</text>
+<rect x="686" y="106" width="60" height="50" rx="8" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="1.5" />
+<text x="716" y="136" textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--primary)">User</text>
+<rect x="758" y="106" width="60" height="50" rx="8" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeDasharray="4,3" />
+<text x="788" y="130" textAnchor="middle" fontSize="10.5" fontWeight="700" fill="var(--muted-foreground)">Admin</text>
+<text x="788" y="144" textAnchor="middle" fontSize="9.5" fill="var(--muted-foreground)">reserved</text>
+
+<text x="645" y="184" textAnchor="middle" fontSize="12.5" fontWeight="700" fill="var(--primary)">Added once. Never removed.</text>
+<text x="645" y="200" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">4 real users + 1 reserved admin seat</text>
+
+<line x1="645" y1="212" x2="645" y2="248" stroke="var(--muted-foreground)" strokeWidth="1.5" markerEnd="url(#modelArrowHead)" />
+
+<text x="645" y="268" textAnchor="middle" fontSize="13" fontWeight="700" fill="var(--foreground)">Reach scales by self-hosting</text>
+
+<rect x="480" y="285" width="110" height="52" rx="8" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="535" y="308" textAnchor="middle" fontSize="10.5" fill="var(--foreground)">Own Spotify app</text>
+<text x="535" y="323" textAnchor="middle" fontSize="10" fill="var(--muted-foreground)">5-user cap</text>
+<rect x="600" y="285" width="110" height="52" rx="8" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="655" y="308" textAnchor="middle" fontSize="10.5" fill="var(--foreground)">Own Spotify app</text>
+<text x="655" y="323" textAnchor="middle" fontSize="10" fill="var(--muted-foreground)">5-user cap</text>
+<rect x="720" y="285" width="110" height="52" rx="8" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="775" y="308" textAnchor="middle" fontSize="10.5" fill="var(--foreground)">Own Spotify app</text>
+<text x="775" y="323" textAnchor="middle" fontSize="10" fill="var(--muted-foreground)">5-user cap</text>
+
+<text x="645" y="368" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">Growth happens across instances,</text>
+<text x="645" y="384" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">not past the platform ceiling</text>
+
+<text x="430" y="456" textAnchor="middle" fontSize="11.5" fill="var(--muted-foreground)">Same 5-user Dev Mode cap either way — the difference is what's built around it.</text>
+</g>
+</svg>
+</div>
+
+Rather than keep patching a design built on a wrong assumption about Spotify's actual limits, I made the call to reverse course: freeze the allowlist at a **fixed, permanent 4 real users, plus 1 reserved admin seat** — that reservation exists so the admin account can always sign in to debug, even at capacity — and delete the churn entirely. The spec: no release after login, no rotation pool, no priority queue, no reclaim sweep. Once an email is added, it stays added, and a 5th sign-up attempt gets a clear "at capacity" message before it ever reaches Spotify's own rejection. [sonaraem#392](https://github.com/FindMalek/sonaraem/issues/392) is that decision, currently what I'm building against; the rotation implementation from #385 is closed unmerged rather than deleted outright, on purpose — it's a working reference worth resurrecting if Spotify ever grants Extended Quota Mode, or if the 24h throttle turns out not to be as fixed as it looked.
+
+That leaves growth to happen the other way. Instead of one instance trying to automate its way past a platform-imposed ceiling, the plan going forward is to make Sonaraem easy enough to self-host that someone can point it at their own Spotify developer app and run it for themselves and their own friends — hitting the same 5-user Dev Mode limit, but on their own infrastructure, for their own circle. It's a smaller ambition than scaling one instance past Spotify's limits, but a more honest one: I measured the actual constraint before designing around it, and the second time, I didn't keep pushing on a wall that had already told me its exact dimensions.
+
+---
+
 ## 📊 Status
 
-Pre-launch, invite-only. The core pipeline — sync → classify → embed → cluster → generate → export — works end-to-end against real libraries, including the failure modes above. What's left before it's open to more than a waitlist is data-quality tuning (dedup, further clustering refinement, naming variety) and a UI pass — the dashboard is being rebuilt on a new design system, which is also what's blocking real product screenshots for this very case study.
+Pre-launch, invite-only, and moving to a permanent cap of 4 real users plus 1 reserved admin seat by decision, not by accident — the rotation-queue infrastructure is being replaced rather than patched further. The full pipeline — sync → lyrics → classify → embed → cluster → generate → match → export — works end-to-end against real libraries, including the failure modes above. What's left before it's worth pointing more people at is landing the fixed-allowlist gate, data-quality tuning (dedup, further clustering refinement, naming variety), a UI pass — the dashboard is being rebuilt on a new design system, which is also what's blocking real product screenshots for this very case study — and a self-hosting guide that's actually written for someone other than me.
 
-Built and maintained solo: 165 commits, 337 pull requests, 193 issues opened over the project's life — small, reviewable PRs rather than large batched commits, which is deliberate; it's the same discipline the fixes above came out of.
+Built and maintained solo: 194 commits, 170 pull requests, 220 issues opened over the project's life — small, reviewable PRs rather than large batched commits, which is deliberate; it's the same discipline the fixes above came out of.
 
 ---
 
