@@ -32,7 +32,7 @@ I wanted the equivalent of a friend who's heard your whole collection and can sa
 Sonaraem is built as an eight-stage pipeline, each stage a discrete, resumable Trigger.dev job rather than one monolithic function. Only two of them ever talk to Spotify:
 
 <div style={{ overflowX: "auto" }}>
-<svg width="100%" height="auto" viewBox="0 0 860 460" role="img" ariaLabelledby="sonaraem-pipeline-inline-title">
+<svg width="100%" height="auto" viewBox="0 0 860 460" role="img" aria-labelledby="sonaraem-pipeline-inline-title">
 <title id="sonaraem-pipeline-inline-title">Sonaraem eight-stage pipeline: sync, lyrics, classify, embed, cluster, generate, match, export — only sync and export call the Spotify API</title>
 <defs>
 <marker id="pipelineArrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -165,7 +165,7 @@ The pipeline runs as background jobs on Trigger.dev v4, not inline in a request 
 
 ## 🔁 CI & Background Jobs
 
-Every push and PR runs through GitHub Actions as parallel jobs — lint (Biome), a typecheck+build job, tests, and a separate commit-lint check enforcing conventional commits — so one failing check doesn't block visibility into the others. Trigger.dev tasks deploy to production automatically on merge to main.
+Every push and PR runs through GitHub Actions as parallel jobs — lint (Biome), a typecheck+build job, tests, and a separate check blocking AI-tool attribution strings from commit messages — so one failing check doesn't block visibility into the others. Trigger.dev tasks deploy to production automatically on merge to main.
 
 Beyond the on-demand pipeline a user triggers by reconnecting or asking for a re-analysis, a Monday-morning cron re-runs `organize` for every eligible user in the background. On a clean completion it queues a weekly digest email — created/updated playlist counts, tracks organized, and the new playlist names — so nobody has to open the dashboard to notice their library got reorganized.
 
@@ -215,7 +215,7 @@ That's a materially different ceiling than the one the rotation design assumed. 
 ### The pivot
 
 <div style={{ overflowX: "auto" }}>
-<svg width="100%" height="auto" viewBox="0 0 860 470" role="img" ariaLabelledby="sonaraem-allowlist-model-title">
+<svg width="100%" height="auto" viewBox="0 0 860 470" role="img" aria-labelledby="sonaraem-allowlist-model-title">
 <title id="sonaraem-allowlist-model-title">Before and after: a rotating five-slot allowlist queue versus a fixed, permanent four-user allowlist plus one reserved admin seat</title>
 <defs>
 <marker id="modelArrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
