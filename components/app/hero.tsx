@@ -21,7 +21,7 @@ export async function Hero() {
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
             <h1 className="text-balance text-2xl font-bold tracking-tight">
-              {siteConfig.author.name}
+              <span className="hero-name">{siteConfig.author.name}</span>
             </h1>
             <PronounceNameButton name={siteConfig.author.name} />
           </div>
