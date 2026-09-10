@@ -8,6 +8,7 @@ import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
 import { ChatFloatingContainer } from "@/components/app/chat-floating-container"
+import { FoldableEasterEgg } from "@/components/app/foldable-easter-egg"
 import { HighlightAskAction } from "@/components/app/highlight-ask-action"
 import { ScrollToTop } from "@/components/app/scroll-to-top"
 import { Analytics } from "@/components/layout/analytics"
@@ -107,6 +108,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <ChatFloatingContainer />
               <HighlightAskAction />
               <ScrollToTop />
+              {/* Device Posture API is Chromium/Samsung-Internet-only (no
+                  WebKit support) -- no-ops everywhere else, including any
+                  real iPhone. See hooks/use-device-posture.ts. */}
+              <FoldableEasterEgg />
             </div>
           </ChatProvider>
         </LayoutWrapper>
