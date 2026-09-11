@@ -42,25 +42,36 @@ export function GitHubContributions({
         className="no-scrollbar px-2"
         title="GitHub Contributions"
       >
-        {({ activity, dayIndex, weekIndex }) => (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <g>
-                <ContributionGraphBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </g>
-            </TooltipTrigger>
-            <TooltipContent className="font-sans">
-              <p>
-                {activity.count} contribution{activity.count > 1 ? "s" : null}{" "}
-                on {format(new Date(activity.date), "MMM d, yyyy")}
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        )}
+        {({ activity, dayIndex, weekIndex }) =>
+          activity.count === 0 ? (
+            <g>
+              <ContributionGraphBlock
+                activity={activity}
+                dayIndex={dayIndex}
+                weekIndex={weekIndex}
+              />
+            </g>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <g>
+                  <ContributionGraphBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                </g>
+              </TooltipTrigger>
+              <TooltipContent className="font-sans">
+                <p>
+                  {activity.count} contribution
+                  {activity.count > 1 ? "s" : null} on{" "}
+                  {format(new Date(activity.date), "MMM d, yyyy")}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          )
+        }
       </ContributionGraphCalendar>
 
       <ContributionGraphFooter className="px-2">
