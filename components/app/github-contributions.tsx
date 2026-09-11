@@ -1,7 +1,7 @@
 "use client"
 
-import { use } from "react"
-import { format } from "date-fns"
+import { use, useMemo } from "react"
+import { format, isToday, parseISO } from "date-fns"
 
 import { cn } from "@/lib/utils"
 
@@ -21,6 +21,29 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
+const STREAK_FILL = "#f59e0b"
+
+// Consecutive contribution days counting back from today. A contribution-less
+// "today" doesn't break the streak yet since the day isn't over.
+function getCurrentStreakDates(data: Activity[]): Set<string> {
+  const sortedByDateDesc = [...data].sort((a, b) => b.date.localeCompare(a.date))
+  const streakDates = new Set<string>()
+  let skippedToday = false
+
+  for (const activity of sortedByDateDesc) {
+    if (activity.count === 0) {
+      if (!skippedToday && isToday(parseISO(activity.date))) {
+        skippedToday = true
+        continue
+      }
+      break
+    }
+    streakDates.add(activity.date)
+  }
+
+  return streakDates
+}
+
 export function GitHubContributions({
   contributions,
   className,
@@ -29,6 +52,7 @@ export function GitHubContributions({
   className?: string
 }) {
   const data = use(contributions)
+  const streakDates = useMemo(() => getCurrentStreakDates(data), [data])
 
   return (
     <ContributionGraph
@@ -42,13 +66,18 @@ export function GitHubContributions({
         className="no-scrollbar px-2"
         title="GitHub Contributions"
       >
-        {({ activity, dayIndex, weekIndex }) =>
-          activity.count === 0 ? (
+        {({ activity, dayIndex, weekIndex }) => {
+          const style = streakDates.has(activity.date)
+            ? { fill: STREAK_FILL }
+            : undefined
+
+          return activity.count === 0 ? (
             <g>
               <ContributionGraphBlock
                 activity={activity}
                 dayIndex={dayIndex}
                 weekIndex={weekIndex}
+                style={style}
               />
             </g>
           ) : (
@@ -59,6 +88,7 @@ export function GitHubContributions({
                     activity={activity}
                     dayIndex={dayIndex}
                     weekIndex={weekIndex}
+                    style={style}
                   />
                 </g>
               </TooltipTrigger>
@@ -71,7 +101,7 @@ export function GitHubContributions({
               </TooltipContent>
             </Tooltip>
           )
-        }
+        }}
       </ContributionGraphCalendar>
 
       <ContributionGraphFooter className="px-2">

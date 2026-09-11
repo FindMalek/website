@@ -11,6 +11,8 @@ interface CardProps {
   index: number
   cycleCard: (id: number) => void
   totalCards: number
+  isFlipped: boolean
+  onFlipChange?: (isFlipped: boolean) => void
 }
 
 export function AboutOverviewCard({
@@ -18,6 +20,8 @@ export function AboutOverviewCard({
   index,
   cycleCard,
   totalCards,
+  isFlipped,
+  onFlipChange,
 }: CardProps) {
   const zIndex = totalCards - index
   const yOffset = index * -15 // Vertical offset
@@ -29,18 +33,7 @@ export function AboutOverviewCard({
     y: 0,
   })
 
-  const [isFlipped, setIsFlipped] = useState(false)
   const canFlip = index === 0 && card.type === "image"
-
-  // Reset the flip state while rendering when a card is no longer on top,
-  // rather than in an effect, per https://react.dev/learn/you-might-not-need-an-effect
-  const [prevIndex, setPrevIndex] = useState(index)
-  if (index !== prevIndex) {
-    setPrevIndex(index)
-    if (index !== 0) {
-      setIsFlipped(false)
-    }
-  }
 
   return (
     <motion.div
@@ -99,25 +92,35 @@ export function AboutOverviewCard({
         boxShadow: `0 ${15 + index * 5}px ${40 + index * 10}px rgba(0, 0, 0, 0.4)`,
       }}
       onTap={(event) => {
-        if (!canFlip) return
+        if (!canFlip || !onFlipChange) return
         if ((event.target as HTMLElement)?.closest("a")) return
-        setIsFlipped((prev) => !prev)
+        onFlipChange(!isFlipped)
       }}
     >
       <div
-        className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-2xl"
-        style={{ color: card.textColor, perspective: 1200 }}
+        className="relative flex h-full w-full flex-col items-center justify-center"
+        style={{
+          color: card.textColor,
+          perspective: 1000,
+          WebkitPerspective: 1000,
+        }}
       >
         {card.type === "image" ? (
           <motion.div
             className="relative h-full w-full"
-            style={{ transformStyle: "preserve-3d" }}
+            style={{
+              transformStyle: "preserve-3d",
+              WebkitTransformStyle: "preserve-3d",
+            }}
             animate={{ rotateY: isFlipped ? 180 : 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
           >
             <div
-              className="absolute inset-0 h-full w-full"
-              style={{ backfaceVisibility: "hidden" }}
+              className="absolute inset-0 h-full w-full overflow-hidden rounded-2xl"
+              style={{
+                backfaceVisibility: "hidden",
+                WebkitBackfaceVisibility: "hidden",
+              }}
             >
               <Image
                 src={card.imageUrl || "/placeholder.svg"}
@@ -128,9 +131,10 @@ export function AboutOverviewCard({
               />
             </div>
             <div
-              className="absolute inset-0 flex h-full w-full flex-col items-center justify-center p-8 text-center"
+              className="absolute inset-0 flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-2xl p-8 text-center"
               style={{
                 backfaceVisibility: "hidden",
+                WebkitBackfaceVisibility: "hidden",
                 transform: "rotateY(180deg)",
                 backgroundColor: card.backgroundColor,
                 color: card.textColor,
