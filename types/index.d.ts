@@ -139,4 +139,6 @@ export interface CardData {
   subtext?: string
   backgroundColor: string
   textColor: string
+  story?: string
+  storyLink?: { label: string; href: string }
 }

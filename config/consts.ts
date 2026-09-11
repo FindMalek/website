@@ -259,6 +259,8 @@ export const OVERVIEW_CARDS: CardData[] = [
     imageUrl: "/about/author.png",
     backgroundColor: "#1a1a1a",
     textColor: "#ffffff",
+    story:
+      "I trained this on hundreds of my own photos, and it still can't fake the tired look I actually had that week.",
   },
   {
     id: 2,
@@ -274,5 +276,44 @@ export const OVERVIEW_CARDS: CardData[] = [
     imageUrl: "/author.jpg",
     backgroundColor: "#2d4a22",
     textColor: "#ffffff",
+    story:
+      "That ferry ride to Üsküdar is still the calmest twenty minutes I've had all year.",
+  },
+  {
+    id: 4,
+    type: "image",
+    imageUrl: "/about/jbal-rsas-summit.jpg",
+    backgroundColor: "#3a2a1a",
+    textColor: "#ffffff",
+    story:
+      "795 meters up Jbal Rsas, legs completely done, and genuinely one of the happiest moments I've had all year.",
+  },
+  {
+    id: 5,
+    type: "image",
+    imageUrl: "/about/cappadocia-balloon-jobflow.jpg",
+    backgroundColor: "#5c2a1a",
+    textColor: "#ffffff",
+    story:
+      "Sunrise over Cappadocia, sun right in my eyes, up in a balloon with the Jobflow team — hard to beat a morning like that.",
+    storyLink: { label: "Jobflow", href: "https://jobflow.de" },
+  },
+  {
+    id: 6,
+    type: "image",
+    imageUrl: "/about/vanille-cat.jpg",
+    backgroundColor: "#4a3f2d",
+    textColor: "#ffffff",
+    story:
+      "Vanille only tolerates being held for a photo or two before she's had enough — I'll take what I can get.",
+  },
+  {
+    id: 7,
+    type: "image",
+    imageUrl: "/about/nevey-cat.jpg",
+    backgroundColor: "#1f2d3a",
+    textColor: "#ffffff",
+    story:
+      "Nevey is three, curious about literally everything on this table, and has zero concept of personal space.",
   },
 ]

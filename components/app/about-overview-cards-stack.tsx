@@ -9,8 +9,11 @@ import { OVERVIEW_CARDS } from "@/config/consts"
 
 import { AboutOverviewCard } from "@/components/app/about-overview-card-stack"
 
+const AUTO_SWIPE_INTERVAL_MS = 6000
+
 export function AboutOverviewCardsStack() {
   const [cards, setCards] = useState<CardData[]>(OVERVIEW_CARDS)
+  const [isTopCardFlipped, setIsTopCardFlipped] = useState(false)
 
   const cycleCard = (id: number) => {
     setCards((prevCards) => {
@@ -20,18 +23,21 @@ export function AboutOverviewCardsStack() {
       const newCards = prevCards.filter((card) => card.id !== id)
       return [...newCards, cardToMove]
     })
+    setIsTopCardFlipped(false)
   }
 
-  // Auto-swipe every 3 seconds
+  // Auto-swipe, paused while the top card is flipped to show its story
   useEffect(() => {
+    if (isTopCardFlipped) return
+
     const interval = setInterval(() => {
       if (cards.length > 0) {
         cycleCard(cards[0].id)
       }
-    }, 3000)
+    }, AUTO_SWIPE_INTERVAL_MS)
 
     return () => clearInterval(interval)
-  }, [cards])
+  }, [cards, isTopCardFlipped])
 
   return (
     <div className="relative aspect-square w-full">
@@ -43,6 +49,8 @@ export function AboutOverviewCardsStack() {
             index={index}
             cycleCard={cycleCard}
             totalCards={Math.min(cards.length, 3)}
+            isFlipped={index === 0 && isTopCardFlipped}
+            onFlipChange={index === 0 ? setIsTopCardFlipped : undefined}
           />
         ))}
       </AnimatePresence>

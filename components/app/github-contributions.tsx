@@ -1,7 +1,7 @@
 "use client"
 
-import { use } from "react"
-import { format } from "date-fns"
+import { use, useMemo } from "react"
+import { format, isToday, parseISO } from "date-fns"
 
 import { cn } from "@/lib/utils"
 
@@ -21,6 +21,29 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
+const STREAK_FILL = "#f59e0b"
+
+// Consecutive contribution days counting back from today. A contribution-less
+// "today" doesn't break the streak yet since the day isn't over.
+function getCurrentStreakDates(data: Activity[]): Set<string> {
+  const sortedByDateDesc = [...data].sort((a, b) => b.date.localeCompare(a.date))
+  const streakDates = new Set<string>()
+  let skippedToday = false
+
+  for (const activity of sortedByDateDesc) {
+    if (activity.count === 0) {
+      if (!skippedToday && isToday(parseISO(activity.date))) {
+        skippedToday = true
+        continue
+      }
+      break
+    }
+    streakDates.add(activity.date)
+  }
+
+  return streakDates
+}
+
 export function GitHubContributions({
   contributions,
   className,
@@ -29,6 +52,7 @@ export function GitHubContributions({
   className?: string
 }) {
   const data = use(contributions)
+  const streakDates = useMemo(() => getCurrentStreakDates(data), [data])
 
   return (
     <ContributionGraph
@@ -42,25 +66,42 @@ export function GitHubContributions({
         className="no-scrollbar px-2"
         title="GitHub Contributions"
       >
-        {({ activity, dayIndex, weekIndex }) => (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <g>
-                <ContributionGraphBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </g>
-            </TooltipTrigger>
-            <TooltipContent className="font-sans">
-              <p>
-                {activity.count} contribution{activity.count > 1 ? "s" : null}{" "}
-                on {format(new Date(activity.date), "MMM d, yyyy")}
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        )}
+        {({ activity, dayIndex, weekIndex }) => {
+          const style = streakDates.has(activity.date)
+            ? { fill: STREAK_FILL }
+            : undefined
+
+          return activity.count === 0 ? (
+            <g>
+              <ContributionGraphBlock
+                activity={activity}
+                dayIndex={dayIndex}
+                weekIndex={weekIndex}
+                style={style}
+              />
+            </g>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <g>
+                  <ContributionGraphBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                    style={style}
+                  />
+                </g>
+              </TooltipTrigger>
+              <TooltipContent className="font-sans">
+                <p>
+                  {activity.count} contribution
+                  {activity.count > 1 ? "s" : null} on{" "}
+                  {format(new Date(activity.date), "MMM d, yyyy")}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          )
+        }}
       </ContributionGraphCalendar>
 
       <ContributionGraphFooter className="px-2">

@@ -1,14 +1,18 @@
 import { useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { motion } from "motion/react"
 
 import type { CardData } from "@/types"
+import { cn } from "@/lib/utils"
 
 interface CardProps {
   card: CardData
   index: number
   cycleCard: (id: number) => void
   totalCards: number
+  isFlipped: boolean
+  onFlipChange?: (isFlipped: boolean) => void
 }
 
 export function AboutOverviewCard({
@@ -16,6 +20,8 @@ export function AboutOverviewCard({
   index,
   cycleCard,
   totalCards,
+  isFlipped,
+  onFlipChange,
 }: CardProps) {
   const zIndex = totalCards - index
   const yOffset = index * -15 // Vertical offset
@@ -26,6 +32,8 @@ export function AboutOverviewCard({
     x: 0,
     y: 0,
   })
+
+  const canFlip = index === 0 && card.type === "image"
 
   return (
     <motion.div
@@ -83,21 +91,68 @@ export function AboutOverviewCard({
         scale: 1.05,
         boxShadow: `0 ${15 + index * 5}px ${40 + index * 10}px rgba(0, 0, 0, 0.4)`,
       }}
+      onTap={(event) => {
+        if (!canFlip || !onFlipChange) return
+        if ((event.target as HTMLElement)?.closest("a")) return
+        onFlipChange(!isFlipped)
+      }}
     >
       <div
-        className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-2xl"
-        style={{ color: card.textColor }}
+        className="relative flex h-full w-full flex-col items-center justify-center"
+        style={{
+          color: card.textColor,
+          perspective: 1000,
+          WebkitPerspective: 1000,
+        }}
       >
         {card.type === "image" ? (
-          <div className="h-full w-full">
-            <Image
-              src={card.imageUrl || "/placeholder.svg"}
-              alt="Card image"
-              className="pointer-events-none h-full w-full object-cover"
-              width={400}
-              height={400}
-            />
-          </div>
+          <motion.div
+            className="relative h-full w-full"
+            style={{
+              transformStyle: "preserve-3d",
+              WebkitTransformStyle: "preserve-3d",
+            }}
+            animate={{ rotateY: isFlipped ? 180 : 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+          >
+            <div
+              className="absolute inset-0 h-full w-full overflow-hidden rounded-2xl"
+              style={{
+                backfaceVisibility: "hidden",
+                WebkitBackfaceVisibility: "hidden",
+              }}
+            >
+              <Image
+                src={card.imageUrl || "/placeholder.svg"}
+                alt="Card image"
+                className="pointer-events-none h-full w-full object-cover"
+                width={400}
+                height={400}
+              />
+            </div>
+            <div
+              className="absolute inset-0 flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-2xl p-8 text-center"
+              style={{
+                backfaceVisibility: "hidden",
+                WebkitBackfaceVisibility: "hidden",
+                transform: "rotateY(180deg)",
+                backgroundColor: card.backgroundColor,
+                color: card.textColor,
+              }}
+            >
+              <p className="text-lg">{card.story}</p>
+              {card.storyLink && (
+                <Link
+                  href={card.storyLink.href}
+                  target="_blank"
+                  className="mt-4 font-semibold underline underline-offset-2"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  {card.storyLink.label}
+                </Link>
+              )}
+            </div>
+          </motion.div>
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center">
             <h2 className="text-4xl font-bold">{card.text}</h2>
@@ -121,7 +176,12 @@ export function AboutOverviewCard({
           </div>
         )}
         {index === 0 && (
-          <div className="absolute inset-0 z-10 cursor-grab active:cursor-grabbing" />
+          <div
+            className={cn(
+              "absolute inset-0 z-10 cursor-grab active:cursor-grabbing",
+              isFlipped && "pointer-events-none"
+            )}
+          />
         )}
       </div>
     </motion.div>
