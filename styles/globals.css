@@ -264,3 +264,13 @@
     display: none !important;
   }
 }
+
+/* Device Posture API (CSS `device-posture` media feature) is Chromium/
+   Samsung-Internet-only -- see app/layout.tsx for the JS-side note and
+   https://github.com/WebKit/standards-positions/issues/328 for WebKit's
+   open (unresolved) position. No-ops everywhere else. */
+@media (device-posture: folded) {
+  .hero-name {
+    opacity: 0.25;
+  }
+}
