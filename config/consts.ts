@@ -174,6 +174,11 @@ export const CLIENTS: Client[] = [
     href: "https://www.sa7abox.com",
     logo: "/clients/sa7abox.svg",
   },
+  {
+    name: "Glance",
+    logo: "/clients/glance.png",
+    href: "https://tryglance.app",
+  },
 ]
 
 // Manually curated display order for the top of the /projects grid --
