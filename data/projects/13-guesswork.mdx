@@ -1,0 +1,98 @@
+---
+id: 13
+image: "/project/guesswork.png"
+name: "guesswork"
+overview: "Fish-style zsh autosuggestions, but ranked by an AI model instead of prefix matching — types 'gst', gets 'git status'; picks the right command out of a hundred candidates by intent, not just characters."
+status: "published"
+link: "https://guesswork.findmalek.com"
+href: "/projects/guesswork"
+tags: ["Zsh", "TypeScript", "CLI", "AI", "Terminal", "Open Source"]
+---
+
+# ⌨️ guesswork — A Terminal That Actually Guesses Right
+
+**guesswork** is a zsh plugin: as you type, it shows an inline suggestion for the command you're probably retyping, the same fish-style grey ghost-text `zsh-autosuggestions` shows — except the ranking comes from an AI model reasoning about intent, not a plain prefix match. Type `gst` and it suggests `git status`. Describe what you want ("last 5 commits") with nothing in history literally starting that way, and it still finds `git log --oneline -5`.
+
+![guesswork suggesting git status from "gst" and git log from "last 5 commits" in a real terminal session](/project/guesswork-demo.gif)
+
+---
+
+## 🌟 The Problem
+
+Prefix-matching history search — what every shell ships by default — has a hard blind spot: it only works if you remember exactly how the command *started*. You know you ran something with `--dir blog` in it last week, but not whether it began with `amp`, `npm`, or `git`. Fish-style autosuggestion plugins fixed the *display* (inline ghost text instead of a separate search UI) but not the *matching* — still just a substring/prefix check under the hood.
+
+guesswork started as a rebrand-and-rebuild of an existing open-source plugin (`jev-shell-history`) that had already solved the "rank history with an AI model" half of the problem well; the work here was making it something a stranger could actually pick up and use in one command — provider choice, real cost transparency, an arrow-key setup wizard, a hosted install URL, and a real landing page.
+
+---
+
+## 🧠 How It Works
+
+1. **Candidates.** The last N distinct history entries are read from the zsh history file (extended-format parsing, multi-line commands supported). If any of them literally start with what you've typed, only those are sent for ranking ("prefix mode") — otherwise every recent entry is ("fuzzy mode").
+2. **One request, two questions.** A `Choice` question asks which candidate the user is most likely completing (its probability distribution *is* the score); a `Noul` question asks whether *anything* in the list plausibly matches at all — without that second gate, the closest irrelevant command would always "win" a Choice, since its probabilities always sum to 1.
+3. **Gate.** Prefix mode always shows its top match. Fuzzy mode only shows a suggestion when the top score clears a minimum *and* either the Noul confidence is high enough or the top score is high enough on its own — the two signals fail in different places (Noul under-fires on tiny histories where the Choice is already decisive; on pure nonsense the Choice spreads thin while the Noul correctly goes near zero), so both are checked.
+
+Exact rules — prefix matching, dedup, score thresholds — live in code; the model only makes the judgment call of *which* entry fits. The zsh side hooks `zle`'s line-editor redraw hook directly and runs the ranking as a background process substitution, so the prompt never blocks waiting on a network call — a stale response (buffer changed mid-request) is silently discarded rather than flashing the wrong suggestion.
+
+---
+
+## 🔌 Four Interchangeable Providers
+
+The part of this project I'd point to as the actual engineering decision, not just glue code: guesswork can run on **four different backends** behind one interface, added one at a time as real needs came up —
+
+| Provider | What it runs | Why it exists |
+|---|---|---|
+| **TypeSafe** (direct) | The purpose-built Jev model | The original, fastest, cheapest path — $42/billion input tokens |
+| **Cloudflare Workers AI** | The same Jev model, Cloudflare-hosted | For people who'd rather bill through an account they already have |
+| **Anthropic** | A real Claude model, standing in for Jev | A fallback for people who don't want *either* account — not Jev itself, since no self-hosted Jev exists publicly (researched and documented, not assumed) |
+| **Groq** | A real open model via LPU hardware | Same fallback idea as Anthropic, but chosen specifically to test whether inference speed survives a general-purpose model instead of Jev's purpose-built classifier |
+
+Every non-native provider works the same way: swap only the underlying HTTP client's `fetch` implementation, translating the outgoing request into that provider's real API shape and its response back into the one internal shape the rest of the code already expects. Retries, timeouts, and logging all keep working unchanged regardless of which of the four is active — new providers are additive, not a fork of the core logic.
+
+---
+
+## 🖥️ The Landing Page
+
+`guesswork.findmalek.com` isn't just a docs page — the hero has a real interactive terminal playground that calls the same ranking backend the CLI does, rate-limited per IP and globally so it stays usable without a personal API key. The whole site borrows its dark palette and terminal styling directly from the CLI's own aesthetic, down to the exact hex values, so the README GIF, the site, and the plugin itself all read as the same product.
+
+![guesswork.findmalek.com landing page and terminal playground](/project/guesswork.png)
+
+---
+
+## 🛠️ Stack
+
+| Layer | Technology |
+|---|---|
+| Language | TypeScript (Node 22+, runs the CLI directly with no build step) |
+| Shell integration | zsh (`zle` hooks, `POSTDISPLAY`/`region_highlight`) |
+| Setup wizard | `@clack/prompts` — arrow-key provider picker, masked credential input, live verification before writing config |
+| Landing page | Next.js (App Router), Tailwind v4 theme tokens, a rate-limited API route proxying real model calls |
+| CI | GitHub Actions — typecheck, unit tests, shell syntax checks on every PR; a gated e2e job that drives a real interactive zsh in a pty; a separate site CI job (lint/typecheck/build) |
+| Hosting | Vercel (`guesswork.findmalek.com`, including `/install.sh`) |
+| Project workflow | GitHub Projects (Status/Priority/Size fields), issue-linked branches, PR auto-linking — same conventions as this portfolio's other repos |
+
+---
+
+## ⚙️ Engineering Challenges (the honest part)
+
+- **A model ID that looked right, wasn't.** Defaulted the Anthropic provider to a model ID with a date suffix recalled from training — the authoritative API reference explicitly warns against exactly that pattern (current model IDs are the bare name, no suffix). Caught by checking the live reference instead of trusting recollection, same for a second real bug it caught: every object in the structured-output JSON schema needs `additionalProperties: false`, or the API rejects the request outright.
+- **A comment-parsing bug that only broke at runtime.** A CI workflow's inline shell command included a bare `#N` issue reference inside a double-quoted string — YAML treats ` #` as a comment start in a plain scalar even inside what bash considers a quoted string, silently truncating the command and producing `unexpected EOF while looking for matching` at runtime. YAML validation alone didn't catch it, since the truncated result was still syntactically valid YAML — just semantically wrong. Fixed by switching to a block scalar.
+- **The install URL's HTTPS cert took over two hours to issue** — real infrastructure latency (GitHub's own Let's Encrypt provisioning, not anything actionable), tracked and watched through `new` → `authorization_created` → `approved` rather than guessed at. That domain later moved from GitHub Pages to Vercel entirely, which broke the install URL again for an afternoon until the DNS/rewrite config caught up — the same lesson twice: verify the live endpoint after any hosting change instead of assuming the last fix still holds.
+- **The default GitHub Actions token can't do everything it looks like it should.** Two separate workflows — a clone-count metric and a GitHub Project status-sync — both needed the *default* Actions token, and both hit hard, confirmed-empirically permission walls (`403`, and no GraphQL mutation exists at all for configuring a Project's built-in automations) that only a real personal access token with broader scope could get past.
+- **Two parallel AI agents disagreed with each other about a repo rule.** Dispatched separately to add two different providers, one agent added an AI-attribution footer to its PR description, the other correctly omitted it per the repo's own conventions doc, which explicitly bans vendor/AI tool names in PR bodies — caught and reconciled by checking the actual rule text rather than assuming either agent was right by default.
+- **A demo example that looked reliable, wasn't.** The README/launch demo scripts originally planned a `kgp` → `kubectl get pods -n staging` beat, reasoning it matched the model's own "first letters of words" heuristic. Verified against actual rendered frames that it never cleared the confidence gate — the recording showed a literal `command not found` instead. Rather than force it, it was swapped for a confidence-independent "nothing matches" beat; every demo GIF in the README and on the site is a real, unscripted model response, never a fabricated transcript.
+
+*(Receipts: [#1](https://github.com/FindMalek/guesswork/issues/1) self-host investigation, [#8](https://github.com/FindMalek/guesswork/issues/8) the YAML comment bug, [#7](https://github.com/FindMalek/guesswork/issues/7) the HTTPS cert wait, [#2](https://github.com/FindMalek/guesswork/issues/2) and [#5](https://github.com/FindMalek/guesswork/issues/5) the token permission walls, [#11](https://github.com/FindMalek/guesswork/issues/11) the Groq provider with the real model-list discrepancy it caught.)*
+
+---
+
+## 📊 Status
+
+`v0.1.0` released, four providers shipped, GitHub Actions CI green, a real install domain live over HTTPS, and the landing page from the proposal above now live with a working AI-backed playground. Distribution is in progress: listed in `unixorn/awesome-zsh-plugins`, submitted to a couple of other curated terminal/CLI lists, GitHub topics added, a Show HN post drafted but not yet posted. Still too early for install/usage numbers to mean anything — that's the next thing worth tracking once it's had real time in the wild.
+
+---
+
+## 🔗 Links
+
+- Site: [guesswork.findmalek.com](https://guesswork.findmalek.com)
+- Repo: [github.com/findmalek/guesswork](https://github.com/findmalek/guesswork)
+- Install: `curl -fsSL https://guesswork.findmalek.com/install.sh | bash`
