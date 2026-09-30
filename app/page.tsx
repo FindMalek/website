@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import Link from "next/link"
 import { allProjects, allWorks } from "content-collections"
 
-import { CLIENTS, REPOSITORIES } from "@/config/consts"
+import { CLIENTS, CONTRIBUTIONS, REPOSITORIES } from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
 import { getCachedContributions } from "@/lib/get-cached-contributions"
 import { getResumeData } from "@/lib/get-resume-data"
@@ -34,6 +34,7 @@ import {
   PanelTitleSup,
 } from "@/components/app/panel"
 import { PanelCopyLinkButton } from "@/components/app/panel-copy-link-button"
+import { ProjectContributionCard } from "@/components/app/project-contribution-card"
 import { ProjectItem } from "@/components/app/project-item"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
@@ -56,6 +57,12 @@ export default async function Home() {
   const orderedProjects = sortProjectsByStatus(allProjects)
   const openSourceProjects = await getMultipleRepoInfo(REPOSITORIES)
   const sortedOpenSourceProjects = sortProjectsByStars(openSourceProjects)
+  const contributions = CONTRIBUTIONS.filter(
+    (contribution) => contribution.pullRequests.length > 0
+  )
+  const contributionRepos = await getMultipleRepoInfo(
+    contributions.map((contribution) => contribution.repo)
+  )
   const stackItemCount = STACK_SECTIONS.reduce(
     (total, section) => total + section.items.length,
     0
@@ -71,8 +78,8 @@ export default async function Home() {
         <PanelHeader>
           <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
           <PanelDescription>
-            I&apos;m a Design Engineer, Founder, and Product Builder based in
-            🇹🇳 Monastir, Tunisia.
+            I&apos;m a Design Engineer, Founder, and Product Builder based in 🇹🇳
+            Monastir, Tunisia.
           </PanelDescription>
         </PanelHeader>
 
@@ -225,12 +232,40 @@ export default async function Home() {
               <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
               <PanelCopyLinkButton sectionId="open-source" />
             </h3>
-           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {sortedOpenSourceProjects.map((project) => (
-              <ProjectOpenSourceCard key={project.name} project={project} />
-            ))}
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {sortedOpenSourceProjects.map((project) => (
+                <ProjectOpenSourceCard key={project.name} project={project} />
+              ))}
             </div>
           </div>
+
+          {contributions.length > 0 && (
+            <div
+              id="contributions"
+              className="[scroll-margin-top:var(--header-height,6rem)]"
+            >
+              <h3 className="group/title mb-4 mt-12 flex items-center gap-1.5 text-xl font-semibold">
+                Contributing to
+                <PanelTitleSup>({contributions.length})</PanelTitleSup>
+                <PanelCopyLinkButton sectionId="contributions" />
+              </h3>
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {contributions.map((contribution) => (
+                  <ProjectContributionCard
+                    key={contribution.repo}
+                    contribution={contribution}
+                    stars={
+                      contributionRepos.find(
+                        (repo) =>
+                          repo.url.toLowerCase() ===
+                          contribution.repo.toLowerCase()
+                      )?.stars
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </PanelContent>
       </Panel>
 

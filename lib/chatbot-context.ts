@@ -3,6 +3,7 @@ import { allProjects, allWorks } from "content-collections"
 
 import { PageContext } from "@/types"
 
+import { CONTRIBUTIONS } from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
 import { getResumeData, type ResumeData } from "@/lib/get-resume-data"
 
@@ -89,6 +90,15 @@ function getProjectsData() {
     }))
 }
 
+function getOpenSourceContributionsData() {
+  return CONTRIBUTIONS.filter(
+    (contribution) => contribution.pullRequests.length > 0
+  ).map((contribution) => ({
+    repository: contribution.repo,
+    mergedPullRequests: contribution.pullRequests,
+  }))
+}
+
 function getTechStackData() {
   return STACK_SECTIONS.map((section) => ({
     section: section.title,
@@ -159,6 +169,7 @@ export async function generateChatbotContext(pageContext?: PageContext) {
     },
     workExperience: getWorkExperienceData(),
     projects: getProjectsData(),
+    openSourceContributions: getOpenSourceContributionsData(),
     techStack: getTechStackData(),
     ...(describePageContext(pageContext)
       ? { currentContext: describePageContext(pageContext) }

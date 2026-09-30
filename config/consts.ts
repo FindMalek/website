@@ -1,4 +1,4 @@
-import type { CardData, Client, FeatureOption } from "@/types"
+import type { CardData, Client, Contribution, FeatureOption } from "@/types"
 
 export const PAGES = {
   HOME: {
@@ -203,6 +203,23 @@ export const REPOSITORIES = [
   "https://github.com/FindMalek/findauth",
   "https://github.com/FindMalek/syncify",
   "https://github.com/FindMalek/Photomater",
+]
+
+// Merged upstream PRs only. A repo with no listed PRs stays hidden (Zed is
+// here so its first merged PR URL can be dropped in once it lands).
+export const CONTRIBUTIONS: Contribution[] = [
+  {
+    repo: "https://github.com/databuddy-analytics/Databuddy",
+    pullRequests: [
+      "https://github.com/databuddy-analytics/Databuddy/pull/636",
+      "https://github.com/databuddy-analytics/Databuddy/pull/637",
+      "https://github.com/databuddy-analytics/Databuddy/pull/680",
+    ],
+  },
+  {
+    repo: "https://github.com/zed-industries/zed",
+    pullRequests: [],
+  },
 ]
 
 export const LANGUAGES_COLORS = {
