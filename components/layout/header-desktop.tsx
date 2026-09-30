@@ -42,7 +42,6 @@ function NavItem({ href, children, isActive }: NavItemType) {
 export function HeaderDesktop(props: DesktopNavigationType) {
   const activeSection = useActiveSection([
     "work",
-    "education",
     "projects",
     "stack",
     "about",
