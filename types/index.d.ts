@@ -58,6 +58,16 @@ export interface OpenSourceProject {
   url: string
 }
 
+export interface ContributionPullRequest {
+  number: number
+  title: string
+}
+
+export interface Contribution {
+  repo: string
+  pullRequests: ContributionPullRequest[]
+}
+
 export interface StackItem {
   title: string
   description: string

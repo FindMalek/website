@@ -84,37 +84,43 @@ export default function RootLayout({ children }: RootLayoutProps) {
     >
       <body
         suppressHydrationWarning
-        className={cn(
-          "bg-background min-h-screen font-sans antialiased",
-          "mx-auto flex w-full flex-col overflow-x-clip",
-          "sm:max-w-lg md:max-w-2xl xl:max-w-3xl",
-          "print:max-w-none",
-          poppins
-        )}
+        className={cn("bg-background font-sans antialiased", poppins)}
       >
-        <LayoutWrapper>
-          <ChatProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            {/* Site chrome has no place on a printed/PDF'd page (e.g. /resume) --
+        {/* Clip on a wrapper, not <body>: body overflow propagates to the
+            viewport, which stays script-scrollable into the full-bleed lines. */}
+        <div className="overflow-x-clip">
+          <div
+            className={cn(
+              "mx-auto flex min-h-screen w-full flex-col",
+              "sm:max-w-lg md:max-w-2xl xl:max-w-3xl",
+              "print:max-w-none"
+            )}
+          >
+            <LayoutWrapper>
+              <ChatProvider>
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+                {/* Site chrome has no place on a printed/PDF'd page (e.g. /resume) --
                 Header/Footer are covered by the tag-selector print rule in
                 globals.css, this wraps everything else that isn't. */}
-            <div className="print:hidden">
-              <Background />
-              <Analytics />
-              <Toaster />
-              <TailwindIndicator />
-              <ChatFloatingContainer />
-              <HighlightAskAction />
-              <ScrollToTop />
-              {/* Device Posture API is Chromium/Samsung-Internet-only (no
+                <div className="print:hidden">
+                  <Background />
+                  <Analytics />
+                  <Toaster />
+                  <TailwindIndicator />
+                  <ChatFloatingContainer />
+                  <HighlightAskAction />
+                  <ScrollToTop />
+                  {/* Device Posture API is Chromium/Samsung-Internet-only (no
                   WebKit support) -- no-ops everywhere else, including any
                   real iPhone. See hooks/use-device-posture.ts. */}
-              <FoldableEasterEgg />
-            </div>
-          </ChatProvider>
-        </LayoutWrapper>
+                  <FoldableEasterEgg />
+                </div>
+              </ChatProvider>
+            </LayoutWrapper>
+          </div>
+        </div>
       </body>
     </html>
   )

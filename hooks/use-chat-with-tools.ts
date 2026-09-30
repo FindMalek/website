@@ -10,7 +10,7 @@ const WELCOME_MESSAGE: UIMessage = {
   parts: [
     {
       type: "text",
-      text: "👋 Welcome! I'm here to help you connect with the Malek. I can:\n\n- Save your contact information for follow-up\n- Schedule a meeting at a convenient time\n- Generate a pricing estimate for your project\n- Provide access to the owner's resume/CV\n\nHow can I assist you today?",
+      text: "Hey, I'm Malek. Ask me about my work, my projects, or what it'd take to build yours. I can also grab a time on my calendar or send you my CV.",
     },
   ],
 }
@@ -81,7 +81,7 @@ export function useChatWithTools(pageContext?: PageContext) {
         textMessage(
           `tool-result-${Date.now()}`,
           "assistant",
-          "I've processed your request. Let me know if you need anything else!"
+          "Done. What's next?"
         ),
       ])
     }
@@ -112,7 +112,7 @@ export function useChatWithTools(pageContext?: PageContext) {
       const resetMsg = textMessage(
         `context-reset-${Date.now()}`,
         "assistant",
-        "I understand you want to change the topic. Let's start fresh. How can I help you now?"
+        "Okay, new topic. What's up?"
       )
 
       const systemHint = textMessage(
