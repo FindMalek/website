@@ -5,6 +5,12 @@ import { PageContext } from "@/types"
 
 import { CONTRIBUTIONS } from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
+import {
+  getPostBySlug,
+  getPostMarkdown,
+  getPostUrl,
+  getVisiblePosts,
+} from "@/lib/blog"
 import { getResumeData, type ResumeData } from "@/lib/get-resume-data"
 
 type Project = (typeof allProjects)[number]
@@ -121,6 +127,17 @@ function getTechStackData() {
 function describePageContext(pageContext?: PageContext): string | undefined {
   if (!pageContext) return undefined
 
+  if (pageContext.route === "/blog") {
+    return "The visitor is browsing the blog index (the list of all posts)."
+  }
+
+  if (pageContext.route.startsWith("/blog/") && pageContext.slug) {
+    const post = getPostBySlug(pageContext.slug)
+    if (post) {
+      return `The visitor is currently reading my blog post "${post.title}". Answer questions about it from its full text below, and quote it rather than guessing.\n\n${getPostMarkdown(post)}`
+    }
+  }
+
   if (pageContext.slug) {
     const work = allWorks.find((w: Work) => w.href === pageContext.route)
     if (work) {
@@ -173,6 +190,11 @@ export async function generateChatbotContext(pageContext?: PageContext) {
     workExperience: getWorkExperienceData(),
     projects: getProjectsData(),
     openSourceContributions: getOpenSourceContributionsData(),
+    blogPosts: getVisiblePosts().map((post) => ({
+      title: post.title,
+      url: getPostUrl(post),
+      excerpt: post.excerpt,
+    })),
     techStack: getTechStackData(),
     ...(describePageContext(pageContext)
       ? { currentContext: describePageContext(pageContext) }
