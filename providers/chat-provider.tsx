@@ -51,7 +51,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   ])
 
   const pageContext = useMemo<PageContext>(() => {
-    const slugMatch = pathname.match(/^\/(?:work|projects)\/(.+)$/)
+    const slugMatch = pathname.match(/^\/(?:work|projects|blog)\/(.+)$/)
     return {
       route: pathname,
       section: activeSection,

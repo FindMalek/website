@@ -4,7 +4,7 @@ interface ArticleContentProps {
 }
 
 /**
- * Marks case-study body content as eligible for highlight-to-ask
+ * Marks case-study and blog-post body content as eligible for highlight-to-ask
  * (see hooks/use-highlight-to-ask.ts). Deliberately not used on the
  * one-pager -- highlight-to-ask is case-study-only by design.
  */

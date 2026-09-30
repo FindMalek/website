@@ -1,0 +1,219 @@
+---
+title: "Five seats, five adds a day: how Sonaraem rotates Spotify's dev-mode allowlist"
+href: /blog/spotify-allowlist-rotation
+excerpt: "Spotify lets a dev-mode app have 5 users and, as I found out the hard way, only 5 allowlist adds per day. This is the scheduler I built so a few friends can share those seats without me ever tripping the throttle."
+publishedAt: "2026-09-30"
+tags: ["spotify", "scheduling", "postgres", "side-projects"]
+status: published
+image: /blog/spotify-allowlist-rotation/cover.png
+imageAlt: "Cover for \"Five seats, five adds a day\", framing the sonaraem.com landing page in a browser window"
+---
+
+Sonaraem is my Spotify side project. It syncs your library, has an LLM classify every track, clusters them, and pushes mood playlists back to your account. The [case study](/projects/sonaraem) covers the pipeline.
+
+This post is about the part that wasn't in any tutorial: Spotify only lets my app have five users, and I have more friends than that.
+
+## The wall
+
+Every Spotify Web API app starts in Development Mode. In dev mode, only accounts you add by hand in the Developer Dashboard can log in. Spotify's [February 2026 migration guide](https://developer.spotify.com/documentation/web-api/tutorials/february-2026-migration-guide) says new dev-mode apps are capped at 5 users, and the app owner needs an active Premium subscription.
+
+The normal way out is Extended Quota Mode. In [April 2025 Spotify narrowed who gets it](https://developer.spotify.com/blog/2025-04-15-updating-the-criteria-for-web-api-extended-access) to apps with "established, scalable, and impactful use cases". That's fair. It also means a solo project with a waitlist of friends isn't getting in. I wrote that up as [sonaraem#240](https://github.com/FindMalek/sonaraem/issues/240) and stopped pretending "we'll apply once we hit 25 users" was a plan.
+
+So the real question became: what can you build inside five seats?
+
+## The observation that made rotation possible
+
+The pipeline has eight stages: sync, lyrics, classify, embed, cluster, generate, match, export. Only two of them talk to Spotify. Sync reads your library, export writes playlists. Everything in between runs against rows already sitting in Postgres.
+
+So a user doesn't need a seat for the whole run. They need a seat for the minutes where Spotify is actually being called. Five seats could mean five users *at a time*, not five users forever.
+
+There's no API for the dev-mode user list, though. The only interface is the dashboard page. So the "hand" that adds and removes people is a Playwright worker running on Trigger.dev, driving that page with a saved session.
+
+I want to be upfront here: this is a workaround for how Spotify intends dev mode to be used, not a sanctioned integration. The epic ([sonaraem#290](https://github.com/FindMalek/sonaraem/issues/290)) has a risk section that says exactly that, and quotes [Spotify's own reasoning](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security) for the February changes, that "advances in automation and AI have fundamentally altered the usage patterns and risk profile of developer access." A bot that edits the allowlist on a schedule is close to what that sentence is about. The realistic worst case is the app or my developer account getting suspended. I accepted that for a handful of friends on a personal project, wrote it down once, and moved on. If you're building something people pay for, don't copy this.
+
+## Version one, and the test I ran first
+
+The whole idea hinged on one question nobody documents: if I remove someone from the allowlist, does their refresh token die?
+
+I tested it before writing any queue code. Throwaway account, add it, run it through the real OAuth flow, grab the refresh token from the `account` table, remove it in the dashboard, then hit `POST /api/token` with `grant_type=refresh_token`. `200 OK`, fresh access token, full scope. Did it again a few minutes later to rule out propagation delay. Same thing.
+
+So removal only blocks new `/authorize` attempts. A user who's already connected stays connected while they're off the list, which meant I could free their seat without logging them out.
+
+Version one ([sonaraem#373](https://github.com/FindMalek/sonaraem/pull/373)) was a slot table, a priority queue where interactive logins beat background syncs, a reclaim sweep for slots stuck behind a crashed job, and the Playwright worker. [#385](https://github.com/FindMalek/sonaraem/pull/385) gated the OAuth redirect on grabbing a slot. Every login, every reconnect, every sync was one add and one remove.
+
+It worked for about a day.
+
+## The limit Spotify doesn't document
+
+During live testing the "Add user" call started coming back with a 429, and the dashboard showed this inline:
+
+> You can't add more than 5 users to an App in a 24 hour period.
+
+That's [sonaraem#390](https://github.com/FindMalek/sonaraem/issues/390). Five adds per rolling 24 hours, for the whole app. Not per user, not per seat. My design assumed the constraint was five *concurrent* seats, and it was actually five *changes a day*. Every login spent one. A normal afternoon of me testing plus a couple of background syncs burned the whole budget.
+
+I did the boring, correct thing first: closed #385 unmerged, froze the allowlist at 4 permanent users plus 1 admin seat ([#392](https://github.com/FindMalek/sonaraem/issues/392), shipped in [#394](https://github.com/FindMalek/sonaraem/pull/394)), and wrote a [self-hosting guide](https://github.com/FindMalek/sonaraem/pull/395) so people could run their own copy on their own Spotify app. That's where the case study leaves it.
+
+Then all 4 seats were taken, and 7 or 8 friends wanted in. "Four people, forever" is a product decision I didn't love. So I went back, but this time I designed around the number I'd actually measured instead of finding the next one in production.
+
+## Treat the throttle as the product constraint
+
+The v2 design lives in `docs/decisions/0001-spotify-allowlist-rotation.md` in the repo, and the code is in [sonaraem#414](https://github.com/FindMalek/sonaraem/pull/414). The rules are short:
+
+- 5 adds and 5 removes per rolling 24h, tracked as two separate ceilings. Only the add limit is confirmed. I assume removes behave the same because guessing wrong in the other direction is the expensive mistake.
+- Only spend 4 of each. The 5th is margin, since I have no idea where Spotify's window boundaries actually sit.
+- 1 seat is permanently the admin's, so I can always log in to debug. The other 4 rotate.
+- One add and one remove is one "visit". Whatever a user has pending gets done in that visit.
+
+That last one is where the capacity comes from. One visit costs 1 add plus 1 remove, so with 4 of each I get 4 visits a day, and not all of them can go to background refreshes because onboarding and exports need some too. The capacity table in #290 works out to about 2 refresh visits a day, so population is roughly 2 × the refresh interval in days. Weekly refreshes cap me at about 14 people. A 21 day interval is about 42, 30 days about 60, on paper. My actual target is 7 or 8 friends, so this is headroom, not a growth plan. It also killed the weekly digest as a default. You can't refresh everyone every week and also have more than 14 users.
+
+![Diagram of the rotation budget. Of the 5 allowlist seats, 1 is the permanent admin seat and 4 rotate. One visit is an add to the allowlist, a sync and export of everything pending for that user, then a remove, with each ledger row written before the real action. The rolling 24 hour ledger allows 4 adds and 4 removes, with the fifth of each kept as margin, which gives 4 visits a day, about 2 of them for refreshes.](/blog/spotify-allowlist-rotation/rotation-budget.webp)
+
+## The ledger
+
+The budget is a table, `spotify_allowlist_mutation_log`, one row per add or remove. Checking headroom is a count over the trailing 24 hours, recomputed against `now()` every time. No daily reset, because I don't know when Spotify's day starts.
+
+```ts
+export const SAFE_MUTATION_BUDGET_PER_DIRECTION = 4;
+
+export async function countMutationsInWindow(
+  direction: MutationDirection,
+  windowMs: number = ROLLING_WINDOW_MS,
+): Promise<number> {
+  const since = new Date(Date.now() - windowMs);
+  const [row] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(spotifyAllowlistMutationLog)
+    .where(
+      and(
+        eq(spotifyAllowlistMutationLog.direction, direction),
+        gte(spotifyAllowlistMutationLog.occurredAt, since),
+      ),
+    );
+  return row?.count ?? 0;
+}
+```
+
+The Playwright worker checks this before it touches the dashboard. It also scrapes the user table first and skips the click entirely if the email is already in the state it wants. Clicking "add" for someone who's already there isn't a no-op on Spotify's side. It can land the page in a weird state that looks exactly like a real failure.
+
+The part I got wrong at first is *when* the ledger gets written. Originally it was after the real action. So if the worker died between clicking "add" and inserting the row (a deploy, an OOM, whatever), Spotify counted it and I didn't. My ledger would think it had budget it didn't have, which is the one way this whole system can hurt itself. [sonaraem#409](https://github.com/FindMalek/sonaraem/issues/409) flipped it:
+
+```ts
+if (!(await hasMutationBudget(action))) {
+  throw new AllowlistBudgetExhaustedError(action);
+}
+
+await waitForWriteGap();
+
+// Recorded before the real action: a crash here should waste a budget
+// unit (safe), never hide one that was actually spent (unsafe).
+await recordMutation(action, email);
+
+if (action === "add") {
+  await addAllowlistUser(page, email);
+} else {
+  await removeAllowlistUser(page, email);
+}
+```
+
+Now a crash wastes one unit, which comes back when the window rolls. I'll take wasteful over wrong.
+
+## The dispatcher
+
+Work goes into a `spotify_rotation_job` table with two job types, `snapshot_refresh` and `export`. Export gets priority 20 because someone just clicked a button. Refresh gets 10 because nobody is watching. Enqueueing is idempotent, and a second export request while one is still queued merges its playlist IDs into the existing job instead of opening another one.
+
+A Trigger.dev cron fires every 15 minutes on a queue with `concurrencyLimit: 1`. Each tick picks the highest-priority job, then pulls in every other queued job for that same user, so one visit covers everything:
+
+```text
+cron (every 15 min)
+  └─ getNextConsolidatedBatch()   head job + all other queued jobs for that user
+       └─ reserveRotationSeat()   advisory lock, re-count on_list seats
+            └─ add to allowlist   Playwright, ledger checked + written first
+                 └─ sync / export everything in the batch
+                      └─ remove from allowlist
+                           └─ markRotationEntryServiced()   next due = now + interval
+```
+
+The trimmed core of `rotation-dispatcher.ts`:
+
+```ts
+if (entry.status !== "on_list") {
+  const seatReserved = await reserveRotationSeat(entry.id);
+  if (!seatReserved) {
+    await requeueForBudget(jobIds);
+    return { dispatched: false, waitingOnBudget: true };
+  }
+  await runAllowlistMutation(entry.email, "add");
+}
+
+for (const job of batch.jobs) {
+  if (job.jobType === "snapshot_refresh") {
+    await syncLibraryTracks(batch.userId);
+  } else if (job.jobType === "export") {
+    for (const playlistId of job.playlistIds ?? []) {
+      await exportPlaylistToSpotify(batch.userId, playlistId);
+    }
+  }
+}
+
+await runAllowlistMutation(entry.email, "remove");
+await markRotationEntryServiced(entry.id, entry.refreshIntervalDays);
+```
+
+One thing worth pointing out: in v2 the user is back on the allowlist for the whole time their Spotify calls run. The token-survival test from v1 is still why sign-in doesn't break when they're off the list, but the dispatcher doesn't lean on it to call the API for someone who isn't allowlisted.
+
+`markRotationEntryServiced` resets the user's next due date no matter which job brought them in. A daily scanner at 07:00 only enqueues refreshes for people who went the full interval without any visit at all. If you exported yesterday, you're not getting re-added tomorrow for a refresh. Touching the same person twice for two reasons is exactly how you burn a budget of 4.
+
+## Onboarding goes through the same seats
+
+New users hit the gate before OAuth. A Better Auth `before` hook on Spotify sign-in calls `ensureAllowlisted`, which counts `on_list` rows and adds the email if there's room. A user who was rotated off gets their row flipped back to `on_list` instead of a duplicate insert. After the first successful link, their initial sync is enqueued automatically so they don't have to find a button.
+
+The dispatcher and a sign-in can both want a seat at the same moment. If both read "3 of 4 taken" and both add someone, I've got 5 real users on a list Spotify caps at 5, with the admin seat already in use. So both paths go through the same Postgres advisory lock:
+
+```ts
+export async function reserveRotationSeat(entryId: number): Promise<boolean> {
+  return db.transaction(async (tx) => {
+    await tx.execute(
+      sql`select pg_advisory_xact_lock(hashtext('sonaraem_spotify_allowlist_capacity'))`,
+    );
+    const [countRow] = await tx
+      .select({ count: sql<number>`count(*)::int` })
+      .from(spotifyAllowlistEntry)
+      .where(eq(spotifyAllowlistEntry.status, "on_list"));
+    if ((countRow?.count ?? 0) >= MAX_ALLOWLISTED_REAL_USERS) return false;
+
+    await tx
+      .update(spotifyAllowlistEntry)
+      .set({ status: "on_list" })
+      .where(eq(spotifyAllowlistEntry.id, entryId));
+    return true;
+  });
+}
+```
+
+It's a transaction-scoped lock, so it releases at commit and never gets held across the slow browser automation. The original design also had a whole admission pool with 48h and 72h reservation timeouts for a growing waitlist. I deleted it. At 7 or 8 signups there's never a queue to ration.
+
+## The bugs that were actually interesting
+
+**Waiting isn't failing.** When the ledger is tapped out, the worker throws `AllowlistBudgetExhaustedError`. The dispatcher calls the worker through Trigger.dev's `runs.poll()`, which crosses a run boundary, so the error class doesn't survive. Only the message string does. `instanceof` was always false, every budget wait went through `markJobsFailed`, and three ordinary "no budget right now" ticks marked a healthy job permanently failed ([#408](https://github.com/FindMalek/sonaraem/issues/408)). The fix is a shared marker string that both the throw site and the check site import, plus a `requeueForBudget` that pushes `eligibleAt` out 10 minutes without touching `retryCount`. Not pretty, but honest about what crosses the boundary.
+
+**Jobs stuck in "dispatched".** If the dispatcher dies after marking a batch dispatched but before doing anything, those jobs are invisible forever because only `queued` jobs get picked. Each tick now resets anything dispatched more than 30 minutes ago back to `queued` first.
+
+**A CASE expression Postgres wouldn't take.** I tried to set status to `failed` or `queued` in one update with a SQL `CASE` on `retryCount`. Postgres types a CASE of bare string literals as `text`, and `text` doesn't implicitly cast to a custom enum on assignment. The mocked-DB tests passed. Real Postgres threw. It's two typed updates now, with a comment so I don't "clean it up" later.
+
+**Playwright in a Vercel function.** A top-level `import "playwright"` got bundled into the web function that only *triggers* the task, and it crashed there looking for browser binaries. It's a dynamic import inside `run()` now, so it only loads on Trigger.dev's workers.
+
+## What's still open
+
+As I write this, #414 is still an open PR, so v2 isn't in production yet. A few things I know are unverified or missing:
+
+- Remove throttling is an assumption. Only adds are confirmed. I want a few throwaway add/remove cycles watching for a 429 on remove before that number carries real weight.
+- The Playwright worker can't log in by itself. It needs a session I seed manually, and when that expires, rotation stops until I log in again. There's an admin page that shows session health ([#400](https://github.com/FindMalek/sonaraem/pull/400)) and an alert email on failure, but it's still a human in the loop.
+- There's a 15 second minimum gap between dashboard writes. It's a guess, not something Spotify told me.
+- Nobody gets told when their export finishes, because it happens whenever their visit comes up ([#410](https://github.com/FindMalek/sonaraem/issues/410)).
+- A second developer app would double both budgets, but it would also put a second person's account at the same risk. That's a decision for them, so it has its own issue ([#391](https://github.com/FindMalek/sonaraem/issues/391)) and nothing is built.
+
+## What I'd tell myself before v1
+
+Measure the platform before you design around it. I did test the token question up front, and that test held. I didn't test "how many adds can I actually make", and that's the one that killed v1.
+
+The second time I started from the number, 4 adds and 4 removes a day, and everything else followed from it: consolidated visits, a ledger that errs toward over-counting, a lock around the seat count, and a refresh interval set by arithmetic instead of vibes. It's a small system for a small group of friends, and it knows exactly how small it has to stay.

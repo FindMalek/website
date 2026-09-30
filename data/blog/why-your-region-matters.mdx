@@ -1,0 +1,147 @@
+---
+title: "My app was in Virginia, my database was in Frankfurt"
+href: /blog/why-your-region-matters
+excerpt: "Zero Locker felt slow in production and instant on localhost. The code was fine. The functions were just on the wrong side of the Atlantic."
+publishedAt: "2026-09-30"
+tags: [vercel, performance, postgres, nextjs]
+status: published
+image: /blog/why-your-region-matters/cover.png
+imageAlt: "Cover for \"Virginia app, Frankfurt database\", showing the request path before and after moving the functions to Frankfurt"
+---
+
+Zero Locker was instant on my laptop and sluggish in production. Open a credential, wait. Create one, wait. Click around the dashboard, everything a beat late, like the app was thinking about it.
+
+People who tried it said the same thing, so it wasn't just me being picky.
+
+The fix ended up being one setting. Finding it took way longer than it should have, so here's the whole thing, including the parts where I was wrong.
+
+## Blaming everything except the obvious
+
+My first move was the classic: "it's fast locally, so the code is fine, so it's something else."
+
+Then I went through the usual suspects. The queries. Prisma. The network. Cold starts. The database waking up.
+
+Cold starts were my favorite theory for a while. Zero Locker runs on Neon, which is serverless Postgres, and serverless things have a reputation. There's still a route in the repo, `app/api/cron/keep-alive/route.ts`, whose whole job is to poke the database so it stays awake:
+
+```ts
+export const GET = async () => {
+  const newPage = await database.health.create({})
+
+  await database.health.delete({
+    where: {
+      id: newPage.id,
+    },
+  })
+
+  return new Response("OK", { status: 200 })
+}
+```
+
+That helps with a cold database. It does nothing for slowness that's there on every single request, warm or not. And that's what I had.
+
+## Where everything actually lived
+
+Eventually I did the boring thing and checked where each piece was hosted.
+
+The database: Neon, in Frankfurt (`eu-central-1`).
+
+The functions: Vercel, in Washington, D.C. (`iad1`).
+
+I never picked `iad1`. It's just what you get. Vercel's docs say it plainly: functions run in Washington, D.C. by default for all new projects, because a lot of external data sources sit on the US East Coast. Mine didn't. I'd created the Neon project in Frankfurt, which makes sense for someone in Tunisia, and then never touched the Vercel side.
+
+So every request looked like this:
+
+![Request path before and after. Before, the browser talks to a function in iad1, Washington D.C., and the function crosses the Atlantic to Neon in eu-central-1 for the session lookup, the credential, card and secret lists, and sometimes another query. After, the function runs in fra1, Frankfurt, next to the database, and a US user's request crosses the Atlantic once.](/blog/why-your-region-matters/request-path.webp)
+
+The browser to function hop is not the problem. That's one trip. The problem is the function to database part, because one request is never one query.
+
+## Why one request is never one query
+
+Here's the dashboard page, `app/(dashboard)/dashboard/page.tsx`:
+
+```tsx
+export default async function DashboardPage() {
+  const context = await createContext()
+  const serverClient = createServerClient(context)
+
+  const [credentialsResponse, cardsResponse, secretsResponse] =
+    await Promise.all([
+      serverClient.credentials.list({ page: 1, limit: MAX_RECENT_ITEMS }),
+      serverClient.cards.list({ page: 1, limit: MAX_RECENT_ITEMS }),
+      serverClient.secrets.list({ page: 1, limit: MAX_RECENT_ITEMS }),
+    ])
+
+  // ...
+}
+```
+
+Before any of those lists run, `createContext()` in `orpc/context.ts` calls `auth.api.getSession()` to figure out who you are. That's a trip to the database. Then the three lists fire in parallel, which is nice, but parallel still means "at least one more ocean crossing" and each list can be more than one query.
+
+So a page that does maybe 10ms of real database work pays for several transatlantic round trips on top. Stack a few requests on one screen (the page render, then the oRPC calls from the client through `app/api/orpc/[[...rest]]/route.ts`) and you get exactly the "everything's a beat late" feeling.
+
+Localhost hid all of this because the app and the database were on the same machine. Network cost was basically zero. Production was slow because physics.
+
+## What the Network tab said
+
+I recorded the DevTools Network tab before and after, and those recordings are where my numbers come from. Before the fix, requests were sitting at 200-300ms each. After, the same requests were 5-15ms. The heavier API calls went from around 760ms to around 120ms, and page loads went from about 2.5 seconds to under 1 second.
+
+These are numbers from my own screen recordings of the app, not a proper benchmark. But the gap was big enough that I didn't need a benchmark to believe it.
+
+## The fix: move the functions, not the database
+
+I changed the function region to Frankfurt (`fra1`) in the Vercel dashboard: project Settings, then Functions, then Function Regions. Then redeployed.
+
+That's it. The deployment history backs this up. Every production deployment up to October 21, 2025 lists `iad1` as its region. On October 22 there's a redeploy of a commit that was already on `main`, no new code, and from that one on every deployment says `fra1`.
+
+In the original version of this post I showed a `vercel.json` snippet for the fix. Truth is, that file never existed in the Zero Locker repo. I did it in the dashboard. And the snippet I wrote had a bug in it anyway:
+
+```json
+{
+  "functions": {
+    "app/api/**/*.ts": {
+      "regions": ["fra1"]
+    }
+  }
+}
+```
+
+That only targets the route handlers under `app/api`. The dashboard page above isn't under `app/api`. It's a server component, and it talks to the database just as much. Pin only the API routes and the page render stays in Virginia, still crossing the ocean.
+
+If I were putting it in code today, I'd set it at the project level so everything moves together:
+
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["fra1"]
+}
+```
+
+Per-function `regions` is still useful, but for a different case: when different functions talk to different data sources in different places. For an app with one database, one region for everything is the answer.
+
+## The tradeoffs I thought about after
+
+Moving functions to Frankfurt doesn't make the ocean disappear. It moves where you pay for it.
+
+A user in the US now crosses the Atlantic once, browser to `fra1`, instead of the function crossing it several times per request. Static stuff (HTML, JS, CSS, images) comes from Vercel's CDN near the user either way, so it's only the dynamic part that travels. One crossing instead of several is a good trade.
+
+Running functions in more regions doesn't help if the database lives in one. A function in `iad1` talking to Frankfurt is the exact thing I just fixed. Multi-region functions only make sense when the data is also multi-region, or read replicas are close to each extra function region. On Hobby you get one function region anyway.
+
+This is also why "run it at the edge" was the wrong instinct back when that was the hype. The Edge runtime runs in the region closest to the request by default, which is great for a function that doesn't touch a database and terrible for one that does. Vercel now recommends migrating from edge to Node.js anyway, and Next.js 16.3 dropped support for `runtime = 'edge'`.
+
+Cold starts are a separate problem, and a smaller one than I thought. The Vercel project for Zero Locker was created in May 2025, after Vercel made Fluid compute the default for new projects (April 23, 2025), which shares warm instances across requests and cuts how often cold starts happen at all. A cold start costs you once. A bad region costs you on every request, forever.
+
+## How to check yours in two minutes
+
+Find where your database lives. It's on the project page of whatever provider you use.
+
+Find where your functions run. The deployment details on Vercel list the regions, and inside a function you can log `process.env.VERCEL_REGION` to see where it actually executed.
+
+If they're not in the same place, or at least the same part of the world, you probably found your slowness. Open the Network tab while you're at it. If every dynamic request is paying 100ms+ and localhost isn't, that's a geography problem, not a code problem.
+
+## What I'd do differently
+
+Pick the function region the same day I pick the database region. It's one dropdown on each side, and they should match.
+
+And put it in `vercel.json` instead of the dashboard, so it shows up in code review and doesn't depend on me remembering which setting I clicked a year ago.
+
+_This is a rewrite of a post I first published on the Zero Locker blog: [Why Your Database Location Matters](https://www.zero-locker.com/articles/region-deployment-importance)._

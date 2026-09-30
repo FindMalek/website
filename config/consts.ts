@@ -37,6 +37,12 @@ export const PAGES = {
     name: "Stack",
     text: "Explore my tech stack",
   },
+  BLOG: {
+    path: "/blog",
+    label: "Blog.",
+    name: "Blog",
+    text: "Read what I've been writing",
+  },
   CONTACT: {
     path: "/contact",
     label: "Contact Me.",

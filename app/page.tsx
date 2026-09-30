@@ -4,6 +4,7 @@ import { allProjects, allWorks } from "content-collections"
 
 import { CLIENTS, CONTRIBUTIONS, REPOSITORIES } from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
+import { getVisiblePosts, toPostSummary } from "@/lib/blog"
 import { getCachedContributions } from "@/lib/get-cached-contributions"
 import { getResumeData } from "@/lib/get-resume-data"
 import {
@@ -39,6 +40,7 @@ import { ProjectItem } from "@/components/app/project-item"
 import { ProjectOpenSourceCard } from "@/components/app/project-opensource-card"
 import { StackSection } from "@/components/app/stack-section"
 import { WorkExperienceItem } from "@/components/app/work-experience-item"
+import { LatestPosts } from "@/components/blog/latest-posts"
 
 import { getMultipleRepoInfo } from "@/actions/github"
 import { getUserPlaylists } from "@/actions/spotify"
@@ -70,6 +72,8 @@ export default async function Home() {
       return { repoUrl, info, stars: info?.stars ?? -1 }
     })
   )
+  const visiblePosts = getVisiblePosts()
+  const latestPosts = visiblePosts.slice(0, 3).map(toPostSummary)
   const stackItemCount = STACK_SECTIONS.reduce(
     (total, section) => total + section.items.length,
     0
@@ -275,6 +279,32 @@ export default async function Home() {
       </Panel>
 
       <div className="stripe-divider" />
+
+      {latestPosts.length > 0 && (
+        <>
+          <Panel id="blog">
+            <PanelHeader>
+              <div className="group/title flex items-center gap-1.5">
+                <PanelTitle>
+                  Blog
+                  <PanelTitleSup>({visiblePosts.length})</PanelTitleSup>
+                </PanelTitle>
+                <PanelCopyLinkButton sectionId="blog" />
+              </div>
+              <PanelDescription>
+                Notes from building things: what broke, what I tried, and what
+                actually worked.
+              </PanelDescription>
+            </PanelHeader>
+
+            <PanelContent>
+              <LatestPosts posts={latestPosts} />
+            </PanelContent>
+          </Panel>
+
+          <div className="stripe-divider" />
+        </>
+      )}
 
       <Panel id="stack">
         <PanelHeader>

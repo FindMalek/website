@@ -25,6 +25,9 @@ function getPageLabel(pathname: string): string {
   // Check if path has more than one segment (has a dynamic part)
   const pathSegments = pathname.split("/").filter(Boolean)
 
+  // Post slugs are sentence-length; at 200px they read as noise, not a label.
+  if (pathSegments[0] === "blog" && pathSegments.length > 1) return ""
+
   if (pathSegments.length > 1) {
     // Use the last segment as the label
     return pathSegments[pathSegments.length - 1]
@@ -119,14 +122,16 @@ export function Background() {
             ))}
         </svg>
       </svg>
-      <div className={purplePurse.className}>
-        <h1
-          className="fixed -bottom-24 -left-10 -z-40 text-[200px] font-bold text-gray-700/10 dark:text-gray-700/10"
-          style={{ userSelect: "none" }}
-        >
-          {pageLabel}
-        </h1>
-      </div>
+      {pageLabel && (
+        <div className={purplePurse.className}>
+          <h1
+            className="fixed -bottom-24 -left-10 -z-40 text-[200px] font-bold text-gray-700/10 dark:text-gray-700/10"
+            style={{ userSelect: "none" }}
+          >
+            {pageLabel}
+          </h1>
+        </div>
+      )}
 
       <div
         className="absolute left-[calc(50%-4rem)] top-10 -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)]"
