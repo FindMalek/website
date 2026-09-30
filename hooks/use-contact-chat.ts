@@ -14,7 +14,7 @@ import { MAX_MESSAGES_ALLOWED } from "@/config/consts"
  * succeed but the UI would never visibly update.
  */
 export function useContactChat() {
-  const { chat: chatContext } = useChatDock()
+  const { chat: chatContext, dockState } = useChatDock()
   const { messages, error, input, handleInputChange, isLoading, stop } =
     chatContext
 
@@ -24,8 +24,12 @@ export function useContactChat() {
 
   const isMessageLimitReached = messages.length >= MAX_MESSAGES_ALLOWED
 
-  // Keep input focused across all situations
+  const isOpen = dockState === "docked"
+
+  // Only while open: focusing an idle chat on load steals the page's keyboard focus.
   useEffect(() => {
+    if (!isOpen) return
+
     const focusTimer = setTimeout(() => {
       if (inputRef.current && !isMessageLimitReached) {
         inputRef.current.focus()
@@ -33,7 +37,7 @@ export function useContactChat() {
     }, 100)
 
     return () => clearTimeout(focusTimer)
-  }, [messages, isLoading, isCancelling, isMessageLimitReached])
+  }, [isOpen, messages, isLoading, isCancelling, isMessageLimitReached])
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
