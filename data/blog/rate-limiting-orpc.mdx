@@ -1,0 +1,278 @@
+---
+title: "Rate limiting an oRPC API with a Map, and everything that Map gets wrong"
+href: /blog/rate-limiting-orpc
+excerpt: "The rate limiter I shipped in Zero Locker is about 60 lines of TypeScript and an in-memory Map. It works, but it's a fixed window I called a sliding window, and it trusts headers it shouldn't. Here's the real code and what I'd change."
+publishedAt: "2026-09-30"
+tags: ["orpc", "rate-limiting", "security", "nextjs"]
+status: draft
+---
+
+Zero Locker is a password manager I'm building in the open ([repo](https://github.com/FindMalek/zero-locker)). A password manager's API is the kind of thing people will point scripts at. Guess a login a few thousand times, hammer a form that sends email, or just loop an endpoint until your database bill cries.
+
+So in October 2025 I added rate limiting to the oRPC routers, then wrote an article about it on the Zero Locker site. Reading that article again a year later, I cringed a bit. The code is fine for what it is. The article oversold it.
+
+This is the honest version: the real code, what it actually protects, and the places where it's wrong.
+
+## What it actually covers
+
+The PR that added it ([#27](https://github.com/FindMalek/zero-locker/pull/27), "Setup Global Ratelimits on Routers") lists exactly which procedures got a limiter, and they're all public, unauthenticated endpoints in `orpc/routers/user.ts`:
+
+- `joinWaitlist`, `subscribeToRoadmap` and `subscribeToUpdates` get the strict tier (5 per minute), because every call sends an email.
+- `getWaitlistCount`, `getUserCount` and `getEncryptedDataCount` get the lenient tier (100 per minute), since they're cheap reads on the marketing pages.
+
+The vault routers (`credential.ts`, `secret.ts`, `card.ts` and friends) go through `authMiddleware` only. No limiter. And login itself isn't an oRPC procedure at all, it's handled by better-auth.
+
+That's less scary than it sounds. Email endpoints are the cheapest thing to abuse on a public site: one script and you've turned my Resend account into a spam cannon aimed at strangers. And for login, better-auth has its own limiter. Its current docs say it's on by default in production (100 requests per 60 seconds), with a tighter rule on `/sign-in/email` of 3 requests per 10 seconds. My `lib/auth/server.ts` doesn't configure it, so it's running on those defaults, in memory.
+
+But I'd be lying if I said the oRPC middleware is what stands between an attacker and your vault. It isn't. Keep that in mind for the rest of the post.
+
+## The whole engine is a Map
+
+`lib/utils/rate-limit.ts` stores one entry per key: a counter and the second at which it resets.
+
+```ts
+class RateLimitCache {
+  private cache: Map<string, { count: number; resetAt: number }> = new Map()
+
+  get(key: string) {
+    const entry = this.cache.get(key)
+    if (entry && entry.resetAt <= Math.floor(Date.now() / 1000)) {
+      this.cache.delete(key)
+      return undefined
+    }
+    return entry
+  }
+  // set, delete, a 60s cleanup sweep on an unref()'d interval...
+}
+```
+
+Two small things I'm still happy with. Expired entries get deleted on read, so a stale count never leaks into a new window even if the sweep hasn't run yet. And the sweep timer is `unref()`'d, so it doesn't keep a Node process alive on its own. The optional chaining is there because not every runtime's timer has `unref`.
+
+Keys are `ratelimit:<tier>:<ip>`, so the same IP gets a separate budget per tier. Hitting the waitlist five times doesn't eat into your count reads.
+
+## I called it a sliding window. It's a fixed window.
+
+Here's the core of `checkRateLimit`, trimmed:
+
+```ts
+const key = generateKey(ip, identifier)
+const now = Math.floor(Date.now() / 1000)
+
+let entry = rateLimitCache.get(key)
+
+if (!entry || entry.resetAt <= now) {
+  entry = { count: 1, resetAt: now + windowSeconds }
+  rateLimitCache.set(key, entry)
+  return { allowed: true, remaining: maxRequests - 1, limit: maxRequests, resetAt: entry.resetAt }
+}
+
+entry.count++
+rateLimitCache.set(key, entry)
+
+if (entry.count > maxRequests) {
+  return {
+    allowed: false,
+    remaining: 0,
+    limit: maxRequests,
+    resetAt: entry.resetAt,
+    retryAfter: entry.resetAt - now,
+  }
+}
+```
+
+(The real file has the "no entry" and "expired entry" branches written out separately, and validates that `maxRequests` and `windowSeconds` are finite and positive before any of this.)
+
+The file header, the PR description and my original article all say "sliding window". Look at `resetAt` though. It's set once, on the first request, and never moves. That's a fixed window that starts whenever a given IP first shows up. A real sliding window would look at the last 60 seconds from *now* on every request.
+
+The practical difference is the boundary burst. With 5 per minute, someone can send 5 requests in the last second of a window and 5 more in the first second of the next one. Ten requests in about two seconds, all allowed. For "don't let a bot send 500 waitlist emails", that's fine. For login attempts I'd want something tighter.
+
+I still think fixed window was the right pick here, for a boring reason: it's one counter and one timestamp per key. There's nothing to get wrong. I just should have named it correctly.
+
+## Wiring it into oRPC
+
+The middleware in `middleware/rate-limit.ts` is a factory: give it a config, get back a function with oRPC's `({ context, next })` middleware shape.
+
+```ts
+export const rateLimitMiddleware = (config: RateLimitConfig) => {
+  return async ({
+    context,
+    next,
+  }: {
+    context: PublicContext
+    next: MiddlewareNextFn<unknown>
+  }) => {
+    const result = await checkRateLimit(context.ip, config)
+
+    if (!result.allowed) {
+      throw new ORPCError("TOO_MANY_REQUESTS", {
+        message: "Rate limit exceeded. Please try again later.",
+        data: {
+          retryAfter: result.retryAfter,
+          limit: result.limit,
+          resetAt: result.resetAt,
+          identifier: config.identifier,
+        },
+      })
+    }
+
+    return next({
+      context: {
+        ...context,
+        rateLimit: {
+          remaining: result.remaining,
+          limit: result.limit,
+          resetAt: result.resetAt,
+        },
+      },
+    })
+  }
+}
+
+export const strictRateLimit = () => {
+  return rateLimitMiddleware({
+    ...RATE_LIMIT_PRESETS.STRICT,
+    identifier: "strict",
+  })
+}
+```
+
+`TOO_MANY_REQUESTS` is one of oRPC's built-in error codes, so it goes out as a 429. The retry info rides along in `data`.
+
+Then in `orpc/routers/user.ts` each tier becomes its own base procedure:
+
+```ts
+const baseProcedure = os.$context<ORPCContext>()
+
+const publicProcedure = baseProcedure.use(({ context, next }) =>
+  lenientRateLimit()({ context, next })
+)
+
+const strictPublicProcedure = baseProcedure.use(({ context, next }) =>
+  strictRateLimit()({ context, next })
+)
+
+export const joinWaitlist = strictPublicProcedure
+  .input(waitlistInputSchema)
+  .output(waitlistJoinOutputSchema)
+  .handler(async ({ input }) => {
+    // ...
+  })
+```
+
+Two things I'd clean up. The `...context` spread isn't needed: oRPC merges whatever you pass to `next({ context })` into the existing context, and its docs say so explicitly. And wrapping `lenientRateLimit()({ context, next })` in an arrow means the factory runs on every request. It's cheap here because all the state lives in the module-level Map, but `baseProcedure.use(lenientRateLimit())` would say the same thing with less noise.
+
+What the middleware doesn't do is set any HTTP headers. No `Retry-After`, no `RateLimit-Remaining`. The numbers exist, they just end up in the error body and in `context.rateLimit`, and nothing in the handlers reads `context.rateLimit`.
+
+## Whose IP is it anyway
+
+An IP-keyed limiter is only as good as the IP. `orpc/context.ts` pulls it from headers when building the oRPC context:
+
+```ts
+function getClientIp(headersList: Headers): string {
+  const forwardedFor = headersList.get("x-forwarded-for")
+  const realIp = headersList.get("x-real-ip")
+  const vercelIp = headersList.get("x-vercel-forwarded-for")
+  const cfConnectingIp = headersList.get("cf-connecting-ip")
+
+  if (cfConnectingIp) {
+    return cfConnectingIp
+  }
+
+  if (vercelIp) {
+    const ips = vercelIp.split(",").map((ip) => ip.trim())
+    if (ips[0]) return ips[0]
+  }
+
+  if (realIp) {
+    return realIp
+  }
+
+  if (forwardedFor) {
+    const ips = forwardedFor.split(",").map((ip) => ip.trim())
+    if (ips[0]) return ips[0]
+  }
+
+  return "UNKNOWN-IP"
+}
+```
+
+Here's a fun one. My original article shows this function checking `x-forwarded-for` *first*. The code on main had already been reordered by then (it landed with the roadmap page, [#26](https://github.com/FindMalek/zero-locker/pull/26), a week before the article) to check `x-forwarded-for` last, because a client can just send that header themselves. So the article was teaching the spoofable version of my own code.
+
+The reordered version still has a hole. It trusts `cf-connecting-ip` whenever it's present. That header only means something if Cloudflare is actually in front of you and overwrites it. Zero Locker was set up for Vercel (PR #27 says so in its first paragraph). If nothing in front strips a client-sent `cf-connecting-ip`, anyone can put a random value in it and get a fresh bucket on every request.
+
+The rule I'd follow now: trust exactly one header, the one your real edge sets, and ignore the rest. On Vercel that means Vercel's header, and dropping the Cloudflare branch unless you actually put Cloudflare in front.
+
+The fallback has its own problem. Every request without any of these headers shares the literal key `UNKNOWN-IP`. And `createContext` also returns `ip: "UNKNOWN-IP"` from its `catch`, which fires if the session lookup throws. So a flaky auth call can put every visitor in one shared bucket, and five people joining the waitlist lock everyone else out for a minute.
+
+## Serverless doesn't share your Map
+
+The Map lives in module scope. On one long-running Node server, that's one counter per IP. Great. On serverless you get as many copies of that Map as there are warm instances, and each one starts empty after a cold start.
+
+So "5 per minute" really means "5 per minute per instance, until the instance gets recycled". Requests that land on different instances get a multiple of the limit, and I don't control how many instances there are.
+
+The original article said this setup was fine "under 1000 daily users" and that you'd want Redis at "1000+ concurrent users". Those numbers weren't based on any measurement, and I'd drop them. The real line is simpler: the moment you have more than one process, an in-memory limiter is a suggestion. For the email endpoints that's still way better than nothing, because the goal there is stopping a dumb loop, not a distributed attack.
+
+## Fail open or fail closed
+
+With a Map there's no network call, so "the store is down" can't happen. The question still shows up in two places.
+
+`checkRateLimit` throws if `maxRequests` or `windowSeconds` isn't a finite positive number. That throw happens inside the middleware, so the procedure errors out. That's fail closed: a typo in a preset breaks the endpoint instead of silently turning the limit off. For a security feature I think that's the right default.
+
+The `UNKNOWN-IP` fallback is the other one. Also fail closed, but by accident, and it punishes the wrong people.
+
+Move to Redis and the decision gets real. For the waitlist I'd fail open: Redis is down, let people sign up, log it. For anything touching login or the vault I'd fail closed. A password manager being briefly annoying is fine. A password manager whose brute force protection quietly switched off is not.
+
+## How I tested it (and the bug that testing missed)
+
+There are no unit tests for any of this. Testing was clicking.
+
+The first version shipped with a whole `/rate-limit-test` page ([#27](https://github.com/FindMalek/zero-locker/pull/27)), which I deleted the same evening ([#29](https://github.com/FindMalek/zero-locker/pull/29)). When I wrote the article ([#38](https://github.com/FindMalek/zero-locker/pull/38)), the test moved into the article itself: a `testRateLimit` procedure in `orpc/routers/test.ts` and a component with a button you mash until it says no.
+
+It uses its own `test-strict` and `test-moderate` identifiers, so playing with the demo doesn't burn your real waitlist budget. Nice. It also calls `checkRateLimit` directly instead of going through the middleware, so the demo never actually exercises `rateLimitMiddleware`. Less nice.
+
+And here's the bug. The demo component wants to show "retry in N seconds", so it does this:
+
+```ts
+onError: (error: Error) => {
+  const retryAfter = parseRetryTime(error.message)
+  // ...
+}
+```
+
+`parseRetryTime` is a regex in `lib/utils/rate-limit.ts` that looks for a number followed by "seconds", "sec" or "s". The server's message is "Rate limit exceeded. Please try again later." There's no number in it. So `retryAfter` is always `undefined`, and the countdown never shows. The actual value was sitting in `error.data.retryAfter` the whole time.
+
+A unit test with a fake clock would have caught that in a minute. So would reading the error shape instead of scraping the message. Lesson learned: if you put structured data in `ORPCError`'s `data`, read it from `data`.
+
+## What I'd do today
+
+Since then oRPC shipped an official rate limit package, `@orpc/ratelimit` (still beta at the time of writing). It has limiters for memory, Redis, Upstash, Bun's Redis client and Cloudflare's binding, a `ratelimit` middleware that takes a `key` function, and a `RateLimitHandlerPlugin` that sets `RateLimit-*` and `Retry-After` headers on responses. That last one covers the headers I never got around to.
+
+The part I like most is that the key gets the input. From the docs:
+
+```ts
+import { ratelimit, RateLimiter } from '@orpc/ratelimit'
+
+const procedure = os
+  .$context<{ ratelimiter: RateLimiter }>()
+  .input(z.object({ email: z.email() }))
+  .use(
+    ratelimit({
+      limiter: ({ context }) => context.ratelimiter,
+      key: ({ context }, input) => `login:${input.email}`,
+      weight: 1,
+    }),
+  )
+  .handler(({ input }) => {
+    return { success: true }
+  })
+```
+
+That's the right shape for a password manager. Keying login and unlock attempts by account instead of IP means rotating IPs doesn't buy an attacker extra guesses against one account. I'd still keep a loose per-IP limit on top so one IP can't spray many accounts either.
+
+So if I redid this in Zero Locker, it'd be: one trusted IP header, a shared store (Upstash, since it's serverless), per-account keys on anything auth or vault related, fail closed there, and a test that fakes `Date.now()` and asserts request six gets a 429.
+
+## The takeaway
+
+A Map and a timestamp is a completely reasonable first rate limiter. Mine stopped the thing I was actually worried about, which was a script spamming email through my waitlist.
+
+Just be honest about what it is. It's a fixed window, it's per instance, and it's only as trustworthy as the header you read the IP from. My original post got all three of those wrong, and nobody would have noticed until it mattered.

@@ -1,0 +1,216 @@
+---
+title: "Every pull request gets its own database"
+href: /blog/a-database-per-pull-request
+excerpt: "How Dukkani spins up a full preview stack per PR on Vercel, with its own Neon branch, its own R2 folder and seeded demo data, and how it all gets thrown away when the PR closes."
+publishedAt: "2026-09-30"
+tags: ["dukkani", "vercel", "neon", "postgres", "ci"]
+status: draft
+---
+
+## Four apps, one DATABASE_URL
+
+[Dukkani](/projects/dukkani) is a monorepo with four Next.js apps: `api`, `dashboard`, `storefront` and `web`. Each one is its own Vercel project, so every push to a PR gives you four preview URLs in the GitHub comment. Nice.
+
+What Vercel doesn't give you for free is a database for those previews. A preview deployment reads whatever `DATABASE_URL` you configured for the Preview environment. That's one value, shared by every open PR.
+
+So PR A adds a column, runs its migration against that shared database, and PR B, which doesn't know about the column yet, now runs on a schema from the future. Someone tests "delete product" on one preview and the product disappears from every other preview too. Reviewers end up clicking around on data nobody can explain.
+
+I wanted each PR to be its own little universe. Its own Postgres, its own file storage, its own seed data, and a clean death when the PR closes.
+
+## What happens when you open a PR
+
+```text
+ PR opened / pushed
+        |
+        v
+ Vercel builds 4 projects (api, dashboard, storefront, web)
+        |              skipped if turbo says "not affected"
+        v
+ Neon integration: branch "preview/<git-branch>"
+        |              DATABASE_URL injected into this deployment only
+        v
+ api build:  prisma migrate deploy
+             -> db:seed        (only when VERCEL_ENV=preview)
+             -> next build
+        |
+        v
+ dashboard / storefront / web find the api preview
+ via Vercel related projects
+        |
+        v
+ uploads go to R2 under  pr-<number>/...
+        |
+        v
+ PR closed
+        |
+        v
+ GitHub Action: delete R2 pr-<number>/  +  delete Neon branch
+```
+
+That's the whole thing. The rest of this post is the parts that took more than one try.
+
+## The database: a Neon branch per preview
+
+Production runs on Neon. Neon has a Vercel integration that does the heavy lifting: when a preview deployment starts, Vercel sends Neon a webhook, Neon creates a copy-on-write branch called `preview/<git-branch>`, and the connection string is injected into that one deployment. It overrides the Preview env var for that deployment only, so you never see it in the Vercel dashboard.
+
+Copy-on-write is the reason this is cheap. A branch is not a `pg_dump` and restore. It's a pointer to the parent's storage that only starts costing you when you write to it.
+
+The other half is migrations. The API app's build script does it before Next even starts:
+
+```json
+"build": "pnpm --filter @dukkani/db run db:migrate:deploy && (test \"$VERCEL_ENV\" != \"preview\" || pnpm --filter @dukkani/db run db:seed) && next build"
+```
+
+`prisma migrate deploy` applies whatever migrations exist in the PR's code to the PR's branch. So the preview schema is always exactly the schema of that commit, not of main, and not of whoever pushed last.
+
+Production has its own path too. A separate workflow, `prisma-migrate.yml`, runs `prisma migrate deploy` against `PRODUCTION_DATABASE_URL` whenever a push to main touches `packages/db/prisma/migrations/**` or the schema. The API's production build also runs `migrate deploy`, which is fine because it's idempotent: the second run finds nothing to apply.
+
+## Seeds that don't explode on the second push
+
+The seed runs on every preview build, which means every push. If the seeder blindly inserted rows, the second push to a PR would crash on duplicate keys.
+
+So every seeder checks first and walks away if its table already has rows:
+
+```ts
+const existingUsers = await database.user.findMany();
+if (existingUsers.length > 0) {
+  this.log(`Skipping: ${existingUsers.length} users already exist`);
+  // ...
+}
+```
+
+The demo account is the exception. `DemoSeeder` uses `upsert` so `demo@dukkani.co` and the `demo` store always exist, even on a branch that already had data in it. Lighthouse CI runs against that store, and reviewers log in with it.
+
+Then I got lazy about typing the password on every preview, so the dashboard login prefills it. Only on previews:
+
+```ts
+const isPreviewEnvironment = env.NEXT_PUBLIC_VERCEL_ENV === "preview";
+```
+
+Small gotcha there. The env package already had `NEXT_PUBLIC_NODE_ENV`, but it maps Vercel's `preview` to `"development"`, so it can't tell a preview from my laptop. Vercel also doesn't expose `VERCEL_ENV` to the browser. The fix was a separate `NEXT_PUBLIC_VERCEL_ENV` that the dashboard's config maps from `$VERCEL_ENV` explicitly.
+
+## A tripwire for the production URL
+
+Isolation is only as good as the env var that got injected. If the integration ever fails and a preview falls back to a production connection string, a preview seed would write fake users into real Dukkani.
+
+So the core package refuses to start:
+
+```ts
+if (process.env.VERCEL_ENV === "preview") {
+  const dbUrl = apiEnv.DATABASE_URL;
+  if (dbUrl?.toLowerCase().includes("production")) {
+    throw new Error(
+      "Preview deployment must not use production DATABASE_URL. Use Neon Vercel integration or a preview branch.",
+    );
+  }
+}
+```
+
+Yes, it's a string match. It only catches a connection string that literally contains the word "production". But a dumb check that's always on beats a smart one I forget to write.
+
+## Storage: one folder per PR
+
+Files went through the same thinking. Dukkani moved product images from Supabase Storage to Cloudflare R2, and previews share the same bucket, but never the same keys. `StorageService` prefixes every object key with a scope when it's running in a preview:
+
+```ts
+private static resolvePreviewScope(): string | null {
+  if (StorageService.resolveStorageEnvironment() !== "preview") {
+    return null;
+  }
+  if (env.STORAGE_PREVIEW_PREFIX) {
+    return StorageService.sanitizePathSegment(env.STORAGE_PREVIEW_PREFIX);
+  }
+  if (env.VERCEL_GIT_PULL_REQUEST_ID) {
+    return `pr-${StorageService.sanitizePathSegment(env.VERCEL_GIT_PULL_REQUEST_ID)}`;
+  }
+  if (env.VERCEL_GIT_COMMIT_REF) {
+    return `branch-${StorageService.sanitizePathSegment(env.VERCEL_GIT_COMMIT_REF)}`;
+  }
+  // ...
+}
+```
+
+So an upload from PR #321 lands under `pr-321/products/...`. Production has no prefix at all. One bucket, but a PR can only ever see and delete its own files.
+
+## Making four previews talk to each other
+
+A preview of the dashboard is useless if it calls the production API. It needs the API preview built from the same branch.
+
+Vercel's related projects solve this. Each frontend's `vercel.json` lists the API project ID:
+
+```json
+{
+  "relatedProjects": ["prj_<api-project-id>"],
+  "ignoreCommand": "bash $(git rev-parse --show-toplevel)/scripts/vercel-ignore-build.sh @dukkani/dashboard"
+}
+```
+
+Vercel then puts the related project's preview and production hosts in `VERCEL_RELATED_PROJECTS`, and `@dukkani/env` reads it with `withRelatedProject` in `getApiUrl()`. The dashboard's `next.config.ts` resolves the URL at build time and throws if it can't, because a dashboard with no API is worse than a failed build.
+
+The API side needed matching CORS and Better Auth trusted origins, so previews are allowed through a `CORS_PREVIEW_ORIGIN_PATTERN` only when the API itself is a preview.
+
+And one thing that has nothing to do with databases: storefronts in production live on their own subdomains. Preview URLs don't get wildcard subdomains. So previews get a store selector instead: `?store=<slug>` sets a cookie and redirects, and the storefront reads the store from the cookie. Same code, different routing, decided by `isStoreSelectorEnabled()`.
+
+## Teardown, and why I couldn't trust the default
+
+Neon deletes a preview branch when the matching Vercel deployment is deleted. The catch is Vercel keeps preview deployments around for a long time by default, so the branches would pile up months after the PR merged.
+
+So closing a PR runs `cleanup-preview.yml`:
+
+```yaml
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  cleanup-preview:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      # checkout, pnpm, node 22, install ...
+      - name: Delete R2 preview objects (pr-{PR_NUMBER}/)
+        env:
+          PREVIEW_CLEANUP_PR_NUMBER: ${{ github.event.pull_request.number }}
+          # S3_* secrets
+        run: pnpm --filter @dukkani/ci-tools run cleanup-preview
+
+      - name: Delete Neon preview branch
+        if: ${{ always() }}
+        continue-on-error: true
+        uses: neondatabase/delete-branch-action@v3.2.0
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID }}
+          branch: preview/${{ github.event.pull_request.head.ref }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+```
+
+The R2 half is a small command in `@dukkani/ci-tools` that deletes everything under `pr-<number>/`. It has its own tiny env preset with only the S3 variables, so the cleanup job doesn't need the long list of OAuth, Telegram and URL variables the real apps validate. The Neon half builds the branch name the same way the integration does, `preview/` plus the head ref.
+
+The fork check at the top matters. Forks don't get repository secrets, so the job would just fail on every outside PR.
+
+## The bug that hid in plain sight
+
+This workflow was silently failing on every single PR.
+
+The root `package.json` pinned pnpm 11, which needs Node 22.13 or newer. The cleanup workflow pinned `setup-node` to Node 20. pnpm crashed during setup, the install and R2 steps got skipped, and the Neon step still ran because of `if: always()`. So the job looked "kind of red" and nobody looked closer.
+
+It surfaced when API previews on a batch of dashboard PRs started failing with a Neon "Resource provisioning failed" error. Chasing that led to the cleanup job, which turned out not to have been cleaning anything up. I can't prove the leftover branches caused the provisioning errors, but a cleanup job that never runs is a bug either way. The fix in #514 was changing `"20"` to `"22"` in three workflows. Two characters.
+
+The lesson I actually took: `continue-on-error` on a cleanup step is fine, but then something else has to tell you it's broken. Mine was previews failing to provision.
+
+## The costs
+
+It's not free. Every preview runs migrations and a seed inside the API build, so an API preview does more work than a plain `next build`. Four projects times every push also adds up in build minutes, which is why #608 added an ignored build step: `turbo query affected` skips an app if nothing it depends on changed, and any branch with `skip-vercel` in its name skips everything.
+
+That script has its own footgun, written up in a comment in `scripts/vercel-ignore-build.sh`. Without an explicit `--base`, `turbo query affected` compares against the merge base with main. On a production build of main, that's main's own tip, which means zero affected packages, which means every production deploy gets skipped forever. So it always passes `--base "$VERCEL_GIT_PREVIOUS_SHA"`, and if that var is empty it builds anyway. Fail open, never fail closed on a deploy.
+
+## What I'd change
+
+The "production" string check should be a real check: compare the preview's host against the known production host, not a word in the URL.
+
+The CI `build` job still only builds the shared packages, because a full build runs a live `migrate deploy` and needs env vars CI doesn't have yet. A throwaway Neon branch per CI run, created and deleted in the same job, would close that gap.
+
+And I'd add something that alerts when the cleanup job fails, instead of waiting for Neon to run out of room.
+
+## The takeaway
+
+The expensive part of a preview environment isn't the preview URL. Vercel hands you that. It's everything with state: the database, the files, the seed, the links between apps, and the cleanup. Name every piece of state after the PR, and make closing the PR delete all of it.
