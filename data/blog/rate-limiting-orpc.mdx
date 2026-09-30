@@ -4,7 +4,9 @@ href: /blog/rate-limiting-orpc
 excerpt: "The rate limiter I shipped in Zero Locker is about 60 lines of TypeScript and an in-memory Map. It works, but it's a fixed window I called a sliding window, and it trusts headers it shouldn't. Here's the real code and what I'd change."
 publishedAt: "2026-09-30"
 tags: ["orpc", "rate-limiting", "security", "nextjs"]
-status: draft
+status: published
+image: /blog/rate-limiting-orpc/cover.png
+imageAlt: "Cover for \"Rate limiting oRPC with a Map\", showing a timeline of the same requests under a fixed window and a sliding window"
 ---
 
 Zero Locker is a password manager I'm building in the open ([repo](https://github.com/FindMalek/zero-locker)). A password manager's API is the kind of thing people will point scripts at. Guess a login a few thousand times, hammer a form that sends email, or just loop an endpoint until your database bill cries.
@@ -19,6 +21,10 @@ The PR that added it ([#27](https://github.com/FindMalek/zero-locker/pull/27), "
 
 - `joinWaitlist`, `subscribeToRoadmap` and `subscribeToUpdates` get the strict tier (5 per minute), because every call sends an email.
 - `getWaitlistCount`, `getUserCount` and `getEncryptedDataCount` get the lenient tier (100 per minute), since they're cheap reads on the marketing pages.
+
+This is the page they sit behind. The "Join Waitlist" button is the strict tier, and the waitlist count under it is the lenient one.
+
+![The Zero Locker landing page at zero-locker.com, with the "Your email" field, the "Join Waitlist" button and a live count of people on the waitlist.](/blog/rate-limiting-orpc/zero-locker-waitlist.webp)
 
 The vault routers (`credential.ts`, `secret.ts`, `card.ts` and friends) go through `authMiddleware` only. No limiter. And login itself isn't an oRPC procedure at all, it's handled by better-auth.
 
@@ -84,7 +90,9 @@ if (entry.count > maxRequests) {
 
 The file header, the PR description and my original article all say "sliding window". Look at `resetAt` though. It's set once, on the first request, and never moves. That's a fixed window that starts whenever a given IP first shows up. A real sliding window would look at the last 60 seconds from *now* on every request.
 
-The practical difference is the boundary burst. With 5 per minute, someone can send 5 requests in the last second of a window and 5 more in the first second of the next one. Ten requests in about two seconds, all allowed. For "don't let a bot send 500 waitlist emails", that's fine. For login attempts I'd want something tighter.
+The practical difference is the boundary burst. With 5 per minute, someone can use the last 4 slots of a window in its final second (the window opened with their first request) and 5 more in the first second of the next one. Nine requests in about two seconds, all allowed. For "don't let a bot send 500 waitlist emails", that's fine. For login attempts I'd want something tighter.
+
+![Timeline of ten requests against a 5 per 60 seconds limit. One request at 0 seconds opens the fixed window, four more arrive just before 60 seconds and five more just after. The fixed window resets at 60 seconds and allows all of them, nine in about two seconds. A sliding window counts the previous 60 seconds for each request, so it allows request 6 and rejects requests 7 to 10 with a 429.](/blog/rate-limiting-orpc/fixed-vs-sliding-window.webp)
 
 I still think fixed window was the right pick here, for a boring reason: it's one counter and one timestamp per key. There's nothing to get wrong. I just should have named it correctly.
 
@@ -224,7 +232,7 @@ Move to Redis and the decision gets real. For the waitlist I'd fail open: Redis 
 
 ## How I tested it (and the bug that testing missed)
 
-There are no unit tests for any of this. Testing was clicking.
+There were no unit tests for any of this. Testing was clicking.
 
 The first version shipped with a whole `/rate-limit-test` page ([#27](https://github.com/FindMalek/zero-locker/pull/27)), which I deleted the same evening ([#29](https://github.com/FindMalek/zero-locker/pull/29)). When I wrote the article ([#38](https://github.com/FindMalek/zero-locker/pull/38)), the test moved into the article itself: a `testRateLimit` procedure in `orpc/routers/test.ts` and a component with a button you mash until it says no.
 
@@ -242,6 +250,16 @@ onError: (error: Error) => {
 `parseRetryTime` is a regex in `lib/utils/rate-limit.ts` that looks for a number followed by "seconds", "sec" or "s". The server's message is "Rate limit exceeded. Please try again later." There's no number in it. So `retryAfter` is always `undefined`, and the countdown never shows. The actual value was sitting in `error.data.retryAfter` the whole time.
 
 A unit test with a fake clock would have caught that in a minute. So would reading the error shape instead of scraping the message. Lesson learned: if you put structured data in `ORPCError`'s `data`, read it from `data`.
+
+## What I fixed after writing this
+
+Writing this post was the code review this limiter never got. The three bugs above are fixed in [zero-locker#44](https://github.com/FindMalek/zero-locker/pull/44):
+
+- The IP now comes only from the headers Vercel sets and overwrites at the edge (`x-vercel-forwarded-for`, then `x-real-ip`). No more trusting `cf-connecting-ip` or a client-sent `x-forwarded-for`.
+- The IP is read before the session lookup, so a failed auth call no longer drops everyone into one `UNKNOWN-IP` bucket.
+- The demo reads `retryAfter` from `error.data`, so the countdown actually shows.
+
+It also finally has a test: a fake clock, five requests allowed, the sixth gets a 429, and the next window resets.
 
 ## What I'd do today
 

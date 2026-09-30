@@ -4,7 +4,9 @@ href: /blog/dotfiles-that-keep-every-agent-on-the-same-rules
 excerpt: "I use four coding agents across a work laptop and a personal one. This is how one repo, one install script and a bunch of symlinks keep them all following the same rules."
 publishedAt: "2026-09-30"
 tags: [dotfiles, ai-agents, shell, tooling]
-status: draft
+status: published
+image: /blog/dotfiles-that-keep-every-agent-on-the-same-rules/cover.png
+imageAlt: "Cover for \"One set of rules for four agents\", showing a diagram of one skill folder symlinked into each agent's skills directory"
 ---
 
 My dotfiles repo used to be a zshrc and a theme. Now most of it is instructions for AI agents.
@@ -34,12 +36,7 @@ Rules are the easy part. The workflows are harder. I have slash commands like `/
 
 I didn't want four copies of a 200-line file. So each tool gets a one-paragraph wrapper that points at a single shared skill:
 
-```text
-claude/commands/ship.md    ┐
-omp/prompts/ship.md        ├──> ~/.agents/skills/ship/SKILL.md
-opencode/commands/ship.md  │
-cursor/commands/ship.md    ┘──> ~/.cursor/skills/ship/SKILL.md (same target)
-```
+![Diagram of the ship skill. In the repo, agents-skills/personal/ship is linked on the personal machine, company/ship only with --company, and braintrust is shared. install.sh symlinks it to ~/.agents/skills/ship, ~/.claude/skills/ship and ~/.cursor/skills/ship. omp and OpenCode read ~/.agents/skills, Claude Code reads ~/.claude/skills and Cursor reads ~/.cursor/skills, each through its own thin command file.](/blog/dotfiles-that-keep-every-agent-on-the-same-rules/skill-symlinks.webp)
 
 The wrapper just says what the command does and ends with "Follow `~/.agents/skills/ship/SKILL.md` and `~/.agents/skills/coding-practices/reference.md` exactly." The real content lives once in `agents-skills/`, and `install.sh` symlinks it into `~/.agents/skills`, `~/.claude/skills` and `~/.cursor/skills` under the same name.
 
@@ -117,6 +114,10 @@ done
 Without this, a work-only skill would just keep sitting on my personal setup forever.
 
 At the end it runs a "doctor" pass: it checks that every binary is on `PATH` and every important symlink resolves. It prints `[ok]`, `[MISS]` or `[BROKEN] -> target`. Then it lists the things it can't script, like OAuth sign-ins and restarting Zed.
+
+Here's the doctor section from a real run on my personal laptop:
+
+![Terminal output of the install.sh doctor pass on the personal profile. Every binary (claude, opencode, omp, zed, gh, bt, starship) and every checked symlink, from the Zed settings to ~/.agents/skills/coding-practices, reports ok.](/blog/dotfiles-that-keep-every-agent-on-the-same-rules/doctor-output.webp)
 
 ## The PATH bug that only agents hit
 

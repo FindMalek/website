@@ -4,7 +4,9 @@ href: /blog/spotify-allowlist-rotation
 excerpt: "Spotify lets a dev-mode app have 5 users and, as I found out the hard way, only 5 allowlist adds per day. This is the scheduler I built so a few friends can share those seats without me ever tripping the throttle."
 publishedAt: "2026-09-30"
 tags: ["spotify", "scheduling", "postgres", "side-projects"]
-status: draft
+status: published
+image: /blog/spotify-allowlist-rotation/cover.png
+imageAlt: "Cover for \"Five seats, five adds a day\", framing the sonaraem.com landing page in a browser window"
 ---
 
 Sonaraem is my Spotify side project. It syncs your library, has an LLM classify every track, clusters them, and pushes mood playlists back to your account. The [case study](/projects/sonaraem) covers the pipeline.
@@ -63,6 +65,8 @@ The v2 design lives in `docs/decisions/0001-spotify-allowlist-rotation.md` in th
 - One add and one remove is one "visit". Whatever a user has pending gets done in that visit.
 
 That last one is where the capacity comes from. One visit costs 1 add plus 1 remove, so with 4 of each I get 4 visits a day, and not all of them can go to background refreshes because onboarding and exports need some too. The capacity table in #290 works out to about 2 refresh visits a day, so population is roughly 2 × the refresh interval in days. Weekly refreshes cap me at about 14 people. A 21 day interval is about 42, 30 days about 60, on paper. My actual target is 7 or 8 friends, so this is headroom, not a growth plan. It also killed the weekly digest as a default. You can't refresh everyone every week and also have more than 14 users.
+
+![Diagram of the rotation budget. Of the 5 allowlist seats, 1 is the permanent admin seat and 4 rotate. One visit is an add to the allowlist, a sync and export of everything pending for that user, then a remove, with each ledger row written before the real action. The rolling 24 hour ledger allows 4 adds and 4 removes, with the fifth of each kept as margin, which gives 4 visits a day, about 2 of them for refreshes.](/blog/spotify-allowlist-rotation/rotation-budget.webp)
 
 ## The ledger
 

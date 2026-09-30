@@ -4,7 +4,9 @@ href: /blog/why-your-region-matters
 excerpt: "Zero Locker felt slow in production and instant on localhost. The code was fine. The functions were just on the wrong side of the Atlantic."
 publishedAt: "2026-09-30"
 tags: [vercel, performance, postgres, nextjs]
-status: draft
+status: published
+image: /blog/why-your-region-matters/cover.png
+imageAlt: "Cover for \"Virginia app, Frankfurt database\", showing the request path before and after moving the functions to Frankfurt"
 ---
 
 Zero Locker was instant on my laptop and sluggish in production. Open a credential, wait. Create one, wait. Click around the dashboard, everything a beat late, like the app was thinking about it.
@@ -49,20 +51,7 @@ I never picked `iad1`. It's just what you get. Vercel's docs say it plainly: fun
 
 So every request looked like this:
 
-```text
- browser                Vercel function             Neon Postgres
- (anywhere)             iad1, Washington D.C.       eu-central-1, Frankfurt
-
-    |  --- request --->      |                           |
-    |                        |  --- session lookup --->  |
-    |                        |  <------------------------|
-    |                        |  --- actual query ------> |
-    |                        |  <------------------------|
-    |                        |  --- maybe another -----> |
-    |                        |  <------------------------|
-    |  <--- response ---     |                           |
-                             \___ each arrow pair crosses the Atlantic ___/
-```
+![Request path before and after. Before, the browser talks to a function in iad1, Washington D.C., and the function crosses the Atlantic to Neon in eu-central-1 for the session lookup, the credential, card and secret lists, and sometimes another query. After, the function runs in fra1, Frankfurt, next to the database, and a US user's request crosses the Atlantic once.](/blog/why-your-region-matters/request-path.webp)
 
 The browser to function hop is not the problem. That's one trip. The problem is the function to database part, because one request is never one query.
 

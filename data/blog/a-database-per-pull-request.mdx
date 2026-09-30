@@ -4,7 +4,9 @@ href: /blog/a-database-per-pull-request
 excerpt: "How Dukkani spins up a full preview stack per PR on Vercel, with its own Neon branch, its own R2 folder and seeded demo data, and how it all gets thrown away when the PR closes."
 publishedAt: "2026-09-30"
 tags: ["dukkani", "vercel", "neon", "postgres", "ci"]
-status: draft
+status: published
+image: /blog/a-database-per-pull-request/cover.png
+imageAlt: "Cover for \"A database per pull request\", framing the dukkani.co landing page in a browser window"
 ---
 
 ## Four apps, one DATABASE_URL
@@ -19,33 +21,7 @@ I wanted each PR to be its own little universe. Its own Postgres, its own file s
 
 ## What happens when you open a PR
 
-```text
- PR opened / pushed
-        |
-        v
- Vercel builds 4 projects (api, dashboard, storefront, web)
-        |              skipped if turbo says "not affected"
-        v
- Neon integration: branch "preview/<git-branch>"
-        |              DATABASE_URL injected into this deployment only
-        v
- api build:  prisma migrate deploy
-             -> db:seed        (only when VERCEL_ENV=preview)
-             -> next build
-        |
-        v
- dashboard / storefront / web find the api preview
- via Vercel related projects
-        |
-        v
- uploads go to R2 under  pr-<number>/...
-        |
-        v
- PR closed
-        |
-        v
- GitHub Action: delete R2 pr-<number>/  +  delete Neon branch
-```
+![Diagram of a Dukkani PR preview. On every push, Vercel builds the four apps, Neon creates a preview/ plus the git branch name database branch, the api build runs prisma migrate deploy then db:seed, and the frontends find the api preview while uploads go to R2 under a pr-number/ prefix. When the PR closes, cleanup-preview.yml deletes the R2 prefix and the Neon branch.](/blog/a-database-per-pull-request/preview-flow.webp)
 
 That's the whole thing. The rest of this post is the parts that took more than one try.
 

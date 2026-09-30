@@ -4,7 +4,9 @@ href: /blog/batching-clickhouse-queries-in-databuddy
 excerpt: "The goals dashboard in Databuddy fired two ClickHouse queries per goal. I batched them into one, then a bot review found two ways my batch could break, and I had to fix both."
 publishedAt: "2026-09-30"
 tags: [open-source, clickhouse, performance, typescript]
-status: draft
+status: published
+image: /blog/batching-clickhouse-queries-in-databuddy/cover.png
+imageAlt: "Cover for \"40 queries for one dashboard\", framing the databuddy.cc landing page in a browser window"
 ---
 
 [Databuddy](https://github.com/databuddy-analytics/Databuddy) is an open-source analytics platform that doesn't track people in creepy ways. I'd been reading through its code for a while, and then I hit `goalsRouter.bulkAnalytics` and stopped.
@@ -116,11 +118,17 @@ bulkAnalytics
                 -> one denominator + one GROUP BY query per group
 ```
 
+Here's what that means for an example dashboard with 20 goals:
+
+![Before and after comparison for an illustrative dashboard of 20 goals. Before, every goal fires a denominator query and a completion query, 40 ClickHouse queries in total. After, 18 unfiltered goals split across two start dates need one denominator and one batched GROUP BY query per date, and the 2 filtered goals keep two queries each, 8 queries in total.](/blog/batching-clickhouse-queries-in-databuddy/query-batching.webp)
+
 For a dashboard with mostly unfiltered goals, the query count now scales with the number of distinct start dates instead of the number of goals. I don't have production benchmarks for this, and I'm not going to make up a latency number. What I can say for sure is the query count: the unit test asserts one ClickHouse call for N goals, not N.
 
 ## Then the review bot found two holes
 
 I opened [#680](https://github.com/databuddy-analytics/Databuddy/pull/680) and the repo's review bot came back with two findings. Both were real, and both were my fault.
+
+![Header of Databuddy pull request #680, "perf(rpc): batch goals bulkAnalytics ClickHouse queries for unfiltered goals", shown as merged into staging with 594 additions and 103 deletions.](/blog/batching-clickhouse-queries-in-databuddy/pr-680.webp)
 
 **Step numbers overflow.** Look at that builder line again: `toUInt8(${stepNumber})`. Step numbers are `UInt8` in ClickHouse, which tops out at 255. For funnels that's fine, because nobody builds a 300-step funnel. But I was now using step numbers as goal IDs inside a batch. On a plan that allows enough goals, goal 256 wraps to 0, which the query treats as "didn't match". Goal 257 wraps to 1 and gets counted together with goal 1. Wrong numbers, no error. Same failure as the filter trap, just from another direction.
 
