@@ -205,18 +205,46 @@ export const REPOSITORIES = [
   "https://github.com/FindMalek/Photomater",
 ]
 
-// Merged upstream PRs only. A repo with no listed PRs stays hidden (Zed is
-// here so its first merged PR URL can be dropped in once it lands).
+// Merged upstream PRs only, ordered by how substantial the work was. A repo
+// with no listed PRs stays hidden until one lands.
 export const CONTRIBUTIONS: Contribution[] = [
   {
     repo: "https://github.com/databuddy-analytics/Databuddy",
     pullRequests: [
-      "https://github.com/databuddy-analytics/Databuddy/pull/636",
-      "https://github.com/databuddy-analytics/Databuddy/pull/637",
-      "https://github.com/databuddy-analytics/Databuddy/pull/680",
+      {
+        number: 680,
+        title:
+          "perf(rpc): batch goals bulkAnalytics ClickHouse queries for unfiltered goals",
+      },
+      { number: 637, title: "feat(notifications): add Discord provider" },
+      {
+        number: 636,
+        title:
+          "fix(rpc): align funnel cache invalidation key and re-enable caching",
+      },
     ],
   },
   {
+    repo: "https://github.com/midday-ai/midday",
+    pullRequests: [{ number: 39, title: "Typesafe theme-switch" }],
+  },
+  {
+    repo: "https://github.com/withtally/tally-zero",
+    pullRequests: [{ number: 8, title: "Complete Refactor of Tally Zero" }],
+  },
+  {
+    repo: "https://github.com/magicuidesign/magicui",
+    pullRequests: [
+      { number: 422, title: "Chore/dns" },
+      { number: 394, title: "style: added Undrstnd Labs in showcase" },
+    ],
+  },
+  {
+    repo: "https://github.com/unixorn/awesome-zsh-plugins",
+    pullRequests: [{ number: 2279, title: "Add guesswork" }],
+  },
+  {
+    // Open, not merged yet: https://github.com/zed-industries/zed/pull/64956
     repo: "https://github.com/zed-industries/zed",
     pullRequests: [],
   },

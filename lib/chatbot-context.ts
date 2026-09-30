@@ -95,7 +95,10 @@ function getOpenSourceContributionsData() {
     (contribution) => contribution.pullRequests.length > 0
   ).map((contribution) => ({
     repository: contribution.repo,
-    mergedPullRequests: contribution.pullRequests,
+    mergedPullRequests: contribution.pullRequests.map((pullRequest) => ({
+      title: pullRequest.title,
+      url: `${contribution.repo}/pull/${pullRequest.number}`,
+    })),
   }))
 }
 

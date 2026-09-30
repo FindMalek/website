@@ -55,13 +55,20 @@ export default async function Home() {
   const orderedWorks = sortWorkExperiences(allWorks)
   const workGroups = groupWorkByCompany(orderedWorks)
   const orderedProjects = sortProjectsByStatus(allProjects)
-  const openSourceProjects = await getMultipleRepoInfo(REPOSITORIES)
-  const sortedOpenSourceProjects = sortProjectsByStars(openSourceProjects)
   const contributions = CONTRIBUTIONS.filter(
     (contribution) => contribution.pullRequests.length > 0
   )
-  const contributionRepos = await getMultipleRepoInfo(
-    contributions.map((contribution) => contribution.repo)
+  const repoInfos = await getMultipleRepoInfo([
+    ...REPOSITORIES,
+    ...contributions.map((contribution) => contribution.repo),
+  ])
+  const findRepoInfo = (repoUrl: string) =>
+    repoInfos.find((info) => info.url.toLowerCase() === repoUrl.toLowerCase())
+  const openSourceProjects = sortProjectsByStars(
+    REPOSITORIES.map((repoUrl) => {
+      const info = findRepoInfo(repoUrl)
+      return { repoUrl, info, stars: info?.stars ?? -1 }
+    })
   )
   const stackItemCount = STACK_SECTIONS.reduce(
     (total, section) => total + section.items.length,
@@ -229,12 +236,16 @@ export default async function Home() {
           >
             <h3 className="group/title mb-4 mt-12 flex items-center gap-1.5 text-xl font-semibold">
               Open Source
-              <PanelTitleSup>({sortedOpenSourceProjects.length})</PanelTitleSup>
+              <PanelTitleSup>({openSourceProjects.length})</PanelTitleSup>
               <PanelCopyLinkButton sectionId="open-source" />
             </h3>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {sortedOpenSourceProjects.map((project) => (
-                <ProjectOpenSourceCard key={project.name} project={project} />
+              {openSourceProjects.map(({ repoUrl, info }) => (
+                <ProjectOpenSourceCard
+                  key={repoUrl}
+                  repoUrl={repoUrl}
+                  info={info}
+                />
               ))}
             </div>
           </div>
@@ -254,13 +265,7 @@ export default async function Home() {
                   <ProjectContributionCard
                     key={contribution.repo}
                     contribution={contribution}
-                    stars={
-                      contributionRepos.find(
-                        (repo) =>
-                          repo.url.toLowerCase() ===
-                          contribution.repo.toLowerCase()
-                      )?.stars
-                    }
+                    info={findRepoInfo(contribution.repo)}
                   />
                 ))}
               </div>
