@@ -3,7 +3,9 @@ import { allProjects, allWorks } from "content-collections"
 
 import { PageContext } from "@/types"
 
-import { CONTRIBUTIONS } from "@/config/consts"
+import { ABOUT_BIO, aboutSegmentsToText } from "@/config/about"
+import { BOOKS, CLIENTS, CONTRIBUTIONS, OVERVIEW_CARDS } from "@/config/consts"
+import { siteConfig, TIMEZONE } from "@/config/site"
 import { STACK_SECTIONS } from "@/config/stack"
 import {
   getPostBySlug,
@@ -12,6 +14,8 @@ import {
   getVisiblePosts,
 } from "@/lib/blog"
 import { getResumeData, type ResumeData } from "@/lib/get-resume-data"
+
+import { getUserPlaylists } from "@/actions/spotify"
 
 type Project = (typeof allProjects)[number]
 type Work = (typeof allWorks)[number]
@@ -108,6 +112,38 @@ function getOpenSourceContributionsData() {
   }))
 }
 
+async function getPersonalData() {
+  const playlists = await getUserPlaylists(20, 0)
+
+  return {
+    bio: ABOUT_BIO.map(aboutSegmentsToText),
+    facts: {
+      timezone: TIMEZONE,
+      recognition:
+        "#1 open-source contributor in Tunisia (https://gitista.com/search/?country=TN&handle=FindMalek)",
+      socials: siteConfig.links,
+    },
+    photosAndStories: OVERVIEW_CARDS.map((card) =>
+      card.type === "text" ? `${card.text} (${card.subtext})` : card.story
+    ).filter(Boolean),
+    booksImReading: BOOKS.map((book) => ({
+      title: book.title,
+      author: book.author,
+      link: book.link,
+    })),
+    music: {
+      spotifyProfile: siteConfig.links.spotify,
+      playlists: playlists.items.map((playlist) => ({
+        name: playlist.name,
+        url: playlist.external_urls.spotify,
+      })),
+    },
+    companiesIveWorkedWith: CLIENTS.map((client) =>
+      client.href ? `${client.name} (${client.href})` : client.name
+    ),
+  }
+}
+
 function getTechStackData() {
   return STACK_SECTIONS.map((section) => ({
     section: section.title,
@@ -196,6 +232,7 @@ export async function generateChatbotContext(pageContext?: PageContext) {
       excerpt: post.excerpt,
     })),
     techStack: getTechStackData(),
+    personal: await getPersonalData(),
     ...(describePageContext(pageContext)
       ? { currentContext: describePageContext(pageContext) }
       : {}),
