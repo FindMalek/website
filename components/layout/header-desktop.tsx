@@ -7,13 +7,6 @@ import { NAV_ITEMS } from "@/config/consts"
 import { cn, scrollToAnchorSection } from "@/lib/utils"
 import { useActiveSection } from "@/hooks/use-active-section"
 
-import { Icons } from "@/components/shared/icons"
-
-export function NavIcon({ name }: { name: keyof typeof Icons }) {
-  const Icon = Icons[name]
-  return <Icon className="size-4" aria-hidden />
-}
-
 function NavItem({ href, children, isActive }: NavItemType) {
   const pathname = usePathname()
 
@@ -25,7 +18,7 @@ function NavItem({ href, children, isActive }: NavItemType) {
           if (scrollToAnchorSection(href, pathname)) e.preventDefault()
         }}
         className={cn(
-          "relative flex items-center gap-1.5 px-2 py-1.5 text-base transition",
+          "relative block px-2 py-1.5 text-base transition",
           isActive
             ? "text-cyan-900 dark:text-cyan-400"
             : "hover:text-cyan-900 dark:hover:text-cyan-400"
@@ -47,7 +40,6 @@ function NavItem({ href, children, isActive }: NavItemType) {
 }
 
 export function HeaderDesktop(props: DesktopNavigationType) {
-  const pathname = usePathname()
   const activeSection = useActiveSection([
     "work",
     "education",
@@ -74,13 +66,8 @@ export function HeaderDesktop(props: DesktopNavigationType) {
           <NavItem
             key={item.path}
             href={item.path}
-            isActive={
-              item.path.includes("#")
-                ? item.path.split("#")[1] === activeSection
-                : pathname.startsWith(item.path)
-            }
+            isActive={item.path.split("#")[1] === activeSection}
           >
-            {"icon" in item && <NavIcon name={item.icon} />}
             {item.name}
           </NavItem>
         ))}
