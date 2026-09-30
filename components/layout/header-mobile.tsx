@@ -8,6 +8,7 @@ import { MobileNavigationType, NavItemType } from "@/types"
 import { NAV_ITEMS } from "@/config/consts"
 import { scrollToAnchorSection } from "@/lib/utils"
 
+import { NavIcon } from "@/components/layout/header-desktop"
 import { Icons } from "@/components/shared/icons"
 
 function MobileNavItem({ href, children }: NavItemType) {
@@ -19,7 +20,7 @@ function MobileNavItem({ href, children }: NavItemType) {
       <Popover.Button
         as={Link}
         href={href}
-        className="block py-2"
+        className="flex items-center gap-2 py-2"
         onClick={(e: React.MouseEvent) => {
           close()
           if (scrollToAnchorSection(href, pathname)) e.preventDefault()
@@ -75,6 +76,7 @@ export function HeaderMobile(props: MobileNavigationType) {
               <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
                 {Object.values(NAV_ITEMS).map((item) => (
                   <MobileNavItem key={item.path} href={item.path}>
+                    {"icon" in item && <NavIcon name={item.icon} />}
                     {item.name}
                   </MobileNavItem>
                 ))}

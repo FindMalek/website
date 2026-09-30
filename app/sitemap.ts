@@ -1,5 +1,7 @@
 import { allProjects, allWorks } from "content-collections"
 
+import { getVisiblePosts } from "@/lib/blog"
+
 export default async function sitemap() {
   try {
     const currentDate = new Date().toISOString()
@@ -27,7 +29,22 @@ export default async function sitemap() {
       priority: 0.7,
     }))
 
-    return [...baseUrls, ...workUrls, ...projectUrls]
+    const blogUrls = [
+      {
+        url: "https://www.findmalek.com/blog",
+        lastModified: currentDate,
+        changeFrequency: "weekly",
+        priority: 0.8,
+      },
+      ...getVisiblePosts().map((post) => ({
+        url: `https://www.findmalek.com${post.href}`,
+        lastModified: post.updatedAt ?? post.publishedAt,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      })),
+    ]
+
+    return [...baseUrls, ...workUrls, ...projectUrls, ...blogUrls]
   } catch (error) {
     console.error("Error generating sitemap:", error)
     return []

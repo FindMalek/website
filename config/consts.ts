@@ -37,6 +37,12 @@ export const PAGES = {
     name: "Stack",
     text: "Explore my tech stack",
   },
+  BLOG: {
+    path: "/blog",
+    label: "Blog.",
+    name: "Blog",
+    text: "Read what I've been writing",
+  },
   CONTACT: {
     path: "/contact",
     label: "Contact Me.",
@@ -57,6 +63,8 @@ export const NAV_ITEMS = {
   EDUCATION: { ...PAGES.EDUCATION, path: "/#education" },
   PROJECTS: { ...PAGES.PROJECTS, path: "/#projects" },
   STACK: { ...PAGES.STACK, path: "/#stack" },
+  // The only nav item that's a real route rather than a homepage anchor.
+  BLOG: { ...PAGES.BLOG, icon: "blog" },
   // CONTACT intentionally omitted: contact is no longer a nav destination,
   // it becomes the floating chat trigger once that ships.
 } as const

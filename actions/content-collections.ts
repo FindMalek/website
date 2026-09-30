@@ -40,6 +40,19 @@ const projectFrontmatterSchema = z.object({
   endDate: z.string().optional(),
 })
 
+const postFrontmatterSchema = z.object({
+  content: z.string(),
+  title: z.string().min(1),
+  href: z.string().regex(/^\/blog\/[a-z0-9-]+$/),
+  excerpt: z.string().min(1),
+  publishedAt: z.iso.date(),
+  updatedAt: z.iso.date().optional(),
+  tags: z.array(z.string()).optional(),
+  status: z.enum(["draft", "published"]),
+})
+
+const WORDS_PER_MINUTE = 220
+
 // TODO(#66): New work entries (Sonaraem, The Fund) are intentionally not
 // added here yet. Every field in workFrontmatterSchema below is required
 // (company, position, overview, type, startDate, endDate, place, href), and
@@ -77,6 +90,22 @@ const projects = defineCollection({
   },
 })
 
+const posts = defineCollection({
+  name: "posts",
+  directory: "../data/blog",
+  include: "**/*.mdx",
+  schema: postFrontmatterSchema,
+  transform: async (document, context) => {
+    const html = await compileMDX(context, document)
+    const wordCount = document.content.split(/\s+/).filter(Boolean).length
+    return {
+      ...document,
+      html,
+      readingTimeMinutes: Math.max(1, Math.round(wordCount / WORDS_PER_MINUTE)),
+    }
+  },
+})
+
 export default defineConfig({
-  content: [work, projects],
+  content: [work, projects, posts],
 })
