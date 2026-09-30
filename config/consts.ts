@@ -54,7 +54,6 @@ export const PAGES = {
 export const NAV_ITEMS = {
   ABOUT: { ...PAGES.ABOUT, path: "/#about" },
   WORK: { ...PAGES.WORK, path: "/#work" },
-  EDUCATION: { ...PAGES.EDUCATION, path: "/#education" },
   PROJECTS: { ...PAGES.PROJECTS, path: "/#projects" },
   STACK: { ...PAGES.STACK, path: "/#stack" },
   // CONTACT intentionally omitted: contact is no longer a nav destination,
