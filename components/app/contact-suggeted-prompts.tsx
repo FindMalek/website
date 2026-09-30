@@ -10,12 +10,12 @@ export function ContactSuggestedPrompts({
   onSuggestionClick,
 }: SuggestedPromptsProps) {
   const suggestions = [
-    "I'd like to contact you",
-    "Schedule a meeting",
-    "Get a price estimate for my project",
-    "View your resume/CV",
-    "What can you help me with?",
-    "Let's chat",
+    "What are you working on?",
+    "What's your stack?",
+    "How much would my project cost?",
+    "Can we hop on a call?",
+    "Send me your CV",
+    "I want to reach you",
   ]
 
   return (
