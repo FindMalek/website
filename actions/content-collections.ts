@@ -1,5 +1,7 @@
 import { defineCollection, defineConfig } from "@content-collections/core"
 import { compileMDX } from "@content-collections/mdx"
+import rehypeShiki from "@shikijs/rehype"
+import remarkGfm from "remark-gfm"
 import { z } from "zod"
 
 // content-collections requires a genuine StandardSchema-compliant schema
@@ -49,6 +51,8 @@ const postFrontmatterSchema = z.object({
   updatedAt: z.iso.date().optional(),
   tags: z.array(z.string()).optional(),
   status: z.enum(["draft", "published"]),
+  image: z.string().startsWith("/").optional(),
+  imageAlt: z.string().min(1).optional(),
 })
 
 const WORDS_PER_MINUTE = 220
@@ -96,11 +100,25 @@ const posts = defineCollection({
   include: "**/*.mdx",
   schema: postFrontmatterSchema,
   transform: async (document, context) => {
-    const html = await compileMDX(context, document)
+    const html = await compileMDX(context, document, {
+      remarkPlugins: [remarkGfm],
+      rehypePlugins: [
+        [
+          rehypeShiki,
+          {
+            themes: { light: "github-light", dark: "github-dark" },
+            // Both themes ship as CSS variables; styles/globals.css picks one
+            // per `.dark`, so code blocks follow the site theme toggle.
+            defaultColor: false,
+          },
+        ],
+      ],
+    })
     const wordCount = document.content.split(/\s+/).filter(Boolean).length
     return {
       ...document,
       html,
+      slug: document.href.replace("/blog/", ""),
       readingTimeMinutes: Math.max(1, Math.round(wordCount / WORDS_PER_MINUTE)),
     }
   },

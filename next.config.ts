@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "img.logo.dev" },
     ],
   },
+  async rewrites() {
+    return [{ source: "/blog/:slug.md", destination: "/blog/:slug/md" }]
+  },
   async redirects() {
     return [
       { source: "/work", destination: "/#work", permanent: true },

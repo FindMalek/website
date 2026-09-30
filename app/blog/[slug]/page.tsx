@@ -2,24 +2,36 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MDXContent } from "@content-collections/mdx/react"
+import { ArrowLeft } from "lucide-react"
 
 import { siteConfig } from "@/config/site"
-import { formatPostDate, getPostBySlug, getVisiblePosts } from "@/lib/blog"
-import { cn } from "@/lib/utils"
+import {
+  BLOG_REPO_URL,
+  getAdjacentPosts,
+  getPostBySlug,
+  getPostImageUrl,
+  getPostMarkdown,
+  getPostMarkdownUrl,
+  getPostUrl,
+  getVisiblePosts,
+} from "@/lib/blog"
+import { formatPostDate } from "@/lib/format-post-date"
 
 import { ArticleContent } from "@/components/app/article-content"
-import { Icons } from "@/components/shared/icons"
+import { POST_MDX_COMPONENTS } from "@/components/blog/mdx-components"
+import { PostCover } from "@/components/blog/post-cover"
+import { PostPager } from "@/components/blog/post-pager"
+import { PostToolbar } from "@/components/blog/post-toolbar"
 import { Badge } from "@/components/ui/badge"
-import { buttonVariants } from "@/components/ui/button"
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>
 }
 
+export const dynamicParams = false
+
 export async function generateStaticParams() {
-  return getVisiblePosts().map((post) => ({
-    slug: post.href.split("/").pop(),
-  }))
+  return getVisiblePosts().map((post) => ({ slug: post.slug }))
 }
 
 export async function generateMetadata({
@@ -32,26 +44,34 @@ export async function generateMetadata({
     notFound()
   }
 
+  const image = {
+    url: getPostImageUrl(post),
+    alt: post.image ? (post.imageAlt ?? post.title) : siteConfig.name,
+  }
+
   return {
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: post.href },
+    alternates: {
+      canonical: post.href,
+      types: { "text/markdown": getPostMarkdownUrl(post) },
+    },
     openGraph: {
       type: "article",
-      url: `${siteConfig.url}${post.href}`,
+      url: getPostUrl(post),
       title: post.title,
       description: post.excerpt,
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       authors: [siteConfig.author.name],
       tags: post.tags,
-      images: [{ url: siteConfig.images.default, alt: siteConfig.name }],
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
-      images: [siteConfig.images.default],
+      images: [image],
     },
   }
 }
@@ -64,6 +84,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound()
   }
 
+  const { previous, next } = getAdjacentPosts(slug)
   const {
     title,
     excerpt,
@@ -71,68 +92,131 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     updatedAt,
     tags,
     status,
+    image,
     readingTimeMinutes,
     html,
   } = post
 
-  return (
-    <div className="container max-w-4xl px-4 py-16 md:py-24">
-      <article className="relative mx-auto">
-        <Link
-          href="/blog"
-          className={cn(
-            buttonVariants({ variant: "ghost", size: "sm" }),
-            "absolute -top-8 left-0"
-          )}
-        >
-          <Icons.chevronLeft className="mr-1 size-4" />
-          Back to Blog
-        </Link>
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description: excerpt,
+    datePublished: publishedAt,
+    dateModified: updatedAt ?? publishedAt,
+    url: getPostUrl(post),
+    image: getPostImageUrl(post),
+    keywords: tags,
+    author: {
+      "@type": "Person",
+      name: siteConfig.author.name,
+      url: siteConfig.author.url,
+    },
+  }
 
-        <header className="pt-6">
-          <h1 className="mb-4 text-balance text-center text-4xl font-bold">
+  return (
+    <div className="w-full pt-20 md:pt-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+
+      <article className="border-line border-x">
+        <div className="screen-line-top screen-line-bottom flex items-center justify-between gap-2 px-2 py-2">
+          <Link
+            href="/blog"
+            className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 group flex h-8 items-center gap-1.5 rounded-md px-2 text-sm font-medium outline-none transition-colors focus-visible:ring-[3px]"
+          >
+            <ArrowLeft
+              className="size-4 transition-transform group-hover:-translate-x-0.5"
+              aria-hidden
+            />
+            Blog
+          </Link>
+
+          <PostToolbar
+            title={title}
+            markdown={getPostMarkdown(post)}
+            postUrl={getPostUrl(post)}
+            markdownPath={`${post.href}.md`}
+            markdownUrl={getPostMarkdownUrl(post)}
+            sourceUrl={`${BLOG_REPO_URL}/blob/main/data/blog/${post._meta.filePath}`}
+            previous={previous}
+            next={next}
+          />
+        </div>
+
+        <header className="screen-line-top screen-line-bottom mt-4 px-4 pb-6 pt-5">
+          <h1 className="text-balance text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
             {title}
           </h1>
 
-          <p className="text-muted-foreground mb-6 text-center text-lg">
+          <p className="text-muted-foreground mt-4 text-pretty text-base leading-relaxed sm:text-lg">
             {excerpt}
           </p>
 
-          <div className="text-muted-foreground mb-4 flex flex-wrap items-center justify-center gap-2 text-sm">
+          <div className="text-muted-foreground mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
             <time dateTime={publishedAt}>{formatPostDate(publishedAt)}</time>
             {updatedAt && (
               <>
-                <span aria-hidden>•</span>
+                <span aria-hidden>·</span>
                 <span>
                   Updated{" "}
                   <time dateTime={updatedAt}>{formatPostDate(updatedAt)}</time>
                 </span>
               </>
             )}
-            <span aria-hidden>•</span>
+            <span aria-hidden>·</span>
             <span>{readingTimeMinutes} min read</span>
           </div>
 
           {(status === "draft" || (tags && tags.length > 0)) && (
-            <div className="mb-12 flex flex-wrap items-center justify-center gap-1.5">
+            <ul className="mt-4 flex flex-wrap items-center gap-1.5">
               {status === "draft" && (
-                <Badge variant="outline" className="text-xs">
-                  Draft
-                </Badge>
+                <li>
+                  <Badge variant="outline" className="text-xs">
+                    Draft
+                  </Badge>
+                </li>
               )}
               {tags?.map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs">
-                  {tag}
-                </Badge>
+                <li key={tag}>
+                  <Badge variant="secondary" className="text-xs" asChild>
+                    <Link href={`/blog?q=${encodeURIComponent(tag)}`}>
+                      {tag}
+                    </Link>
+                  </Badge>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </header>
 
-        <ArticleContent className="prose prose-gray dark:prose-invert prose-code:before:content-none prose-code:after:content-none prose-code:bg-muted prose-code:rounded prose-code:px-1 prose-code:py-0.5 prose-code:font-normal prose-pre:[&_code]:bg-transparent prose-pre:[&_code]:p-0 mx-auto max-w-3xl">
-          <MDXContent code={html} />
+        {image && (
+          <div className="screen-line-bottom p-2">
+            <PostCover
+              post={post}
+              priority
+              sizes="(min-width: 1280px) 752px, (min-width: 768px) 656px, (min-width: 640px) 496px, 100vw"
+            />
+          </div>
+        )}
+
+        <ArticleContent className="blog-prose prose prose-gray max-w-none px-4 pb-12 pt-8">
+          <MDXContent code={html} components={POST_MDX_COMPONENTS} />
         </ArticleContent>
       </article>
+
+      {(previous || next) && (
+        <>
+          <div className="stripe-divider" />
+          <div className="screen-line-top screen-line-bottom border-line border-x">
+            <PostPager previous={previous} next={next} />
+          </div>
+        </>
+      )}
     </div>
   )
 }
