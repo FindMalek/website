@@ -10,7 +10,7 @@ export const siteConfig: SiteConfig = {
   images: {
     default: "https://www.findmalek.com/og.png",
     notFound: "https://www.findmalek.com/not-found.png",
-    logo: "https://www.findmalek.com/author.jpg",
+    logo: "https://www.findmalek.com/about/author.png",
   },
   links: {
     twitter: "https://go.findmalek.com/x",
