@@ -3,6 +3,7 @@ title: "Five seats, five adds a day: how Sonaraem rotates Spotify's dev-mode all
 href: /blog/spotify-allowlist-rotation
 excerpt: "Spotify lets a dev-mode app have 5 users and, as I found out the hard way, only 5 allowlist adds per day. This is the scheduler I built so a few friends can share those seats without me ever tripping the throttle."
 publishedAt: "2026-09-30"
+updatedAt: "2026-10-01"
 tags: ["spotify", "scheduling", "postgres", "side-projects"]
 status: published
 image: /blog/spotify-allowlist-rotation/cover.png
@@ -95,7 +96,7 @@ export async function countMutationsInWindow(
 
 The Playwright worker checks this before it touches the dashboard. It also scrapes the user table first and skips the click entirely if the email is already in the state it wants. Clicking "add" for someone who's already there isn't a no-op on Spotify's side. It can land the page in a weird state that looks exactly like a real failure.
 
-The part I got wrong at first is *when* the ledger gets written. Originally it was after the real action. So if the worker died between clicking "add" and inserting the row (a deploy, an OOM, whatever), Spotify counted it and I didn't. My ledger would think it had budget it didn't have, which is the one way this whole system can hurt itself. [sonaraem#409](https://github.com/FindMalek/sonaraem/issues/409) flipped it:
+The part I got wrong at first is *when* the ledger gets written. Originally it was after the real action. So if the worker died between clicking "add" and inserting the row (a deploy, an OOM, whatever), Spotify counted it and I didn't. My ledger would think it had budget it didn't have, which is the one way this whole system can hurt itself. I filed that as [sonaraem#409](https://github.com/FindMalek/sonaraem/issues/409), and #414 flips the order:
 
 ```ts
 if (!(await hasMutationBudget(action))) {
@@ -190,11 +191,11 @@ export async function reserveRotationSeat(entryId: number): Promise<boolean> {
 }
 ```
 
-It's a transaction-scoped lock, so it releases at commit and never gets held across the slow browser automation. The original design also had a whole admission pool with 48h and 72h reservation timeouts for a growing waitlist. I deleted it. At 7 or 8 signups there's never a queue to ration.
+It's a transaction-scoped lock, so it releases at commit and never gets held across the slow browser automation. An earlier draft of the design also had a whole admission pool with 48h and 72h reservation timeouts for a growing waitlist. I deleted it. At 7 or 8 signups there's never a queue to ration.
 
 ## The bugs that were actually interesting
 
-**Waiting isn't failing.** When the ledger is tapped out, the worker throws `AllowlistBudgetExhaustedError`. The dispatcher calls the worker through Trigger.dev's `runs.poll()`, which crosses a run boundary, so the error class doesn't survive. Only the message string does. `instanceof` was always false, every budget wait went through `markJobsFailed`, and three ordinary "no budget right now" ticks marked a healthy job permanently failed ([#408](https://github.com/FindMalek/sonaraem/issues/408)). The fix is a shared marker string that both the throw site and the check site import, plus a `requeueForBudget` that pushes `eligibleAt` out 10 minutes without touching `retryCount`. Not pretty, but honest about what crosses the boundary.
+**Waiting isn't failing.** When the ledger is tapped out, the worker throws `AllowlistBudgetExhaustedError`. The dispatcher calls the worker through Trigger.dev's `runs.poll()`, which crosses a run boundary, so the error class doesn't survive. Only the message string does. `instanceof` was always false, every budget wait went through `markJobsFailed`, and three ordinary "no budget right now" ticks marked a healthy job permanently failed ([#408](https://github.com/FindMalek/sonaraem/issues/408)). The fix in #414 is a shared marker string that both the throw site and the check site import, plus a `requeueForBudget` that pushes `eligibleAt` out 10 minutes without touching `retryCount`. Not pretty, but honest about what crosses the boundary.
 
 **Jobs stuck in "dispatched".** If the dispatcher dies after marking a batch dispatched but before doing anything, those jobs are invisible forever because only `queued` jobs get picked. Each tick now resets anything dispatched more than 30 minutes ago back to `queued` first.
 
@@ -204,7 +205,7 @@ It's a transaction-scoped lock, so it releases at commit and never gets held acr
 
 ## What's still open
 
-As I write this, #414 is still an open PR, so v2 isn't in production yet. A few things I know are unverified or missing:
+As I write this, #414 is still an open PR, so v2 isn't in production yet, and neither are the #408 and #409 fixes. Production still runs the fixed 4 + 1 allowlist. A few things I know are unverified or missing:
 
 - Remove throttling is an assumption. Only adds are confirmed. I want a few throwaway add/remove cycles watching for a 429 on remove before that number carries real weight.
 - The Playwright worker can't log in by itself. It needs a session I seed manually, and when that expires, rotation stops until I log in again. There's an admin page that shows session health ([#400](https://github.com/FindMalek/sonaraem/pull/400)) and an alert email on failure, but it's still a human in the loop.

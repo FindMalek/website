@@ -1,4 +1,8 @@
+import Link from "next/link"
+
 import { Contribution, OpenSourceProject } from "@/types"
+
+import { cn } from "@/lib/utils"
 
 import { RepoCard } from "@/components/app/repo-card"
 
@@ -28,19 +32,33 @@ export function ProjectContributionCard({
         </p>
         <ul>
           {contribution.pullRequests.map((pullRequest) => (
-            <li key={pullRequest.number}>
+            <li
+              key={pullRequest.number}
+              className="flex min-w-0 items-baseline gap-2"
+            >
               <a
                 href={`${contribution.repo}/pull/${pullRequest.number}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 title={pullRequest.title}
-                className="hover:bg-muted -mx-1.5 flex min-w-0 items-baseline gap-2 rounded px-1.5 py-1 text-xs no-underline transition-colors"
+                className={cn(
+                  "hover:bg-muted -mx-1.5 flex min-w-0 flex-1 items-baseline gap-2 rounded px-1.5 py-1 text-xs no-underline transition-colors",
+                  pullRequest.post && "mr-0"
+                )}
               >
                 <span className="text-muted-foreground shrink-0 font-mono tabular-nums">
                   #{pullRequest.number}
                 </span>
                 <span className="truncate">{pullRequest.title}</span>
               </a>
+              {pullRequest.post && (
+                <Link
+                  href={pullRequest.post}
+                  className="text-muted-foreground hover:text-foreground shrink-0 text-xs underline-offset-2 hover:underline"
+                >
+                  Write-up
+                </Link>
+              )}
             </li>
           ))}
         </ul>

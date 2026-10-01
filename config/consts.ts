@@ -220,6 +220,7 @@ export const CONTRIBUTIONS: Contribution[] = [
         number: 680,
         title:
           "perf(rpc): batch goals bulkAnalytics ClickHouse queries for unfiltered goals",
+        post: "/blog/batching-clickhouse-queries-in-databuddy",
       },
       { number: 637, title: "feat(notifications): add Discord provider" },
       {
