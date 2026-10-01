@@ -1,15 +1,16 @@
 ---
 title: "Rate limiting an oRPC API with a Map, and everything that Map gets wrong"
 href: /blog/rate-limiting-orpc
-excerpt: "The rate limiter I shipped in Zero Locker is about 60 lines of TypeScript and an in-memory Map. It works, but it's a fixed window I called a sliding window, and it trusts headers it shouldn't. Here's the real code and what I'd change."
+excerpt: "The rate limiter I shipped in Zero Locker is an in-memory Map with a counter per IP. It works, but it's a fixed window I called a sliding window, and it trusts headers it shouldn't. Here's the real code and what I'd change."
 publishedAt: "2026-09-30"
+updatedAt: "2026-10-01"
 tags: ["orpc", "rate-limiting", "security", "nextjs"]
 status: published
 image: /blog/rate-limiting-orpc/cover.png
 imageAlt: "Cover for \"Rate limiting oRPC with a Map\", showing a timeline of the same requests under a fixed window and a sliding window"
 ---
 
-Zero Locker is a password manager I'm building in the open ([repo](https://github.com/FindMalek/zero-locker)). A password manager's API is the kind of thing people will point scripts at. Guess a login a few thousand times, hammer a form that sends email, or just loop an endpoint until your database bill cries.
+[Zero Locker](/projects/zero-locker) is a password manager I'm building in the open ([repo](https://github.com/FindMalek/zero-locker)). A password manager's API is the kind of thing people will point scripts at. Guess a login a few thousand times, hammer a form that sends email, or just loop an endpoint until your database bill cries.
 
 So in October 2025 I added rate limiting to the oRPC routers, then wrote an article about it on the Zero Locker site. Reading that article again a year later, I cringed a bit. The code is fine for what it is. The article oversold it.
 
@@ -251,15 +252,17 @@ onError: (error: Error) => {
 
 A unit test with a fake clock would have caught that in a minute. So would reading the error shape instead of scraping the message. Lesson learned: if you put structured data in `ORPCError`'s `data`, read it from `data`.
 
-## What I fixed after writing this
+## The fix I opened after writing this
 
-Writing this post was the code review this limiter never got. The three bugs above are fixed in [zero-locker#44](https://github.com/FindMalek/zero-locker/pull/44):
+Writing this post was the code review this limiter never got. I filed the three bugs above as [zero-locker#43](https://github.com/FindMalek/zero-locker/issues/43) and opened [zero-locker#44](https://github.com/FindMalek/zero-locker/pull/44) to fix them. As I write this it's still open, so everything above still describes what's running in production.
 
-- The IP now comes only from the headers Vercel sets and overwrites at the edge (`x-vercel-forwarded-for`, then `x-real-ip`). No more trusting `cf-connecting-ip` or a client-sent `x-forwarded-for`.
-- The IP is read before the session lookup, so a failed auth call no longer drops everyone into one `UNKNOWN-IP` bucket.
+What the PR changes:
+
+- The IP comes only from the headers Vercel sets and overwrites at the edge (`x-vercel-forwarded-for`, then `x-real-ip`). No more trusting `cf-connecting-ip` or a client-sent `x-forwarded-for`.
+- The IP is read before the session lookup, so a failed auth call can't drop everyone into one `UNKNOWN-IP` bucket.
 - The demo reads `retryAfter` from `error.data`, so the countdown actually shows.
 
-It also finally has a test: a fake clock, five requests allowed, the sixth gets a 429, and the next window resets.
+It also adds the first test this limiter has ever had: a fake clock, five requests allowed, the sixth gets a 429, and the next window resets.
 
 ## What I'd do today
 
@@ -294,3 +297,5 @@ So if I redid this in Zero Locker, it'd be: one trusted IP header, a shared stor
 A Map and a timestamp is a completely reasonable first rate limiter. Mine stopped the thing I was actually worried about, which was a script spamming email through my waitlist.
 
 Just be honest about what it is. It's a fixed window, it's per instance, and it's only as trustworthy as the header you read the IP from. My original post got all three of those wrong, and nobody would have noticed until it mattered.
+
+_This is a rewrite of an article I first published on the Zero Locker blog: [Building Bulletproof APIs: A Complete Guide to Rate Limiting with oRPC](https://www.zero-locker.com/articles/building-bulletproof-apis-rate-limiting-orpc). The original is still up, title and all._

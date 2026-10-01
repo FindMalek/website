@@ -3,6 +3,7 @@ title: "Every pull request gets its own database"
 href: /blog/a-database-per-pull-request
 excerpt: "How Dukkani spins up a full preview stack per PR on Vercel, with its own Neon branch, its own R2 folder and seeded demo data, and how it all gets thrown away when the PR closes."
 publishedAt: "2026-09-30"
+updatedAt: "2026-10-01"
 tags: ["dukkani", "vercel", "neon", "postgres", "ci"]
 status: published
 image: /blog/a-database-per-pull-request/cover.png
@@ -167,15 +168,15 @@ The fork check at the top matters. Forks don't get repository secrets, so the jo
 
 This workflow was silently failing on every single PR.
 
-The root `package.json` pinned pnpm 11, which needs Node 22.13 or newer. The cleanup workflow pinned `setup-node` to Node 20. pnpm crashed during setup, the install and R2 steps got skipped, and the Neon step still ran because of `if: always()`. So the job looked "kind of red" and nobody looked closer.
+The root `package.json` pinned pnpm 11, which needs Node 22.13 or newer. The cleanup workflow pinned `setup-node` to Node 20. pnpm crashed during setup with `No such built-in module: node:sqlite`, so the install and R2 steps were skipped. The Neon step still ran because of `if: always()`. The job went red, but a red cleanup job on an already-closed PR is easy to never look at.
 
-It surfaced when API previews on a batch of dashboard PRs started failing with a Neon "Resource provisioning failed" error. Chasing that led to the cleanup job, which turned out not to have been cleaning anything up. I can't prove the leftover branches caused the provisioning errors, but a cleanup job that never runs is a bug either way. The fix in #514 was changing `"20"` to `"22"` in three workflows. Two characters.
+It surfaced when API previews on a batch of dashboard PRs started failing with a Neon "Resource provisioning failed" error. Chasing that led to the cleanup job. The R2 half had never run, so every preview's uploads were still sitting in the bucket. Whether the Neon half had actually deleted anything was anyone's guess, because a red job hides which steps worked. I can't prove leftover branches caused the provisioning errors, but a cleanup job that fails on every PR is a bug either way. The fix, [dukkani#514](https://github.com/FindMalek/dukkani/pull/514), changed `"20"` to `"22"` in the three workflows that still pinned Node 20. One character, three times.
 
-The lesson I actually took: `continue-on-error` on a cleanup step is fine, but then something else has to tell you it's broken. Mine was previews failing to provision.
+The lesson I actually took: `continue-on-error` on a cleanup step is fine, but then something else has to tell you it's broken. For me, that something was previews failing to provision, which is a terrible alarm.
 
 ## The costs
 
-It's not free. Every preview runs migrations and a seed inside the API build, so an API preview does more work than a plain `next build`. Four projects times every push also adds up in build minutes, which is why #608 added an ignored build step: `turbo query affected` skips an app if nothing it depends on changed, and any branch with `skip-vercel` in its name skips everything.
+It's not free. Every preview runs migrations and a seed inside the API build, so an API preview does more work than a plain `next build`. Four projects times every push also adds up in build minutes, which is why [#608](https://github.com/FindMalek/dukkani/pull/608) added an ignored build step: `turbo query affected` skips an app if nothing it depends on changed, and any branch with `skip-vercel` in its name skips everything.
 
 That script has its own footgun, written up in a comment in `scripts/vercel-ignore-build.sh`. Without an explicit `--base`, `turbo query affected` compares against the merge base with main. On a production build of main, that's main's own tip, which means zero affected packages, which means every production deploy gets skipped forever. So it always passes `--base "$VERCEL_GIT_PREVIOUS_SHA"`, and if that var is empty it builds anyway. Fail open, never fail closed on a deploy.
 
@@ -185,7 +186,7 @@ The "production" string check should be a real check: compare the preview's host
 
 The CI `build` job still only builds the shared packages, because a full build runs a live `migrate deploy` and needs env vars CI doesn't have yet. A throwaway Neon branch per CI run, created and deleted in the same job, would close that gap.
 
-And I'd add something that alerts when the cleanup job fails, instead of waiting for Neon to run out of room.
+And I'd add something that alerts when the cleanup job fails, instead of finding out from an unrelated error weeks later.
 
 ## The takeaway
 

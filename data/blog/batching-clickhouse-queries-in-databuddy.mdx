@@ -126,7 +126,7 @@ For a dashboard with mostly unfiltered goals, the query count now scales with th
 
 ## Then the review bot found two holes
 
-I opened [#680](https://github.com/databuddy-analytics/Databuddy/pull/680) and the repo's review bot came back with two findings. Both were real, and both were my fault.
+I opened [#680](https://github.com/databuddy-analytics/Databuddy/pull/680) and three minutes later the repo's review bot came back with two correctness findings, plus a lint nit. Both findings were real, and both were my fault.
 
 ![Header of Databuddy pull request #680, "perf(rpc): batch goals bulkAnalytics ClickHouse queries for unfiltered goals", shown as merged into staging with 594 additions and 103 deletions.](/blog/batching-clickhouse-queries-in-databuddy/pr-680.webp)
 
@@ -182,7 +182,7 @@ And when a batched query fails, only that chunk falls back to the original per-g
 
 The maintainer, [@izadoesdev](https://github.com/izadoesdev), approved it with a long review that traced every changed line. It checked the ClickHouse SQL against the `UInt8` encoding, the result mapping, the 255 cap, the fallback isolation, and the filter routing, and left three non-blocking nits: a redundant `toUInt8(step)` cast in my query (the step was already a `UInt8` from the builder), a `forEach` where the project's lint rules want `for...of`, and no test for the fallback path.
 
-Then it sat for a few weeks while `staging` moved on. When the review picked back up, the batching logic still held up, but the PR needed a rebase. Other commits had touched the same code, including a `memoizedTotalUsers` helper on the per-goal path that already removed some duplicate denominator calls. There was also a test script in `package.json` that still pointed at a file that no longer existed.
+Then it sat for about a month while `staging` moved on. When the review picked back up, the batching logic still held up, but the PR needed a rebase. Other commits had touched the same code, including a `memoizedTotalUsers` helper on the per-goal path that already removed some duplicate denominator calls. There was also a test script in `package.json` that still pointed at a file that no longer existed.
 
 So I rebased, kept staging's memoization and logging, fixed all three nits, typed `filters` as `DataFilter[] | null` instead of `unknown`, and added two tests I should have written in the first place. One checks that when the batched query rejects, each goal is answered by the per-goal path with its own filters. The other is a ClickHouse integration test asserting that batched counts equal per-goal counts across profile, session, and reassigned-browser visitors.
 
@@ -196,12 +196,12 @@ Before this one I had two smaller PRs merged.
 
 [#637](https://github.com/databuddy-analytics/Databuddy/pull/637) added a Discord notification provider. The package's `TODO.md` claimed Discord was done, but no code existed. I built it on the same shape as the Slack provider and enforced Discord's embed limits, including the 6000-character total limit I missed on the first pass.
 
-I've also got four more open right now: typed alarm trigger conditions ([#988](https://github.com/databuddy-analytics/Databuddy/pull/988)), an eval-only judge for insight claims ([#989](https://github.com/databuddy-analytics/Databuddy/pull/989)), a deterministic seed script ([#990](https://github.com/databuddy-analytics/Databuddy/pull/990)), and one registry for alarm destination types ([#991](https://github.com/databuddy-analytics/Databuddy/pull/991)).
+As I write this, I've got four more open: typed alarm trigger conditions ([#988](https://github.com/databuddy-analytics/Databuddy/pull/988)), an eval-only judge for insight claims ([#989](https://github.com/databuddy-analytics/Databuddy/pull/989)), a deterministic seed script ([#990](https://github.com/databuddy-analytics/Databuddy/pull/990)), and one registry for alarm destination types ([#991](https://github.com/databuddy-analytics/Databuddy/pull/991)).
 
 ## What I'd tell myself before the first PR
 
 In your own codebase, you know which helpers have weird edges. In someone else's, you don't, and the weird edges are exactly where the bugs hide. The `index === 0` filter branch and the `UInt8` step number were both correct for what they were built for. They only broke when I used them for something new.
 
-So now I do three things. I file the issue before the PR. I limit the change to the case I can actually prove is safe. And I write the parity test first, the one that says "batched output equals the old output", instead of adding it during a rebase three weeks later.
+So now I do three things. I file the issue before the PR. I limit the change to the case I can actually prove is safe. And I write the parity test first, the one that says "batched output equals the old output", instead of adding it during a rebase a month later.
 
 Oh, and read the review bot's comments properly. On this PR, both of its correctness findings were real bugs I had shipped.

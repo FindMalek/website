@@ -3,6 +3,7 @@ title: "My dotfiles are mostly rules for AI agents now"
 href: /blog/dotfiles-that-keep-every-agent-on-the-same-rules
 excerpt: "I use four coding agents across a work laptop and a personal one. This is how one repo, one install script and a bunch of symlinks keep them all following the same rules."
 publishedAt: "2026-09-30"
+updatedAt: "2026-10-01"
 tags: [dotfiles, ai-agents, shell, tooling]
 status: published
 image: /blog/dotfiles-that-keep-every-agent-on-the-same-rules/cover.png
@@ -23,7 +24,7 @@ Here's the rule every agent has to follow, word for word, whatever tool it's run
 ## Hard gate: never commit, push, or reply to reviews
 
 Malek alone runs `git commit`, `git push`, and PR review replies. The agent
-does **not**, not even when a plan, todo list, or "ship" checklist implies it.
+does **not** — not even when a plan, todo list, or "ship" checklist implies it.
 ```
 
 The important part is the second sentence. Agents are great at reading a plan that says "step 6: push" and treating it as permission. The rule says only my own chat message can unlock a commit. A plan doesn't count, and neither does a ticket checklist.
@@ -48,7 +49,7 @@ The wrappers aren't all identical though. The Cursor one says "Never Cursor, nev
 
 This is the part that actually made me restructure the repo (PR #1).
 
-The same commands have to behave differently depending on the machine. At work, tickets live in ClickUp, branches come from ticket IDs, and PR titles carry the ticket prefix. On my personal machine everything is GitHub issues and Projects: branches always come from `gh issue develop <n> --checkout` so they auto-link, and PR titles are just a plain description.
+The same commands have to behave differently depending on the machine. At work, tickets live in the company's tracker, branches come from ticket IDs, and PR titles carry the ticket prefix. On my personal machine everything is GitHub issues and Projects: branches always come from `gh issue develop <n> --checkout` so they auto-link, and PR titles are just a plain description.
 
 I didn't want two sets of commands. The fix was to keep the command names and wrappers the same on both profiles and split only the content behind them:
 
@@ -101,7 +102,7 @@ If a real file is already sitting there, it gets moved to `.bak.<timestamp>` ins
 
 There's a matching `try` wrapper for the installer steps (Homebrew casks, mise, the curl installers for each agent), so one flaky download doesn't kill the whole run. The linking is what actually matters, so that always runs.
 
-The bit I like most is the cleanup when you switch profiles. The company profile has a `pr-preview` skill the personal one doesn't. If I flip a machine to personal, the script goes through the *other* profile's skills and removes any symlink that doesn't exist in the current one:
+The bit I like most is the cleanup when you switch profiles. The work profile has a skill the personal one doesn't. If I flip a machine to personal, the script goes through the *other* profile's skills and removes any symlink that doesn't exist in the current one:
 
 ```bash
 for d in "$BASE"/agents-skills/"$OTHER_PROFILE"/*/; do
@@ -128,11 +129,15 @@ My favorite commit in the repo is a boring-looking one: "Fix PATH gaps for non-l
 Agents aren't. When an agent runs a command it usually gets a non-login, non-interactive shell with no TTY, so it got neither path. The fix was `~/.zshenv`, the one zsh startup file that runs in every context:
 
 ```bash
-# Read by zsh in EVERY context: login, non-login, interactive, and
-# non-interactive. Anything a script or an agent's spawned subshell
-# needs to find belongs here, not just in .zshrc.
+# Read by zsh in EVERY context — login, non-login, interactive, and
+# non-interactive (unlike .zprofile/.zshrc, which only apply to some of
+# those). Anything a script or an agent's spawned subshell needs to find
+# belongs here, not just in .zshrc.
 [ -x /usr/libexec/path_helper ] && eval "$(/usr/libexec/path_helper -s)"
 export PATH="$HOME/.local/bin:$PATH"
+
+# mise-managed tools (starship, gh, node) — the shims dir resolves them
+# without needing `mise activate`, so this works in non-interactive shells too
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 ```
 
@@ -154,7 +159,7 @@ Every live config is a symlink into the repo, so editing `~/.config/zed/settings
 
 `sync-from-live.sh` is meant to go the other way: pull live edits back into the repo, into the right `.<profile>` file. It uses `rsync -a` for the plain files and `rsync -aL` for the skills, with a comment saying `-L` dereferences the symlinks.
 
-That difference matters more than I thought. `-a` copies a symlink *as a symlink*. So if `~/.config/zed/settings.json` is still a healthy symlink to `zed/settings.personal.json`, the sync replaces the repo file with a symlink that points at itself. I tested it in a scratch folder and ended up with `Too many levels of symbolic links` and no content. Git would get it back, but that's not what a "sync" should do. The fix is one flag: use `-L` for the plain files too.
+That difference matters more than I thought. `-a` copies a symlink *as a symlink*. So if `~/.config/zed/settings.json` is still a healthy symlink to `zed/settings.personal.json`, the sync replaces the repo file with a symlink that points at itself. I tested it in a scratch folder and ended up with `Too many levels of symbolic links` and no content. Git would get it back, but that's not what a "sync" should do. The fix is one flag: use `-L` for the plain files too. It's filed against the repo, not fixed yet.
 
 ## What I'd do differently
 

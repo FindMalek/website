@@ -61,6 +61,7 @@ export interface OpenSourceProject {
 export interface ContributionPullRequest {
   number: number
   title: string
+  post?: string
 }
 
 export interface Contribution {

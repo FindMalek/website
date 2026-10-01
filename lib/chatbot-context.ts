@@ -108,6 +108,7 @@ function getOpenSourceContributionsData() {
     mergedPullRequests: contribution.pullRequests.map((pullRequest) => ({
       title: pullRequest.title,
       url: `${contribution.repo}/pull/${pullRequest.number}`,
+      writeUp: pullRequest.post,
     })),
   }))
 }
