@@ -8,6 +8,7 @@ import type { CardData } from "@/types"
 import { OVERVIEW_CARDS } from "@/config/consts"
 
 import { AboutOverviewCard } from "@/components/app/about-overview-card-stack"
+import { AboutOverviewStamps } from "@/components/app/about-overview-stamps"
 
 const AUTO_SWIPE_INTERVAL_MS = 6000
 
@@ -41,6 +42,7 @@ export function AboutOverviewCardsStack() {
 
   return (
     <div className="relative aspect-square w-full">
+      <AboutOverviewStamps />
       <AnimatePresence mode="popLayout">
         {cards.slice(0, 3).map((card, index) => (
           <AboutOverviewCard
