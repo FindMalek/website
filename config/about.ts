@@ -38,19 +38,6 @@ export const ABOUT_BIO: AboutSegment[][] = [
   [
     "My journey hasn't been linear. I started by taking on small freelance work, building and shipping constantly, failing fast, and iterating in public and private. Over time, that evolved into founding products, working with teams, contributing to open-source, and designing systems that survive real usage.",
   ],
-  [
-    "I'm an active open-source contributor and builder. Some projects I've contributed to include ",
-    { text: "Midday", href: "https://midday.ai/" },
-    ", ",
-    { text: "Function03", href: "https://github.com/function03-labs" },
-    " in Web3, ",
-    { text: "TallyZero", href: "https://tally-zero.preview.tally.xyz/" },
-    ", ",
-    { text: "OpenStatus", href: "https://www.openstatus.dev" },
-    " for ",
-    { text: "Goat Stack", href: "https://github.com/openstatusHQ/goat-stack" },
-    ", and other production-grade tools.",
-  ],
 ]
 
 export function aboutSegmentsToText(paragraph: AboutSegment[]): string {
