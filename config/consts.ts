@@ -199,8 +199,6 @@ export const FEATURED_PROJECT_ORDER = [
 
 export const REPOSITORIES = [
   "https://github.com/findmalek/website",
-  "https://github.com/undrstnd-labs/education",
-  "https://github.com/undrstnd-labs/developers",
   "https://github.com/FindMalek/dukkani",
   "https://github.com/FindMalek/zero-locker",
   "https://github.com/FindMalek/sonaraem",
@@ -231,12 +229,27 @@ export const CONTRIBUTIONS: Contribution[] = [
     ],
   },
   {
+    repo: "https://github.com/function03-labs/WalletLabels",
+    pullRequests: [
+      { number: 15, title: "Refactor to NextJS 14" },
+      { number: 22, title: "Feat/pricing" },
+      { number: 20, title: "Feat/submission" },
+      { number: 19, title: "Chore/secure api" },
+    ],
+  },
+  {
     repo: "https://github.com/midday-ai/midday",
     pullRequests: [{ number: 39, title: "Typesafe theme-switch" }],
   },
   {
     repo: "https://github.com/withtally/tally-zero",
     pullRequests: [{ number: 8, title: "Complete Refactor of Tally Zero" }],
+  },
+  {
+    repo: "https://github.com/function03-labs/uniswaphooks",
+    pullRequests: [
+      { number: 1, title: "Add user dashboard for admin and users" },
+    ],
   },
   {
     repo: "https://github.com/magicuidesign/magicui",

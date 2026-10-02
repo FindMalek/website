@@ -5,6 +5,7 @@ import { Contribution, OpenSourceProject } from "@/types"
 import { cn } from "@/lib/utils"
 
 import { RepoCard } from "@/components/app/repo-card"
+import { Icons } from "@/components/shared/icons"
 
 const GITHUB_USERNAME = "FindMalek"
 
@@ -54,9 +55,11 @@ export function ProjectContributionCard({
               {pullRequest.post && (
                 <Link
                   href={pullRequest.post}
-                  className="text-muted-foreground hover:text-foreground shrink-0 text-xs underline-offset-2 hover:underline"
+                  aria-label="Read the write-up"
+                  title="Read the write-up"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/50 -mr-1 shrink-0 self-center rounded p-1 outline-none transition-colors focus-visible:ring-[3px]"
                 >
-                  Write-up
+                  <Icons.post className="size-3.5" />
                 </Link>
               )}
             </li>
