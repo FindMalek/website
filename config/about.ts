@@ -45,3 +45,89 @@ export function aboutSegmentsToText(paragraph: AboutSegment[]): string {
     .map((segment) => (typeof segment === "string" ? segment : segment.text))
     .join("")
 }
+
+type AboutStampBase = {
+  id: string
+  country: string
+  value: string
+  caption: string
+  story: string
+}
+
+export type AboutStamp =
+  | (AboutStampBase & { kind: "photo"; src: string })
+  | (AboutStampBase & { kind: "type"; headline: string; ink: string })
+
+// Rendered by components/app/about-overview-stamps.tsx. Every stamp is a real
+// moment that already appears elsewhere on the site (photo card stories, bio).
+export const ABOUT_STAMPS: AboutStamp[] = [
+  {
+    id: "jbal-rsas",
+    kind: "photo",
+    src: "/about/jbal-rsas-summit.jpg",
+    country: "Tunisie",
+    value: "795m",
+    caption: "Jbal Rsas ×2",
+    story:
+      "Jbal Rsas, 795 m. Climbed it twice, legs completely done both times.",
+  },
+  {
+    id: "cappadocia",
+    kind: "photo",
+    src: "/about/cappadocia-balloon-jobflow.jpg",
+    country: "Türkiye",
+    value: "dawn",
+    caption: "Kapadokya",
+    story:
+      "Sunrise from a hot-air balloon over Cappadocia, with the Jobflow team.",
+  },
+  {
+    id: "uskudar",
+    kind: "photo",
+    src: "/author.jpg",
+    country: "Türkiye",
+    value: "20min",
+    caption: "Üsküdar ferry",
+    story: "The ferry to Üsküdar: the calmest twenty minutes of my year.",
+  },
+  {
+    id: "vanille",
+    kind: "photo",
+    src: "/about/vanille-cat.jpg",
+    country: "Tunisie",
+    value: "×2",
+    caption: "Vanille",
+    story: "Vanille tolerates a photo or two, then she's had enough.",
+  },
+  {
+    id: "nevey",
+    kind: "photo",
+    src: "/about/nevey-cat.jpg",
+    country: "Tunisie",
+    value: "3yrs",
+    caption: "Nevey",
+    story: "Nevey is three and has zero concept of personal space.",
+  },
+  {
+    id: "hair",
+    kind: "type",
+    headline: "RIP",
+    ink: "#0f2b46",
+    country: "Tunisie",
+    value: "2020–25",
+    caption: "The hair",
+    story:
+      "Grew it out from January 2020, cut it in March 2025. Rest in peace.",
+  },
+  {
+    id: "artweave",
+    kind: "type",
+    headline: "SOLD",
+    ink: "#b0432a",
+    country: "Tunisie",
+    value: "2023",
+    caption: "Artweave",
+    story:
+      "Co-founded Artweave, a clothing brand. Acquired by Tunisian Design in 2023.",
+  },
+]

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 
 import { AboutFacts } from "@/components/app/about-facts"
 import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-stack"
+import { AboutOverviewStampsHint } from "@/components/app/about-overview-stamps"
 import { Icons } from "@/components/shared/icons"
 
 const SOCIAL_LINKS = [
@@ -58,19 +59,22 @@ export function AboutOverview() {
               <AboutOverviewCardsStack />
             </div>
 
-            <div className="flex items-center gap-3.5">
-              {SOCIAL_LINKS.map(({ href, icon: Icon, label }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener"
-                  aria-label={label}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <Icon className="size-4" />
-                </Link>
-              ))}
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+              <div className="flex items-center gap-3.5">
+                {SOCIAL_LINKS.map(({ href, icon: Icon, label }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener"
+                    aria-label={label}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Icon className="size-4" />
+                  </Link>
+                ))}
+              </div>
+              <AboutOverviewStampsHint />
             </div>
           </div>
         </div>
