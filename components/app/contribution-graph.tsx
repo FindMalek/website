@@ -4,7 +4,9 @@ import {
   createContext,
   Fragment,
   useContext,
+  useLayoutEffect,
   useMemo,
+  useRef,
   type CSSProperties,
   type HTMLAttributes,
   type ReactNode,
@@ -375,8 +377,16 @@ export const ContributionGraphCalendar = ({
     [weeks, labels.months]
   )
 
+  // Narrow viewports can't fit the full year; open on the most recent weeks.
+  const scrollRef = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const container = scrollRef.current
+    if (container) container.scrollLeft = container.scrollWidth
+  }, [width])
+
   return (
     <div
+      ref={scrollRef}
       className={cn(
         "no-scrollbar scroll-fade-x max-w-full overflow-x-auto overflow-y-hidden",
         className
