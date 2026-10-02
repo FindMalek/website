@@ -46,71 +46,22 @@ export function aboutSegmentsToText(paragraph: AboutSegment[]): string {
     .join("")
 }
 
-type AboutStampBase = {
+export type AboutStamp = {
   id: string
+  headline: string
+  ink: string
   country: string
   value: string
   caption: string
   story: string
 }
 
-export type AboutStamp =
-  | (AboutStampBase & { kind: "photo"; src: string })
-  | (AboutStampBase & { kind: "type"; headline: string; ink: string })
-
-// Rendered by components/app/about-overview-stamps.tsx. Every stamp is a real
-// moment that already appears elsewhere on the site (photo card stories, bio).
+// Rendered by components/app/about-overview-stamps.tsx. Each stamp is a real
+// moment, so keep every claim sourced: Artweave and the hair are in the bio
+// and photo stories; the Qorelo raise is public (tech.eu, 15 June 2026).
 export const ABOUT_STAMPS: AboutStamp[] = [
   {
-    id: "jbal-rsas",
-    kind: "photo",
-    src: "/about/jbal-rsas-summit.jpg",
-    country: "Tunisie",
-    value: "795m",
-    caption: "Jbal Rsas ×2",
-    story:
-      "Jbal Rsas, 795 m. Climbed it twice, legs completely done both times.",
-  },
-  {
-    id: "cappadocia",
-    kind: "photo",
-    src: "/about/cappadocia-balloon-jobflow.jpg",
-    country: "Türkiye",
-    value: "dawn",
-    caption: "Kapadokya",
-    story:
-      "Sunrise from a hot-air balloon over Cappadocia, with the Jobflow team.",
-  },
-  {
-    id: "uskudar",
-    kind: "photo",
-    src: "/author.jpg",
-    country: "Türkiye",
-    value: "20min",
-    caption: "Üsküdar ferry",
-    story: "The ferry to Üsküdar: the calmest twenty minutes of my year.",
-  },
-  {
-    id: "vanille",
-    kind: "photo",
-    src: "/about/vanille-cat.jpg",
-    country: "Tunisie",
-    value: "×2",
-    caption: "Vanille",
-    story: "Vanille tolerates a photo or two, then she's had enough.",
-  },
-  {
-    id: "nevey",
-    kind: "photo",
-    src: "/about/nevey-cat.jpg",
-    country: "Tunisie",
-    value: "3yrs",
-    caption: "Nevey",
-    story: "Nevey is three and has zero concept of personal space.",
-  },
-  {
     id: "hair",
-    kind: "type",
     headline: "RIP",
     ink: "#0f2b46",
     country: "Tunisie",
@@ -121,7 +72,6 @@ export const ABOUT_STAMPS: AboutStamp[] = [
   },
   {
     id: "artweave",
-    kind: "type",
     headline: "SOLD",
     ink: "#b0432a",
     country: "Tunisie",
@@ -129,5 +79,15 @@ export const ABOUT_STAMPS: AboutStamp[] = [
     caption: "Artweave",
     story:
       "Co-founded Artweave, a clothing brand. Acquired by Tunisian Design in 2023.",
+  },
+  {
+    id: "qorelo",
+    headline: "$3.5M",
+    ink: "#1f5b4a",
+    country: "Deutschland",
+    value: "2026",
+    caption: "Qorelo seed",
+    story:
+      "My QTech AI co-founders went on to start Qorelo and raised a $3.5M seed in June 2026.",
   },
 ]

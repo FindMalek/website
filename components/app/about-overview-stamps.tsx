@@ -10,7 +10,6 @@ import {
   type ReactNode,
   type PointerEvent as ReactPointerEvent,
 } from "react"
-import Image from "next/image"
 import {
   motion,
   useMotionValue,
@@ -49,43 +48,21 @@ const HOME_SPOTS: Record<
   string,
   { className: string; rotate: number; labelSide: LabelSide }
 > = {
-  cappadocia: {
-    className: "left-[-56px] top-[2%] lg:left-[-66px] lg:top-[-4%]",
-    rotate: -9,
-    labelSide: "left",
-  },
-  vanille: {
-    className: "left-[-52px] top-[38%] lg:left-[-60px] lg:top-[33%]",
-    rotate: -4,
-    labelSide: "left",
-  },
   hair: {
-    className: "left-[-56px] top-[72%] lg:left-[-68px] lg:top-[68%]",
+    className: "left-[-52px] top-[30%] lg:left-[-62px] lg:top-[16%]",
     rotate: 9,
     labelSide: "left",
   },
-  uskudar: {
-    className:
-      "left-[24%] top-[-72px] lg:left-auto lg:right-[-112px] lg:top-[-8%]",
-    rotate: 7,
-    labelSide: "center",
-  },
   artweave: {
     className:
-      "left-[54%] top-[-64px] lg:left-auto lg:right-[-128px] lg:top-[24%]",
+      "left-[46%] top-[-64px] lg:left-auto lg:right-[-118px] lg:top-[4%]",
     rotate: -6,
-    labelSide: "center",
+    labelSide: "right",
   },
-  nevey: {
+  qorelo: {
     className:
-      "left-[22%] bottom-[-68px] lg:left-auto lg:bottom-auto lg:right-[-110px] lg:top-[53%]",
-    rotate: 10,
-    labelSide: "center",
-  },
-  "jbal-rsas": {
-    className:
-      "left-[56%] bottom-[-72px] lg:left-auto lg:bottom-auto lg:right-[-126px] lg:top-[80%]",
-    rotate: -5,
+      "left-[26%] bottom-[-70px] lg:left-auto lg:bottom-auto lg:right-[-104px] lg:top-[50%]",
+    rotate: 7,
     labelSide: "right",
   },
 }
@@ -273,37 +250,6 @@ function StampPaper({
 }
 
 function StampFace({ stamp }: { stamp: AboutStamp }) {
-  if (stamp.kind === "photo") {
-    return (
-      <StampPaper width={80} height={96}>
-        <Image
-          src={stamp.src}
-          alt=""
-          fill
-          sizes="80px"
-          draggable={false}
-          className="object-cover saturate-[.75] sepia-[.15]"
-        />
-        <div className="absolute inset-x-0 top-0 flex items-start justify-between bg-gradient-to-b from-black/45 to-transparent px-1 pb-2 pt-0.5 text-white">
-          <span className="text-[5.5px] font-semibold uppercase leading-none tracking-[0.14em]">
-            {stamp.country}
-          </span>
-          <span
-            className={cn(
-              purplePurse.className,
-              "text-[11px] font-bold leading-none"
-            )}
-          >
-            {stamp.value}
-          </span>
-        </div>
-        <span className="absolute inset-x-0 bottom-0 bg-[#fbf8f1]/90 py-[3px] text-center text-[6.5px] font-semibold uppercase leading-none tracking-[0.12em] text-neutral-800">
-          {stamp.caption}
-        </span>
-      </StampPaper>
-    )
-  }
-
   return (
     <StampPaper width={80} height={88}>
       <div
@@ -316,7 +262,8 @@ function StampFace({ stamp }: { stamp: AboutStamp }) {
         <span
           className={cn(
             purplePurse.className,
-            "text-[24px] font-bold leading-none"
+            "font-bold leading-none",
+            stamp.headline.length > 4 ? "text-[19px]" : "text-[24px]"
           )}
         >
           {stamp.headline}
