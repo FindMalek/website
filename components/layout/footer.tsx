@@ -2,6 +2,7 @@ import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 
+import { FooterWordmark } from "@/components/layout/footer-wordmark"
 import { Icons } from "@/components/shared/icons"
 import { ModeToggle } from "@/components/shared/mode-toggle"
 
@@ -28,11 +29,15 @@ export function Footer() {
         </Link>
       </div>
 
-      <div className="container mb-20 flex items-center justify-between">
+      <div className="container flex items-center justify-between">
         <p className="text-muted-foreground text-xs">
           © {currentYear} Malek Gara-Hellal. All rights reserved.
         </p>
         <ModeToggle />
+      </div>
+
+      <div className="container mb-20 pt-4">
+        <FooterWordmark />
       </div>
     </footer>
   )
