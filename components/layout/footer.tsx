@@ -36,7 +36,7 @@ export function Footer() {
         <ModeToggle />
       </div>
 
-      <div className="container mb-20 pt-4">
+      <div className="mb-20 pt-2">
         <FooterWordmark />
       </div>
     </footer>
