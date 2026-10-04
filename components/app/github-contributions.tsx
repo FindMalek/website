@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/tooltip"
 
 const STREAK_FILL = "#f59e0b"
+const STREAK_MIN_OPACITY = 0.35
 
 // Consecutive contribution days counting back from today. A contribution-less
 // "today" doesn't break the streak yet since the day isn't over.
@@ -68,7 +69,12 @@ export function GitHubContributions({
       >
         {({ activity, dayIndex, weekIndex }) => {
           const style = streakDates.has(activity.date)
-            ? { fill: STREAK_FILL }
+            ? {
+                fill: STREAK_FILL,
+                fillOpacity:
+                  STREAK_MIN_OPACITY +
+                  (1 - STREAK_MIN_OPACITY) * ((activity.level - 1) / 3),
+              }
             : undefined
 
           return activity.count === 0 ? (

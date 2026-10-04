@@ -38,19 +38,6 @@ export const ABOUT_BIO: AboutSegment[][] = [
   [
     "My journey hasn't been linear. I started by taking on small freelance work, building and shipping constantly, failing fast, and iterating in public and private. Over time, that evolved into founding products, working with teams, contributing to open-source, and designing systems that survive real usage.",
   ],
-  [
-    "I'm an active open-source contributor and builder. Some projects I've contributed to include ",
-    { text: "Midday", href: "https://midday.ai/" },
-    ", ",
-    { text: "Function03", href: "https://github.com/function03-labs" },
-    " in Web3, ",
-    { text: "TallyZero", href: "https://tally-zero.preview.tally.xyz/" },
-    ", ",
-    { text: "OpenStatus", href: "https://www.openstatus.dev" },
-    " for ",
-    { text: "Goat Stack", href: "https://github.com/openstatusHQ/goat-stack" },
-    ", and other production-grade tools.",
-  ],
 ]
 
 export function aboutSegmentsToText(paragraph: AboutSegment[]): string {
@@ -58,3 +45,49 @@ export function aboutSegmentsToText(paragraph: AboutSegment[]): string {
     .map((segment) => (typeof segment === "string" ? segment : segment.text))
     .join("")
 }
+
+export type AboutStamp = {
+  id: string
+  headline: string
+  ink: string
+  country: string
+  value: string
+  caption: string
+  story: string
+}
+
+// Rendered by components/app/about-overview-stamps.tsx. Each stamp is a real
+// moment, so keep every claim sourced: Artweave and the hair are in the bio
+// and photo stories; the Qorelo raise is public (tech.eu, 15 June 2026).
+export const ABOUT_STAMPS: AboutStamp[] = [
+  {
+    id: "hair",
+    headline: "RIP",
+    ink: "#0f2b46",
+    country: "Tunisie",
+    value: "2020–25",
+    caption: "The hair",
+    story:
+      "Grew it out from January 2020, cut it in March 2025. Rest in peace.",
+  },
+  {
+    id: "artweave",
+    headline: "SOLD",
+    ink: "#b0432a",
+    country: "Tunisie",
+    value: "2023",
+    caption: "Artweave",
+    story:
+      "Co-founded Artweave, a clothing brand. Acquired by Tunisian Design in 2023.",
+  },
+  {
+    id: "qorelo",
+    headline: "$3.5M",
+    ink: "#1f5b4a",
+    country: "Deutschland",
+    value: "2026",
+    caption: "Qorelo seed",
+    story:
+      "My QTech AI co-founders went on to start Qorelo and raised a $3.5M seed in June 2026.",
+  },
+]
