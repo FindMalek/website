@@ -2,6 +2,7 @@ import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 
+import { FooterSkyClock } from "@/components/layout/footer-sky-clock"
 import { FooterWordmark } from "@/components/layout/footer-wordmark"
 import { Icons } from "@/components/shared/icons"
 import { ModeToggle } from "@/components/shared/mode-toggle"
@@ -33,7 +34,10 @@ export function Footer() {
         <p className="text-muted-foreground text-xs">
           © {currentYear} Malek Gara-Hellal. All rights reserved.
         </p>
-        <ModeToggle />
+        <div className="flex items-center gap-4">
+          <FooterSkyClock className="hidden sm:inline-flex" />
+          <ModeToggle />
+        </div>
       </div>
 
       <div className="mb-20 pt-2">
