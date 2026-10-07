@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { useChatDock } from "@/providers/chat-provider"
 import { AnimatePresence, motion } from "motion/react"
 
+import { emitChatActivity } from "@/lib/chat-activity"
 import { cn } from "@/lib/utils"
 import { useContactChat } from "@/hooks/use-contact-chat"
 
@@ -116,6 +117,7 @@ export function ChatFloatingContainer() {
   // no need to send another message first just to see history you already
   // have.
   const handleInputFocus = () => {
+    emitChatActivity({ type: "focus" })
     if (messages.length > 1) openChat()
   }
 
@@ -214,6 +216,7 @@ export function ChatFloatingContainer() {
                 value={input}
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}
+                onBlur={() => emitChatActivity({ type: "blur" })}
                 onKeyDown={(e) => {
                   if (
                     e.key === "Enter" &&

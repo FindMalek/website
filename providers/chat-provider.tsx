@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation"
 
 import { PageContext } from "@/types"
 
+import { emitChatActivity } from "@/lib/chat-activity"
 import { useActiveSection } from "@/hooks/use-active-section"
 import {
   setGlobalChatContext,
@@ -20,6 +21,18 @@ import {
 } from "@/hooks/use-chat-with-tools"
 
 type DockState = "idle" | "docked"
+
+type ChatMessage = ReturnType<typeof useChatWithTools>["messages"][number]
+
+const REPLY_CHUNK_INTERVAL = 60
+
+function replyTextLength(message: ChatMessage | undefined): number {
+  if (message?.role !== "assistant") return 0
+  return message.parts.reduce(
+    (total, part) => total + (part.type === "text" ? part.text.length : 0),
+    0
+  )
+}
 
 interface ChatDockContextValue {
   chat: ReturnType<typeof useChatWithTools>
@@ -80,6 +93,43 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }
     previousMessageCount.current = chat.messages.length
   }, [chat.messages.length])
+
+  const replyRef = useRef({
+    id: "",
+    length: 0,
+    streaming: false,
+    loading: false,
+    lastChunkAt: 0,
+  })
+
+  useEffect(() => {
+    const reply = replyRef.current
+    const lastMessage = chat.messages[chat.messages.length - 1]
+    const length = replyTextLength(lastMessage)
+    if (lastMessage && lastMessage.id !== reply.id) {
+      reply.id = lastMessage.id
+      reply.length = 0
+    }
+
+    if (chat.isLoading && length > reply.length) {
+      if (!reply.streaming) {
+        reply.streaming = true
+        emitChatActivity({ type: "reply-start" })
+      }
+      const now = performance.now()
+      if (now - reply.lastChunkAt >= REPLY_CHUNK_INTERVAL) {
+        reply.lastChunkAt = now
+        emitChatActivity({ type: "reply-chunk" })
+      }
+    }
+    if (reply.loading && !chat.isLoading) {
+      reply.streaming = false
+      emitChatActivity({ type: "reply-end" })
+    }
+
+    reply.length = length
+    reply.loading = chat.isLoading
+  }, [chat.messages, chat.isLoading])
 
   const openChat = useCallback(() => setDockState("docked"), [])
   const closeChat = useCallback(() => setDockState("idle"), [])

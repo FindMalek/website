@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { useChatDock } from "@/providers/chat-provider"
 
 import { MAX_MESSAGES_ALLOWED } from "@/config/consts"
+import { emitChatActivity } from "@/lib/chat-activity"
 
 /**
  * Reads the single shared chat instance from ChatProvider instead of
@@ -61,9 +62,19 @@ export function useContactChat() {
     }
 
     if (input.trim()) {
+      emitChatActivity({ type: "submit" })
       chatContext.handleSubmit(e)
       setShowSuggestions(false)
     }
+  }
+
+  const handleTypedInputChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.target.value.length !== input.length) {
+      emitChatActivity({ type: "keystroke" })
+    }
+    handleInputChange(e)
   }
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -83,7 +94,7 @@ export function useContactChat() {
     showSuggestions,
     handleSuggestionClick,
     input,
-    handleInputChange,
+    handleInputChange: handleTypedInputChange,
     inputRef,
     handleFormSubmit,
     isMessageLimitReached,

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { motion, useReducedMotion } from "motion/react"
 
@@ -39,6 +39,10 @@ function getPageLabel(pathname: string): string {
   return currentPage?.label || PAGES.NOT_FOUND.label
 }
 
+// Distance (px) over which the page label fades out as the footer wordmark
+// rises into view, so the two big serif words never stack on each other.
+const LABEL_FADE_DISTANCE = 320
+
 // Squares stay visible in the gutters but drop to a faint trace under the
 // content column, so moving shapes never sit at full weight behind text.
 const SQUARES_MASK =
@@ -52,6 +56,34 @@ export function Background() {
     Array<{ id: number; pos: [number, number] }>
   >([])
   const [isMounted, setIsMounted] = useState(false)
+  const labelRef = useRef<HTMLHeadingElement>(null)
+
+  useEffect(() => {
+    const label = labelRef.current
+    const footer = document.querySelector("footer")
+    if (!label || !footer) return
+
+    let frame: number | null = null
+    const update = (): void => {
+      frame = null
+      const visible = window.innerHeight - footer.getBoundingClientRect().top
+      const progress = Math.min(1, Math.max(0, visible / LABEL_FADE_DISTANCE))
+      label.style.opacity = String(1 - progress)
+      label.style.transform = `translateY(${progress * 48}px)`
+    }
+    const schedule = (): void => {
+      if (frame === null) frame = requestAnimationFrame(update)
+    }
+
+    update()
+    window.addEventListener("scroll", schedule, { passive: true })
+    window.addEventListener("resize", schedule)
+    return () => {
+      window.removeEventListener("scroll", schedule)
+      window.removeEventListener("resize", schedule)
+      if (frame !== null) cancelAnimationFrame(frame)
+    }
+  }, [pageLabel])
 
   useEffect(() => {
     // Square positions depend on window dimensions, which only exist client-side,
@@ -140,6 +172,7 @@ export function Background() {
       {pageLabel && (
         <div className={purplePurse.className}>
           <h1
+            ref={labelRef}
             className="fixed -bottom-24 -left-10 -z-40 text-[200px] font-bold text-gray-700/[0.06] dark:text-gray-700/10"
             style={{ userSelect: "none" }}
           >
