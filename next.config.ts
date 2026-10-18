@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
       { source: "/stack", destination: "/#stack", permanent: true },
       { source: "/about", destination: "/#about", permanent: true },
       { source: "/contact", destination: "/", permanent: true },
+      { source: "/resume", destination: "/cv.pdf", permanent: true },
     ]
   },
 };
