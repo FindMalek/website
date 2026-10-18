@@ -18,6 +18,7 @@ export function CertificatesList() {
             alt={`${certificate.issuer} certificate: ${certificate.title}, ${certificate.date}`}
             width={1191}
             height={907}
+            sizes="(min-width: 640px) 50vw, 100vw"
             className="h-auto w-full"
           />
           <div className="p-3">
