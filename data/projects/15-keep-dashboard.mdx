@@ -1,0 +1,79 @@
+---
+id: 15
+image: "/project/keep-dashboard.png"
+name: "keep-dashboard"
+overview: "A monochrome live dashboard for a single-box homelab: system, containers, uptime, jobs and activity on square corners, refreshed every second, with a host agent that only accepts a short list of known actions."
+status: "published"
+link: "https://github.com/FindMalek/keep-dashboard"
+href: "/projects/keep-dashboard"
+tags:
+  [
+    "Bun",
+    "React",
+    "TypeScript",
+    "Homelab",
+    "Docker",
+    "Tailscale",
+    "Open Source",
+  ]
+---
+
+# keep-dashboard
+
+I moved most of what I run from the cloud to one box at home. An old 8th-gen i5, 6 cores, 32GB of RAM, a 1TB and a 225GB SSD. I call it the keep. Tailscale gets me in, AdGuard does DNS, Uptime Kuma checks everything and sends alerts to my phone through ntfy, and Dokploy deploys the apps.
+
+Once it ran, I wanted one screen that showed me the state of it. I tried the existing dashboards. None matched my taste: monochrome, boxy, sharp corners. So I wrote my own. It is open source under MIT.
+
+![An abstract layout of the keep-dashboard overview: a row of tiles, bar panels and a jobs table](/project/keep-dashboard.png)
+
+## What it shows
+
+Six pages.
+
+- **overview**: eight tiles (cpu, memory, data disk, temperature, network, sites up, ads blocked, internet speed), then panels for music, ad blocking, internet and reading, and space per app against its limit.
+- **system**: cpu per core, memory, network per interface, disks, every temperature sensor, every container. Graphs for live, 1 hour, 24 hours, 7 days and 30 days.
+- **uptime**: every Uptime Kuma check as a 24 hour strip of half hour bars.
+- **apps**: every Dokploy project and service, plus a log of what the nightly cleanup removed.
+- **jobs**: the scheduled host jobs with last result and next run, and a run now button for each.
+- **activity**: the Tailscale devices, who is connected right now over SSH, Dokploy or the dashboard, and a 7 day timeline of logins, sudo commands, deploys, cleanups and reboots.
+
+Black and white only. The one exception is color for limits. Orange means close to a limit, red means at it. Nothing else is allowed to be colored, so when something is, I look.
+
+## How it works
+
+![Architecture: the browser reaches the Bun server over Tailscale and a Traefik route. The server reads host proc and sys, Docker through a read-only proxy, and the services' APIs. A host agent writes JSON files into a shared data folder.](/project/keep-dashboard-architecture.png)
+
+One Bun process collects everything and streams a snapshot every second over Server-Sent Events. Long-term history, 1 minute averages and peaks for 31 days, goes into SQLite. The UI is React 19 with no UI library.
+
+The server reads `/proc` and `/sys` from the host, and calls the APIs of Garage, Dokploy, Uptime Kuma, AdGuard, Navidrome and Miniflux. Every integration is optional. If one is not configured, its panel hides or says it is not reachable.
+
+## The container cannot run anything on the host
+
+This was the decision that mattered. The dashboard has buttons that can reboot the machine. A web app that can do that is a bad idea if it also holds a shell.
+
+So the container never runs host commands. A button drops a request file into a shared folder. A small Python agent on the host, started by a systemd path unit, picks it up. It accepts `reboot`, `tidy`, `run:<known job>` and start or stop of a switch I configured. Everything else is refused. Requests also need an `x-keep-action` header, so another website cannot trigger them.
+
+The jobs on that page are plain systemd timers. The nightly cleanup runs at 04:30. The weekly tidy runs Sundays at 05:00: stopped containers, old images, build cache, old journal logs, the apt cache. It never touches Docker volumes or `/srv`. A status timer rewrites the job state every minute.
+
+## What broke
+
+The first release was too open. Any container on the same Docker network could call the API, and the Docker socket was mounted into the dashboard. A read-only mount on a socket does not limit the API, which surprised me. I fixed it within days.
+
+Now every API route answers 403 unless the request carries `x-keep-gate` with a long secret, compared in constant time. Traefik's Tailscale-only route adds that header and overwrites whatever a client sends. Docker is read through a small proxy on an internal network that forwards only `GET /containers/json`. Not inspect, since that would expose other containers' secrets. I added CI and a test for the gate in the same change, because there had been none.
+
+Two smaller ones. The 7 day and 30 day graphs looked broken, because history only goes back to the day the dashboard went live. Range tabs now clear old data at once and say where history starts. And my cleanup deleted a sleeping Minecraft server and its image, because it looked stopped and unused. Now the tidy job skips containers labeled `keep.sleeps=true`, and the jobs page has start and stop buttons for apps like that.
+
+## Power cuts
+
+Tunisia has frequent power cuts. I changed the BIOS so the box powers on by itself when the electricity comes back, then boots straight into everything it was running. The dashboard is how I check that it actually came back.
+
+## What I would change
+
+- A login. The dashboard has none of its own. It relies on being reachable only through the tailnet, which is fine for me and bad as a default.
+- Ports published by Docker bypass the firewall. I found that in an audit, and it is still an open issue.
+- The agent is about 330 lines of Python with no tests. The server side has a few small ones, for the gate, the Docker proxy, jobs, outages and range labels.
+- No alerts of its own. Uptime Kuma and ntfy do that.
+
+## Run it
+
+The README has the steps, the variables and an example compose file. Put it behind your VPN. Source: [FindMalek/keep-dashboard](https://github.com/FindMalek/keep-dashboard).
