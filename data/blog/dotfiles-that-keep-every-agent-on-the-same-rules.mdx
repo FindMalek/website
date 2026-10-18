@@ -1,9 +1,9 @@
 ---
 title: "My dotfiles are mostly rules for AI agents now"
 href: /blog/dotfiles-that-keep-every-agent-on-the-same-rules
-excerpt: "I use four coding agents across a work laptop and a personal one. This is how one repo, one install script and a bunch of symlinks keep them all following the same rules."
+excerpt: "I use four coding agents across two laptops. This is how one repo, one install script and a bunch of symlinks keep them all following the same rules."
 publishedAt: "2026-09-30"
-updatedAt: "2026-10-01"
+updatedAt: "2026-10-18"
 tags: [dotfiles, ai-agents, shell, tooling]
 status: published
 image: /blog/dotfiles-that-keep-every-agent-on-the-same-rules/cover.png
@@ -45,7 +45,7 @@ The wrapper just says what the command does and ends with "Follow `~/.agents/ski
 
 The wrappers aren't all identical though. The Cursor one says "Never Cursor, never a Co-authored-by Cursor trailer" because that's the file it all got ported from. The others say "never the agent's own identity". Close enough, and you can tell which one came first.
 
-## Work laptop vs personal laptop
+## Two machines, two profiles
 
 This is the part that actually made me restructure the repo (PR #1).
 
@@ -62,7 +62,7 @@ agents-skills/
 
 Both end up linked to `~/.agents/skills/ship`. So `/ship` is always `/ship`, and what it does depends on which folder got linked. Same idea for configs: `zed/settings.company.json` and `settings.personal.json`, `omp/mcp.company.json` and `mcp.personal.json`, and so on. The difference is which MCP servers are wired in and which coding-practices doc the agent reads. The personal omp MCP config is literally just Braintrust and Playwright.
 
-Cursor rules use a suffix trick because Cursor wants a flat folder of `.mdc` files. `coding-practices.personal.mdc` gets linked in as `coding-practices.mdc`, and the company one only gets linked on the work machine:
+Cursor rules use a suffix trick because Cursor wants a flat folder of `.mdc` files. `coding-practices.personal.mdc` gets linked in as `coding-practices.mdc`, and the company one only gets linked on the other machine:
 
 ```bash
 case "$base" in
@@ -142,6 +142,10 @@ export PATH="$HOME/.local/share/mise/shims:$PATH"
 ```
 
 The commit message says it was verified under `env -i` with a non-login, non-interactive zsh. The next commit fixed the same bug in `install.sh` itself. It runs as plain bash, so it never reads `.zshenv` either, and its own doctor check was reporting tools as missing right after installing them.
+
+## One monochrome look everywhere
+
+The repo isn't only agent rules. Zed, Ghostty and Starship share one black and white palette. The Zed theme is hand-built (`zed/themes/monochrome.json`), Ghostty gets the same colors with a transparent, blurred background, and the Starship prompt shows only the directory, git state and how long the last command took. Nothing else. I like black and white and fast things, and when every tool has the same palette the editor, terminal and prompt read as one surface instead of three apps.
 
 ## Keeping secrets out, on purpose
 
