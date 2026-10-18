@@ -4,7 +4,7 @@ import { getResumePdfBase64 } from "@/lib/get-resume-pdf"
 const FILE_NAME = "Malek-Gara-Hellal-Resume.pdf"
 
 export async function GET(request: Request) {
-  const download = new URL(request.url).searchParams.has("download")
+  const download = new URL(request.url).searchParams.get("download") === "1"
 
   try {
     const pdf = Buffer.from(await getResumePdfBase64(), "base64")
