@@ -1,0 +1,79 @@
+---
+id: 16
+image: "/project/keep-minecraft.png"
+name: "keep-minecraft"
+overview: "A story-driven Minecraft server for friends: a generated datapack that turns the world into seven chapters, a one-click client pack, and a companion site where everyone follows the story, plans events and sees the map."
+status: "published"
+link: "https://mc.findmalek.engineer"
+href: "/projects/keep-minecraft"
+tags:
+  [
+    "Minecraft",
+    "Python",
+    "TypeScript",
+    "Bun",
+    "React",
+    "Self-Hosted",
+    "Open Source",
+  ]
+---
+
+# keep-minecraft
+
+A small Minecraft server for friends. The world is vanilla. On top of it sits a story called "The Last Keepers": a ruined keep at spawn, seven chapters, about 40 quests, and journal pages hidden in the abandoned camps. I wrote the story. The code makes it playable.
+
+---
+
+## The datapack is generated
+
+The story lives in `story.py`: the intro, the chapter dialogs, the journal pages, the letter and the ending. `build.py` turns it into a datapack. No hand-written JSON. If I want to change a line of the story, I edit Python and rebuild.
+
+Quests are advancements, so they show up in the normal advancements screen under their own tab. Each one has a chapter gate, so nothing in chapter 4 counts until chapter 4 is open.
+
+Group quests are the part I care about. They count for everyone the moment one player does them. Players who were offline get the advancement when they join, because the join function re-grants every shared quest that is already done.
+
+Chapters don't run on a timer. A new one opens on the Friday after the group finishes the current one, through a function called `the_keep:unlock_next`. Nothing expires. If the group is slow, the story waits.
+
+The keep itself is a structure template written out by the build script and placed once with `function the_keep:setup`. The coordinates are constants in `build.py`.
+
+---
+
+## The client pack
+
+`pack.py` builds a `.mrpack` for the Modrinth App or Prism Launcher. It asks Modrinth for each mod at the exact game and loader version the server runs, adds the required dependencies, and puts the server in the launcher's list. Friends import one file and press play.
+
+The list is mostly performance and quality of life: Sodium, Iris, a minimap, proximity voice chat, waystones.
+
+---
+
+## The companion site
+
+A Bun server with a React 19 frontend, shadcn on Base UI and Tailwind 4.
+
+Sign-in has no password. The site shows a code, you type `/trigger login set <code>` in game, and the site reads your score over RCON. Only you can set your own trigger score, so the code proves you are that player. Codes last five minutes.
+
+Once in, you see the story so far (only what the group has reached), who did which quest, events with an "i'm in" button, player stats, who's online and a live BlueMap map. The join guide is the only public page.
+
+The server can sleep when nobody's on. A signed-in player wakes it from the site. The site writes a request file and something on the host picks it up. The site never talks to Docker.
+
+There is also an `/admin` for me, with its own password: start, stop, restart, whitelist, kick, a console, the log, backups, and opening the next chapter early.
+
+---
+
+## What I was careful about
+
+RCON is the server's full console, so the site only sends fixed commands, and player names are checked against `whitelist.json` and a strict pattern first. The admin password is stored as an argon2 hash. An address is locked out for 15 minutes after 10 wrong tries. Sessions are HttpOnly and Secure cookies, and changes need a custom header.
+
+CI builds the datapack and runs typecheck, lint and tests for the site on every push.
+
+---
+
+## What was annoying
+
+Dialogs are a registry. Change one and `/reload` does nothing, you need a server restart.
+
+Mod versions fight each other. Iris pins a Sodium version, so the order in the mod list matters: a mod listed earlier can pin one listed later, and a pinned dependency wins over "latest".
+
+## What I'd change
+
+Sign-in codes are held in memory, so restarting the site drops any code in flight. That is fine for five-minute codes, but a database would be cleaner. The keep's position is hard-coded, so a new world means editing the script. And the wake-up path relies on a host-side watcher that is not in this repo.
