@@ -49,18 +49,18 @@ The wrappers aren't all identical though. The Cursor one says "Never Cursor, nev
 
 This is the part that actually made me restructure the repo (PR #1).
 
-The same commands have to behave differently depending on the machine. At work, tickets live in the company's tracker, branches come from ticket IDs, and PR titles carry the ticket prefix. On my personal machine everything is GitHub issues and Projects: branches always come from `gh issue develop <n> --checkout` so they auto-link, and PR titles are just a plain description.
+The same commands have to behave differently depending on the machine. My second machine follows a different ticket workflow than my personal one. On my personal machine everything is GitHub issues and Projects: branches always come from `gh issue develop <n> --checkout` so they auto-link, and PR titles are just a plain description.
 
 I didn't want two sets of commands. The fix was to keep the command names and wrappers the same on both profiles and split only the content behind them:
 
 ```text
 agents-skills/
   braintrust/           # shared, same on both machines
-  company/ship/         # the work version
+  company/ship/         # the version for my other machine
   personal/ship/        # the GitHub-issues version
 ```
 
-Both end up linked to `~/.agents/skills/ship`. So `/ship` is always `/ship`, and what it does depends on which folder got linked. Same idea for configs: `zed/settings.company.json` and `settings.personal.json`, `omp/mcp.company.json` and `mcp.personal.json`, and so on. According to the PR description, most of the difference is whether the work tracker's MCP server is wired in and which coding-practices doc the agent reads. The personal omp MCP config is literally just Braintrust and Playwright.
+Both end up linked to `~/.agents/skills/ship`. So `/ship` is always `/ship`, and what it does depends on which folder got linked. Same idea for configs: `zed/settings.company.json` and `settings.personal.json`, `omp/mcp.company.json` and `mcp.personal.json`, and so on. The difference is which MCP servers are wired in and which coding-practices doc the agent reads. The personal omp MCP config is literally just Braintrust and Playwright.
 
 Cursor rules use a suffix trick because Cursor wants a flat folder of `.mdc` files. `coding-practices.personal.mdc` gets linked in as `coding-practices.mdc`, and the company one only gets linked on the work machine:
 
@@ -163,7 +163,7 @@ That difference matters more than I thought. `-a` copies a symlink *as a symlink
 
 ## What I'd do differently
 
-The profile switch isn't clean yet. A reviewer bot on PR #1 pointed out two things. First, the tracker connection for Claude Code is added by hand with `claude mcp add` at user scope, so switching a work machine to personal doesn't remove it. Second, the profile file gets written before the relinking happens, so if the install dies halfway, the saved profile and the actual links don't match. Both are fair, and neither is fixed yet.
+The profile switch isn't clean yet. A reviewer bot on PR #1 pointed out two things. First, one MCP connection for Claude Code is added by hand with `claude mcp add` at user scope, so switching a machine from one profile to the other doesn't remove it. Second, the profile file gets written before the relinking happens, so if the install dies halfway, the saved profile and the actual links don't match. Both are fair, and neither is fixed yet.
 
 Also, there's some irony in the history. The first three commits have an AI co-author trailer, which is exactly what the rules added in PR #1 now ban. The rules came after the mess, which is usually how rules happen.
 
