@@ -1,0 +1,58 @@
+---
+id: 14
+image: "/project/keep-player.png"
+name: "keep-player"
+overview: "A monochrome, square-cornered web music player for Navidrome and any Subsonic server. It streams from my own home lab, with gapless playback, synced lyrics and a keyboard shortcut for everything."
+status: "wip"
+link: "https://github.com/FindMalek/keep-player"
+href: "/projects/keep-player"
+tags: ["TypeScript", "React", "Bun", "Navidrome", "Self-hosted", "Open Source"]
+---
+
+# keep-player
+
+I got tired of Spotify. The UI kept changing under me and every update moved something I used. So I built a player that never changes unless I change it. Monochrome, boxy, sharp corners, hairline borders. When nothing is playing, nothing is on screen.
+
+It's a web app that talks to [Navidrome](https://www.navidrome.org), the self-hosted music server. The code is on [GitHub](https://github.com/FindMalek/keep-player) and it runs at [player.findmalek.engineer](https://player.findmalek.engineer). It is not finished. More on that below.
+
+## How it fits together
+
+![Diagram: a browser talks to the keep-player server, which proxies the Subsonic API of Navidrome on the home lab. The Arpeggi iOS app talks to the same Navidrome.](/project/keep-player-architecture.png)
+
+Navidrome runs on my home lab, an old i5 with 32GB of RAM, deployed with Dokploy. keep-player runs next to it as one container. CI publishes the image to GitHub's registry for amd64 and arm64, and Dokploy redeploys after a merge to `main`.
+
+On my phone I use Arpeggi, an iOS app, against the same Navidrome. keep-player only uses standard Subsonic data for sync: the play queue, stars, ratings, playlists and scrobbles. So both apps agree without me writing a sync service.
+
+## Decisions that mattered
+
+**One origin, and a server in the middle.** The browser never talks to Navidrome directly. A small Bun server serves the app and proxies an allowlist of Subsonic endpoints. Login turns the password into a Subsonic token, which the server stores encrypted. The browser only holds an httpOnly cookie. Two things came out of that. Audio and cover URLs have no credentials in them, so they can be cached forever. And Web Audio can process the stream without CORS fights, which I needed for gapless playback and ReplayGain.
+
+**Two audio decks.** One `<audio>` element plays, the other holds the next song. A few milliseconds before the end, they swap. Downloads ahead only start once the current song is safely buffered, so precaching never starves what you are hearing. A service worker keeps the next few songs in an audio cache and answers Range requests, so seeking is instant and a cached song plays offline.
+
+**Search on the server.** Typing in a 10k-song library should not feel slow, so the server keeps a SQLite FTS5 index of songs, albums, artists and lyrics. It tolerates typos. It can find a song from half a remembered lyric.
+
+**Keyboard first.** One registry holds every shortcut. The `?` cheat sheet, the tooltips and the command palette all read from it, so they can't drift apart.
+
+**Monochrome as a rule, not a taste.** The UI is shadcn/ui with theme tokens only, and there is a CI check for colors. Color is allowed for errors and nothing else.
+
+## What broke
+
+The first real bug on a phone: tap a song on an iPhone, the progress bar moves, no sound. iOS mutes Web Audio when the ringer switch is on silent, unless the page declares its audio session as `playback`. CI has no WebKit, so no test catches this. It has to be checked on a real phone.
+
+Layout was the other one. The first version had double scrollbars on big screens and a crowded player bar on small ones. I rewrote it to follow the window down to 320px.
+
+Smaller things keep showing up too. A playlist header that jumped when it finished loading made a layout-shift test flaky. A Lighthouse score floor flipped between two values on CI, so I set the floor lower instead of pretending it was stable.
+
+## What is still rough
+
+My home internet is slow. Streaming from the lab over it is the weakest part, and the precache only helps so much. Some bugs are plain obvious and I haven't gotten to them. The phone hand-off with Arpeggi has a manual test plan in the repo, and every row of it is still marked pending. I haven't verified it end to end on a real device, so I won't claim it works.
+
+There is a lot of surface for a project this young. The repo has 79 commits in its first week and a half. That is fast, and fast means rough edges.
+
+## Tests and tooling
+
+The repo has 48 test files plus 46 Playwright end to end specs, including accessibility and layout shift checks. CI runs typecheck, lint, the color check, tests, a bundle size budget and the e2e suite against a fake Navidrome with 10k songs. Every pull request gets a preview deployment with a generated demo library, so no screenshots in the repo contain real music.
+
+## What's next
+
+A desktop app is possible. The web version comes first, and I want it to be good before I wrap it in anything. Right now the plan is boring: fix the obvious bugs, make it quicker on my slow connection, and keep it ugly in exactly the way I like.
