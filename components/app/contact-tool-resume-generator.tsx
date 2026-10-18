@@ -16,32 +16,38 @@ interface ResumeGeneratorProps {
  */
 export function ContactToolResumeGenerator({ toolCall }: ResumeGeneratorProps) {
   const resumeUrl = toolCall.output?.resumeUrl as string | undefined
+  const downloadUrl = toolCall.output?.downloadUrl as string | undefined
 
   return (
     <div className="bg-muted/30 space-y-4 rounded-lg border p-4">
-      <h3 className="font-medium">View Resume</h3>
+      <h3 className="font-medium">My resume</h3>
       <p className="text-muted-foreground text-sm">
-        Access my resume to see my professional experience and qualifications.
+        Read it online or grab the PDF.
       </p>
 
-      <Button
-        variant="outline"
-        className="w-full"
-        disabled={!resumeUrl}
-        onClick={() => resumeUrl && window.open(resumeUrl, "_blank")}
-      >
-        {resumeUrl ? (
-          <>
-            <Icons.download className="mr-2 h-4 w-4" />
-            View Resume
-          </>
-        ) : (
-          <>
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            Loading...
-          </>
-        )}
-      </Button>
+      {resumeUrl ? (
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Button variant="outline" className="flex-1" asChild>
+            <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
+              <Icons.link className="mr-2 h-4 w-4" />
+              View CV
+            </a>
+          </Button>
+          {downloadUrl && (
+            <Button variant="outline" className="flex-1" asChild>
+              <a href={downloadUrl} download>
+                <Icons.download className="mr-2 h-4 w-4" />
+                Download PDF
+              </a>
+            </Button>
+          )}
+        </div>
+      ) : (
+        <Button variant="outline" className="w-full" disabled>
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          Loading...
+        </Button>
+      )}
     </div>
   )
 }

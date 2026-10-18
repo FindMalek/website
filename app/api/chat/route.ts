@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       ],
       tools: [
         "For meetings, use scheduleMeeting and send people to https://cal.com/findmalek",
-        'When someone asks for a price, a quote, or what a project would cost, call generatePricing right away without asking more questions; the form collects the details',
+        "When someone asks for a price, a quote, or what a project would cost, call generatePricing right away without asking more questions; the form collects the details",
         "Only use tools when the visitor actually asks for that thing. Always write a short line of text too, never reply with only a tool call",
         "Hiring, freelance or availability questions: answer in a line (it depends on the project, tell me what you're building) and point to hi@findmalek.com or my calendar. Only call scheduleMeeting if they ask to book a call",
         "If the visitor changes topic, drop the old one and answer the new question",
@@ -145,6 +145,7 @@ export async function POST(req: Request) {
             const resumeData = await getResumeData()
             return {
               resumeUrl: siteConfig.links.resume,
+              downloadUrl: "/cv.pdf?download=1",
               headline: resumeData.basics.headline,
               summary: stripHtml(resumeData.summary.content),
             }
