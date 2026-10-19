@@ -4,7 +4,7 @@ logo: "/work/jobflow.svg"
 logoClassName: "dark:bg-white"
 company: "Jobflow GmbH"
 position: "Senior Full-Stack Engineer (AI Systems)"
-overview: "Owning and shipping AI-powered automation systems for recruiters and candidates, improving reliability, productivity, and platform scalability."
+overview: "Building and shipping the AI pipelines that turn recruiter conversations into interview confirmations and structured tasks, with evals and tracing, plus search and rendering work across the platform."
 type: "full-time"
 startDate: "September, 2024"
 endDate: "Present"
@@ -16,7 +16,8 @@ skills:
   [
     "TypeScript",
     "Next.js",
-    "Trigger.dev",
+    "Braintrust",
+    "PostGIS",
     "LLM Pipelines",
     "Prompt Engineering",
     "TurboRepo",
@@ -24,66 +25,34 @@ skills:
   ]
 ---
 
-### Jobflow: AI-Powered Recruitment Automation
+### Jobflow: AI pipelines for recruiting
 
-At **Jobflow**, I focus on designing and shipping AI-driven automation systems that streamline recruiter and candidate workflows. My role spans AI feature ownership, infrastructure reliability, and platform scalability.
+Jobflow is a recruiting platform. I work on the AI side: the pipelines that read recruiter and candidate conversations and turn them into actions on the platform. Most of this is in one large monorepo, so I describe the work at the level of what it does, not how the company's systems are named.
 
----
+## Interview confirmation and task extraction
 
-## 🧠 AI Systems & Automation
+The interview analyzer reads a conversation and decides whether an interview was confirmed, moved or missed. When it is confirmed, the platform creates the interview, updates the calendar and sends the notifications. I refactored the analyzer into a pure workflow step and built OCR evals for interview PDFs. I also built the no-show detector and later hardened it with scheduling validation.
 
-I designed and implemented multiple AI-powered workflows that convert unstructured recruiter communication into structured platform actions:
+The task extractor turns recruiter messages into structured tasks with reminders, and marks a task finished when a later message resolves it. It was built eval first: the PR that introduced the full task shape also introduced the scoring for it.
 
-- **Interview Confirmation Detection**  
-  Built an AI-based confirmation detection system that automatically identifies when a candidate confirms an interview, triggers backend creation, updates calendars, and sends notifications.
+Both pipelines were rolled out behind a feature flag. After the rollout I deleted the retired v1 to v3 code, about 16,000 lines, so there is one pipeline to maintain.
 
-- **Task Extraction Engine**  
-  Implemented a structured task extraction system that converts recruiter messages into actionable candidate tasks with reminders and status tracking.
+## Evals and tracing
 
-- **AI Analysis & Data Processing Pipelines**  
-  Contributed to autonomous data analysis workflows that enrich candidate and job data using LLM-based processing.
+The AI services have fixture datasets and run in Braintrust. I set up the project layout, the shared sampling, nested trace spans so one conversation reads as one tree, and an end-to-end chain eval scored by an LLM judge. The same evals were used to decide a model change: non-sensitive prompts moved to a cheaper model after the evals.
 
-My work includes:
+I also wrote the prompts and eval datasets for scraping and importing job data, using realistic page noise, and extended the extraction for scraped companies.
 
-- Prompt engineering
-- Dataset creation
-- Evaluation frameworks
-- Structured output enforcement
-- Cost optimization strategies
-- Continuous model experimentation
+## Search that stopped being slow
 
----
+The admin tool that estimates how many users and teams are within a distance of a job location was slow. I measured it with a benchmark script on a near-production clone, then replaced the per-row distance calculation with a PostGIS geography column and a partial GIST index. On that data the estimate went from about 90 seconds to about 100 milliseconds. The change also added input validation for coordinates, smaller responses and integration tests.
 
-## ⚙️ Scraping Infrastructure & Data Systems
+## CV and cover letter rendering
 
-- Built and maintained job scraping pipelines using **Trigger.dev**, cron jobs, and distributed workflows.
-- Delivered partner integrations including **IHK** and **Kaufland**.
-- Improved scraper reliability and throughput through system refactors.
-- Ensured high-quality data ingestion and database consistency.
+CV and cover letter PDFs had a stretch of about ten rendering fixes in three months. I extended the smoke tests so every CV and cover letter template is rendered to a PDF. It checks that rendering works, not pixels. Afterwards only a handful of CV fixes were needed.
 
----
+## By the numbers
 
-## 🧪 Reliability & Quality Improvements
-
-- Implemented automated smoke tests for CV rendering, eliminating recurring regressions.
-- Contributed to performance optimizations across search and caching layers.
-- Reduced production instability through structured testing and monitoring.
-
----
-
-## 🧱 Technical Modernization
-
-- Led migration from **Yarn to pnpm** within a large monorepo.
-- Improved dependency management and CI reliability.
-- Contributed extensively across frontend and backend layers within a TurboRepo architecture.
-
----
-
-## 📊 Impact
-
-- 400+ merged pull requests.
-- Recognized as one of the most active contributors in the repository.
-- Became the go-to engineer for AI feature implementation and LLM-based systems.
-- Delivered measurable improvements in recruiter productivity and workflow automation.
-
-![](/work/contribution-jobflow.png)
+- 332 merged pull requests, 315 pull requests reviewed.
+- Top 10 of 47 contributors by commit count.
+- Numbers are from the git and GitHub history of the monorepo.
