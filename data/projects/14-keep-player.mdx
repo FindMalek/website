@@ -1,0 +1,172 @@
+---
+id: 14
+image: "/project/keep-player.png"
+name: "keep-player"
+overview: "A monochrome, square-cornered web music player for Navidrome and any Subsonic server. It streams from my own home lab, with gapless playback, a service worker precache, typo-tolerant search and a keyboard shortcut for everything."
+status: "wip"
+link: "https://github.com/FindMalek/keep-player"
+href: "/projects/keep-player"
+tags: ["TypeScript", "React", "Bun", "Navidrome", "Self-hosted", "Open Source"]
+---
+
+# keep-player
+
+I got tired of Spotify. The UI kept changing under me and every update moved something I used. So I built a player that never changes unless I change it. Monochrome, boxy, sharp corners, hairline borders.
+
+It's a web app that talks to [Navidrome](https://www.navidrome.org), the self-hosted music server. My library has 3,000+ tracks and it feels fast. The code is on [GitHub](https://github.com/FindMalek/keep-player) and it runs at [player.findmalek.engineer](https://player.findmalek.engineer), behind my own Navidrome login, so you can't open it. That's why every screenshot below comes from a generated demo library, not my music.
+
+![Album page of the demo library with the queue panel open on the right, the player bar at the bottom and three upcoming songs marked as saved for offline.](/project/keep-player/queue.webp)
+
+_The album page with the queue open. The small arrows next to the time are songs already saved on this device._
+
+## How it grew
+
+The repo has 79 commits, all from one week.
+
+![Bar chart of commits per day: 1 on Oct 11, 1 on Oct 13, 34 on Oct 14, 25 on Oct 15, 17 on Oct 16 and 1 on Oct 17, with the main features of each day listed under the chart.](/project/keep-player/timeline.png)
+
+_Commits per day, from `git log`._
+
+- **Oct 11.** First commit, `feat(player): initial release`. A player that talks to Navidrome.
+- **Oct 13.** A roadmap and a board. Nothing else.
+- **Oct 14, 34 commits.** The day it turned into an app. Tailwind and shadcn tokens, server-side sessions, route splitting, TanStack Query with an IndexedDB cache, virtualized lists, the queue model, gapless playback with two decks, the service worker precache, the shortcut registry, lyrics, the FTS5 search index, likes, skeletons, a mini player and the queue hand-off.
+- **Oct 15, 25 commits.** Playlist editing, undo and redo, right-click menus, listening stats and a recap, endless radio, moments, a settings page, crossfade, normalization and an equalizer, genre pages, stream quality with codec fallback, import from Spotify. A multi-arch Docker image and release automation landed the same day.
+- **Oct 16, 17 commits.** Listen together, a library doctor page, the responsive layout, release 0.2.0, the iPhone silent switch fix, a monorepo split, the generated demo library, PR previews and release 0.3.0.
+
+I'm not going to pretend that pace is calm. It's fast, and fast means rough edges. More on those at the end.
+
+## How it fits together
+
+![Diagram: a browser talks to the keep-player server, which proxies the Subsonic API of Navidrome on the home lab. The Arpeggi iOS app talks to the same Navidrome.](/project/keep-player-architecture.png)
+
+_Browser, a small Bun server, Navidrome. Arpeggi on my iPhone talks to the same Navidrome._
+
+Navidrome runs on my home lab, an old i5 with 32GB of RAM, deployed with Dokploy. keep-player runs next to it as one container. CI publishes the image to GitHub's registry for amd64 and arm64.
+
+The browser never talks to Navidrome directly. The server serves the app and proxies an allowlist of Subsonic endpoints. Login turns the password into a Subsonic token, which the server stores encrypted. The browser only holds an httpOnly cookie. That has a side effect I care about: audio and cover URLs contain no credentials, so they are stable, cacheable forever, and Web Audio can process the stream without CORS fights.
+
+## Rendering a big library
+
+I'll say it plainly: I can't measure my own library for you. What I can do is run the app against the fake Navidrome the repo uses for its tests, which serves a generated library of 10,000 songs, and measure that. Everything below is labeled that way.
+
+![The songs page of the demo library scrolled to row 1,500, with the sidebar, the page header saying 10,000 songs and a table of rows.](/project/keep-player/songs-10k-window.webp)
+
+_The songs page scrolled to row 1,512. Only about 42 of the 10,000 rows exist in the page._
+
+Four things make the list feel instant.
+
+**Virtualization.** Any list over 100 rows is virtualized with `@tanstack/react-virtual`. The songs page loads 200 songs at a time and asks for the next page once you are 80% down what's loaded. On a generated 10,000-song demo library, I jumped to the bottom eight times and scrolled to the middle. The page held 31 rows at the top and 41 or 42 everywhere else, with `data-index` 1,512 to 1,553 at the spot in the screenshot. The e2e test for this fails if there are more than 60. The whole page had about 1,900 DOM nodes after all that scrolling.
+
+![Diagram of a virtual list: 10,000 rows, a highlighted window of about 42 mounted rows, spacer rows above and below that keep the scroll bar the right size.](/project/keep-player/virtual.png)
+
+_What the browser holds while you scroll._
+
+**A selector store and a separate position ticker.** The player is an external store that components read through selectors, and the playback position is its own ticker. A list doesn't re-render once a second because a song is playing. This was a perf commit on day one of the app, `1fd02d4`.
+
+**Data that paints before the network answers.** Library data goes through TanStack Query, persisted to IndexedDB per account. After signing in on the demo library, navigating to the songs page showed its first row in a median of 102 ms (five runs, 88 to 118 ms). A reload of the same page was a median of 64 ms. I measured that in headless Chromium on my Mac against a local server, from navigation start until the first row was visible, with no network throttling. A slow connection will not look like that, and I haven't tested one.
+
+**Small first screen.** Routes are split and the app is served precompressed. The repo's bundle script reports, from my build of version 0.3.0, 159.1 KB of gzipped JavaScript and 22.3 KB of CSS for the first screen, against budgets of 160 and 30. Another 358.3 KB gzipped is lazy: charts, the recap, radio controls, the pages. CI also runs Lighthouse against the 10,000-song fixture and fails under a performance score of 93, as a median of three runs. I haven't published a score of my own.
+
+## Search that forgives me
+
+The server keeps its own SQLite FTS5 index of songs, albums, artists and lyrics, with two tables: one for words and one for trigrams, so typos still match. It does not use Navidrome's search. Results are ranked as exact, prefix, word, then fuzzy matches, with songs I like and play often first.
+
+![The command palette with the query atlsa typed. The top result is the song Atlas night orbit, with more songs and a lyrics match below it.](/project/keep-player/search-typo.webp)
+
+_`atlsa` still finds the Atlas songs. The footer says how many lyrics are indexed so far._
+
+I measured the search endpoint from the browser against the same demo library, 30 requests each, on loopback:
+
+- `atlas`: median 26.9 ms
+- `atlsa` (a typo): median 13.2 ms
+- `atlassignal` (no space): median 31.4 ms
+- `winter river 4`: median 43.2 ms
+- a query that matches nothing: 1.3 ms
+
+That is the server and the proxy, with no real network in between. The palette also takes filters like `year:1990..1999`, `is:liked` and `lyrics:`, and a lyrics match starts playing at that line.
+
+## Precache and offline
+
+![Diagram of the precache. The next 3 songs go from the queue to the page, which waits until 30 seconds are buffered, to the service worker, which downloads one at a time at low priority into the audio-v1 cache. A Range request on a cached song is answered with 206 by slicing the stored blob.](/project/keep-player/precache.png)
+
+_What the service worker does with the next three songs, from `apps/player/src/sw.ts`._
+
+The service worker is the part I'd have found hardest to get right, so here is what it actually does.
+
+- The page tells it which songs come next. The constant is `PRECACHE_AHEAD = 3`.
+- Nothing downloads until the song that is playing has 30 seconds buffered ahead of the playhead. Precaching never starves what you're hearing. If the playing song stalls, the download in progress is aborted and goes back to the front of the line.
+- It downloads one song at a time with fetch priority `low`, and stores the raw file in an `audio-v1` cache.
+- When the audio element asks for a cached song, the worker serves it and honors `Range` by slicing the stored file into a `206`. That is why seeking in a cached song is instant and why it plays with the network off.
+- If the next song is due in under 45 seconds and still isn't cached, the idle deck loads it from the network and the worker drops its own copy, so the song isn't downloaded twice.
+
+What is and isn't cached matters. Only the original stream is. A transcoded stream, the lower quality you can pick in settings, is never cached. The default cap is 2 GiB, least recently used songs go first until the cache is at 90%, and songs I keep offline (pinned albums and playlists) stay. Covers are cache-first with the newest 2,000 kept. The app shell is cached too, so the app opens offline, but a library page I never visited has nothing to show. The repo's offline test plays three precached songs and seeks inside one with the network off.
+
+![An album with the first song playing and arrows next to the time of tracks 2, 3, 4, 6, 8 and 9, which are saved for offline.](/project/keep-player/album-offline.webp)
+
+_After playing an album on the demo library, the cache held three songs for the queue. The extra arrows here are songs cached in earlier sessions of that same browser profile._
+
+I didn't measure the gapless swap itself. Headless Chromium has no audio output, so a timing number there would be made up. The code says what it intends: the idle deck starts 30 ms before the end of the playing song, each deck has its own gain node, and the gain ramps over 5 ms so the handover doesn't click.
+
+![Diagram of two decks. Deck A plays song 1 while deck B holds song 2. At the end of song 1 minus 30 ms, B starts, the gains ramp over 5 ms and the roles swap.](/project/keep-player/decks.png)
+
+_Two `<audio>` decks. The playing one plays, the idle one holds the next song._
+
+## What I couldn't get in Spotify
+
+Only things that exist in the repo.
+
+**A shortcut for everything.** One registry holds every key. The `?` cheat sheet is searchable, shows what applies on the current page, and every key can be rebound. Tooltips, the palette and the docs read the same registry, so they can't drift apart. The e2e suite has a test that presses every shortcut.
+
+![The keyboard shortcuts sheet with a filter box and the playback shortcuts in two columns.](/project/keep-player/shortcuts.webp)
+
+_The `?` sheet._
+
+**Moments.** `b` saves a note at the exact second of a song, shows a tick on the seek bar, and gives me a link that opens the song at that point.
+
+**Synced lyrics that I can fix.** Lyrics come from Navidrome first, then LRCLIB, with hits and misses cached. `[` and `]` nudge the timing, and there is a coverage page showing how many songs have lyrics.
+
+![The lyrics panel next to an album, with the current line in white and the others in grey, and timing controls at the bottom.](/project/keep-player/lyrics.webp)
+
+_Lyrics follow the song._
+
+**Trims and "never in shuffle".** `alt+[` starts a song at the current point from now on, `alt+]` ends it there. A song can be hidden or kept out of shuffle.
+
+**Stats and a recap.** Minutes, plays, a streak, top lists, and forgotten favorites you can turn into a playlist.
+
+![The stats page: tiles for minutes, plays, songs, new to you, streak and skips, a bar chart per day and top songs, artists, albums and genres.](/project/keep-player/stats.webp)
+
+_Stats, on a generated listening history I seeded for the screenshot._
+
+**Radio, listen together, undo.** Radio is endless and tunable with thumbs up, thumbs down and ban. Listen together lets friends on my server follow my playback, corrected when it drifts by more than 0.25 s. Undo and redo cover the queue, playlists and likes.
+
+**Audio controls.** Normalization, a pre-amp, crossfade with album-aware skipping (an album that should be gapless isn't faded) and a ten-band equalizer with presets.
+
+![The equalizer sheet with ten bands from 31 Hz to 16 kHz and presets such as bass boost, treble boost and late night.](/project/keep-player/equalizer.webp)
+
+_Ten bands, plus 12 dB either way._
+
+## On a phone
+
+![The album page at phone width, with a single-column layout, the player bar pinned to the bottom and the queue and more buttons in it.](/project/keep-player/phone-album.webp)
+
+_The responsive layout follows the window down to 320px._
+
+On my iPhone I use Arpeggi against the same Navidrome. keep-player only uses standard Subsonic data for sync: the play queue, stars, ratings, playlists and scrobbles.
+
+## What broke
+
+The first real bug on a phone: tap a song on an iPhone and the progress bar moves, but there is no sound. iOS mutes Web Audio when the ringer switch is on silent, unless the page declares its audio session as `playback`. The fix, `c0da4f8`, sets `navigator.audioSession.type` and resumes the audio context inside the first tap. CI has no WebKit, so no test catches this. It has to be checked on a real phone.
+
+The layout shift was the other one. A playlist with no description showed nothing while the cached summary was up, then an "add a description" line appeared and the title moved. I reserved the placeholder as plain text while loading (`07d08be`). A Lighthouse floor that flipped between 0.94 and 0.95 on different CI machines is why the floor is 0.93.
+
+## What is still rough
+
+My home internet is slow. Streaming from the lab over it is the weakest part, and a precache of three songs only helps so much. Some bugs are plain obvious and I haven't gotten to them. The phone hand-off with Arpeggi has a manual test plan in the repo and every row of it is still marked pending. I haven't verified it end to end, so I won't claim it works.
+
+The demo library has no real music, only generated tones and flat covers in my screenshots, so how it looks with real album art is something you can't see here. I also haven't measured the gapless swap, or anything over a slow link.
+
+A desktop app is possible. The web version comes first. The plan is boring: fix the obvious bugs, make it quicker on my slow connection, and keep it ugly in exactly the way I like.
+
+## Tests and tooling
+
+The repo has 48 unit test files and 46 Playwright e2e specs, including accessibility and layout shift checks. CI runs typecheck, lint, a color check, tests, the bundle size budget and the e2e suite against the fake Navidrome. Every pull request gets a preview deployment with the generated demo library.
