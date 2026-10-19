@@ -75,6 +75,23 @@ export type PageLabel = (typeof PAGES)[keyof typeof PAGES]["label"]
 export const RESUME_USERNAME = "findmalek"
 export const RESUME_SLUG = "findmalek-resume"
 
+export const CERTIFICATES = [
+  {
+    id: "hackerrank-problem-solving-basic",
+    title: "Problem Solving (Basic)",
+    issuer: "HackerRank",
+    date: "January 2023",
+    image: "/certificates/hackerrank-problem-solving-basic.jpg",
+  },
+  {
+    id: "hackerrank-python-basic",
+    title: "Python (Basic)",
+    issuer: "HackerRank",
+    date: "January 2023",
+    image: "/certificates/hackerrank-python-basic.jpg",
+  },
+] as const
+
 export const BOOKS = [
   {
     id: "1",
