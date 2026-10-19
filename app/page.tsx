@@ -25,7 +25,7 @@ import {
   GitHubContributionsFallback,
 } from "@/components/app/github-contributions"
 import { HelloTitle } from "@/components/app/hello-title"
-import { Hero } from "@/components/app/hero"
+import { HeroJourney } from "@/components/app/hero-journey"
 import {
   Panel,
   PanelContent,
@@ -81,7 +81,7 @@ export default async function Home() {
 
   return (
     <div className="w-full">
-      <Hero />
+      <HeroJourney />
 
       <div className="stripe-divider" />
 
