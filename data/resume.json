@@ -1,8 +1,8 @@
 {
   "picture": {
-    "hidden": false,
+    "hidden": true,
     "fit": "cover",
-    "url": "https://rxresu.me/api/uploads/019bef93-5dda-7780-b526-6bdfc798ffd8/pictures/01a2b8fa-7ed7-4ef9-99ec-86788e5ba628.jpeg",
+    "url": "",
     "size": 80,
     "rotation": 0,
     "aspectRatio": 1,
@@ -98,7 +98,7 @@
             "label": "jobflow.de",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Built interview confirmation detection: a candidate's message becomes a backend event that updates the calendar and sends notifications.</p></li><li><p>Built AI task extraction that turns recruiter conversations into structured tasks with reminders, with prompts and evals running in production.</p></li><li><p>Cut a user search request from about 2 minutes to 8 seconds by introducing PostGIS.</p></li><li><p>Rebuilt scraping pipelines on Effect and Trigger.dev, and added automated smoke tests for CV rendering.</p></li><li><p>323 merged PRs, 5th of 38 contributors by commits in the main repository.</p></li></ul>",
+          "description": "<ul><li><p>Built the AI pipelines behind interview confirmation and task extraction: refactored the interview analyzer and built the task extractor, scored by eval datasets and rolled out behind a feature flag.</p></li><li><p>Retired the old v1 to v3 pipelines after rollout, deleting about 16,000 lines.</p></li><li><p>Cut the admin user-search estimate from about 90 s to 100 ms on near-production data (about 900x), with a PostGIS geography column and a partial GIST index.</p></li><li><p>Built the Braintrust evaluation and tracing setup for the AI services: fixture datasets, an end-to-end chain eval with an LLM judge, and production traces. Evals also gated a switch to cheaper models for non-sensitive prompts.</p></li><li><p>Extended the CV and cover letter smoke tests to render every template to PDF.</p></li><li><p>332 merged PRs and 315 PRs reviewed, top 10 of 47 contributors by commits.</p></li></ul>",
           "roles": []
         },
         {
@@ -118,7 +118,7 @@
             "label": "8returns.com",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Built the Shopify-embedded return flow with an AI chatbot for refund, exchange and store credit requests.</p></li><li><p>Built the streaming chat UI on TanStack Query against a Rails API, agreeing data contracts with the backend team.</p></li><li><p>Brought chatbot reply time from about 10 s to about 3 s through frontend and API orchestration changes.</p></li></ul>",
+          "description": "<ul><li><p>Built the Shopify-embedded return flow with an AI chatbot for refund, exchange and store credit requests.</p></li><li><p>Built the streaming chat UI on TanStack Query against a Rails API, agreeing data contracts with the backend team.</p></li></ul>",
           "roles": []
         },
         {
@@ -178,7 +178,7 @@
             "label": "",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Built an AI inference API compatible with the Vercel AI SDK.</p></li><li><p>Ran 2 events in Tunisia that gave participating teams free platform credits.</p></li></ul>",
+          "description": "<ul><li><p>Built an AI inference API compatible with the Vercel AI SDK.</p></li></ul>",
           "roles": []
         },
         {
@@ -198,7 +198,7 @@
             "label": "",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Refactored WalletLabels to Next.js 14 (<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/function03-labs/WalletLabels/pull/15\">PR #15</a>) and restructured UniswapHooks. Also refactored TallyZero.</p></li></ul>",
+          "description": "<ul><li><p>Main contributor to the open-source apps: <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/function03-labs/uniswaphooks/commits?author=FindMalek\">122 commits</a> to UniswapHooks (app restructure, <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/function03-labs/uniswaphooks/pull/11\">PR #11</a>), <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/function03-labs/tally-zero/commits?author=FindMalek\">87 of ~100 commits</a> to TallyZero, a decentralized voting client, and <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/function03-labs/WalletLabels/commits?author=FindMalek\">85 commits</a> to WalletLabels (Next.js 14 refactor, <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/function03-labs/WalletLabels/pull/15\">PR #15</a>).</p></li></ul>",
           "roles": []
         },
         {
@@ -238,7 +238,7 @@
             "label": "",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Founded a software agency with university coworkers and delivered client projects end to end, including the Promolab CRM and marketing platform.</p></li></ul>",
+          "description": "<ul><li><p>Founded a software agency with university coworkers and delivered client projects end to end, including Promolab, a trilingual product catalog with an admin dashboard and a contact and quote mailer.</p></li></ul>",
           "roles": []
         },
         {
@@ -258,7 +258,7 @@
             "label": "",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Built a custom Shopify template and an AI-assisted catalog pipeline that uploaded 1,000+ products with generated images and descriptions.</p></li></ul>",
+          "description": "<ul><li><p>Built a custom Shopify template and an AI-assisted product catalog pipeline for an e-commerce client.</p></li></ul>",
           "roles": []
         }
       ]
@@ -336,17 +336,17 @@
             "label": "dukkani.co",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Multi-tenant storefronts for Instagram and Facebook sellers in Tunisia. 200+ merged PRs, 4 contributors, I review PRs and set the roadmap.</p></li></ul>"
+          "description": "<ul><li><p>Multi-tenant storefronts for Instagram and Facebook sellers in Tunisia. 200+ merged PRs, 4 contributors.</p></li></ul>"
         },
         {
           "id": "a889c22b-20e2-453b-8846-12226395179f",
           "hidden": false,
           "name": "Zero Locker",
-          "period": "May 2025 – Present",
+          "period": "May 2025 – December 2025",
           "dates": {
             "start": "2025-05",
-            "end": null,
-            "present": true
+            "end": "2025-12",
+            "present": false
           },
           "website": {
             "url": "https://www.zero-locker.com",
@@ -359,11 +359,11 @@
           "id": "6299f891-2819-47a7-b3fb-7a435ee32c2a",
           "hidden": false,
           "name": "guesswork",
-          "period": "2026 – Present",
+          "period": "September 2026",
           "dates": {
-            "start": "2026",
+            "start": "2026-09",
             "end": null,
-            "present": true
+            "present": false
           },
           "website": {
             "url": "https://guesswork.findmalek.com",
@@ -373,21 +373,38 @@
           "description": "<ul><li><p>zsh autosuggestions ranked by an AI model instead of prefix matching. Open source.</p></li></ul>"
         },
         {
-          "id": "f4bed7d5-f83d-4bff-a09d-69f69bb0d596",
+          "id": "2468c418-3a93-4dc8-b3fb-2926d0cb70c0",
           "hidden": false,
-          "name": "keep-player and keep-dashboard",
-          "period": "2026 – Present",
+          "name": "keep-player",
+          "period": "October 2026 – Present",
           "dates": {
-            "start": "2026",
+            "start": "2026-10",
             "end": null,
             "present": true
           },
           "website": {
             "url": "https://github.com/FindMalek/keep-player",
-            "label": "github.com/FindMalek",
+            "label": "github.com/FindMalek/keep-player",
             "inlineLink": true
           },
-          "description": "<ul><li><p>My own music player and homelab dashboard, self-hosted on an old i5 machine.</p></li></ul>"
+          "description": "<ul><li><p>Web music player for self-hosted Navidrome: virtualized lists (about 40 rows mounted for 10,000 songs), typo-tolerant search, offline audio cache, gapless playback. 48 unit test files and 46 e2e specs.</p></li></ul>"
+        },
+        {
+          "id": "9efc05f3-b353-4aa7-baa0-2b59beaff86b",
+          "hidden": false,
+          "name": "keep-dashboard",
+          "period": "October 2026 – Present",
+          "dates": {
+            "start": "2026-10",
+            "end": null,
+            "present": true
+          },
+          "website": {
+            "url": "https://github.com/FindMalek/keep-dashboard",
+            "label": "github.com/FindMalek/keep-dashboard",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>Live dashboard for my homelab: system, containers, uptime, jobs and activity, streamed every second. The container never runs host commands, a host agent runs only allowlisted jobs. Open source.</p></li></ul>"
         },
         {
           "id": "c1cac69d-c116-44a0-9122-3224251d6815",
@@ -474,7 +491,6 @@
             "PostGIS",
             "Prisma",
             "oRPC",
-            "Effect",
             "Ruby on Rails (integrations)"
           ]
         },
@@ -592,7 +608,7 @@
       "title": "",
       "icon": "",
       "columns": 2,
-      "hidden": false,
+      "hidden": true,
       "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
