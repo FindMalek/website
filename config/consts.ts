@@ -194,7 +194,10 @@ export const FEATURED_PROJECT_ORDER = [
   "Sonaraem",
   "Dukkani",
   "Zero Locker",
-  "FindMalek",
+  "guesswork",
+  "keep-player",
+  "keep-dashboard",
+  "Syncify",
 ]
 
 export const REPOSITORIES = [
