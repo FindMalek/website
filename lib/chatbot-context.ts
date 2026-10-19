@@ -126,11 +126,11 @@ async function getPersonalData() {
         "7,092 GitHub contributions lifetime, 3,057 in the last 12 months (counted 2026-10-18), and 5 merged pull requests in Databuddy, an open-source analytics repo with 1,200+ stars",
       companiesFounded: [
         "Undrstnd Labs: co-founder, then CTO (AI inference API)",
-        "Endless Byte: founder (software agency, clients included Promolab)",
+        "Endless Byte: co-founder (software agency, clients included Promolab)",
         "Artweave: co-founded clothing brand, acquired by Tunisian Design in 2023",
       ],
       otherRoles:
-        "CTO at Qorelo (formerly QTech AI) in 2025, technical advisor at DeepMetis, contractor at 8Returns, full-time at Jobflow",
+        "CTO at QTech AI (now Qorelo) in 2025, technical advisor at DeepMetis, contractor at 8Returns and Function03, full-time at Jobflow and Hortensia, freelancer at Digital Army",
       socials: siteConfig.links,
     },
     photosAndStories: OVERVIEW_CARDS.map((card) =>
