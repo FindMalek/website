@@ -57,6 +57,23 @@ const postFrontmatterSchema = z.object({
 
 const WORDS_PER_MINUTE = 220
 
+// One set of MDX options for blog posts, work and project case studies, so a
+// GFM table or a code block renders the same wherever the markdown lives.
+const MDX_OPTIONS = {
+  remarkPlugins: [remarkGfm],
+  rehypePlugins: [
+    [
+      rehypeShiki,
+      {
+        themes: { light: "github-light", dark: "github-dark" },
+        // Both themes ship as CSS variables; styles/globals.css picks one
+        // per `.dark`, so code blocks follow the site theme toggle.
+        defaultColor: false,
+      },
+    ],
+  ],
+} satisfies Parameters<typeof compileMDX>[2]
+
 // TODO(#66): New work entries (Sonaraem, The Fund) are intentionally not
 // added here yet. Every field in workFrontmatterSchema below is required
 // (company, position, overview, type, startDate, endDate, place, href), and
@@ -72,7 +89,7 @@ const work = defineCollection({
   include: "**/*.mdx",
   schema: workFrontmatterSchema,
   transform: async (document, context) => {
-    const html = await compileMDX(context, document)
+    const html = await compileMDX(context, document, MDX_OPTIONS)
     return {
       ...document,
       html,
@@ -86,7 +103,7 @@ const projects = defineCollection({
   include: "**/*.mdx",
   schema: projectFrontmatterSchema,
   transform: async (document, context) => {
-    const html = await compileMDX(context, document)
+    const html = await compileMDX(context, document, MDX_OPTIONS)
     return {
       ...document,
       html,
@@ -100,20 +117,7 @@ const posts = defineCollection({
   include: "**/*.mdx",
   schema: postFrontmatterSchema,
   transform: async (document, context) => {
-    const html = await compileMDX(context, document, {
-      remarkPlugins: [remarkGfm],
-      rehypePlugins: [
-        [
-          rehypeShiki,
-          {
-            themes: { light: "github-light", dark: "github-dark" },
-            // Both themes ship as CSS variables; styles/globals.css picks one
-            // per `.dark`, so code blocks follow the site theme toggle.
-            defaultColor: false,
-          },
-        ],
-      ],
-    })
+    const html = await compileMDX(context, document, MDX_OPTIONS)
     const wordCount = document.content.split(/\s+/).filter(Boolean).length
     return {
       ...document,
