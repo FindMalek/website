@@ -226,6 +226,15 @@ export const CONTRIBUTIONS: Contribution[] = [
         title:
           "fix(rpc): align funnel cache invalidation key and re-enable caching",
       },
+      {
+        number: 988,
+        title: "feat(rpc): type and gate alarm trigger conditions",
+      },
+      {
+        number: 1086,
+        title:
+          "fix(auth): tolerate unreadable dashboard fingerprints at startup",
+      },
     ],
   },
   {

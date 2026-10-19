@@ -121,17 +121,30 @@ async function getPersonalData() {
     facts: {
       timezone: TIMEZONE,
       recognition:
-        "#1 open-source contributor in Tunisia (https://gitista.com/search/?country=TN&handle=FindMalek)",
+        "#1 open-source contributor in Tunisia on Gitista (https://gitista.com/search/?country=TN&handle=FindMalek)",
+      githubActivity:
+        "7,092 GitHub contributions lifetime, 3,057 in the last 12 months (counted 2026-10-18), and 5 merged pull requests in Databuddy, an open-source analytics repo with 1,200+ stars",
+      companiesFounded: [
+        "Undrstnd Labs: co-founder, then CTO (AI inference API)",
+        "Endless Byte: founder (software agency, clients included Promolab)",
+        "Artweave: co-founded clothing brand, acquired by Tunisian Design in 2023",
+      ],
+      otherRoles:
+        "CTO at Qorelo (formerly QTech AI) in 2025, technical advisor at DeepMetis, contractor at 8Returns, full-time at Jobflow",
       socials: siteConfig.links,
     },
     photosAndStories: OVERVIEW_CARDS.map((card) =>
       card.type === "text" ? `${card.text} (${card.subtext})` : card.story
     ).filter(Boolean),
-    booksImReading: BOOKS.map((book) => ({
-      title: book.title,
-      author: book.author,
-      link: book.link,
-    })),
+    readingList: {
+      description: `The "Reading list" section at the bottom of my site shows ${BOOKS.length} books. That's the count to give when asked how many books I've read or am reading`,
+      count: BOOKS.length,
+      books: BOOKS.map((book) => ({
+        title: book.title,
+        author: book.author,
+        link: book.link,
+      })),
+    },
     music: {
       spotifyProfile: siteConfig.links.spotify,
       playlists: playlists.items.map((playlist) => ({
