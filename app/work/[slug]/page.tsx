@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 
 import { ArticleContent } from "@/components/app/article-content"
 import { WorkDateWithTooltip } from "@/components/app/work-date-with-tooltip"
+import { POST_MDX_COMPONENTS } from "@/components/blog/mdx-components"
 import { Icons } from "@/components/shared/icons"
 import { buttonVariants } from "@/components/ui/button"
 
@@ -124,8 +125,8 @@ export default async function WorkPageById({ params }: WorkPageByIdProps) {
           </div>
         )}
 
-        <ArticleContent className="prose prose-gray dark:prose-invert mx-auto max-w-3xl">
-          <MDXContent code={html} />
+        <ArticleContent className="blog-prose prose prose-gray mx-auto max-w-3xl">
+          <MDXContent code={html} components={POST_MDX_COMPONENTS} />
         </ArticleContent>
       </div>
     </div>
