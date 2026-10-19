@@ -1,0 +1,163 @@
+---
+id: 15
+image: "/project/keep-dashboard.png"
+name: "keep-dashboard"
+overview: "A monochrome live dashboard for a single-box homelab: system, containers, uptime, jobs and activity on square corners, refreshed every second, with a host agent that only accepts a short list of known actions."
+status: "published"
+link: "https://github.com/FindMalek/keep-dashboard"
+href: "/projects/keep-dashboard"
+tags:
+  [
+    "Bun",
+    "React",
+    "TypeScript",
+    "Homelab",
+    "Docker",
+    "Tailscale",
+    "Open Source",
+  ]
+---
+
+# keep-dashboard
+
+I moved most of what I run from the cloud to one box at home. An old 8th-gen i5, 6 cores, 32GB of RAM, a 1TB SSD and a 225GB one. I call it the keep. Tailscale gets me in, AdGuard does DNS, Uptime Kuma checks everything and pings my phone through ntfy, and Dokploy deploys the apps.
+
+Once it ran, I wanted one screen that told me the state of it. I tried the existing dashboards and none of them matched my taste: monochrome, boxy, sharp corners. So I wrote my own, on Bun with React and no UI library. It is open source under MIT, and the live one sits behind my tailnet at [keep.findmalek.engineer](https://keep.findmalek.engineer/). That link is gated, so you will see a refusal. The point of this page is what is behind it.
+
+![Abstract layout of the keep-dashboard overview: a sidebar with six pages, four stat tiles, a cpu graph, a strip of uptime bars with two orange ones, and a jobs table with run now buttons.](/project/keep-dashboard.png)
+
+_An abstract of the overview layout. Real screenshots are further down._
+
+## How it grew
+
+The repo is only a week old, and I will not pretend the history is a long saga. One big first commit, then small pull requests, each one starting from an issue I wrote the same morning.
+
+![Timeline from October 11 to October 17: initial release, an open issue about published ports, the security fix, range tabs, uptime hover, and sleeping app controls.](/project/keep-dashboard/timeline.png)
+
+_Six commits, five merged pull requests, and one issue that is still open._
+
+| Date   | What landed                                                                                                                                   |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Oct 11 | Initial release. All six pages, the host agent with its systemd units, SQLite history and the live stream.                                    |
+| Oct 13 | Issue 1 opened after an audit: containers publish ports past the firewall. Still open.                                                        |
+| Oct 15 | Security pull request: the API only answers through the private route, Docker is read through a proxy. CI and the first tests arrive with it. |
+| Oct 15 | Range tabs on the system page stop showing stale data and say where history starts.                                                           |
+| Oct 15 | Uptime bars show each half hour and when it was down when you hover or arrow through them.                                                    |
+| Oct 17 | Start and stop buttons for apps that sleep, and the tidy job learns to leave them alone.                                                      |
+
+The first release already had the agent and the history store. The security work came after, which is the honest order for a weekend project that suddenly held a reboot button.
+
+## The pages
+
+Six of them, all black and white. The only colors are orange and red, and they mean one thing: close to a limit, or at it. Nothing else is allowed to be colored, so when something is, I look.
+
+### Overview
+
+![The overview page in dark mode: eight stat tiles for cpu, memory, data disk, temperature, network, sites, ads blocked and internet speed, then panels for music, ad blocking, internet and reading, and space per app.](/project/keep-dashboard/overview.webp)
+
+_Overview at 1440 wide, fake demo data._
+
+Eight tiles, then panels for music, ad blocking, internet speed and feeds, then space per app against its limit. The design call here was to show answers, not charts. I open this page to find out whether everything is fine, and I should know in one look.
+
+### System
+
+![The system page: a live cpu graph with per core bars, memory with used and cache, network per interface, disks with read and write, and every temperature sensor as a bar.](/project/keep-dashboard/system.webp)
+
+_System, with the live tab selected. The other tabs read from SQLite._
+
+CPU per core, memory, network per interface, disks, every temperature sensor and every container. Tabs switch between live, 1 hour, 24 hours, 7 days and 30 days. I want every sensor because heat is the first thing I would check on a box that never gets switched off.
+
+### Uptime
+
+![The uptime page: a table of checks, each with a strip of half hour bars, response time, 24 hour and 30 day uptime, and days left on the certificate.](/project/keep-dashboard/uptime.webp)
+
+_Uptime. The address column is blacked out on purpose._
+
+Every Uptime Kuma check as a 24 hour strip of half hour bars, with response time, uptime percentages and days left on the TLS certificate. I did not build my own checker. Kuma already does it well, so the dashboard reads its metrics and draws them my way. Hovering a bar tells you which half hour it was and when it went down, which was the second pull request after the first release.
+
+### Apps
+
+![The apps page: Dokploy projects with their services, type, domains, container count, cpu, memory and last deploy.](/project/keep-dashboard/apps.webp)
+
+_Apps, grouped by project, with example domains._
+
+Every Dokploy project and service, with containers, cpu, memory, domains and the last deploy. Under it sits a log of what the nightly cleanup removed, because a job that deletes things should say what it deleted.
+
+### Jobs
+
+![The jobs page: a table of scheduled jobs with schedule, last run, next run and a run now button, and a server section with tidy now and reboot.](/project/keep-dashboard/jobs.webp)
+
+_Jobs, with last result, next run and a run now button for each._
+
+This is the page with buttons, so it is the one I worry about. More on that below.
+
+### Activity
+
+The sixth page lists the tailnet devices, who is connected right now over SSH, Dokploy or the dashboard, and a 7 day timeline of logins, sudo commands, deploys, cleanups and reboots, folded into sessions. I left its screenshot out of this page, because it shows exactly the kind of detail a page like this should not publish.
+
+## One snapshot every second
+
+![Flow diagram: collectors refresh every second, five seconds, fifteen seconds, thirty seconds and five minutes, merge into one snapshot on each tick, which goes to the browser over server sent events and to SQLite as one minute averages kept for 31 days.](/project/keep-dashboard/snapshot-flow.png)
+
+_Fast things are read each tick, slow things keep their own timer._
+
+One Bun process collects everything and pushes a snapshot to the browser every second over Server-Sent Events. Not everything can be read that fast. CPU and memory can. Asking Dokploy for its projects cannot. So each collector runs on its own timer and writes only its own fields, and the one second tick just merges whatever they last produced. Long-term history, 1 minute averages and peaks for 31 days, goes into SQLite and feeds the 1h to 30d tabs.
+
+Every integration is optional. If one is not configured its panel hides or says it is not reachable.
+
+## The container cannot run anything on the host
+
+The dashboard has buttons that can reboot the machine. A web app that can do that is a bad idea if it also holds a shell.
+
+![Diagram: the dashboard container writes a request file into a shared folder, a systemd path unit wakes a Python host agent, and the agent accepts only reboot, tidy, a known job or a configured switch and refuses everything else.](/project/keep-dashboard/host-agent.png)
+
+_A button drops a file. Only the host agent decides what happens._
+
+So the container never runs host commands. A button drops a request file into a shared folder. A systemd path unit notices it and starts a small Python agent on the host. The agent accepts `reboot`, `tidy`, `run:<known job>` and start or stop of a switch I configured. Everything else is refused and logged. It even refuses a reboot if the box booted less than five minutes ago. Requests also need a custom header, so another website cannot trigger them from my browser.
+
+Even if someone owned the web app, the worst they could do is drop a file the agent refuses.
+
+![Schedule of host jobs across a day: a status refresh every minute, the cleanup at 04:30 every day, and the tidy at 05:00 on Sundays.](/project/keep-dashboard/jobs-schedule.png)
+
+_The timers behind the jobs page._
+
+The jobs are plain systemd timers. The nightly cleanup runs at 04:30. The weekly tidy runs Sundays at 05:00: stopped containers, old images, build cache, old journal logs, the apt cache. It never touches Docker volumes or my data. A status timer rewrites the job state every minute so the page stays honest.
+
+## What was wrong, and what I did
+
+The first release was too open. Any container on the same Docker network could call the API and press its buttons, and the Docker socket was mounted into the dashboard. A read-only mount on a socket does not make the API read-only, which surprised me. I fixed it within four days.
+
+![Four stacked layers drawn generically: a private route that only answers my own devices, a gate header, a read-only Docker proxy, and the host agent allowlist.](/project/keep-dashboard/layers.png)
+
+_Four layers, drawn without any real hostnames or values._
+
+- **A private route.** The dashboard is reachable through a route that only my devices can use.
+- **A gate.** That route adds a header carrying a long secret, and every API call without it is a 403. The check is constant time. The proxy overwrites whatever a client sends, so it cannot be forged from the outside. The health check stays open for uptime.
+- **A proxy for Docker.** The socket left the dashboard. A small proxy on its own internal network forwards exactly one request, listing containers. Not inspect, since that would expose other containers' environment.
+- **The agent.** Buttons only ask, as above.
+
+I added CI and a test for the gate in the same change, because there had been no tests at all.
+
+Two lessons were not about security. The 7 day and 30 day graphs looked broken, because history only goes back to the day the dashboard went live. Range tabs now clear old data at once and say where history starts. And my cleanup once deleted a sleeping game server and its image, because it looked stopped and unused. Now the tidy job skips containers labeled as sleepers, and the jobs page has start and stop buttons for those.
+
+The general lesson I took from the open issue: Docker edits the firewall itself when it publishes a port, so a rule you wrote can be skipped without you noticing. I found that in an audit and the fix is still open. I am not going to describe the details of my own box here.
+
+## Power cuts
+
+Tunisia has frequent power cuts. I set the BIOS so the box powers on by itself when the electricity comes back, and it boots straight into everything it was running. The dashboard is how I check that it actually came back. The uptime in the header tells me whether it rebooted while I was away.
+
+## What is still rough
+
+- No login of its own. It relies on being reachable only through the tailnet, which is fine for me and a bad default for anyone else.
+- The published ports issue above is open.
+- The agent is about 330 lines of Python with no tests. The server side has a few small ones, for the gate, the Docker proxy, jobs, outages and range labels.
+- No alerts of its own. Uptime Kuma and ntfy do that.
+-
+
+## What is next
+
+The jobs page already has a placeholder for an offsite backup, planned for when new drives arrive. The login is the next thing I would add, since it is the biggest gap in the list above.
+
+## Run it
+
+The README has the steps, the variables and an example compose file. Put it behind your VPN. Source: [FindMalek/keep-dashboard](https://github.com/FindMalek/keep-dashboard).
