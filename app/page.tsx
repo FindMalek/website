@@ -2,7 +2,12 @@ import { Suspense } from "react"
 import Link from "next/link"
 import { allProjects, allWorks } from "content-collections"
 
-import { CLIENTS, CONTRIBUTIONS, REPOSITORIES } from "@/config/consts"
+import {
+  CERTIFICATES,
+  CLIENTS,
+  CONTRIBUTIONS,
+  REPOSITORIES,
+} from "@/config/consts"
 import { STACK_SECTIONS } from "@/config/stack"
 import { getVisiblePosts, toPostSummary } from "@/lib/blog"
 import { getCachedContributions } from "@/lib/get-cached-contributions"
@@ -17,6 +22,7 @@ import {
 import { AboutBooks } from "@/components/app/about-books"
 import { AboutMusic } from "@/components/app/about-music"
 import { AboutOverview } from "@/components/app/about-overview"
+import { CertificatesList } from "@/components/app/certificates-list"
 import { ClientsMarquee } from "@/components/app/clients-marquee"
 import { CollapsibleList } from "@/components/app/collapsible-list"
 import { EducationItem } from "@/components/app/education-item"
@@ -190,6 +196,21 @@ export default async function Home() {
               <EducationItem key={item.id} item={item} />
             ))}
           </div>
+        </PanelContent>
+      </Panel>
+
+      <div className="stripe-divider" />
+
+      <Panel>
+        <PanelHeader>
+          <PanelTitle className="text-lg">
+            Certificates
+            <PanelTitleSup>({CERTIFICATES.length})</PanelTitleSup>
+          </PanelTitle>
+        </PanelHeader>
+
+        <PanelContent>
+          <CertificatesList />
         </PanelContent>
       </Panel>
 

@@ -58,7 +58,7 @@ export type AboutStamp = {
 
 // Rendered by components/app/about-overview-stamps.tsx. Each stamp is a real
 // moment, so keep every claim sourced: Artweave and the hair are in the bio
-// and photo stories; the Qorelo raise is public (tech.eu, 15 June 2026).
+// and photo stories; the Qorelo (formerly QTech AI) raise is public (tech.eu, 15 June 2026).
 export const ABOUT_STAMPS: AboutStamp[] = [
   {
     id: "hair",
@@ -88,6 +88,6 @@ export const ABOUT_STAMPS: AboutStamp[] = [
     value: "2026",
     caption: "Qorelo seed",
     story:
-      "My QTech AI co-founders went on to start Qorelo and raised a $3.5M seed in June 2026.",
+      "QTech AI, where I was CTO, is now Qorelo, and it raised a $3.5M seed in June 2026.",
   },
 ]

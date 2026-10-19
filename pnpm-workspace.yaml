@@ -2,5 +2,6 @@ packages:
   - "."
 
 allowBuilds:
+  braintrust: false
   esbuild: false
   sharp: false

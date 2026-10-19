@@ -75,6 +75,23 @@ export type PageLabel = (typeof PAGES)[keyof typeof PAGES]["label"]
 export const RESUME_USERNAME = "findmalek"
 export const RESUME_SLUG = "findmalek-resume"
 
+export const CERTIFICATES = [
+  {
+    id: "hackerrank-problem-solving-basic",
+    title: "Problem Solving (Basic)",
+    issuer: "HackerRank",
+    date: "January 2023",
+    image: "/certificates/hackerrank-problem-solving-basic.jpg",
+  },
+  {
+    id: "hackerrank-python-basic",
+    title: "Python (Basic)",
+    issuer: "HackerRank",
+    date: "January 2023",
+    image: "/certificates/hackerrank-python-basic.jpg",
+  },
+] as const
+
 export const BOOKS = [
   {
     id: "1",
@@ -194,7 +211,10 @@ export const FEATURED_PROJECT_ORDER = [
   "Sonaraem",
   "Dukkani",
   "Zero Locker",
-  "FindMalek",
+  "guesswork",
+  "keep-player",
+  "keep-dashboard",
+  "Syncify",
 ]
 
 export const REPOSITORIES = [
@@ -225,6 +245,15 @@ export const CONTRIBUTIONS: Contribution[] = [
         number: 636,
         title:
           "fix(rpc): align funnel cache invalidation key and re-enable caching",
+      },
+      {
+        number: 988,
+        title: "feat(rpc): type and gate alarm trigger conditions",
+      },
+      {
+        number: 1086,
+        title:
+          "fix(auth): tolerate unreadable dashboard fingerprints at startup",
       },
     ],
   },
