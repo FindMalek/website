@@ -1,7 +1,8 @@
 {
   "picture": {
     "hidden": false,
-    "url": "",
+    "fit": "cover",
+    "url": "https://rxresu.me/api/uploads/019bef93-5dda-7780-b526-6bdfc798ffd8/pictures/01a2b8fa-7ed7-4ef9-99ec-86788e5ba628.jpeg",
     "size": 80,
     "rotation": 0,
     "aspectRatio": 1,
@@ -13,7 +14,7 @@
   },
   "basics": {
     "name": "Malek Gara-Hellal",
-    "headline": "Senior Full-Stack Engineer | AI Automation, Data & Agentic Systems",
+    "headline": "Senior Full-Stack Engineer | AI Products, Automation & LLM Systems",
     "email": "hi@findmalek.com",
     "phone": "",
     "location": "Monastir, Tunisia (Remote)",
@@ -28,9 +29,10 @@
     "icon": "",
     "columns": 1,
     "hidden": false,
+    "showHeading": true,
     "keepTogether": false,
     "startOnNewPage": false,
-    "content": "<p>Full-Stack Engineer building AI-native products end-to-end — automated workflows, data analysis pipelines, and agentic systems on top of React/Next.js and TypeScript. Recent work spans LLM-driven automation (Jobflow, 8Returns), RAG and multi-agent pipelines (QTech AI), and a self-built inference API (Undrstnd Labs), using the Vercel AI SDK, Mastra, and Braintrust for evaluation. High-volume open-source contributor (~7,000 GitHub contributions). Experience working remotely with Berlin and US teams.</p>"
+    "content": "<p>Full-stack engineer who ships AI features to production: LLM automation at Jobflow, RAG and multi-agent pipelines at Qorelo, a streaming AI chat flow at 8Returns. Co-founded Undrstnd Labs, and built Dukkani and Sonaraem on my own. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://gitista.com/search/?country=TN&handle=FindMalek\">#1 open-source contributor in Tunisia on Gitista</a>, 7,000+ lifetime GitHub contributions (3,057 in the last 12 months).</p>"
   },
   "sections": {
     "profiles": {
@@ -38,6 +40,7 @@
       "icon": "",
       "columns": 3,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": [
@@ -66,19 +69,6 @@
             "label": "",
             "inlineLink": false
           }
-        },
-        {
-          "id": "019c90aa-0020-71cb-874f-835885ebf8e0",
-          "hidden": false,
-          "icon": "instagram-logo",
-          "iconColor": "",
-          "network": "Instagram",
-          "username": "findmalek",
-          "website": {
-            "url": "https://go.findmalek.com/ig",
-            "label": "",
-            "inlineLink": false
-          }
         }
       ]
     },
@@ -87,155 +77,188 @@
       "icon": "",
       "columns": 1,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": [
         {
-          "id": "019c8102-56be-736d-bd30-7361b8ca8b13",
+          "id": "15b41063-bd59-42d8-8c93-d510d6ae99c2",
           "hidden": false,
           "company": "Jobflow GmbH",
-          "position": "Senior Full-Stack Engineer (AI Systems)",
-          "location": "Berlin, Germany",
-          "period": "September 2024 - Present",
+          "position": "Senior Full-Stack Engineer (AI Systems), Full-time",
+          "location": "Berlin, Germany (Remote)",
+          "period": "September 2024 – Present",
+          "dates": {
+            "start": "2024-09",
+            "end": null,
+            "present": true
+          },
           "website": {
             "url": "https://www.jobflow.de",
             "label": "jobflow.de",
             "inlineLink": true
           },
-          "description": "<p>Delivered AI-driven automation features across recruiter–candidate workflows.<br>Built interview confirmation detection system (message → backend event → calendar integration + notifications).<br>Implemented AI task extraction from recruiter conversations into structured candidate tasks with reminders.<br>Designed prompting strategies and evaluation frameworks for LLM workflows in production.<br>Refactored scraping infrastructure using Effect &amp; <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://Trigger.dev\">Trigger.dev</a> to improve maintainability and resilience.<br>Introduced automated smoke testing for CV rendering, eliminating recurring production issues.<br>400+ merged PRs; ranked among top active contributors in repository.</p>",
+          "description": "<ul><li><p>Built interview confirmation detection: a candidate's message becomes a backend event that updates the calendar and sends notifications.</p></li><li><p>Built AI task extraction that turns recruiter conversations into structured tasks with reminders, with prompts and evals running in production.</p></li><li><p>Cut a user search request from about 2 minutes to 8 seconds by introducing PostGIS.</p></li><li><p>Rebuilt scraping pipelines on Effect and Trigger.dev, and added automated smoke tests for CV rendering.</p></li><li><p>323 merged PRs, 5th of 38 contributors by commits in the main repository.</p></li></ul>",
           "roles": []
         },
         {
-          "id": "019c80ff-ec34-730b-a667-91ffd584e0e3",
+          "id": "d0d445f1-20a6-4e73-8ce5-aaf9e5508b53",
           "hidden": false,
-          "company": "8Returns UG",
-          "position": "Senior Frontend Engineer (AI Systems & Shopify)",
-          "location": "Berlin, Germany",
-          "period": "December 2025 - April 2026",
+          "company": "8Returns",
+          "position": "Senior Frontend Engineer (AI Systems & Shopify), Contract",
+          "location": "Berlin, Germany (Remote)",
+          "period": "December 2025 – April 2026",
+          "dates": {
+            "start": "2025-12",
+            "end": "2026-04",
+            "present": false
+          },
           "website": {
-            "url": "https://www.8returns.com",
+            "url": "https://8returns.com",
             "label": "8returns.com",
             "inlineLink": true
           },
-          "description": "<p>Built Shopify-embedded return experience powered by AI chatbot (refund, exchange, store credit flows).<br>Used TanStack Query for data fetching, caching, and real-time updates across the chatbot's streaming UI.<br>Reduced chatbot reply delay from ~10s to ~3s through frontend optimization and API orchestration improvements.<br>Implemented complex UI state management and Rails API integrations.<br>Collaborated closely with backend team (Ruby on Rails) on data contracts and flow reliability.<br>Contributed to AI flow design and merchant-facing UX improvements.</p>",
+          "description": "<ul><li><p>Built the Shopify-embedded return flow with an AI chatbot for refund, exchange and store credit requests.</p></li><li><p>Built the streaming chat UI on TanStack Query against a Rails API, agreeing data contracts with the backend team.</p></li><li><p>Brought chatbot reply time from about 10 s to about 3 s through frontend and API orchestration changes.</p></li></ul>",
           "roles": []
         },
         {
-          "id": "019c80fd-2ba2-71cb-874f-835885ebf8c4",
+          "id": "b420e1e7-5b53-424d-ac11-55d3da8c9895",
           "hidden": false,
-          "company": "DeepMetis UG",
-          "position": "Senior Full Stack Engineer",
-          "location": "Berlin, Germany",
-          "period": "June 2025 - August 2025",
+          "company": "DeepMetis",
+          "position": "Technical Advisor",
+          "location": "Berlin, Germany (Remote)",
+          "period": "June 2025 – August 2025",
+          "dates": {
+            "start": "2025-06",
+            "end": "2025-08",
+            "present": false
+          },
           "website": {
-            "url": "https://deepmetis.com",
+            "url": "https://www.deepmetis.com",
             "label": "deepmetis.com",
             "inlineLink": true
           },
-          "description": "<p>Built responsive frontend interfaces using Svelte across multiple production projects.<br>Designed and implemented backend services in Go, improving performance and system reliability.<br>Managed and optimized PostgreSQL databases to ensure data integrity and efficient query performance.<br>Led technical direction for Project Dori, coordinating cross-functional teams and driving milestone delivery.</p>",
+          "description": "<ul><li><p>Advised on Svelte frontends and Go backend services, and on the technical direction of Project Dori.</p></li></ul>",
           "roles": []
         },
         {
-          "id": "019c90aa-0001-71cb-874f-835885ebf8c5",
+          "id": "8c3f75a7-28e6-448a-9c3f-1246ec9e985d",
           "hidden": false,
-          "company": "QTech AI",
+          "company": "Qorelo (formerly QTech AI)",
           "position": "Chief Technology Officer (Self-employed)",
-          "location": "Germany",
-          "period": "April 2025 - July 2025",
-          "website": {
-            "url": "https://www.qtech-company.com",
-            "label": "qtech-company.com",
-            "inlineLink": true
+          "location": "Germany (Remote)",
+          "period": "April 2025 – July 2025",
+          "dates": {
+            "start": "2025-04",
+            "end": "2025-07",
+            "present": false
           },
-          "description": "<p>Developed the company's marketing website and built RAG-based document-processing systems for enterprise clients.<br>Built a context-aware support chatbot: parses uploaded PDFs, vectorizes content, and retrieves across multiple knowledge sources, with a router agent selecting which source to query per question.<br>Designed a multi-agent pipeline that retrieves, enhances, and self-improves its own context from user questions over time.</p>",
-          "roles": []
-        },
-        {
-          "id": "019c8102-56be-736d-bd30-7361b8ca8b14",
-          "hidden": false,
-          "company": "Undrstnd Labs",
-          "position": "Founder & CTO",
-          "location": "Rome, Italy",
-          "period": "August 2024 - June 2025",
           "website": {
             "url": "",
             "label": "",
             "inlineLink": true
           },
-          "description": "<p>Co-founded an AI inference company with Denis Cartin, starting as Co-Founder before taking on the CTO title as the company matured. Applied to Y Combinator and were rejected, so launched independently in Rome, Italy instead.<br>Built fast, significantly cheaper inference than OpenAI, using bigger and better models.<br>Shipped an API with strong developer experience, compatible with the Vercel AI SDK.<br>Hosted 2 events in Tunisia, giving free platform credits to participating teams.</p>",
+          "description": "<ul><li><p>Built RAG document-processing systems for enterprise clients, and the company's marketing site.</p></li><li><p>Built a support chatbot that parses uploaded PDFs and uses a router agent to pick the knowledge source for each question.</p></li><li><p>Designed a multi-agent pipeline that retrieves and improves its own context from user questions.</p></li></ul>",
           "roles": []
         },
         {
-          "id": "019c80f7-5171-7184-a13a-4b25d2b4a2c2",
+          "id": "29b47151-888c-4282-99fe-d62fb3f5c27c",
+          "hidden": false,
+          "company": "Undrstnd Labs",
+          "position": "Co-founder & CTO",
+          "location": "Rome, Italy",
+          "period": "March 2024 – June 2025",
+          "dates": {
+            "start": "2024-03",
+            "end": "2025-06",
+            "present": false
+          },
+          "website": {
+            "url": "",
+            "label": "",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>Built an AI inference API compatible with the Vercel AI SDK.</p></li><li><p>Ran 2 events in Tunisia that gave participating teams free platform credits.</p></li></ul>",
+          "roles": []
+        },
+        {
+          "id": "cf369019-fc1c-4c0f-b5ea-c016167e552f",
+          "hidden": false,
+          "company": "Function03 Labs",
+          "position": "UX Engineer, then Blockchain Developer",
+          "location": "San Francisco, USA (Remote)",
+          "period": "June 2023 – August 2024",
+          "dates": {
+            "start": "2023-06",
+            "end": "2024-08",
+            "present": false
+          },
+          "website": {
+            "url": "",
+            "label": "",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>Refactored WalletLabels to Next.js 14 (<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/function03-labs/WalletLabels/pull/15\">PR #15</a>) and restructured UniswapHooks. Also refactored TallyZero.</p></li></ul>",
+          "roles": []
+        },
+        {
+          "id": "66132e66-3183-4b76-a238-625b05a574fd",
           "hidden": false,
           "company": "Hortensia Agency",
           "position": "Full Stack Developer",
           "location": "Ariana, Tunisia",
-          "period": "May 2024 - September 2024",
-          "website": {
-            "url": "https://hortensia-agency.com/",
-            "label": "hortensia-agency.com",
-            "inlineLink": true
+          "period": "May 2024 – September 2024",
+          "dates": {
+            "start": "2024-05",
+            "end": "2024-09",
+            "present": false
           },
-          "description": "<p>Built Stelify real-time music analytics dashboard.<br>Delivered Primevera e-learning platform with Stripe payments.<br>Managed deployments via Docker &amp; Coolify.</p>",
-          "roles": []
-        },
-        {
-          "id": "019c80f9-2f7a-723e-9926-fad98306180d",
-          "hidden": false,
-          "company": "Function03 Labs",
-          "position": "",
-          "location": "San Francisco, USA",
-          "period": "June 2023 - August 2024",
-          "website": {
-            "url": "https://fn03.xyz",
-            "label": "fn03.xyz",
-            "inlineLink": true
-          },
-          "description": "<p>Built <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://docs.walletlabels.xyz/endpoint/ethereum/label\">WalletLabels</a> admin dashboard and API tooling.<br>Automated API key generation and blacklist endpoint.<br>Improved UX and architecture of <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://zero.tally.xyz/\">TallyZero</a> voting platform.<br>Contributed to <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://v4.uniswap.org/\">UniswapHooks</a> marketing rebuild.</p>",
-          "roles": [
-            {
-              "id": "019c90aa-0021-71cb-874f-835885ebf8e1",
-              "position": "UX Engineer & Blockchain Developer",
-              "period": "February 2024 - August 2024",
-              "description": "Moved to full-time, building WalletLabels, refactoring TallyZero, and contributing to the UniswapHooks rebrand."
-            },
-            {
-              "id": "019c90aa-0022-71cb-874f-835885ebf8e2",
-              "position": "UX Engineer",
-              "period": "June 2023 - February 2024",
-              "description": "Joined part-time, working on front-end and UX improvements before moving to full-time."
-            }
-          ]
-        },
-        {
-          "id": "019c90aa-0004-71cb-874f-835885ebf8c8",
-          "hidden": false,
-          "company": "Endless Byte",
-          "position": "Founder",
-          "location": "Monastir, Tunisia",
-          "period": "May 2023 - March 2024",
           "website": {
             "url": "",
             "label": "",
             "inlineLink": true
           },
-          "description": "<p>Founded a software agency with university coworkers, delivering client projects end-to-end.<br>Built Promolab, a CRM and marketing platform for a client serving major accounts including STEG-affiliated business in Tunisia.<br>Delivered a membership-management CRM for gym chains (including California Gym), covering subscriptions across multiple locations nationwide plus WhatsApp-based promotional messaging to members.</p>",
+          "description": "<ul><li><p>Built the Stelify real-time music analytics dashboard and the Primevera e-learning platform with Stripe payments.</p></li></ul>",
           "roles": []
         },
         {
-          "id": "019c90aa-0008-71cb-874f-835885ebf8cc",
+          "id": "e282c9c0-faf5-4ef8-b8bf-9b42385df418",
+          "hidden": false,
+          "company": "Endless Byte",
+          "position": "Founder",
+          "location": "Monastir, Tunisia",
+          "period": "May 2023 – March 2024",
+          "dates": {
+            "start": "2023-05",
+            "end": "2024-03",
+            "present": false
+          },
+          "website": {
+            "url": "",
+            "label": "",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>Founded a software agency with university coworkers and delivered client projects end to end, including the Promolab CRM and marketing platform.</p></li></ul>",
+          "roles": []
+        },
+        {
+          "id": "52923261-27cc-4a19-8c2d-4c1efb9bc235",
           "hidden": false,
           "company": "Digital Army",
           "position": "Web Developer",
           "location": "Ariana, Tunisia",
-          "period": "February 2021 - May 2023",
+          "period": "February 2021 – May 2023",
+          "dates": {
+            "start": "2021-02",
+            "end": "2023-05",
+            "present": false
+          },
           "website": {
-            "url": "https://digital-army.clients.malek.engineering",
+            "url": "",
             "label": "",
             "inlineLink": true
           },
-          "description": "<p>Built a professional portfolio website using React, Next.js, and Tailwind CSS.<br>Built a custom Shopify template and AI-assisted product pipeline for LilyPharma, an e-commerce client — uploaded 1,000+ products with AI-generated images and descriptions.</p>",
+          "description": "<ul><li><p>Built a custom Shopify template and an AI-assisted catalog pipeline that uploaded 1,000+ products with generated images and descriptions.</p></li></ul>",
           "roles": []
         }
       ]
@@ -245,6 +268,7 @@
       "icon": "",
       "columns": 1,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": [
@@ -254,43 +278,16 @@
           "school": "Higher Institute of Informatics and Mathematics of Monastir (ISIMM)",
           "degree": "Software Engineering",
           "area": "Computer Science",
-          "grade": "Top of my Major",
+          "grade": "Top of my major",
           "location": "Monastir, Tunisia",
-          "period": "September 2021 - June 2024",
+          "period": "September 2021 – June 2024",
+          "dates": {
+            "start": "2021-09",
+            "end": "2024-06",
+            "present": false
+          },
           "website": {
             "url": "https://isimm.rnu.tn/public/",
-            "label": "",
-            "inlineLink": true
-          },
-          "description": "<p>Throughout my university years, I consistently ranked at the top of my cohort. My academic focus included low-level</p><p>languages like C and C++ and in-depth studies of algorithms, Java, and complex software engineering principles. This</p><p>foundational knowledge laid the groundwork for my ability to design scalable systems and contribute to innovative</p><p>projects.</p>"
-        },
-        {
-          "id": "019c90aa-0005-71cb-874f-835885ebf8c9",
-          "hidden": false,
-          "school": "Lycée Secondaire de Sayada",
-          "degree": "Baccalauréat",
-          "area": "",
-          "grade": "",
-          "location": "Sayada, Tunisia",
-          "period": "September 2020 - July 2021",
-          "website": {
-            "url": "",
-            "label": "",
-            "inlineLink": true
-          },
-          "description": ""
-        },
-        {
-          "id": "019c90aa-0006-71cb-874f-835885ebf8ca",
-          "hidden": false,
-          "school": "Lycée Privé International de Monastir",
-          "degree": "Secondary Education",
-          "area": "",
-          "grade": "",
-          "location": "Monastir, Tunisia",
-          "period": "September 2016 - June 2020",
-          "website": {
-            "url": "",
             "label": "",
             "inlineLink": true
           },
@@ -303,56 +300,111 @@
       "icon": "",
       "columns": 1,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
-      "startOnNewPage": false,
+      "startOnNewPage": true,
       "items": [
         {
-          "id": "019c8104-f316-72b8-98ce-f93e60f3c8e2",
+          "id": "074b2d59-7cc7-43df-8500-bfdb74fd81d9",
+          "hidden": false,
+          "name": "Sonaraem",
+          "period": "March 2026 – Present",
+          "dates": {
+            "start": "2026-03",
+            "end": null,
+            "present": true
+          },
+          "website": {
+            "url": "https://www.sonaraem.com",
+            "label": "sonaraem.com",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>Syncs a Spotify library, classifies 4,409 tracks with an LLM, clusters them and builds mood playlists in a six-stage Trigger.dev pipeline.</p></li></ul>"
+        },
+        {
+          "id": "c94795f0-86f8-4e02-9159-ed8e5c7bb267",
           "hidden": false,
           "name": "Dukkani",
-          "period": "November 2025 - Present",
+          "period": "November 2025 – Present",
+          "dates": {
+            "start": "2025-11",
+            "end": null,
+            "present": true
+          },
           "website": {
             "url": "https://dukkani.co",
             "label": "dukkani.co",
-            "inlineLink": false
+            "inlineLink": true
           },
-          "description": "<p>Lightweight commerce infrastructure for social sellers (Instagram/Facebook merchants).<br>Designed multi-tenant storefront architecture.<br>Built onboarding → product management → order routing pipeline.<br>Hired and manage contributor; review PRs and define technical roadmap.<br>Built with Next.js, TurboRepo, TypeScript, PostgreSQL.</p>"
+          "description": "<ul><li><p>Multi-tenant storefronts for Instagram and Facebook sellers in Tunisia. 200+ merged PRs, 4 contributors, I review PRs and set the roadmap.</p></li></ul>"
         },
         {
-          "id": "019c90aa-0007-71cb-874f-835885ebf8cb",
-          "hidden": false,
-          "name": "Sonaraem",
-          "period": "March 2026 - Present",
-          "website": {
-            "url": "https://sonaraem.com",
-            "label": "",
-            "inlineLink": false
-          },
-          "description": "<p>Personal music-intelligence system: syncs a Spotify library, classifies every track with an LLM, clusters by similarity, and generates mood-based playlists.<br>Six-stage durable pipeline (sync → classify → embed → cluster → generate → export) on Trigger.dev.<br>Pre-launch — full write-up pending final review.</p>"
-        },
-        {
-          "id": "019c8105-bb60-7274-9a38-f7687981cf16",
+          "id": "a889c22b-20e2-453b-8846-12226395179f",
           "hidden": false,
           "name": "Zero Locker",
-          "period": "May 2025 - Present",
+          "period": "May 2025 – Present",
+          "dates": {
+            "start": "2025-05",
+            "end": null,
+            "present": true
+          },
           "website": {
             "url": "https://www.zero-locker.com",
-            "label": "",
-            "inlineLink": false
+            "label": "zero-locker.com",
+            "inlineLink": true
           },
-          "description": "<p>Self-hosted credential, card, and secret vault for developers with end-to-end encryption.<br>Data model supports credentials, cards, and secrets, sharded across containers with per-item encryption.<br>Built platform-approval workflow and NORMAL/PRO plan tiers.<br>Built with Next.js 15, Prisma + Neon Postgres, oRPC, BetterAuth, and TanStack Query.</p>"
+          "description": "<ul><li><p>Self-hosted vault for credentials, cards and secrets, every item encrypted with AES-256-GCM. Next.js, Prisma, oRPC, BetterAuth.</p></li></ul>"
         },
         {
-          "id": "019c8106-250a-7316-a74d-79f8dcbb6462",
+          "id": "6299f891-2819-47a7-b3fb-7a435ee32c2a",
           "hidden": false,
-          "name": "Undrstnd Education",
-          "period": "August 2024",
-          "website": {
-            "url": "https://undrstnd.vercel.app",
-            "label": "",
-            "inlineLink": false
+          "name": "guesswork",
+          "period": "2026 – Present",
+          "dates": {
+            "start": "2026",
+            "end": null,
+            "present": true
           },
-          "description": "<p>AI-powered learning platform giving students instant, sourced answers over their own course material.<br>RAG pipeline built on LangChain with Pinecone as the vector store.<br>Built with Next.js, Prisma, and NextAuth.</p>"
+          "website": {
+            "url": "https://guesswork.findmalek.com",
+            "label": "guesswork.findmalek.com",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>zsh autosuggestions ranked by an AI model instead of prefix matching. Open source.</p></li></ul>"
+        },
+        {
+          "id": "f4bed7d5-f83d-4bff-a09d-69f69bb0d596",
+          "hidden": false,
+          "name": "keep-player and keep-dashboard",
+          "period": "2026 – Present",
+          "dates": {
+            "start": "2026",
+            "end": null,
+            "present": true
+          },
+          "website": {
+            "url": "https://github.com/FindMalek/keep-player",
+            "label": "github.com/FindMalek",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>My own music player and homelab dashboard, self-hosted on an old i5 machine.</p></li></ul>"
+        },
+        {
+          "id": "c1cac69d-c116-44a0-9122-3224251d6815",
+          "hidden": false,
+          "name": "Open source: Databuddy",
+          "period": "2026 – Present",
+          "dates": {
+            "start": "2026",
+            "end": null,
+            "present": true
+          },
+          "website": {
+            "url": "https://github.com/databuddy-analytics/Databuddy/pulls?q=author%3AFindMalek",
+            "label": "github.com/databuddy-analytics",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>5 merged PRs in a 1,200+ star analytics repo, e.g. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/databuddy-analytics/Databuddy/pull/680\">#680</a> batches goal analytics queries into ClickHouse (+594 / -103).</p></li></ul>"
         }
       ]
     },
@@ -361,116 +413,98 @@
       "icon": "",
       "columns": 3,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": [
         {
-          "id": "019c90aa-0010-71cb-874f-835885ebf8d0",
+          "id": "e39b02a3-c64e-4c08-b201-f14b51b427bb",
           "hidden": false,
           "icon": "",
           "iconColor": "",
           "name": "Languages",
           "proficiency": "",
           "level": 0,
-          "keywords": ["TypeScript", "JavaScript", "Go", "Python", "Java", "C", "C++"]
+          "keywords": ["TypeScript", "JavaScript", "Go", "Python"]
         },
         {
-          "id": "019c90aa-0016-71cb-874f-835885ebf8d6",
+          "id": "c06370a1-1b06-4917-aaec-f46fd05b0a5f",
           "hidden": false,
           "icon": "",
           "iconColor": "",
-          "name": "Frontend",
+          "name": "Front end",
           "proficiency": "",
           "level": 0,
-          "keywords": ["React", "Next.js", "Svelte", "Tailwind CSS", "shadcn/ui", "Motion (Framer Motion)"]
+          "keywords": [
+            "React",
+            "Next.js",
+            "Svelte",
+            "Tailwind CSS",
+            "TanStack Query"
+          ]
         },
         {
-          "id": "019c90aa-0011-71cb-874f-835885ebf8d1",
+          "id": "3b49970c-23dc-4e59-83f4-86da347cf69f",
           "hidden": false,
           "icon": "",
           "iconColor": "",
-          "name": "AI / LLM Engineering",
+          "name": "AI",
           "proficiency": "",
           "level": 0,
-          "keywords": ["Vercel AI SDK", "Mastra", "Braintrust", "Groq", "LangChain", "Retrieval-Augmented Generation (RAG)", "Vector Databases (Pinecone)", "Prompt Engineering", "Evaluation Frameworks", "LLM Pipelines", "Multi-Agent Systems", "AI Image Generation"]
+          "keywords": [
+            "Vercel AI SDK",
+            "RAG",
+            "Multi-agent pipelines",
+            "Evals (Braintrust)",
+            "LangChain",
+            "Pinecone"
+          ]
         },
         {
-          "id": "019c90aa-0012-71cb-874f-835885ebf8d2",
+          "id": "c6298354-122c-4244-b6f2-2c42554ef219",
           "hidden": false,
           "icon": "",
           "iconColor": "",
-          "name": "Backend & Databases",
+          "name": "Back end",
           "proficiency": "",
           "level": 0,
-          "keywords": ["Node.js", "PostgreSQL", "MongoDB", "Prisma", "Supabase", "Neon", "oRPC", "BetterAuth", "NextAuth", "Ruby on Rails", "Zod"]
+          "keywords": [
+            "Node.js",
+            "PostgreSQL",
+            "PostGIS",
+            "Prisma",
+            "oRPC",
+            "Effect",
+            "Ruby on Rails (integrations)"
+          ]
         },
         {
-          "id": "019c90aa-0013-71cb-874f-835885ebf8d3",
+          "id": "aec91eb0-bcbc-43cd-bd4c-470dc59d69c5",
           "hidden": false,
           "icon": "",
           "iconColor": "",
-          "name": "Data Fetching & State",
+          "name": "Infrastructure",
           "proficiency": "",
           "level": 0,
-          "keywords": ["TanStack Query", "Effect"]
-        },
-        {
-          "id": "019c90aa-0014-71cb-874f-835885ebf8d4",
-          "hidden": false,
-          "icon": "",
-          "iconColor": "",
-          "name": "Infrastructure & DevOps",
-          "proficiency": "",
-          "level": 0,
-          "keywords": ["Docker", "Coolify", "Trigger.dev", "Turborepo", "pnpm", "GitHub Actions", "CI/CD", "Vercel", "IPFS (Fleek)"]
-        },
-        {
-          "id": "019c90aa-0015-71cb-874f-835885ebf8d5",
-          "hidden": false,
-          "icon": "",
-          "iconColor": "",
-          "name": "Commerce & Payments",
-          "proficiency": "",
-          "level": 0,
-          "keywords": ["Shopify", "Shopify Liquid", "Stripe", "WhatsApp Business API"]
-        },
-        {
-          "id": "019c90aa-0017-71cb-874f-835885ebf8d7",
-          "hidden": false,
-          "icon": "",
-          "iconColor": "",
-          "name": "Web3 / Blockchain",
-          "proficiency": "",
-          "level": 0,
-          "keywords": ["Ethers.js", "Web3Modal"]
-        },
-        {
-          "id": "019c90aa-0019-71cb-874f-835885ebf8d9",
-          "hidden": false,
-          "icon": "",
-          "iconColor": "",
-          "name": "Architecture & Patterns",
-          "proficiency": "",
-          "level": 0,
-          "keywords": ["Multi-Tenant Architecture", "API Design", "System Design"]
-        },
-        {
-          "id": "019c90aa-0018-71cb-874f-835885ebf8d8",
-          "hidden": false,
-          "icon": "",
-          "iconColor": "",
-          "name": "Automation & Tooling",
-          "proficiency": "",
-          "level": 0,
-          "keywords": ["Web Scraping", "CLI Development", "Adobe Photoshop Automation"]
+          "keywords": [
+            "Docker",
+            "Dokploy",
+            "Trigger.dev",
+            "GitHub Actions",
+            "Vercel",
+            "Tailscale"
+          ]
         }
-      ]
+      ],
+      "keywordLayout": "inline",
+      "layout": "default"
     },
     "languages": {
       "title": "",
       "icon": "",
       "columns": 3,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": [
@@ -502,6 +536,7 @@
       "icon": "",
       "columns": 1,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": []
@@ -511,6 +546,7 @@
       "icon": "",
       "columns": 2,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": [
@@ -520,6 +556,11 @@
           "title": "Competition Winner",
           "awarder": "B-Tech",
           "date": "June 2021",
+          "dates": {
+            "start": "2021-06",
+            "end": null,
+            "present": false
+          },
           "website": {
             "url": "",
             "label": "",
@@ -533,6 +574,11 @@
           "title": "eXtreme winner",
           "awarder": "IEEE",
           "date": "October 2023",
+          "dates": {
+            "start": "2023-10",
+            "end": null,
+            "present": false
+          },
           "website": {
             "url": "https://ieeextreme.org",
             "label": "",
@@ -547,42 +593,17 @@
       "icon": "",
       "columns": 2,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
-      "items": [
-        {
-          "id": "019c8107-602c-778a-b11e-2ae9540210b8",
-          "hidden": false,
-          "title": "Problem Solving (Basic)",
-          "issuer": "HackerRank",
-          "date": "January 2023",
-          "website": {
-            "url": "https://hackerrank.com",
-            "label": "",
-            "inlineLink": false
-          },
-          "description": "<p>Achieved the Problem Solving (Basic) Certificate from HackerRank, showcasing proficiency in solving fundamental algorithmic and coding challenges.</p>"
-        },
-        {
-          "id": "019c8107-ddf0-76cd-97ea-19cc806bd86d",
-          "hidden": false,
-          "title": "Python (Basic)",
-          "issuer": "HackerRank",
-          "date": "January 2024",
-          "website": {
-            "url": "",
-            "label": "",
-            "inlineLink": false
-          },
-          "description": "<p>Earned the Python (Basic) Certificate from HackerRank, demonstrating foundational knowledge and skills in Python programming.</p>"
-        }
-      ]
+      "items": []
     },
     "publications": {
       "title": "",
       "icon": "",
       "columns": 1,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": []
@@ -592,6 +613,7 @@
       "icon": "",
       "columns": 1,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": []
@@ -601,6 +623,7 @@
       "icon": "",
       "columns": 1,
       "hidden": false,
+      "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
       "items": []
@@ -633,17 +656,15 @@
         }
       ]
     },
-    "css": {
-      "enabled": false,
-      "value": ""
-    },
     "page": {
       "gapX": 4,
-      "gapY": 5,
-      "marginX": 11,
-      "marginY": 12,
+      "gapY": 4,
+      "marginX": 10,
+      "marginY": 8,
       "format": "a4",
       "locale": "en-US",
+      "dateFormat": "long",
+      "hideLinkUnderline": false,
       "hideIcons": false,
       "hideSectionIcons": true
     },
@@ -662,13 +683,13 @@
       "body": {
         "fontFamily": "Inter",
         "fontWeights": ["400", "600"],
-        "fontSize": 10.5,
-        "lineHeight": 1.3
+        "fontSize": 9,
+        "lineHeight": 1.35
       },
       "heading": {
         "fontFamily": "Inter",
         "fontWeights": ["700"],
-        "fontSize": 14,
+        "fontSize": 12.5,
         "lineHeight": 1.15
       }
     },
