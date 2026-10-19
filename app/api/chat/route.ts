@@ -146,6 +146,7 @@ export async function POST(req: Request) {
             const resumeData = await getResumeData()
             return {
               resumeUrl: siteConfig.links.resume,
+              downloadUrl: "/cv.pdf?download=1",
               headline: resumeData.basics.headline,
               summary: stripHtml(resumeData.summary.content),
             }
