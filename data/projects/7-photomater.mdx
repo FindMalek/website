@@ -21,17 +21,17 @@ The idea for **Photomater** came from my experience working as a graphic designe
 
 - **Automated Text Layer Updates:**
 
-  - Automatically update text layers in Photoshop files, tailored for weekly dates or other recurring updates.
-  - Handle multiple files and artboards, customizable for different clients and date formats.
+  - Automatically update text layers in Photoshop files, tailored for [weekly dates](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/services/date_service.py#L11-L24) or other recurring updates (a [recursive lookup by layer path](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/controllers/photoshop_controller.py#L76-L94) finds the layer, then [its text is replaced](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/controllers/photoshop_controller.py#L54-L58)).
+  - Handle multiple files and [artboards](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/controllers/photoshop_controller.py#L116-L142), customizable for different clients and date formats (files without artboards take a [separate single-layer path](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/controllers/photoshop_controller.py#L144-L157)).
 
 - **Rich Command-Line Interface (CLI):**
 
-  - A user-friendly CLI allows for easy interaction, supporting various commands for managing client data and automation tasks.
-  - Commands include adding, editing, and removing clients, updating text layers, and exporting files.
+  - A user-friendly CLI ([Typer app](https://github.com/FindMalek/Photomater/blob/7c25ec9/cli/main_cli.py#L9-L16), with [Rich panels and tables](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/utils/cli_utils.py#L1-L35) for output) allows for easy interaction, supporting various commands for managing client data and automation tasks.
+  - Commands include [adding](https://github.com/FindMalek/Photomater/blob/7c25ec9/cli/commands/add_client.py#L4-L12), [editing](https://github.com/FindMalek/Photomater/blob/7c25ec9/cli/commands/edit_client.py#L4-L10), and [removing](https://github.com/FindMalek/Photomater/blob/7c25ec9/cli/commands/remove_client.py#L4) clients, [updating text layers](https://github.com/FindMalek/Photomater/blob/7c25ec9/cli/commands/update_file.py#L15-L17), and [exporting files](https://github.com/FindMalek/Photomater/blob/7c25ec9/cli/commands/export_file.py#L14-L16).
 
 - **Extendable Architecture:**
 
-  - The tool’s architecture is designed to be extendable, allowing for additional Photoshop automation functionalities as needed.
+  - The tool’s architecture is designed to be extendable ([commands, controllers, services and models in separate folders](https://github.com/FindMalek/Photomater/tree/7c25ec9/app)), allowing for additional Photoshop automation functionalities as needed.
 
 - **Customizable and Scalable:**
   - Easily customize the tool to fit specific workflows and client requirements.
@@ -42,11 +42,11 @@ The idea for **Photomater** came from my experience working as a graphic designe
 The platform is built using a modern tech stack to ensure performance, scalability, and security:
 
 - **Frontend:**
-  - **Python:** For building the core automation logic and CLI.
-  - **Adobe Photoshop Scripting:** For interacting with Photoshop files and updating text layers.
+  - **Python:** For building the core automation logic and CLI ([entry point](https://github.com/FindMalek/Photomater/blob/7c25ec9/main.py#L5-L7)).
+  - **Adobe Photoshop Scripting:** For interacting with Photoshop files and updating text layers ([driven from Python through a Photoshop session](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/controllers/photoshop_controller.py#L16-L19)).
 - **Backend:**
   - **Python:** For handling the automation logic and CLI commands.
-  - **JSON:** For storing client data and configurations.
+  - **JSON:** For storing client data and configurations ([read and written in `file_service.py`](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/services/file_service.py#L10-L20)).
 - **Hosting and Services:**
   - **GitHub:** For version control and collaboration.
   - **Adobe Photoshop:** For designing and updating graphic files.
@@ -67,7 +67,7 @@ To get started with **Photomater**, follow these steps:
      git clone https://github.com/FindMalek/Photomater.git
      cd Photomater
      ```
-   - Install any necessary Python dependencies:
+   - Install any necessary Python dependencies ([`requirements.txt`](https://github.com/FindMalek/Photomater/blob/7c25ec9/requirements.txt)):
      ```bash
      pip install -r requirements.txt
      ```
@@ -165,7 +165,7 @@ These commands provide a comprehensive interface for managing and automating tas
 **Photomater** manages client data with a comprehensive structure to accommodate various project requirements and workflows. Here is an overview of the client data structure:
 
 - **Client Object:**
-  - Each client object consists of a name and a list of files associated with that client.
+  - Each client object consists of a [name and a list of files](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/models/client_model.py#L1-L4) associated with that client.
   - Example:
     ```json
     {
@@ -227,16 +227,16 @@ These commands provide a comprehensive interface for managing and automating tas
     }
     ```
 
-This structure provides flexibility for managing different types of projects and their specific requirements. It is crucial to maintain this format for the application to function correctly.
+This structure ([built by the `FileDetails` model](https://github.com/FindMalek/Photomater/blob/7c25ec9/app/models/file_model.py#L1-L21)) provides flexibility for managing different types of projects and their specific requirements. It is crucial to maintain this format for the application to function correctly.
 
 #### **Project Structure**
 
 The project is organized into several directories:
 
 - **Photomater/**
-  - **app/**: Core application code, including controllers for business logic and models for data structures.
-  - **cli/**: CLI-related code, housing individual commands and the main CLI application.
-  - **data/**: Data storage, including the JSON file for client data.
-  - **scripts/**: JavaScript scripts for Photoshop.
-  - **main.py**: Main script to run the CLI application.
+  - **[app/](https://github.com/FindMalek/Photomater/tree/7c25ec9/app)**: Core application code, including controllers for business logic and models for data structures.
+  - **[cli/](https://github.com/FindMalek/Photomater/tree/7c25ec9/cli)**: CLI-related code, housing individual commands and the main CLI application.
+  - **[data/](https://github.com/FindMalek/Photomater/tree/7c25ec9/data)**: Data storage, including the JSON file for client data.
+  - **[scripts/](https://github.com/FindMalek/Photomater/tree/7c25ec9/scripts)**: JavaScript scripts for Photoshop.
+  - **[main.py](https://github.com/FindMalek/Photomater/blob/7c25ec9/main.py)**: Main script to run the CLI application.
   - **requirements.txt**: Required Python dependencies.

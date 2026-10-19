@@ -101,31 +101,47 @@ This is where Dukkani became:
 
 ## Stack & Architecture
 
-Dukkani is built as a **modular monorepo** with clear separation of concerns:
+Dukkani is built as a **modular monorepo** ([pnpm workspaces over `apps/*` and `packages/*`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/pnpm-workspace.yaml#L1-L3)) with clear separation of concerns, and [apps never import from other apps](https://github.com/FindMalek/dukkani/blob/3a8b1a3/docs/architecture.md#L28-L29):
 
 ### Core Apps
 
-- **Dashboard (Web App)**  
+- **[Dashboard (Web App)](https://github.com/FindMalek/dukkani/tree/3a8b1a3/apps/dashboard)**  
   Merchant admin interface (products, orders, settings)
-- **Storefront (Web App)**  
+- **[Storefront (Web App)](https://github.com/FindMalek/dukkani/tree/3a8b1a3/apps/storefront)**  
   Public merchant stores
 - **API App (ORPC)**  
-  Dedicated API app hosted on Vercel with full typed endpoints + UI explorer
+  Dedicated API app hosted on Vercel with full typed endpoints + UI explorer ([the OpenAPI reference is mounted in the catch-all route](https://github.com/FindMalek/dukkani/blob/3a8b1a3/apps/api/src/app/api/%5B%5B...rest%5D%5D/route.ts#L46-L77))
 - **Telegram Bot**  
-  Merchants receive and manage orders directly on Telegram
+  Merchants receive and manage orders directly on Telegram, through a [webhook handler in the API app](https://github.com/FindMalek/dukkani/blob/3a8b1a3/apps/api/src/app/api/webhooks/%5Bprovider%5D/route.ts#L12-L33) that checks the secret token and hands the update to `TelegramService`
 
 ### Core Tech Stack
 
 - Next.js (App Router)
 - TypeScript
-- ORPC (similar to tRPC)
-- Prisma + PostgreSQL
+- ORPC (similar to tRPC), with [one root router](https://github.com/FindMalek/dukkani/blob/3a8b1a3/packages/orpc/src/routers/index.ts#L10-L14) split into dashboard, storefront and web namespaces
+- Prisma + PostgreSQL ([schema split per domain](https://github.com/FindMalek/dukkani/tree/3a8b1a3/packages/db/prisma/schema))
 - Vercel (apps hosting)
-- Cloudflare R2 (object storage, per-PR prefixes on previews)
+- Cloudflare R2 (object storage, [per-PR prefixes on previews](https://github.com/FindMalek/dukkani/blob/3a8b1a3/packages/storage/src/service.ts#L136-L145))
 - Telegram Bot API
 - Monorepo architecture (multiple apps + shared packages)
-- CI with Lighthouse tests for performance & accessibility
-- A full preview stack per pull request: four Vercel previews, a Neon database branch, seeded demo data, torn down when the PR closes ([how it works](/blog/a-database-per-pull-request))
+- CI with Lighthouse tests for performance & accessibility ([added in #267](https://github.com/FindMalek/dukkani/pull/267), [see how CI works](#how-ci-works))
+- A full preview stack per pull request: four Vercel previews, a Neon database branch, seeded demo data, torn down when the PR closes ([how it works](/blog/a-database-per-pull-request), landed in [#290](https://github.com/FindMalek/dukkani/pull/290))
+
+### How CI works
+
+Everything lives in [`.github/workflows`](https://github.com/FindMalek/dukkani/tree/3a8b1a3/.github/workflows). The per-PR preview stack is covered in [the blog post](/blog/a-database-per-pull-request), so this is the checking and automation around it.
+
+**On every PR to `main`, and on every push to `main`**, [`ci.yml`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/.github/workflows/ci.yml) runs four jobs in parallel. Lint is `biome lint`. A pinned-dependency check runs [a small script in `packages/ci-tools`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/packages/ci-tools/src/commands/check-pinned-deps.ts#L29-L36) that fails if `sharp` drifts from `^0.34.4`, because a Dependabot bump once reintroduced a crash on Vercel for weeks. Typecheck runs through Turborepo with the remote cache. The build job only builds the shared packages (`db`, `auth`, `orpc`), not the four apps, since a full build needs a live database and a pile of env vars that CI doesn't have yet. The workflow says so in a comment. There is no test job: I don't run a test suite in CI today.
+
+**On PRs only**, [`lighthouse-ci.yml`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/.github/workflows/lighthouse-ci.yml) skips drafts, waits for the Vercel preview of the exact commit to be ready, then audits the marketing site and the storefront in English and Arabic, with desktop and mobile emulation. The [thresholds](https://github.com/FindMalek/dukkani/blob/3a8b1a3/.lighthouserc.cjs#L32-L38) are 0.85 for performance and accessibility (errors) and 0.8 for best practices (warning only).
+
+**Main only.** [`prisma-migrate.yml`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/.github/workflows/prisma-migrate.yml) runs `prisma migrate deploy` against production when a push to `main` touches the schema, migrations or Prisma config. [`languine.yml`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/.github/workflows/languine.yml) runs when locale JSON files change on `main` and opens a PR with the French and Arabic translations.
+
+**When something fails**, [`ci-failure-analysis.yml`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/.github/workflows/ci-failure-analysis.yml) triggers on a failed CI, Lighthouse, migration or translation run, [pulls the job logs and the PR diff, asks an LLM what broke, and posts one comment](https://github.com/FindMalek/dukkani/blob/3a8b1a3/packages/ci-tools/src/commands/analyze.ts#L39-L175) (updated in place on later failures) on the open PR.
+
+**Housekeeping.** [`pr-auto-assign.yml`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/.github/workflows/pr-auto-assign.yml) assigns the PR author and anyone who pushes commits to it. [`pr-link-issue.yml`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/.github/workflows/pr-link-issue.yml) reads the issue number from the branch name (`fix/250-some-slug`) and appends `Closes #250` to the PR body if no issue is linked, so the project board moves on its own. When a PR closes, [`cleanup-preview.yml`](https://github.com/FindMalek/dukkani/blob/3a8b1a3/.github/workflows/cleanup-preview.yml) [deletes the `pr-N/` objects from R2](https://github.com/FindMalek/dukkani/blob/3a8b1a3/packages/ci-tools/src/commands/cleanup-preview.ts#L21-L38) and the Neon branch for that PR's head branch.
+
+---
 
 ### Architecture Goals
 

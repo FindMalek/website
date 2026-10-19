@@ -25,13 +25,13 @@ The idea for **StageUp** came from recognizing the difficulties students encount
 
 - **User-Friendly Interface:**
 
-  - The platform features an intuitive and easy-to-navigate interface, allowing students to search, filter, and apply for internships with ease.
-  - Students can create profiles, upload resumes, and manage their applications all in one place.
+  - The platform features an intuitive and easy-to-navigate interface, allowing students to search, filter ([`InternshipFilter`](https://github.com/FindMalek/StageUp/blob/95086d4/components/sections/internships/InternshipFilter.tsx)), and apply for internships with ease. The list page reads from the [internships API](https://github.com/FindMalek/StageUp/blob/95086d4/app/api/internship/route.ts#L130-L160) through [`getInternships`](<https://github.com/FindMalek/StageUp/blob/95086d4/app/(authed)/internships/page.tsx#L9-L25>).
+  - Students can create profiles, upload resumes ([`uploadFile`](https://github.com/FindMalek/StageUp/blob/95086d4/lib/storage.ts#L4-L15) to Supabase Storage, called from the [intern profile form](https://github.com/FindMalek/StageUp/blob/95086d4/components/sections/forms/Intern.tsx#L183-L205)), and manage their applications all in one place.
 
 - **Seamless Application Process:**
 
   - The platform streamlines the application process, enabling students to apply for internships directly through the platform.
-  - Companies can review applications, communicate with candidates, and manage the hiring process efficiently.
+  - Companies can review applications, communicate with candidates, and manage the hiring process efficiently ([enterprise applications table](<https://github.com/FindMalek/StageUp/blob/95086d4/app/(authed)/applications/page.tsx>), [`DataTable`](https://github.com/FindMalek/StageUp/blob/95086d4/components/sections/application/enterprise/DataTable.tsx), [new internship dialog](https://github.com/FindMalek/StageUp/blob/95086d4/components/sections/application/enterprise/DialogNewInternship.tsx)).
 
 - **Comprehensive Dashboard:**
   - Students can track the status of their applications, receive notifications, and stay updated on new opportunities that match their preferences.
@@ -41,12 +41,12 @@ The idea for **StageUp** came from recognizing the difficulties students encount
 The platform is built using a modern tech stack to ensure performance, scalability, and security:
 
 - **Frontend:**
-  - **React and Next.js:** For building dynamic and responsive user interfaces.
-  - **TailwindCSS:** For creating a sleek and customizable design.
+  - **React and Next.js:** For building dynamic and responsive user interfaces ([Next.js 14](https://github.com/FindMalek/StageUp/blob/95086d4/package.json#L38)).
+  - **TailwindCSS:** For creating a sleek and customizable design ([config](https://github.com/FindMalek/StageUp/blob/95086d4/tailwind.config.ts)).
 - **Backend:**
   - **TypeScript:** For robust and type-safe code.
-  - **Prisma:** For efficient database management.
-  - **NextAuth:** For secure authentication.
+  - **Prisma:** For efficient database management ([`Intern`, `Enterprise` and `Internship` models](https://github.com/FindMalek/StageUp/blob/95086d4/prisma/schema.prisma#L59-L122)).
+  - **NextAuth:** For secure authentication ([GitHub, Google and credentials providers](https://github.com/FindMalek/StageUp/blob/95086d4/lib/auth.ts#L20-L34)).
 - **Hosting and Services:**
   - **Vercel:** For hosting and performance monitoring.
   - **GitHub (Codebase, Issues, PRs, Actions):** For version control and collaboration.
