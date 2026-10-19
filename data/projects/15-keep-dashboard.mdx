@@ -36,14 +36,14 @@ The repo is only a week old, and I will not pretend the history is a long saga. 
 
 _Six commits, five merged pull requests, and one issue that is still open._
 
-| Date   | What landed                                                                                                                                   |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Oct 11 | Initial release. All six pages, the host agent with its systemd units, SQLite history and the live stream.                                    |
-| Oct 13 | Issue 1 opened after an audit: containers publish ports past the firewall. Still open.                                                        |
-| Oct 15 | Security pull request: the API only answers through the private route, Docker is read through a proxy. CI and the first tests arrive with it. |
-| Oct 15 | Range tabs on the system page stop showing stale data and say where history starts.                                                           |
-| Oct 15 | Uptime bars show each half hour and when it was down when you hover or arrow through them.                                                    |
-| Oct 17 | Start and stop buttons for apps that sleep, and the tidy job learns to leave them alone.                                                      |
+| Date   | What landed                                                                                                                                                                                               |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Oct 11 | [Initial release](https://github.com/FindMalek/keep-dashboard/commit/f69ee5352e72ff4a81ac4043b0138d583eee14e1). All six pages, the host agent with its systemd units, SQLite history and the live stream. |
+| Oct 13 | Issue 1 opened after an audit: containers publish ports past the firewall. Still open.                                                                                                                    |
+| Oct 15 | Security [pull request](https://github.com/FindMalek/keep-dashboard/pull/5): the API only answers through the private route, Docker is read through a proxy. CI and the first tests arrive with it.       |
+| Oct 15 | [Range tabs](https://github.com/FindMalek/keep-dashboard/pull/6) on the system page stop showing stale data and say where history starts.                                                                 |
+| Oct 15 | [Uptime bars](https://github.com/FindMalek/keep-dashboard/pull/7) show each half hour and when it was down when you hover or arrow through them.                                                          |
+| Oct 17 | [Start and stop buttons](https://github.com/FindMalek/keep-dashboard/pull/9) for apps that sleep, and the [tidy job](https://github.com/FindMalek/keep-dashboard/pull/11) learns to leave them alone.     |
 
 The first release already had the agent and the history store. The security work came after, which is the honest order for a weekend project that suddenly held a reboot button.
 
@@ -55,7 +55,7 @@ Six of them, all black and white. The only colors are orange and red, and they m
 
 ![The overview page in dark mode: eight stat tiles for cpu, memory, data disk, temperature, network, sites, ads blocked and internet speed, then panels for music, ad blocking, internet and reading, and space per app.](/project/keep-dashboard/overview.webp)
 
-_Overview at 1440 wide, fake demo data._
+_Overview at 1440 wide, fake demo data ([`overview-page.tsx`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/web/pages/overview-page.tsx))._
 
 Eight tiles, then panels for music, ad blocking, internet speed and feeds, then space per app against its limit. The design call here was to show answers, not charts. I open this page to find out whether everything is fine, and I should know in one look.
 
@@ -63,7 +63,7 @@ Eight tiles, then panels for music, ad blocking, internet speed and feeds, then 
 
 ![The system page: a live cpu graph with per core bars, memory with used and cache, network per interface, disks with read and write, and every temperature sensor as a bar.](/project/keep-dashboard/system.webp)
 
-_System, with the live tab selected. The other tabs read from SQLite._
+_System, with the live tab selected. The other tabs read from SQLite ([`system-page.tsx`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/web/pages/system-page.tsx))._
 
 CPU per core, memory, network per interface, disks, every temperature sensor and every container. Tabs switch between live, 1 hour, 24 hours, 7 days and 30 days. I want every sensor because heat is the first thing I would check on a box that never gets switched off.
 
@@ -71,15 +71,15 @@ CPU per core, memory, network per interface, disks, every temperature sensor and
 
 ![The uptime page: a table of checks, each with a strip of half hour bars, response time, 24 hour and 30 day uptime, and days left on the certificate.](/project/keep-dashboard/uptime.webp)
 
-_Uptime. The address column is blacked out on purpose._
+_Uptime. The address column is blacked out on purpose ([`uptime-page.tsx`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/web/pages/uptime-page.tsx))._
 
-Every Uptime Kuma check as a 24 hour strip of half hour bars, with response time, uptime percentages and days left on the TLS certificate. I did not build my own checker. Kuma already does it well, so the dashboard reads its metrics and draws them my way. Hovering a bar tells you which half hour it was and when it went down, which was the second pull request after the first release.
+Every Uptime Kuma check as a 24 hour strip of half hour bars, with response time, uptime percentages and days left on the TLS certificate. I did not build my own checker. Kuma already does it well, so the dashboard reads its metrics ([`kuma.ts`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/collectors/kuma.ts)) and draws them my way. Hovering a bar tells you which half hour it was and when it went down, which was the [second pull request](https://github.com/FindMalek/keep-dashboard/pull/7) after the first release ([`outages.ts`](https://github.com/FindMalek/keep-dashboard/blob/8c1f5c06c1a7e9df47b1213d86ac79ca7db9c96a/src/web/lib/outages.ts)).
 
 ### Apps
 
 ![The apps page: Dokploy projects with their services, type, domains, container count, cpu, memory and last deploy.](/project/keep-dashboard/apps.webp)
 
-_Apps, grouped by project, with example domains._
+_Apps, grouped by project, with example domains ([`apps-page.tsx`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/web/pages/apps-page.tsx))._
 
 Every Dokploy project and service, with containers, cpu, memory, domains and the last deploy. Under it sits a log of what the nightly cleanup removed, because a job that deletes things should say what it deleted.
 
@@ -87,13 +87,13 @@ Every Dokploy project and service, with containers, cpu, memory, domains and the
 
 ![The jobs page: a table of scheduled jobs with schedule, last run, next run and a run now button, and a server section with tidy now and reboot.](/project/keep-dashboard/jobs.webp)
 
-_Jobs, with last result, next run and a run now button for each._
+_Jobs, with last result, next run and a run now button for each ([`jobs-page.tsx`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/web/pages/jobs-page.tsx))._
 
 This is the page with buttons, so it is the one I worry about. More on that below.
 
 ### Activity
 
-The sixth page lists the tailnet devices, who is connected right now over SSH, Dokploy or the dashboard, and a 7 day timeline of logins, sudo commands, deploys, cleanups and reboots, folded into sessions. I left its screenshot out of this page, because it shows exactly the kind of detail a page like this should not publish.
+The sixth page ([`activity-page.tsx`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/web/pages/activity-page.tsx)) lists the tailnet devices, who is connected right now over SSH, Dokploy or the dashboard, and a 7 day timeline of logins, sudo commands, deploys, cleanups and reboots, folded into sessions. I left its screenshot out of this page, because it shows exactly the kind of detail a page like this should not publish.
 
 ## One snapshot every second
 
@@ -101,7 +101,7 @@ The sixth page lists the tailnet devices, who is connected right now over SSH, D
 
 _Fast things are read each tick, slow things keep their own timer._
 
-One Bun process collects everything and pushes a snapshot to the browser every second over Server-Sent Events. Not everything can be read that fast. CPU and memory can. Asking Dokploy for its projects cannot. So each collector runs on its own timer and writes only its own fields, and the one second tick just merges whatever they last produced. Long-term history, 1 minute averages and peaks for 31 days, goes into SQLite and feeds the 1h to 30d tabs.
+One Bun process ([`server.ts`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/server.ts)) collects everything and pushes a snapshot to the browser every second over Server-Sent Events. Not everything can be read that fast. CPU and memory can. Asking Dokploy for its projects cannot. So each [collector](https://github.com/FindMalek/keep-dashboard/tree/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/collectors) runs on its own timer and writes only its own fields, and the one second tick just merges whatever they last produced. Long-term history, 1 minute averages and peaks for 31 days, goes into SQLite ([`history-db.ts`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/src/lib/history-db.ts)) and feeds the 1h to 30d tabs.
 
 Every integration is optional. If one is not configured its panel hides or says it is not reachable.
 
@@ -111,34 +111,34 @@ The dashboard has buttons that can reboot the machine. A web app that can do tha
 
 ![Diagram: the dashboard container writes a request file into a shared folder, a systemd path unit wakes a Python host agent, and the agent accepts only reboot, tidy, a known job or a configured switch and refuses everything else.](/project/keep-dashboard/host-agent.png)
 
-_A button drops a file. Only the host agent decides what happens._
+_A button drops a file. Only the host agent decides what happens ([`keep-agent.py`](https://github.com/FindMalek/keep-dashboard/blob/f69ee5352e72ff4a81ac4043b0138d583eee14e1/host/keep-agent.py))._
 
-So the container never runs host commands. A button drops a request file into a shared folder. A systemd path unit notices it and starts a small Python agent on the host. The agent accepts `reboot`, `tidy`, `run:<known job>` and start or stop of a switch I configured. Everything else is refused and logged. It even refuses a reboot if the box booted less than five minutes ago. Requests also need a custom header, so another website cannot trigger them from my browser.
+So the container never runs host commands. A button drops a request file into a shared folder. A systemd path unit notices it ([units](https://github.com/FindMalek/keep-dashboard/tree/f69ee5352e72ff4a81ac4043b0138d583eee14e1/host/systemd)) and starts a small Python agent on the host. The agent accepts `reboot`, `tidy`, `run:<known job>` and start or stop of a switch I configured. Everything else is refused and logged. It even refuses a reboot if the box booted less than five minutes ago. Requests also need a custom header, so another website cannot trigger them from my browser.
 
 Even if someone owned the web app, the worst they could do is drop a file the agent refuses.
 
 ![Schedule of host jobs across a day: a status refresh every minute, the cleanup at 04:30 every day, and the tidy at 05:00 on Sundays.](/project/keep-dashboard/jobs-schedule.png)
 
-_The timers behind the jobs page._
+_The timers behind the jobs page ([`host/systemd`](https://github.com/FindMalek/keep-dashboard/tree/f69ee5352e72ff4a81ac4043b0138d583eee14e1/host/systemd))._
 
-The jobs are plain systemd timers. The nightly cleanup runs at 04:30. The weekly tidy runs Sundays at 05:00: stopped containers, old images, build cache, old journal logs, the apt cache. It never touches Docker volumes or my data. A status timer rewrites the job state every minute so the page stays honest.
+The jobs are plain systemd timers. The nightly cleanup ([`keep-cleanup.py`](https://github.com/FindMalek/keep-dashboard/blob/3e4a285b9c77a37aaa8dde9cac0c6a9e2b00450c/host/keep-cleanup.py)) runs at 04:30. The weekly tidy ([`keep-tidy.py`](https://github.com/FindMalek/keep-dashboard/blob/3e4a285b9c77a37aaa8dde9cac0c6a9e2b00450c/host/keep-tidy.py)) runs Sundays at 05:00: stopped containers, old images, build cache, old journal logs, the apt cache. It never touches Docker volumes or my data. A status timer rewrites the job state every minute so the page stays honest.
 
 ## What was wrong, and what I did
 
-The first release was too open. Any container on the same Docker network could call the API and press its buttons, and the Docker socket was mounted into the dashboard. A read-only mount on a socket does not make the API read-only, which surprised me. I fixed it within four days.
+The first release was too open. Any container on the same Docker network could call the API and press its buttons, and the Docker socket was mounted into the dashboard. A read-only mount on a socket does not make the API read-only, which surprised me. I fixed it within four days ([#5](https://github.com/FindMalek/keep-dashboard/pull/5)).
 
 ![Four stacked layers drawn generically: a private route that only answers my own devices, a gate header, a read-only Docker proxy, and the host agent allowlist.](/project/keep-dashboard/layers.png)
 
 _Four layers, drawn without any real hostnames or values._
 
 - **A private route.** The dashboard is reachable through a route that only my devices can use.
-- **A gate.** That route adds a header carrying a long secret, and every API call without it is a 403. The check is constant time. The proxy overwrites whatever a client sends, so it cannot be forged from the outside. The health check stays open for uptime.
-- **A proxy for Docker.** The socket left the dashboard. A small proxy on its own internal network forwards exactly one request, listing containers. Not inspect, since that would expose other containers' environment.
+- **A gate.** That route adds a header carrying a long secret, and every API call without it is a 403 ([`gate.ts`](https://github.com/FindMalek/keep-dashboard/blob/1447fa12ce909308dfdd5a122237d1ba73fb279f/src/lib/gate.ts)). The check is constant time. The proxy overwrites whatever a client sends, so it cannot be forged from the outside. The health check stays open for uptime.
+- **A proxy for Docker.** The socket left the dashboard. A small [proxy](https://github.com/FindMalek/keep-dashboard/blob/1447fa12ce909308dfdd5a122237d1ba73fb279f/docker-proxy/server.ts) on its own internal network forwards exactly one request, listing containers. Not inspect, since that would expose other containers' environment.
 - **The agent.** Buttons only ask, as above.
 
-I added CI and a test for the gate in the same change, because there had been no tests at all.
+I added [CI](https://github.com/FindMalek/keep-dashboard/blob/1447fa12ce909308dfdd5a122237d1ba73fb279f/.github/workflows/ci.yml) and a [test for the gate](https://github.com/FindMalek/keep-dashboard/blob/1447fa12ce909308dfdd5a122237d1ba73fb279f/src/lib/gate.test.ts) in the same change, because there had been no tests at all.
 
-Two lessons were not about security. The 7 day and 30 day graphs looked broken, because history only goes back to the day the dashboard went live. Range tabs now clear old data at once and say where history starts. And my cleanup once deleted a sleeping game server and its image, because it looked stopped and unused. Now the tidy job skips containers labeled as sleepers, and the jobs page has start and stop buttons for those.
+Two lessons were not about security. The 7 day and 30 day graphs looked broken, because history only goes back to the day the dashboard went live. Range tabs now clear old data at once and say where history starts ([#6](https://github.com/FindMalek/keep-dashboard/pull/6), [`range-label.ts`](https://github.com/FindMalek/keep-dashboard/blob/dcfefcc65d8a39da031621f481db0b4fbaf00d54/src/web/lib/range-label.ts)). And my cleanup once deleted a sleeping game server and its image, because it looked stopped and unused. Now the tidy job skips containers labeled as sleepers ([#11](https://github.com/FindMalek/keep-dashboard/pull/11)), and the jobs page has start and stop buttons for those ([#9](https://github.com/FindMalek/keep-dashboard/pull/9), [`jobs.test.ts`](https://github.com/FindMalek/keep-dashboard/blob/a076de6f8e8bd4c601b00b833d79d24c58057ffe/src/collectors/jobs.test.ts)).
 
 The general lesson I took from the open issue: Docker edits the firewall itself when it publishes a port, so a rule you wrote can be skipped without you noticing. I found that in an audit and the fix is still open. I am not going to describe the details of my own box here.
 
@@ -150,9 +150,8 @@ Tunisia has frequent power cuts. I set the BIOS so the box powers on by itself w
 
 - No login of its own. It relies on being reachable only through the tailnet, which is fine for me and a bad default for anyone else.
 - The published ports issue above is open.
-- The agent is about 330 lines of Python with no tests. The server side has a few small ones, for the gate, the Docker proxy, jobs, outages and range labels.
+- The agent is about 330 lines of Python with no tests. The server side has a few small ones, for the gate, the Docker proxy ([`server.test.ts`](https://github.com/FindMalek/keep-dashboard/blob/1447fa12ce909308dfdd5a122237d1ba73fb279f/docker-proxy/server.test.ts)), jobs, outages and range labels.
 - No alerts of its own. Uptime Kuma and ntfy do that.
--
 
 ## What is next
 

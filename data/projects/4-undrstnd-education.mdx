@@ -3,6 +3,7 @@ id: 4
 image: "/project/undrstnd-education.png"
 name: "Undrstnd Education"
 overview: "A revolutionary educational platform combining Google Classroom and ChatGPT features, providing a free, AI-powered solution for teachers and students to manage and interact with course materials."
+link: "https://github.com/undrstnd-labs/education"
 status: "published"
 href: "/projects/undrstnd-education"
 tags: ["AI", "Education", "ChatGPT"]
@@ -20,13 +21,13 @@ The idea for **Undrstnd Education** was born out of a need to standardize and st
 
 - **Classroom Management:**
 
-  - Teachers can create virtual classrooms and invite students using their university emails. Students can join automatically, ensuring a seamless onboarding process.
-  - Teachers can upload files and documents, while students can react to, comment on, and download these materials, fostering interactive learning.
+  - Teachers can create virtual classrooms ([`createClassroom`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/classroom.ts#L57-L71)) and invite students using their university emails ([`inviteStudent`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/components/app/feed-classroom-share.tsx#L42-L49) sends the invite, and the allowed domains sit in [`config/universities.ts`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/config/universities.ts)). Students can join automatically through a class code link ([`joinClassroom`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/classroom.ts#L7-L55)), ensuring a seamless onboarding process.
+  - Teachers can upload files and documents ([`createFile`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/post.ts#L83-L99)), while students can react to ([`addReactionPost`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/reaction.ts#L7-L19)), comment on ([`createComment`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/comment.ts#L5-L19)), and [download](https://github.com/undrstnd-labs/education/blob/a2ec2d0/components/shared/download-file-button.tsx) these materials, fostering interactive learning.
 
 - **AI-Powered Interactions:**
 
-  - The platform uses AI to scan uploaded files and employs Retrieval-Augmented Generation (RAG) to feed the model with context from the files. This allows students to chat with the files, asking questions and receiving AI-generated responses based on the content.
-  - Students can also upload their own files and interact with them using the AI features, enhancing their learning experience.
+  - The platform uses AI to scan uploaded files ([`vectorizedDocument`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/pinecone.ts#L11-L26) splits the PDF and stores embeddings in Pinecone) and employs Retrieval-Augmented Generation (RAG) to feed the model with context from the files ([the chat route](https://github.com/undrstnd-labs/education/blob/a2ec2d0/app/api/chat/route.ts#L106-L134) runs a similarity search on the file namespace before calling the model). This allows students to chat with the files, asking questions and receiving AI-generated responses based on the content.
+  - Students can also upload their own files ([`File.studentId`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/prisma/schema.prisma#L165-L182), [upload form](https://github.com/undrstnd-labs/education/blob/a2ec2d0/components/app/chat-upload-file.tsx)) and interact with them using the AI features, enhancing their learning experience.
 
 - **Free and Accessible:**
   - To ensure accessibility, especially for students who cannot afford expensive educational tools, we partnered with Groq. They provided full access to their AI models with no rate limits, allowing us to offer the platform completely free of charge.
@@ -36,15 +37,15 @@ The idea for **Undrstnd Education** was born out of a need to standardize and st
 The platform is built using a modern tech stack to ensure performance, scalability, and security:
 
 - **Frontend:**
-  - **React and Next.js:** For building dynamic and responsive user interfaces.
-  - **TailwindCSS:** For creating a sleek and customizable design.
+  - **React and Next.js:** For building dynamic and responsive user interfaces ([Next.js 14](https://github.com/undrstnd-labs/education/blob/a2ec2d0/package.json#L83-L83), App Router with a [`[locale]`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/app/%5Blocale%5D/layout.tsx) segment for English and French).
+  - **TailwindCSS:** For creating a sleek and customizable design ([config](https://github.com/undrstnd-labs/education/blob/a2ec2d0/tailwind.config.ts)).
 - **Backend:**
   - **TypeScript:** For robust and type-safe code.
-  - **Prisma:** For efficient database management.
-  - **AI Models (Groq):** For AI-powered interactions and content generation.
+  - **Prisma:** For efficient database management ([schema](https://github.com/undrstnd-labs/education/blob/a2ec2d0/prisma/schema.prisma)).
+  - **AI Models (Groq):** For AI-powered interactions and content generation ([Groq client and `mixtral-8x7b-32768` call](https://github.com/undrstnd-labs/education/blob/a2ec2d0/app/api/chat/route.ts#L10-L132); the chat route landed in [`4642bcc`](https://github.com/undrstnd-labs/education/commit/4642bcc)).
 - **Hosting and Services:**
-  - **Vercel:** For hosting and performance monitoring.
-  - **PostgreSQL:** For reliable and scalable database solutions.
+  - **Vercel:** For hosting and performance monitoring ([Vercel Analytics](https://github.com/undrstnd-labs/education/blob/a2ec2d0/components/layout/analytics.tsx)).
+  - **PostgreSQL:** For reliable and scalable database solutions ([datasource](https://github.com/undrstnd-labs/education/blob/a2ec2d0/prisma/schema.prisma#L6-L10)).
   - **GitHub (Codebase, Issues, PRs, Actions):** For version control and collaboration.
 
 #### **Achievements**
@@ -58,4 +59,4 @@ The platform is built using a modern tech stack to ensure performance, scalabili
 
 #### **Getting Started**
 
-To explore **Undrstnd Education**, visit the live website at [Undrstnd Education](https://undrstnd.vercel.app). You can also view the project’s codebase on [GitHub](https://github.com/undrstnd-labs/education) to learn more about its implementation and contribute to its development.
+The code for **Undrstnd Education** is on [GitHub](https://github.com/undrstnd-labs/education).

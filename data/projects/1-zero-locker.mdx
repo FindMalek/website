@@ -4,6 +4,8 @@ image: "/project/zero-locker.png"
 name: "Zero Locker"
 overview: "A self-hosted, open-source password manager built with Next.js 15, TypeScript, Prisma, and Neon Postgres — encrypting credentials, payment cards, and secrets with AES-256-GCM behind a type-safe oRPC API and BetterAuth authentication."
 status: "published"
+startDate: "May, 2025"
+endDate: "December, 2025"
 link: "https://www.zero-locker.com"
 href: "/projects/zero-locker"
 tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Self-Hosted", "Security"]
@@ -11,7 +13,7 @@ tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Self-Hosted", "Security
 
 # 🔐 Zero Locker — A Self-Hosted, Open-Source Password Manager
 
-**Zero Locker** is a self-hosted, open-source password management solution I built to give people full control over their credentials, payment cards, and secrets without trusting a third-party vault. The entire codebase — server, database schema, and encryption logic — is public on [GitHub](https://github.com/FindMalek/zero-locker), so anyone can audit exactly how their data is handled instead of taking a vendor's word for it.
+**Zero Locker** is a self-hosted, open-source password management solution I built to give people full control over their credentials, payment cards, and secrets without trusting a third-party vault. The entire codebase — server, [database schema](https://github.com/FindMalek/zero-locker/tree/1b912b4/prisma/schema), and [encryption logic](https://github.com/FindMalek/zero-locker/blob/1b912b4/lib/encryption.ts#L13-L74) — is public on [GitHub](https://github.com/FindMalek/zero-locker), so anyone can audit exactly how their data is handled instead of taking a vendor's word for it.
 
 ---
 
@@ -30,17 +32,17 @@ Most password managers ask you to trust a closed-source, cloud-hosted vault with
 
 Straight from the project's own feature set:
 
-- **End-to-end encryption** — AES-256-GCM for all sensitive fields
+- **End-to-end encryption** — [AES-256-GCM](https://github.com/FindMalek/zero-locker/blob/1b912b4/lib/encryption.ts#L36-L74) for all sensitive fields
 - **Credential storage** — usernames, passwords, and per-credential metadata (recovery email, phone number, whether 2FA is enabled)
 - **Payment card management** — card number and CVV stored encrypted, alongside card metadata like credit limit, rewards program, and contactless/international payment flags
 - **Secret storage** — typed secrets (API keys, database URLs, SSH keys, JWT secrets, OAuth tokens, webhook secrets, general tokens) with expiry tracking
-- **Containers** — group credentials, cards, and secrets into folders; a container can be restricted to a single entity type, including a secrets-only mode built for exporting environment variables
+- **Containers** — group credentials, cards, and secrets into folders; a container can be restricted to a [single entity type](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/enums.prisma#L132-L137), including a [secrets-only mode](https://github.com/FindMalek/zero-locker/blob/1b912b4/lib/utils/default-containers.ts#L29-L36) built for exporting environment variables
 - **Platforms** — credentials are linked to a platform (e.g. a specific service), with a review workflow (approved/pending/rejected) for platforms submitted by users
-- **Password history** — automatic tracking of credential changes over time
+- **Password history** — [automatic tracking](https://github.com/FindMalek/zero-locker/blob/1b912b4/orpc/routers/credential.ts#L657-L665) of credential changes over time
 - **Tagging** — custom tags across credentials, cards, and secrets
-- **Authentication** — session and account management via BetterAuth
+- **Authentication** — session and account management via [BetterAuth](https://github.com/FindMalek/zero-locker/blob/1b912b4/lib/auth/server.ts#L9-L21)
 - **Dark/light theme, responsive UI** — built with Tailwind CSS and shadcn/ui
-- **Self-hosted deployment** — Docker Compose for a local PostgreSQL instance, with the app itself deployable to Vercel or any Node host
+- **Self-hosted deployment** — [Docker Compose](https://github.com/FindMalek/zero-locker/blob/1b912b4/docker-compose.yml#L1-L19) for a local PostgreSQL instance, with the app itself deployable to Vercel or any Node host
 
 ---
 
@@ -50,28 +52,28 @@ Straight from the project's own feature set:
 
 The schema is split into focused Prisma files rather than one monolith — `credential.prisma`, `cards.prisma`, `secrets.prisma`, `encryption.prisma`, `auth.prisma` — and centers on a few real design decisions:
 
-- **`Credential`, `Card`, and `Secret`** are separate models, each with their own metadata model (`CredentialMetadata`, `CardMetadata`, `SecretMetadata`) rather than one generic "item" table — so a card can carry a credit limit and rewards program while a secret carries a type and expiry date, without either model being forced into a shape it doesn't need.
-- **`EncryptedData`** is a shared table (`iv`, `encryptedValue`, `encryptionKey`) referenced by every sensitive field — a credential's password, a card's number and CVV, and a secret's value all point to their own `EncryptedData` row, so encryption is handled uniformly across entity types instead of being reimplemented per field.
-- **`Container`** groups items into folders, with a `ContainerType` (`MIXED`, `SECRETS_ONLY`, `CREDENTIALS_ONLY`, `CARDS_ONLY`) — a secrets-only container is what backs environment-variable-style operations.
+- **[`Credential`](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/credential.prisma#L23-L57), [`Card`](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/cards.prisma#L27-L66), and [`Secret`](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/secrets.prisma#L17-L42)** are separate models, each with their own metadata model (`CredentialMetadata`, `CardMetadata`, `SecretMetadata`) rather than one generic "item" table — so a card can carry a credit limit and rewards program while a secret carries a type and expiry date, without either model being forced into a shape it doesn't need.
+- **[`EncryptedData`](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/encryption.prisma#L15-L36)** is a shared table (`iv`, `encryptedValue`, `encryptionKey`) referenced by every sensitive field — a [credential's password](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/credential.prisma#L48-L49), a [card's number and CVV](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/cards.prisma#L55-L59), and a [secret's value](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/secrets.prisma#L35-L36) all point to their own `EncryptedData` row, so encryption is handled uniformly across entity types instead of being reimplemented per field.
+- **[`Container`](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/utils.prisma#L90-L117)** groups items into folders, with a `ContainerType` (`MIXED`, `SECRETS_ONLY`, `CREDENTIALS_ONLY`, `CARDS_ONLY`) — a secrets-only container is what backs environment-variable-style operations.
 - **`Platform`** ties a credential to the service it belongs to, with its own approval workflow (`APPROVED` / `PENDING` / `REJECTED`) for platforms added by users rather than pre-seeded.
-- **`UserPlan`** distinguishes `NORMAL` accounts (limited to 3 default containers) from `PRO` accounts (unlimited containers).
+- **`UserPlan`** distinguishes `NORMAL` accounts ([limited to 3 default containers](https://github.com/FindMalek/zero-locker/blob/1b912b4/lib/permissions/utils.ts#L30-L40)) from `PRO` accounts (unlimited containers).
 
 ### **Tech Stack**
 
 - **Next.js 15** (App Router, Turbopack dev server) and **React 19**
 - **TypeScript** throughout, validated at the boundaries with **Zod**
 - **Prisma ORM 6** over **Neon serverless Postgres** (`@prisma/adapter-neon`)
-- **oRPC** for a type-safe, contract-first API layer between client and server (`@orpc/server`, `@orpc/client`, `@orpc/react-query`)
-- **BetterAuth** for session and account authentication
+- **oRPC** for a type-safe, contract-first API layer between client and server (`@orpc/server`, `@orpc/client`, `@orpc/react-query`), with every [router](https://github.com/FindMalek/zero-locker/blob/1b912b4/orpc/routers/index.ts#L10-L21) mounted behind one route handler
+- **BetterAuth** for [session and account authentication](https://github.com/FindMalek/zero-locker/blob/1b912b4/lib/auth/server.ts#L9-L21)
 - **TanStack Query** for client-side data fetching and caching
 - **Tailwind CSS** and **shadcn/ui** (Radix primitives) for the interface
 - **Resend** for transactional email, **Vercel Analytics** for usage metrics
 
 ### **Security**
 
-- **AES-256-GCM encryption** applied to every sensitive field before it's written to the database — credential passwords, card numbers and CVVs, and secret values
+- **AES-256-GCM encryption** applied to every sensitive field before it's written to the database — credential passwords, [card numbers and CVVs](https://github.com/FindMalek/zero-locker/blob/1b912b4/components/app/dashboard-add-card-dialog.tsx#L83-L96), and secret values
 - Each encrypted value gets its own record in the shared `EncryptedData` table with a unique initialization vector, so encryption isn't reused across fields or users
-- Credential password changes are tracked in a separate `CredentialHistory` model, itself encrypted the same way as the live value
+- Credential password changes are tracked in a separate [`CredentialHistory`](https://github.com/FindMalek/zero-locker/blob/1b912b4/prisma/schema/credential.prisma#L70-L88) model, itself [encrypted the same way](https://github.com/FindMalek/zero-locker/blob/1b912b4/orpc/routers/credential.ts#L657-L665) as the live value
 
 ---
 
@@ -90,7 +92,7 @@ pnpm db:migrate          # applies the Prisma schema
 pnpm dev                 # starts the Next.js dev server on :3000
 ```
 
-The included `docker-compose.yml` handles local Postgres, and the same Prisma schema runs against Neon in production. Project scripts also cover day-to-day operations — `docker:status`, `docker:logs`, `docker:reset`, `db:reset-and-seed` — for resetting or inspecting the local database during development.
+The included [`docker-compose.yml`](https://github.com/FindMalek/zero-locker/blob/1b912b4/docker-compose.yml#L1-L19) handles local Postgres, and the same Prisma schema runs against Neon in production. Project scripts also cover day-to-day operations — `docker:status`, `docker:logs`, `docker:reset`, `db:reset-and-seed` — for resetting or inspecting the local database during development.
 
 ---
 

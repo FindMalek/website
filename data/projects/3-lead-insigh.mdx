@@ -21,7 +21,7 @@ tags: ["AI", "Lead Management", "Automation"]
 
 - **CSV Upload and Validation:**
 
-  - Upload CSV files containing leads and validate them against a predefined structure to ensure data integrity.
+  - Upload CSV files containing leads and validate them against a predefined structure to ensure data integrity. Parsing and the required-column check live in [`CSVParserService`](https://github.com/FindMalek/lead-insight/blob/804f9d6/services/csv-parser.service.ts#L40-L116), first added in [`b05625f`](https://github.com/FindMalek/lead-insight/commit/b05625f).
 
 - **AI-Powered Lead Processing:**
 
@@ -29,7 +29,7 @@ tags: ["AI", "Lead Management", "Automation"]
 
 - **Real-Time Tracking:**
 
-  - Monitor lead processing in real-time with a comprehensive logging system, providing insights into the status and progress of each lead.
+  - Monitor lead processing in real-time with a comprehensive logging system, providing insights into the status and progress of each lead. Every import step is written to an [`ImportJobLog`](https://github.com/FindMalek/lead-insight/blob/804f9d6/prisma/schema/upload.prisma#L56-L71) row through [`logImportJob`](https://github.com/FindMalek/lead-insight/blob/804f9d6/services/import-file.service.ts#L47-L61) and rendered by the [processing terminal](https://github.com/FindMalek/lead-insight/blob/804f9d6/components/app/dashboard-processing-terminal.tsx).
 
 - **Leads Dashboard:**
 
@@ -47,15 +47,15 @@ tags: ["AI", "Lead Management", "Automation"]
 The platform is built using a modern tech stack to ensure performance, scalability, and security:
 
 - **Frontend:**
-  - **React and Next.js:** For building dynamic and responsive user interfaces.
-  - **TailwindCSS:** For creating a sleek and customizable design.
+  - **React and Next.js:** For building dynamic and responsive user interfaces, on [Next.js 15 and React 19](https://github.com/FindMalek/lead-insight/blob/804f9d6/package.json#L73-L75).
+  - **TailwindCSS:** For creating a sleek and customizable design ([Tailwind 4](https://github.com/FindMalek/lead-insight/blob/804f9d6/package.json#L108-L108)).
 - **Backend:**
   - **TypeScript:** For robust and type-safe code.
-  - **Prisma:** For efficient database management.
+  - **Prisma:** For efficient database management, with the schema split across [`prisma/schema/`](https://github.com/FindMalek/lead-insight/blob/804f9d6/prisma/schema/apollo.prisma) files.
   - **AI Models (Undrstnd Labs):** For AI-powered lead processing and evaluation.
 - **Hosting and Services:**
-  - **Vercel:** For hosting and performance monitoring.
-  - **PostgreSQL:** For reliable and scalable database solutions.
+  - **Vercel:** For hosting and performance monitoring, including [Vercel Analytics](https://github.com/FindMalek/lead-insight/blob/804f9d6/components/layout/analytics.tsx) and a [daily keep-alive cron](https://github.com/FindMalek/lead-insight/blob/804f9d6/vercel.json) hitting [`/api/cron/keep-alive`](https://github.com/FindMalek/lead-insight/blob/804f9d6/app/api/cron/keep-alive/route.ts).
+  - **PostgreSQL:** For reliable and scalable database solutions ([datasource](https://github.com/FindMalek/lead-insight/blob/804f9d6/prisma/schema/schema.prisma#L6-L9)).
   - **GitHub (Codebase, Issues, PRs, Actions):** For version control and collaboration.
   - **Sentry (Error Tracking):** For monitoring and resolving errors.
   - **PostHog (Analytics):** For detailed analytics and user insights.
@@ -79,11 +79,11 @@ To get started with **LeadInsight**, follow these steps:
 
 #### **Contributing**
 
-Contributions are welcome! Please open an issue or submit a pull request on the [GitHub repository](https://github.com/undrstnd-labs/lead-insight).
+Contributions are welcome! Please open an issue or submit a pull request on the [GitHub repository](https://github.com/FindMalek/lead-insight).
 
 #### **License**
 
-This project is licensed under the MIT License. You can view the license details [here](https://github.com/undrstnd-labs/lead-insight/blob/main/LICENSE.md).
+This project is licensed under the MIT License. You can view the license details [here](https://github.com/FindMalek/lead-insight/blob/main/LICENSE.md).
 
 #### **Contact**
 

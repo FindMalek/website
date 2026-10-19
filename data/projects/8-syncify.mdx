@@ -21,9 +21,9 @@ The idea for **Syncify** came from the lack of payment options for Spotify subsc
 
 - **Spotify Downloads:**
 
-  - Download tracks, albums, and playlists from Spotify with a simple link.
-  - Convert downloaded tracks to various audio formats, including MP3, AAC, FLAC, M4A, OPUS, VORBIS, and WAV.
-  - Preserve full metadata and cover art for all downloaded content.
+  - Download tracks, albums, and playlists from Spotify with a simple link ([the link type is detected in `whatIsLink`](https://github.com/FindMalek/Syncify/blob/5443e1e/SyncifyFunctions/systemFunctions.py#L189-L195) and resolved against the [Spotify endpoints](https://github.com/FindMalek/Syncify/blob/5443e1e/spotifyHandler/requestsHandeling.py#L34-L58)).
+  - Convert downloaded tracks to various audio formats, including [MP3, AAC, FLAC, M4A, OPUS, VORBIS, and WAV](https://github.com/FindMalek/Syncify/blob/5443e1e/main.py#L359-L366).
+  - Preserve full metadata and cover art for all downloaded content ([title, artist, album, track and disc number, date, then the front cover](https://github.com/FindMalek/Syncify/blob/5443e1e/downloadHandler/audioManager.py#L45-L67)).
 
 - **High-Quality Audio:**
 
@@ -36,18 +36,18 @@ The idea for **Syncify** came from the lack of payment options for Spotify subsc
 - **Playlist Support:**
 
   - Download personal Spotify playlists by setting their visibility to 'Public'.
-  - Use the Spotify API to retrieve song details from playlists.
+  - Use the Spotify API to retrieve song details from playlists ([client-credentials token](https://github.com/FindMalek/Syncify/blob/5443e1e/spotifyHandler/requestsHandeling.py#L18-L31), which is why the playlist has to be public).
 
 - **Environment Variables:**
-  - Securely manage Spotify API credentials using environment variables (`SYNCIFY_CLIENT_ID` and `SYNCIFY_CLIENT_SECRET`).
+  - Securely manage Spotify API credentials using environment variables ([`SYNCIFY_CLIENT_ID` and `SYNCIFY_CLIENT_SECRET`](https://github.com/FindMalek/Syncify/blob/5443e1e/spotifyHandler/systemHandeling.py#L3-L22)).
 
 #### **Technical Implementation**
 
 The platform is built using a modern tech stack to ensure performance, scalability, and security:
 
 - **Backend:**
-  - **Python:** For handling the core logic and interactions with the Spotify API.
-  - **FFmpeg:** For converting and writing metadata to the downloaded songs.
+  - **Python:** For handling the core logic ([`main.py`](https://github.com/FindMalek/Syncify/blob/5443e1e/main.py#L95-L108) drives the download loop) and interactions with the Spotify API.
+  - **FFmpeg:** For converting and writing metadata to the downloaded songs ([conversion through MoviePy](https://github.com/FindMalek/Syncify/blob/5443e1e/SyncifyFunctions/systemFunctions.py#L217-L226), [tags through mutagen](https://github.com/FindMalek/Syncify/blob/5443e1e/downloadHandler/audioManager.py#L45-L51)).
 - **Hosting and Services:**
   - **GitHub:** For version control and collaboration.
   - **Spotify API:** For retrieving song details and metadata.
@@ -59,7 +59,7 @@ To get started with **Syncify**, follow these steps:
 1. **Prerequisites:**
 
    - Ensure you have **Ubuntu/Debian/Windows** and **Python 3.6 or higher** installed.
-   - Install the required Python modules listed in `requirements.txt`.
+   - Install the required Python modules listed in [`requirements.txt`](https://github.com/FindMalek/Syncify/blob/5443e1e/requirements.txt).
    - Install **FFmpeg** and add it to your system PATH.
 
 2. **Installation:**

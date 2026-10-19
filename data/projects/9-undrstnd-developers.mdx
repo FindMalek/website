@@ -4,7 +4,7 @@ image: "/project/undrstnd-developers.jpg"
 name: "Undrstnd Developers"
 overview: "A unified platform for managing AI API keys, usage, and documentation, built with modern web technologies like React, Next.js, TailwindCSS, and Shadcn. Hosted on Vercel with real-time features powered by Supabase and Neon."
 status: "wip"
-link: "https://undrstnd.dev"
+link: "https://github.com/FindMalek/developers-undrstnd"
 href: "/projects/undrstnd-developers"
 tags: ["AI", "React", "Next.js", "Supabase"]
 ---
@@ -15,7 +15,7 @@ tags: ["AI", "React", "Next.js", "Supabase"]
 
 #### **Project Overview**
 
-**Undrstnd Developers** was born out of the need for a cost-effective and efficient alternative to expensive AI services like OpenAI. The platform allows developers to manage AI API keys, track usage, and access comprehensive documentation, all while ensuring a seamless and enjoyable user experience.
+**Undrstnd Developers** was born out of the need for a cost-effective and efficient alternative to expensive AI services like OpenAI. The platform allows developers to manage AI API keys ([`createKey`](https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/actions/key.ts#L50-L61)), track usage ([`createUsage`](https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/actions/usage.ts#L51-L65), billed per token in the [completion route](<https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/app/api/(compilation)/route.ts#L130-L175>) against a prepaid [`Funding`](https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/prisma/schema.prisma#L131-L144) balance), and access comprehensive documentation, all while ensuring a seamless and enjoyable user experience.
 
 - **Mission:** To provide easy, cheap, and fast AI integration for developers, making advanced AI technologies accessible to solo founders and small startups.
 - **Vision:** To become the go-to platform for developers seeking reliable, efficient, and affordable AI solutions.
@@ -25,33 +25,33 @@ tags: ["AI", "React", "Next.js", "Supabase"]
 The platform is built using a modern tech stack to ensure performance, scalability, and security:
 
 - **Frontend:**
-  - **React and Next.js:** For building dynamic and responsive user interfaces.
-  - **TailwindCSS and Shadcn:** For creating a sleek and customizable design.
+  - **React and Next.js:** For building dynamic and responsive user interfaces ([Next.js 15 and React 19](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/apps/app/package.json#L33-L35) in the [monorepo](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/package.json), [Next.js 14](https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/package.json#L85) in the earlier app).
+  - **TailwindCSS and Shadcn:** For creating a sleek and customizable design ([shared design system package](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/design-system/package.json), [`components.json`](https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/components.json)).
 - **Backend:**
   - **TypeScript:** For robust and type-safe code.
-  - **Prisma:** For efficient database management.
-  - **OpenAI:** For AI integration and functionalities.
+  - **Prisma:** For efficient database management ([monorepo schema](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/database/prisma/schema/schema.prisma#L7-L11), [API keys, requests and usage models](https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/prisma/schema.prisma#L146-L212)).
+  - **OpenAI:** For AI integration and functionalities ([OpenAI-compatible client plus OpenAI embeddings](https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/lib/undrstnd.ts#L1-L22), [`@ai-sdk/openai`](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/ai/package.json#L10-L12)).
 - **Hosting and Services:**
-  - **Neon (Database):** For reliable and scalable database solutions.
-  - **Supabase (Storage, Realtime):** For real-time data storage and retrieval.
-  - **Vercel (Website, Edge-Config, Analytics, and Metrics):** For hosting and performance monitoring.
+  - **Neon (Database):** For reliable and scalable database solutions ([Neon adapter for Prisma](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/database/index.ts#L1-L22)).
+  - **Supabase (Storage, Realtime):** For real-time data storage and retrieval ([Supabase client](https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/lib/supabase.ts)).
+  - **Vercel (Website, Edge-Config, Analytics, and Metrics):** For hosting and performance monitoring ([Vercel Analytics](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/analytics/vercel.ts), [daily keep-alive cron](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/apps/api/vercel.json)).
   - **GitHub (Codebase, Issues, PRs, Actions):** For version control and collaboration.
-  - **Clerk (Authentication):** For secure user authentication.
-  - **Sentry (Error Tracking):** For monitoring and resolving errors.
-  - **Arcjet (Security):** For enhancing security measures.
-  - **BetterStack (Logging):** For comprehensive logging and monitoring.
-  - **PostHog (Analytics):** For detailed analytics and user insights.
-  - **Google Analytics (Analytics):** For additional analytics and tracking.
+  - **Clerk (Authentication):** For secure user authentication ([`@undrstnd/auth`](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/auth/package.json#L11-L12), [user sync webhook](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/apps/api/app/webhooks/clerk/route.ts)).
+  - **Sentry (Error Tracking):** For monitoring and resolving errors ([`initializeSentry`](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/observability/instrumentation.ts)).
+  - **Arcjet (Security):** For enhancing security measures ([`secure`](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/security/index.ts#L12-L53)).
+  - **BetterStack (Logging):** For comprehensive logging and monitoring ([Logtail logger](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/observability/log.ts)).
+  - **PostHog (Analytics):** For detailed analytics and user insights ([server client](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/analytics/posthog/server.ts)).
+  - **Google Analytics (Analytics):** For additional analytics and tracking ([`GoogleAnalytics`](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/analytics/index.tsx#L3-L19)).
   - **GitHub Actions (CI/CD):** For continuous integration and deployment.
   - **Trigger.dev (Background Jobs):** For managing background tasks and jobs.
-  - **Stripe (Payments):** For secure and efficient payment processing.
+  - **Stripe (Payments):** For secure and efficient payment processing ([Stripe webhook handler](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/apps/api/app/webhooks/stripe/route.ts)).
   - **Dub (Short URLs):** For creating short and manageable URLs.
-  - **Resend (Email):** For handling email communications.
-  - **Vercel AI SDK (AI):** For advanced AI functionalities.
+  - **Resend (Email):** For handling email communications ([`@undrstnd/email`](https://github.com/FindMalek/developers-undrstnd/blob/a6d2857/packages/email/package.json#L15)).
+  - **Vercel AI SDK (AI):** For advanced AI functionalities ([`streamText` and `generateText` in the completion route](<https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/app/api/(compilation)/route.ts#L157-L202>)).
 
 #### **Project History and Development**
 
-The project began when I realized that OpenAI was charging excessively for slow inferences and expensive services. Inspired by this, I decided to create a more affordable and efficient alternative. The initial MVP used models from Groq, and the idea was validated with 50 active users in the first month, generating a profit of 200 euros.
+The project began when I realized that OpenAI was charging excessively for slow inferences and expensive services. Inspired by this, I decided to create a more affordable and efficient alternative. The initial MVP used models from Groq ([Groq endpoint behind the client](https://github.com/FindMalek/undrstnd-dev/blob/f0c0244/lib/undrstnd.ts#L6-L16)), and the idea was validated with 50 active users in the first month, generating a profit of 200 euros.
 
 - **Co-Founder and Investment:** I started the project with Denis Cartin as my co-founder, whom I met through Y Combinator Matchmaking. Although Denis left due to time constraints, we secured an investment of 5,000 USD from an investor in Qatar.
 - **Transition to Solo Founder:** I am now working as a solo founder, focusing on developing our own models, `undrstnd-flash` and `undrstnd-thinking`, inspired by Mistral’s Mixture of Experts (MoE) approach.
@@ -67,4 +67,4 @@ The project began when I realized that OpenAI was charging excessively for slow 
 - **Model Development:** Focus on developing and refining our own AI models, `undrstnd-flash` and `undrstnd-thinking`, to provide even better performance and affordability.
 - **Expansion:** Continue to innovate and improve the platform, making it the go-to solution for solo founders and small startups seeking reliable and cost-effective AI integration.
 
-You can explore the project’s codebase on [GitHub](https://github.com/FindMalek/developers-undrstnd) and visit the live website at [Undrstnd Developers](https://undrstnd.dev).
+You can explore the project’s codebase on [GitHub](https://github.com/FindMalek/developers-undrstnd).

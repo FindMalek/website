@@ -21,23 +21,23 @@ The idea for **FindPlate** was born out of my passion for shipping projects non-
 
 - **Production-Ready Components:**
 
-  - The template includes a wide range of pre-built components, such as landing pages, FAQ sections, and contact forms, all designed to be production-ready.
+  - The template includes a wide range of pre-built components, such as landing pages ([`marketing-hero`](https://github.com/FindMalek/findplate/blob/466d367/components/app/marketing-hero.tsx), [`marketing-about`](https://github.com/FindMalek/findplate/blob/466d367/components/app/marketing-about.tsx)), FAQ sections ([`marketing-faqs`](https://github.com/FindMalek/findplate/blob/466d367/components/app/marketing-faqs.tsx)), and contact forms, all designed to be production-ready.
 
 - **Server Actions:**
 
-  - Integrated server actions ensure seamless backend functionality, allowing for dynamic and interactive user experiences.
+  - Integrated server actions ensure seamless backend functionality, allowing for dynamic and interactive user experiences. The waitlist form posts to [`subscribeAction`](https://github.com/FindMalek/findplate/blob/466d367/actions/subscribe.ts#L8-L27), which stores the email in Postgres and sends the welcome mail.
 
 - **Email Integration:**
 
-  - Utilizing **React-Email** and **Nodemailer**, the template provides robust email integration, enabling developers to set up automated email functionalities with ease.
+  - Utilizing **React-Email** and **Nodemailer**, the template provides robust email integration, enabling developers to set up automated email functionalities with ease: [`sendMail`](https://github.com/FindMalek/findplate/blob/466d367/actions/mail.ts#L21-L77) renders the [React-Email templates](https://github.com/FindMalek/findplate/blob/466d367/components/app/email-whitelist.tsx) and sends them through a Nodemailer transport.
 
 - **SEO and Open Graph Data:**
 
-  - The template is optimized for search engines and social media sharing, with built-in SEO and Open Graph data to enhance visibility and engagement.
+  - The template is optimized for search engines and social media sharing, with built-in SEO and Open Graph data to enhance visibility and engagement ([layout metadata](https://github.com/FindMalek/findplate/blob/466d367/app/%5Blocale%5D/layout.tsx#L51-L93), [`robots.ts`](https://github.com/FindMalek/findplate/blob/466d367/app/robots.ts)).
 
 - **Internationalization (i18n):**
 
-  - Support for multiple languages is included, making it easy to create multilingual applications.
+  - Support for multiple languages is included, making it easy to create multilingual applications ([`next-intl` middleware](https://github.com/FindMalek/findplate/blob/466d367/middleware.ts#L5-L8), [message loader](https://github.com/FindMalek/findplate/blob/466d367/lib/i18n.ts#L6-L12), [English](https://github.com/FindMalek/findplate/blob/466d367/locale/en.json) and [French](https://github.com/FindMalek/findplate/blob/466d367/locale/fr.json) messages).
 
 - **Real-Time Updates:**
   - With **Supabase** integration, the template supports real-time updates and data synchronization, ensuring a dynamic and responsive user experience.
@@ -47,25 +47,25 @@ The idea for **FindPlate** was born out of my passion for shipping projects non-
 The platform is built using a modern tech stack to ensure performance, scalability, and security:
 
 - **Frontend:**
-  - **React and Next.js:** For building dynamic and responsive user interfaces.
-  - **TailwindCSS and Shadcn:** For creating a sleek and customizable design.
-  - **NextAuth:** For secure authentication.
+  - **React and Next.js:** For building dynamic and responsive user interfaces ([Next.js 14](https://github.com/FindMalek/findplate/blob/466d367/package.json#L75)).
+  - **TailwindCSS and Shadcn:** For creating a sleek and customizable design ([Tailwind config](https://github.com/FindMalek/findplate/blob/466d367/tailwind.config.ts), [`components.json`](https://github.com/FindMalek/findplate/blob/466d367/components.json)).
+  - **NextAuth:** For secure authentication ([session and JWT types](https://github.com/FindMalek/findplate/blob/466d367/types/auth.d.ts)).
   - **NextI18Next:** For internationalization and multilingual support.
 - **Backend:**
   - **TypeScript:** For robust and type-safe code.
-  - **Prisma:** For efficient database management.
+  - **Prisma:** For efficient database management ([schema](https://github.com/FindMalek/findplate/blob/466d367/prisma/schema.prisma)).
   - **Supabase:** For real-time updates and data storage.
 - **Hosting and Services:**
   - **Supabase (Database, Storage, Realtime):** For reliable and scalable database solutions.
-  - **Vercel (Website, Edge-Config, Analytics, and Metrics):** For hosting and performance monitoring.
+  - **Vercel (Website, Edge-Config, Analytics, and Metrics):** For hosting and performance monitoring ([Vercel Analytics](https://github.com/FindMalek/findplate/blob/466d367/components/layout/analytics.tsx)).
   - **GitHub (Codebase, Issues, PRs, Actions):** For version control and collaboration.
-  - **LogSnag (Events):** For monitoring and logging events.
-  - **Nodemailer (Email):** For handling email communications.
+  - **LogSnag (Events):** For monitoring and logging events ([`LogSnagProvider`](https://github.com/FindMalek/findplate/blob/466d367/app/%5Blocale%5D/layout.tsx#L109), [event catalog](https://github.com/FindMalek/findplate/blob/466d367/config/events.ts), added in [`d2d4f09`](https://github.com/FindMalek/findplate/commit/d2d4f09)).
+  - **Nodemailer (Email):** For handling email communications ([transport](https://github.com/FindMalek/findplate/blob/466d367/actions/mail.ts#L25-L34)).
   - **GitHub Actions (CI/CD):** For continuous integration and deployment.
   - **Trigger.dev (Background Jobs):** For managing background tasks and jobs.
   - **Konnect (Payments):** For secure and efficient payment processing.
   - **Novu (Notifications):** For handling notifications.
-  - **Loops (Marketing Email):** For automated marketing emails.
+  - **Loops (Marketing Email):** For automated marketing emails ([env wiring](https://github.com/FindMalek/findplate/blob/466d367/env.mjs#L10-L11)).
   - **Dub (Short URLs):** For creating short and manageable URLs.
 
 #### **Getting Started**

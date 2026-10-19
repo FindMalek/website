@@ -58,7 +58,7 @@ Key design elements:
 
 ### 👉 Introducing the `NextPage` Component
 
-To improve flow between sections, I created a **NextPage teaser component**:
+To improve flow between sections, I created a **NextPage teaser component** ([`NextPage`](https://github.com/FindMalek/website/blob/a0b8903/components/shared/next-page.tsx#L12), as it stood when v2 shipped):
 
 > "Learn more about me →"
 
@@ -99,7 +99,7 @@ I reopened **Excalidraw** to map a new information architecture.
 **Key upgrades:**
 
 - Slimmed down layout containers from `max-w-lg` to `max-w-md` for an editorial, article-like feel
-- Moved the **theme switcher** to the footer for a cleaner header
+- Moved the **theme switcher** to the footer for a cleaner header ([`ModeToggle` in `footer.tsx`](https://github.com/FindMalek/website/blob/027a92e/components/layout/footer.tsx#L38-L40))
 
 ![Excalidraw V2 Layout](/project/findmalek-excalidraw-v2.png)
 
@@ -112,7 +112,7 @@ I reopened **Excalidraw** to map a new information architecture.
 
 **Overview Cards:**
 
-- Designed animated cards to showcase key sections
+- Designed animated cards to showcase key sections ([`AboutOverviewCardsStack`](https://github.com/FindMalek/website/blob/027a92e/components/app/about-overview-cards-stack.tsx#L15-L51), landed in [#21](https://github.com/FindMalek/website/pull/21))
 - Smooth transitions and hover effects for better engagement
 
 ![Overview Card Animation](/project/findmalek-overview-card.gif)
@@ -125,26 +125,26 @@ I reopened **Excalidraw** to map a new information architecture.
 **Projects:**
 
 - Split into **Projects (personal ventures)** and **Work (professional experience)**
-- Each project now gets its own individual page (instead of sheets)
+- Each project now gets its own individual page (instead of sheets): [`projects/[slug]`](https://github.com/FindMalek/website/blob/027a92e/app/projects/%5Bslug%5D/page.tsx#L47) and [`work/[slug]`](https://github.com/FindMalek/website/blob/027a92e/app/work/%5Bslug%5D/page.tsx#L41)
 
 ![Work page hover animation](/project/findmalek-work-hover.gif)
 
 **New Sections:**
 
-- **Experience**: Individual job/role pages
-- **Clients**: My freelance and agency collaborations
+- **Experience**: Individual job/role pages ([`WorkPageById`](https://github.com/FindMalek/website/blob/027a92e/app/work/%5Bslug%5D/page.tsx#L41), content in [`data/work`](https://github.com/FindMalek/website/blob/027a92e/data/work/1-jobflow-gmbh.mdx))
+- **Clients**: My freelance and agency collaborations ([`ClientsMarquee`](https://github.com/FindMalek/website/blob/027a92e/components/app/clients-marquee.tsx#L63))
 - **[Stack](https://www.findmalek.com/stack)**: Tools & technologies I work with daily
 
 ### 🧠 The Contact Page Revolution
 
 I hated basic forms.  
-So I built an **AI-powered chatbot** using **[Vercel AI SDK](https://vercel.com/blog/vercel-ai-sdk)** with **tool calling**. It can:
+So I built an **AI-powered chatbot** using **[Vercel AI SDK](https://vercel.com/blog/vercel-ai-sdk)** with **tool calling** ([`streamText` and the tool definitions](https://github.com/FindMalek/website/blob/027a92e/app/api/chat/route.ts#L70-L154), first shipped in [#16](https://github.com/FindMalek/website/pull/16)). It can:
 
-- Send emails via **[Resend MCP](https://resend.com)**
-- Book meetings using **[Cal.com](https://cal.com)**
-- Share my resume
-- Act like me, powered by my bio and details
-- Help estimate project prices (fun to build!)
+- Send emails via **[Resend MCP](https://resend.com)** ([`saveEmail` tool](https://github.com/FindMalek/website/blob/027a92e/app/api/chat/route.ts#L78-L83), [`sendContactEmailIntroduction`](https://github.com/FindMalek/website/blob/027a92e/actions/resend.tsx#L14-L30))
+- Book meetings using **[Cal.com](https://cal.com)** ([`scheduleMeeting` tool](https://github.com/FindMalek/website/blob/027a92e/app/api/chat/route.ts#L84-L94), [calendar card](https://github.com/FindMalek/website/blob/027a92e/components/app/contact-tool-meeting-scheduler.tsx))
+- Share my resume ([`getResume` tool](https://github.com/FindMalek/website/blob/027a92e/app/api/chat/route.ts#L137-L154), [resume card](https://github.com/FindMalek/website/blob/027a92e/components/app/contact-tool-resume-generator.tsx))
+- Act like me, powered by my bio and details ([`generateChatbotContext`](https://github.com/FindMalek/website/blob/027a92e/lib/chatbot-context.ts#L218))
+- Help estimate project prices (fun to build!) ([`generatePricing` tool](https://github.com/FindMalek/website/blob/027a92e/app/api/chat/route.ts#L95-L118), [`usePricingEstimator`](https://github.com/FindMalek/website/blob/027a92e/hooks/use-pricing-estimator.ts#L19))
 
 ![Pricing Estimator](/project/findmalek-pricing-estimator.gif)
 
@@ -152,15 +152,15 @@ So I built an **AI-powered chatbot** using **[Vercel AI SDK](https://vercel.com/
 
 ## ⚙️ Tech Stack
 
-- **Next.js 15**
-- **React 19**
-- **TailwindCSS**
+- **Next.js 15** ([`package.json` at the v2 release](https://github.com/FindMalek/website/blob/a0b8903/package.json#L58))
+- **React 19** ([`package.json`](https://github.com/FindMalek/website/blob/a0b8903/package.json#L60))
+- **TailwindCSS** ([`package.json`](https://github.com/FindMalek/website/blob/a0b8903/package.json#L95))
 - **Vercel** for deployment
 
 **Open Source:**
 
-- [🔗 GitHub Repository](https://github.com/FindMalek/FindMalek)
-- [🔗 Pull Request Breakdown](https://github.com/FindMalek/FindMalek/pull/16)
+- [🔗 GitHub Repository](https://github.com/FindMalek/website)
+- [🔗 Pull Request Breakdown](https://github.com/FindMalek/website/pull/16)
 - [🔗 Figma Design File](https://www.figma.com/design/3bowVHzPN7MWZYvqmaNlCh/FindMalek---Personal-Portfolio?node-id=302-4&p=f&t=ykkwbqp3uMHyYroh-0)
 - [🔗 Excalidraw V2 Plan](https://excalidraw.com/#json=X4XHEVX32Gi_TsasX9L6b,PNCkLrUjraPiB95dWlfuMA)
 
