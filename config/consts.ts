@@ -361,14 +361,6 @@ export const OVERVIEW_CARDS: CardData[] = [
       "I trained this on hundreds of my own photos, and it still can't fake the tired look I actually had that week.",
   },
   {
-    id: 2,
-    type: "text",
-    text: "I cut my hair, RIP!",
-    subtext: "January 2020 - March 2025",
-    backgroundColor: "#0f2b46",
-    textColor: "#ffffff",
-  },
-  {
     id: 3,
     type: "image",
     imageUrl: "/author.jpg",
