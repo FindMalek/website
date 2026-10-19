@@ -12,6 +12,7 @@
     "start": "next start",
     "preview": "next build && next start",
     "lint": "eslint .",
+    "eval:chat": "braintrust eval evals/chatbot.eval.ts --no-send-logs",
     "format": "prettier . --write && eslint . --fix"
   },
   "dependencies": {
@@ -101,6 +102,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "braintrust": "^3.37.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
     "eslint-config-prettier": "^9.1.0",
