@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import type { JourneyScript } from "@/data/journey-scripts"
 
@@ -28,49 +28,47 @@ export function useIntroductionJourney(steps: JourneyScript[]) {
   // Start from a stable default to avoid hydration mismatches; restore the
   // validated active flag once the component mounts via a deferred update.
   const [state, setState] = useState<JourneyState>(DEFAULT_STATE)
-  const didRestoreRef = useRef(false)
+  const [hasRestored, setHasRestored] = useState(false)
 
   useEffect(() => {
-    if (didRestoreRef.current) return
-    didRestoreRef.current = true
-
-    let cancelled = false
     const id = setTimeout(() => {
-      if (cancelled) return
       try {
         const raw = sessionStorage.getItem(STORAGE_KEY)
-        if (!raw) return
-        const parsed = JSON.parse(raw) as unknown
-        if (
-          parsed &&
-          typeof parsed === "object" &&
-          "isActive" in parsed &&
-          parsed.isActive === true
-        ) {
-          const isMuted =
-            "isMuted" in parsed && typeof parsed.isMuted === "boolean"
-              ? parsed.isMuted
-              : false
-          setState({ ...DEFAULT_STATE, isActive: true, isMuted })
+        if (raw) {
+          const parsed = JSON.parse(raw) as unknown
+          if (
+            parsed &&
+            typeof parsed === "object" &&
+            "isActive" in parsed &&
+            parsed.isActive === true
+          ) {
+            const isMuted =
+              "isMuted" in parsed && typeof parsed.isMuted === "boolean"
+                ? parsed.isMuted
+                : false
+            setState({ ...DEFAULT_STATE, isActive: true, isMuted })
+          }
         }
       } catch {
         // ignore corrupted storage
+      } finally {
+        setHasRestored(true)
       }
     }, 0)
 
     return () => {
-      cancelled = true
       clearTimeout(id)
     }
   }, [])
 
   useEffect(() => {
+    if (!hasRestored) return
     try {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state))
     } catch {
       // ignore storage quota errors
     }
-  }, [state])
+  }, [state, hasRestored])
 
   const start = useCallback(() => {
     setState((prev) => ({

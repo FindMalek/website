@@ -180,7 +180,7 @@ export const INTRODUCTION_SCRIPT: { steps: JourneyScript[] } = {
         "Router Agent",
         "Verified Answer Synthesis",
       ],
-      caseStudyHref: "/work/qorelo",
+      caseStudyHref: "/work/qtech",
       prompts: [
         "How does the router agent decide which knowledge source to query at Qorelo?",
         "What did you learn serving as CTO at Qorelo?",

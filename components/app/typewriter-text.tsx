@@ -65,6 +65,7 @@ export function TypewriterText({
   const completedRef = useRef(false)
   const rafRef = useRef<number | null>(null)
   const lastFrameRef = useRef<number>(0)
+  const countRef = useRef<number>(0)
   const onTickRef = useRef(onTick)
 
   useEffect(() => {
@@ -84,28 +85,32 @@ export function TypewriterText({
 
     completedRef.current = false
     lastFrameRef.current = 0
+    countRef.current = 0
 
     const animate = (timestamp: number) => {
       if (!lastFrameRef.current) lastFrameRef.current = timestamp
       const elapsed = timestamp - lastFrameRef.current
 
-      if (elapsed >= speed) {
+      if (elapsed >= speed && countRef.current < text.length) {
         lastFrameRef.current = timestamp
-        setDisplayedChars((prev) => {
-          const next = Math.min(prev + 1, text.length)
-          const nextChar = text[next - 1]
-          if (next > prev && nextChar && nextChar !== " ") {
-            onTickRef.current?.(next)
-          }
-          if (next === text.length && !completedRef.current) {
-            completedRef.current = true
-            onComplete?.()
-          }
-          return next
-        })
+        const prev = countRef.current
+        const next = Math.min(prev + 1, text.length)
+        countRef.current = next
+        setDisplayedChars(next)
+
+        const nextChar = text[next - 1]
+        if (next > prev && nextChar && nextChar !== " ") {
+          onTickRef.current?.(next)
+        }
+        if (next === text.length && !completedRef.current) {
+          completedRef.current = true
+          onComplete?.()
+        }
       }
 
-      rafRef.current = requestAnimationFrame(animate)
+      if (countRef.current < text.length) {
+        rafRef.current = requestAnimationFrame(animate)
+      }
     }
 
     rafRef.current = requestAnimationFrame(animate)

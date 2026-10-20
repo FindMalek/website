@@ -314,6 +314,7 @@ export function IntroductionJourneyOverlay({
   const [skip, setSkip] = useState(false)
   const askInputRef = useRef<HTMLInputElement | null>(null)
   const pronounceAudioRef = useRef<HTMLAudioElement | null>(null)
+  const dialogRef = useRef<HTMLDivElement | null>(null)
 
   const total = INTRODUCTION_SCRIPT.steps.length
   const step = journey.currentStep
@@ -417,18 +418,28 @@ export function IntroductionJourneyOverlay({
     }
   }, [])
 
+  // Move focus into the dialog on open and restore it to the trigger on close.
+  useEffect(() => {
+    const previouslyFocused = document.activeElement
+    dialogRef.current?.focus()
+
+    return () => {
+      if (previouslyFocused instanceof HTMLElement) {
+        previouslyFocused.focus()
+      }
+    }
+  }, [])
+
   // Keyboard choreography: Space, Arrows, D (deep dive), M (mute), A (auto), 1-9, /, Esc.
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target
-      const isInputFocused =
+
+      if (
         target instanceof HTMLElement &&
         target.closest("input, textarea, [contenteditable='true']")
-
-      if (isInputFocused) {
-        if (e.key === "Escape") {
-          ;(target as HTMLElement).blur()
-        }
+      ) {
+        if (e.key === "Escape") target.blur()
         return
       }
 
@@ -437,6 +448,9 @@ export function IntroductionJourneyOverlay({
         finish()
         return
       }
+
+      // Never hijack browser/OS shortcuts like Cmd+R, Cmd+1, or Ctrl+M.
+      if (e.metaKey || e.ctrlKey || e.altKey) return
 
       if (e.key === "/") {
         e.preventDefault()
@@ -543,11 +557,13 @@ export function IntroductionJourneyOverlay({
 
   return (
     <motion.div
+      ref={dialogRef}
+      tabIndex={-1}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.22 }}
-      className="fixed inset-0 z-[100] select-none"
+      className="fixed inset-0 z-[100] select-none outline-none"
       role="dialog"
       aria-modal="true"
       aria-label="Interactive introduction journey"
