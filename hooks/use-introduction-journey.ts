@@ -2,18 +2,15 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 
-type JourneyStep = {
-  id: string
-  title: string
-  summary: string
-  details: string
-}
+import type { JourneyScript } from "@/data/journey-scripts"
 
 type JourneyState = {
   isActive: boolean
   stepIndex: number
   isExpanded: boolean
   isTypingComplete: boolean
+  isMuted: boolean
+  autoAdvance: boolean
 }
 
 const STORAGE_KEY = "introduction-journey-active"
@@ -23,9 +20,11 @@ const DEFAULT_STATE: JourneyState = {
   stepIndex: 0,
   isExpanded: false,
   isTypingComplete: false,
+  isMuted: false,
+  autoAdvance: false,
 }
 
-export function useIntroductionJourney(steps: JourneyStep[]) {
+export function useIntroductionJourney(steps: JourneyScript[]) {
   // Start from a stable default to avoid hydration mismatches; restore the
   // validated active flag once the component mounts via a deferred update.
   const [state, setState] = useState<JourneyState>(DEFAULT_STATE)
@@ -48,7 +47,11 @@ export function useIntroductionJourney(steps: JourneyStep[]) {
           "isActive" in parsed &&
           parsed.isActive === true
         ) {
-          setState({ ...DEFAULT_STATE, isActive: true })
+          const isMuted =
+            "isMuted" in parsed && typeof parsed.isMuted === "boolean"
+              ? parsed.isMuted
+              : false
+          setState({ ...DEFAULT_STATE, isActive: true, isMuted })
         }
       } catch {
         // ignore corrupted storage
@@ -62,34 +65,36 @@ export function useIntroductionJourney(steps: JourneyStep[]) {
   }, [])
 
   useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    } catch {
+      // ignore storage quota errors
+    }
   }, [state])
 
   const start = useCallback(() => {
-    setState({
+    setState((prev) => ({
+      ...DEFAULT_STATE,
+      isMuted: prev.isMuted,
       isActive: true,
-      stepIndex: 0,
-      isExpanded: false,
-      isTypingComplete: false,
-    })
+    }))
   }, [])
 
   const reset = useCallback(() => {
-    setState({
+    setState((prev) => ({
+      ...DEFAULT_STATE,
+      isMuted: prev.isMuted,
+      autoAdvance: prev.autoAdvance,
       isActive: true,
-      stepIndex: 0,
-      isExpanded: false,
-      isTypingComplete: false,
-    })
+    }))
   }, [])
 
   const stop = useCallback(() => {
-    setState({
+    setState((prev) => ({
+      ...DEFAULT_STATE,
+      isMuted: prev.isMuted,
       isActive: false,
-      stepIndex: 0,
-      isExpanded: false,
-      isTypingComplete: false,
-    })
+    }))
   }, [])
 
   const next = useCallback(() => {
@@ -97,10 +102,9 @@ export function useIntroductionJourney(steps: JourneyStep[]) {
       const nextIndex = prev.stepIndex + 1
       if (nextIndex >= steps.length) {
         return {
+          ...DEFAULT_STATE,
+          isMuted: prev.isMuted,
           isActive: false,
-          stepIndex: 0,
-          isExpanded: false,
-          isTypingComplete: false,
         }
       }
       return {
@@ -125,6 +129,19 @@ export function useIntroductionJourney(steps: JourneyStep[]) {
     )
   }, [])
 
+  const goTo = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= steps.length) return
+      setState((prev) => ({
+        ...prev,
+        stepIndex: index,
+        isExpanded: false,
+        isTypingComplete: false,
+      }))
+    },
+    [steps.length]
+  )
+
   const expand = useCallback(() => {
     setState((prev) => ({ ...prev, isExpanded: true, isTypingComplete: true }))
   }, [])
@@ -133,9 +150,18 @@ export function useIntroductionJourney(steps: JourneyStep[]) {
     setState((prev) => ({ ...prev, isTypingComplete: true }))
   }, [])
 
-  const currentStep = steps[state.stepIndex]
+  const toggleMute = useCallback(() => {
+    setState((prev) => ({ ...prev, isMuted: !prev.isMuted }))
+  }, [])
+
+  const toggleAutoAdvance = useCallback(() => {
+    setState((prev) => ({ ...prev, autoAdvance: !prev.autoAdvance }))
+  }, [])
+
+  const currentStep = steps[state.stepIndex] ?? steps[0]
   const isLastStep = state.stepIndex === steps.length - 1
-  const progress = steps.length > 0 ? ((state.stepIndex + 1) / steps.length) * 100 : 0
+  const progress =
+    steps.length > 0 ? ((state.stepIndex + 1) / steps.length) * 100 : 0
 
   return {
     ...state,
@@ -147,11 +173,14 @@ export function useIntroductionJourney(steps: JourneyStep[]) {
     stop,
     next,
     prev: prevStep,
+    goTo,
     expand,
     completeTyping,
+    toggleMute,
+    toggleAutoAdvance,
   }
 }
 
-export type { JourneyStep }
+export type { JourneyScript as JourneyStep }
 
 export type IntroductionJourneyApi = ReturnType<typeof useIntroductionJourney>

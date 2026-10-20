@@ -1,30 +1,276 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
-
+import { useCallback, useEffect, useRef, useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
 import { useChatDock } from "@/providers/chat-provider"
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  type PanInfo,
+} from "motion/react"
 
-import { INTRODUCTION_SCRIPT } from "@/data/journey-scripts"
+import {
+  INTRODUCTION_SCRIPT,
+  type JourneyScript,
+} from "@/data/journey-scripts"
+import {
+  playJourneyClose,
+  playJourneyExpand,
+  playJourneyStep,
+  playJourneyTick,
+} from "@/lib/journey-sound"
+import { cn } from "@/lib/utils"
 import type { IntroductionJourneyApi } from "@/hooks/use-introduction-journey"
 
 import { TypewriterText } from "@/components/app/typewriter-text"
+import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Icons } from "@/components/shared/icons"
 
 const INTERACTIVE_TARGET_SELECTOR =
   "button, a, input, textarea, select, [role='button'], [contenteditable='true']"
+
+const SWIPE_DISTANCE_PX = 56
+const SWIPE_VELOCITY_PX = 420
+const AUTO_ADVANCE_DELAY_MS = 3800
 
 function padStep(position: number) {
   return String(position).padStart(2, "0")
 }
 
-function JourneyAskInput({ onAsk }: { onAsk: (text: string) => void }) {
+function JourneyScrubber({
+  steps,
+  activeIndex,
+  isTypingComplete,
+  onSelect,
+}: {
+  steps: JourneyScript[]
+  activeIndex: number
+  isTypingComplete: boolean
+  onSelect: (index: number) => void
+}) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+
+  return (
+    <nav
+      aria-label="Introduction chapters"
+      className="relative grid grid-cols-9 gap-1.5 px-4 pt-3 sm:gap-2 sm:px-8 sm:pt-5"
+    >
+      {steps.map((item, idx) => {
+        const isPast = idx < activeIndex
+        const isCurrent = idx === activeIndex
+
+        return (
+          <div key={item.id} className="relative">
+            <button
+              type="button"
+              onClick={() => onSelect(idx)}
+              onPointerEnter={() => setHoveredIndex(idx)}
+              onPointerLeave={() => setHoveredIndex(null)}
+              onFocus={() => setHoveredIndex(idx)}
+              onBlur={() => setHoveredIndex(null)}
+              aria-label={`Chapter ${idx + 1}: ${item.title}`}
+              aria-current={isCurrent ? "step" : undefined}
+              className="group block w-full cursor-pointer py-2 focus:outline-none"
+            >
+              <div className="bg-foreground/15 group-hover:bg-foreground/30 relative h-1 w-full overflow-hidden rounded-full transition-colors">
+                <div
+                  className={cn(
+                    "bg-primary h-full rounded-full transition-all duration-500 ease-out",
+                    isPast && "w-full",
+                    isCurrent && (isTypingComplete ? "w-full" : "w-2/3"),
+                    !isPast && !isCurrent && "w-0"
+                  )}
+                />
+              </div>
+            </button>
+
+            <AnimatePresence>
+              {hoveredIndex === idx && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.14 }}
+                  className="bg-popover text-popover-foreground border-border pointer-events-none absolute top-full left-1/2 z-30 mt-1 -translate-x-1/2 rounded-md border px-2.5 py-1 shadow-lg whitespace-nowrap"
+                >
+                  <p className="font-mono text-[10px] tracking-wider uppercase">
+                    {padStep(idx + 1)} · {item.title}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )
+      })}
+    </nav>
+  )
+}
+
+function JourneyTelemetryCard({
+  step,
+  stepIndex,
+  onCloseForNavigation,
+}: {
+  step: JourneyScript
+  stepIndex: number
+  onCloseForNavigation: () => void
+}) {
+  const prefersReducedMotion = useReducedMotion()
+
+  return (
+    <motion.aside
+      key={`telemetry-${step.id}`}
+      initial={
+        prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.98 }
+      }
+      animate={
+        prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }
+      }
+      transition={{
+        type: "spring",
+        stiffness: 320,
+        damping: 28,
+        delay: 0.06,
+      }}
+      aria-label={`${step.title} engineering telemetry`}
+      className="border-border/80 bg-card/65 relative flex flex-col justify-between overflow-hidden rounded-2xl border p-5 shadow-2xl backdrop-blur-xl sm:p-6"
+    >
+      {/* Top telemetry header */}
+      <div>
+        <div className="border-border/60 flex items-center justify-between border-b pb-3.5">
+          <div className="flex items-center gap-2">
+            <span className="bg-primary size-2 rounded-full" />
+            <span className="text-muted-foreground font-mono text-[10px] tracking-[0.24em] uppercase">
+              Verified Telemetry · CH.{padStep(stepIndex + 1)}
+            </span>
+          </div>
+          <span className="text-muted-foreground font-mono text-[10px] tabular-nums">
+            {step.period}
+          </span>
+        </div>
+
+        {/* 3 Verified Proof Metrics */}
+        <div className="mt-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+          {step.metrics.map((metric, idx) => (
+            <motion.div
+              key={metric.label}
+              initial={
+                prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 10 }
+              }
+              animate={
+                prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }
+              }
+              transition={{
+                type: "spring",
+                stiffness: 340,
+                damping: 28,
+                delay: 0.1 + idx * 0.07,
+              }}
+              className="border-border/50 bg-background/50 rounded-xl border p-3.5"
+            >
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="text-foreground font-mono text-xl font-bold tracking-tight tabular-nums sm:text-2xl">
+                  {metric.value}
+                </span>
+                <span className="text-primary font-mono text-[10px] tracking-wider uppercase">
+                  {metric.label}
+                </span>
+              </div>
+              <p className="text-muted-foreground mt-1 text-xs leading-relaxed">
+                {metric.detail}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Special visual benchmark bar on Jobflow chapter */}
+        {step.id === "jobflow" && (
+          <div className="border-border/50 bg-background/40 mt-3 rounded-xl border p-3.5">
+            <div className="flex items-center justify-between font-mono text-[10px]">
+              <span className="text-muted-foreground uppercase">
+                Query Plan Benchmark (#5594)
+              </span>
+              <span className="text-emerald-500 font-semibold">900× faster</span>
+            </div>
+            <div className="mt-2 space-y-1.5">
+              <div className="space-y-0.5">
+                <div className="text-muted-foreground flex justify-between font-mono text-[10px]">
+                  <span>Legacy Haversine SQL</span>
+                  <span>~90,000 ms</span>
+                </div>
+                <div className="bg-muted h-1.5 w-full overflow-hidden rounded-full">
+                  <div className="bg-destructive/70 h-full w-full rounded-full" />
+                </div>
+              </div>
+              <div className="space-y-0.5">
+                <div className="text-foreground flex justify-between font-mono text-[10px]">
+                  <span>PostGIS + Partial GIST</span>
+                  <span className="text-emerald-500 font-semibold">~100 ms</span>
+                </div>
+                <div className="bg-muted h-1.5 w-full overflow-hidden rounded-full">
+                  <div className="h-full w-[2%] min-w-[6px] rounded-full bg-emerald-500" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* System architecture pipeline pills */}
+      <div className="border-border/60 mt-5 border-t pt-4">
+        <p className="text-muted-foreground mb-2.5 font-mono text-[10px] tracking-[0.22em] uppercase">
+          System Stack & Flow
+        </p>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {step.architecture.map((node, idx) => (
+            <div key={node} className="flex items-center gap-1.5">
+              <span className="border-border/80 bg-background/70 text-foreground rounded-md border px-2 py-1 font-mono text-[11px]">
+                {node}
+              </span>
+              {idx < step.architecture.length - 1 && (
+                <span
+                  aria-hidden
+                  className="text-muted-foreground font-mono text-[10px]"
+                >
+                  →
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {step.caseStudyHref && (
+          <div className="mt-4 flex justify-end">
+            <Link
+              href={step.caseStudyHref}
+              onClick={onCloseForNavigation}
+              className="text-primary hover:text-primary/80 inline-flex items-center gap-1.5 font-mono text-xs font-medium underline-offset-4 hover:underline"
+            >
+              Read full case study
+              <Icons.arrowRight className="size-3.5" />
+            </Link>
+          </div>
+        )}
+      </div>
+    </motion.aside>
+  )
+}
+
+function JourneyAskBar({
+  inputRef,
+  onAsk,
+}: {
+  inputRef: React.RefObject<HTMLInputElement | null>
+  onAsk: (text: string) => void
+}) {
   const [value, setValue] = useState("")
 
   return (
     <form
-      className="mx-auto flex w-full max-w-md items-center gap-2"
+      className="flex w-full items-center gap-2"
       onSubmit={(e) => {
         e.preventDefault()
         if (!value.trim()) return
@@ -32,16 +278,25 @@ function JourneyAskInput({ onAsk }: { onAsk: (text: string) => void }) {
         setValue("")
       }}
     >
-      <Input
-        placeholder="Ask me anything..."
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        aria-label="Ask me anything"
-        className="bg-background/60 flex-1"
-      />
-      <Button type="submit" size="sm" disabled={!value.trim()}>
-        <Icons.send className="size-4" />
-        <span className="sr-only">Ask</span>
+      <div className="relative flex-1">
+        <Input
+          ref={inputRef}
+          placeholder="Ask Malek's AI anything about this chapter… (press / to focus)"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          aria-label="Ask me anything"
+          className="bg-background/70 border-border/80 h-9 pr-8 text-xs sm:text-sm"
+        />
+        <kbd
+          aria-hidden
+          className="text-muted-foreground pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 rounded border px-1.5 py-0.5 font-mono text-[10px] sm:inline-block"
+        >
+          /
+        </kbd>
+      </div>
+      <Button type="submit" size="sm" disabled={!value.trim()} className="h-9">
+        <Icons.send className="size-3.5" />
+        <span className="ml-1.5 hidden sm:inline">Ask AI</span>
       </Button>
     </form>
   )
@@ -55,42 +310,103 @@ export function IntroductionJourneyOverlay({
   journey,
 }: IntroductionJourneyOverlayProps) {
   const chat = useChatDock()
+  const prefersReducedMotion = useReducedMotion()
   const [skip, setSkip] = useState(false)
+  const askInputRef = useRef<HTMLInputElement | null>(null)
+  const pronounceAudioRef = useRef<HTMLAudioElement | null>(null)
 
   const total = INTRODUCTION_SCRIPT.steps.length
   const step = journey.currentStep
-  const { isTypingComplete, isLastStep, stepIndex } = journey
-  const { next, prev, stop, expand, reset } = journey
+  const {
+    isTypingComplete,
+    isLastStep,
+    stepIndex,
+    isExpanded,
+    isMuted,
+    autoAdvance,
+  } = journey
+  const {
+    next,
+    prev,
+    goTo,
+    stop,
+    expand,
+    reset,
+    toggleMute,
+    toggleAutoAdvance,
+  } = journey
+
+  const handleTick = useCallback(
+    (charIndex: number) => {
+      if (!isMuted) {
+        playJourneyTick(charIndex)
+      }
+    },
+    [isMuted]
+  )
 
   const advance = useCallback(() => {
     setSkip(false)
+    if (!isMuted) playJourneyStep("next")
     next()
-  }, [next])
+  }, [next, isMuted])
 
   const goBack = useCallback(() => {
     setSkip(false)
+    if (!isMuted) playJourneyStep("prev")
     prev()
-  }, [prev])
+  }, [prev, isMuted])
+
+  const selectChapter = useCallback(
+    (index: number) => {
+      setSkip(false)
+      if (!isMuted) playJourneyStep(index >= stepIndex ? "next" : "prev")
+      goTo(index)
+    },
+    [goTo, stepIndex, isMuted]
+  )
 
   const revealDetails = useCallback(() => {
     setSkip(false)
+    if (!isMuted) playJourneyExpand()
     expand()
-  }, [expand])
+  }, [expand, isMuted])
 
   const restart = useCallback(() => {
     setSkip(false)
+    if (!isMuted) playJourneyStep("prev")
     reset()
-  }, [reset])
+  }, [reset, isMuted])
 
   const finish = useCallback(() => {
     setSkip(false)
+    if (!isMuted) playJourneyClose()
     stop()
-  }, [stop])
+  }, [stop, isMuted])
 
-  const handleAsk = (text: string) => {
-    stop()
-    chat.seedInput(text)
+  const handleAsk = useCallback(
+    (text: string) => {
+      stop()
+      chat.seedInput(text)
+    },
+    [stop, chat]
+  )
+
+  const playNameAudio = () => {
+    const audio = pronounceAudioRef.current
+    if (!audio) return
+    audio.currentTime = 0
+    audio.play().catch(() => {})
   }
+
+  // Optional hands-free cinema auto-advance once typing completes.
+  useEffect(() => {
+    if (!autoAdvance || !isTypingComplete || isLastStep) return
+    const timer = setTimeout(() => {
+      advance()
+    }, AUTO_ADVANCE_DELAY_MS)
+    return () => clearTimeout(timer)
+  }, [autoAdvance, isTypingComplete, isLastStep, advance])
 
   // Lock page scroll while the overlay owns the screen.
   useEffect(() => {
@@ -101,15 +417,18 @@ export function IntroductionJourneyOverlay({
     }
   }, [])
 
-  // Keyboard: esc exits, space fast-forwards or advances, arrows navigate.
+  // Keyboard choreography: Space, Arrows, D (deep dive), M (mute), A (auto), 1-9, /, Esc.
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target
-      if (
+      const isInputFocused =
         target instanceof HTMLElement &&
         target.closest("input, textarea, [contenteditable='true']")
-      ) {
-        if (e.key === "Escape") finish()
+
+      if (isInputFocused) {
+        if (e.key === "Escape") {
+          ;(target as HTMLElement).blur()
+        }
         return
       }
 
@@ -119,9 +438,44 @@ export function IntroductionJourneyOverlay({
         return
       }
 
-      if (e.key === "ArrowRight") {
-        if (isTypingComplete && !isLastStep) {
+      if (e.key === "/") {
+        e.preventDefault()
+        askInputRef.current?.focus()
+        return
+      }
+
+      if (e.key === "m" || e.key === "M") {
+        e.preventDefault()
+        toggleMute()
+        return
+      }
+
+      if (e.key === "a" || e.key === "A") {
+        e.preventDefault()
+        toggleAutoAdvance()
+        return
+      }
+
+      if ((e.key === "d" || e.key === "D") && isTypingComplete && !isExpanded) {
+        e.preventDefault()
+        revealDetails()
+        return
+      }
+
+      if (e.key >= "1" && e.key <= "9") {
+        const idx = Number(e.key) - 1
+        if (idx < total) {
           e.preventDefault()
+          selectChapter(idx)
+        }
+        return
+      }
+
+      if (e.key === "ArrowRight") {
+        e.preventDefault()
+        if (!isTypingComplete) {
+          setSkip(true)
+        } else if (!isLastStep) {
           advance()
         }
         return
@@ -153,144 +507,385 @@ export function IntroductionJourneyOverlay({
 
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [advance, goBack, finish, isTypingComplete, isLastStep, stepIndex])
+  }, [
+    advance,
+    goBack,
+    finish,
+    revealDetails,
+    selectChapter,
+    toggleMute,
+    toggleAutoAdvance,
+    isTypingComplete,
+    isExpanded,
+    isLastStep,
+    stepIndex,
+    total,
+  ])
 
-  // Tap on the dimmed background: skip the typing, then advance.
-  const handleBackdropTap = () => {
-    if (!journey.isTypingComplete) {
-      setSkip(true)
-    } else if (!journey.isLastStep) {
-      advance()
+  const handleDragEnd = (
+    _event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
+  ) => {
+    const { offset, velocity } = info
+    if (offset.x < -SWIPE_DISTANCE_PX || velocity.x < -SWIPE_VELOCITY_PX) {
+      if (!isTypingComplete) {
+        setSkip(true)
+      } else if (!isLastStep) {
+        advance()
+      }
+    } else if (
+      (offset.x > SWIPE_DISTANCE_PX || velocity.x > SWIPE_VELOCITY_PX) &&
+      stepIndex > 0
+    ) {
+      goBack()
     }
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[100]"
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.22 }}
+      className="fixed inset-0 z-[100] select-none"
       role="dialog"
       aria-modal="true"
-      aria-label="Introduction journey"
+      aria-label="Interactive introduction journey"
     >
-      {/* Scrim: dims and blurs the site behind */}
-      <button
-        type="button"
-        aria-label="Skip typing"
-        onClick={handleBackdropTap}
-        className="bg-background/85 absolute inset-0 h-full w-full cursor-default backdrop-blur-2xl motion-reduce:backdrop-blur-none"
+      <audio
+        ref={pronounceAudioRef}
+        src="/audio/name-pronunciation.mp3"
+        preload="none"
       />
 
-      <div className="relative flex h-dvh flex-col">
-        {/* Chrome: counter, progress, exit */}
-        <header className="flex items-center justify-between px-4 pt-4 sm:px-8 sm:pt-6">
-          <p className="text-muted-foreground font-mono text-[10px] uppercase tracking-[0.35em] sm:text-xs">
-            Introduction
-          </p>
-          <div className="flex items-center gap-4">
-            <p className="text-muted-foreground font-mono text-[10px] tabular-nums sm:text-xs">
-              {padStep(journey.stepIndex + 1)} / {padStep(total)}
-            </p>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={finish}
-              aria-label="Exit introduction (Esc)"
-              className="text-muted-foreground hover:text-foreground size-8"
-            >
-              <Icons.close className="size-4" />
-            </Button>
-          </div>
-        </header>
+      {/* Backdrop canvas with dynamic chapter spotlight & architectural dot matrix */}
+      <div
+        onClick={() => {
+          if (!isTypingComplete) setSkip(true)
+        }}
+        className="bg-background/95 absolute inset-0 h-full w-full backdrop-blur-3xl"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 transition-all duration-700 ease-out"
+          style={{
+            background: `radial-gradient(65% 55% at 50% 38%, ${step.accent}, transparent 75%)`,
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.18] dark:opacity-[0.22]"
+          style={{
+            backgroundImage:
+              "radial-gradient(var(--foreground) 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+            maskImage:
+              "radial-gradient(ellipse at center, black 35%, transparent 80%)",
+          }}
+        />
+      </div>
 
-        <div className="bg-border mx-4 h-px overflow-hidden sm:mx-8">
-          <div
-            className="bg-primary h-full transition-all duration-500 ease-out"
-            style={{ width: `${journey.progress}%` }}
+      <div className="relative mx-auto flex h-dvh max-w-6xl flex-col justify-between">
+        {/* Top Story Scrubber + Studio Bar */}
+        <div>
+          <JourneyScrubber
+            steps={INTRODUCTION_SCRIPT.steps}
+            activeIndex={stepIndex}
+            isTypingComplete={isTypingComplete}
+            onSelect={selectChapter}
           />
-        </div>
 
-        {/* Stage: one chapter at a time, centered */}
-        <div className="flex flex-1 items-center justify-center overflow-y-auto px-6 py-10">
-          <div
-            key={journey.stepIndex}
-            className="animate-in fade-in slide-in-from-bottom-6 mx-auto w-full max-w-3xl text-center motion-reduce:animate-none"
-          >
-            <p className="text-muted-foreground mb-6 font-mono text-xs uppercase tracking-[0.35em]">
-              {padStep(journey.stepIndex + 1)} — {step.title}
-            </p>
-
-            <h2 className="text-foreground text-balance text-2xl font-semibold leading-snug tracking-tight sm:text-3xl lg:text-4xl">
-              <TypewriterText
-                key={`summary-${journey.stepIndex}`}
-                text={step.summary}
-                skip={skip}
-                onComplete={journey.completeTyping}
-              />
-            </h2>
-
-            {journey.isExpanded && (
-              <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-balance text-base leading-relaxed sm:text-lg">
-                <TypewriterText
-                  key={`details-${journey.stepIndex}`}
-                  text={step.details}
-                  skip={skip}
+          <header className="flex items-center justify-between px-4 pt-3 sm:px-8">
+            <div className="flex items-center gap-3">
+              <div className="relative flex items-center gap-2.5">
+                <Image
+                  src="/about/author.png"
+                  alt="Malek Gara-Hellal"
+                  width={28}
+                  height={28}
+                  className="ring-border size-7 rounded-full object-cover ring-1"
                 />
-              </p>
-            )}
-          </div>
+                <div className="flex flex-col">
+                  <span className="text-foreground flex items-center gap-1.5 text-xs font-medium">
+                    Malek&apos;s Director&apos;s Cut
+                    {!isTypingComplete && (
+                      <span
+                        aria-hidden
+                        className="inline-flex h-2.5 items-end gap-0.5"
+                      >
+                        <span className="bg-primary h-1.5 w-0.5 animate-pulse rounded-full" />
+                        <span className="bg-primary h-2.5 w-0.5 animate-pulse rounded-full" />
+                        <span className="bg-primary h-1 w-0.5 animate-pulse rounded-full" />
+                      </span>
+                    )}
+                  </span>
+                  <span className="text-muted-foreground font-mono text-[10px] tracking-[0.2em] uppercase">
+                    Chapter {padStep(stepIndex + 1)} of {padStep(total)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <button
+                type="button"
+                onClick={toggleAutoAdvance}
+                aria-pressed={autoAdvance}
+                title="Toggle hands-free auto-advance (A)"
+                className={cn(
+                  "border-border/70 flex h-8 cursor-pointer items-center gap-1.5 rounded-full border px-3 font-mono text-[10px] tracking-wider uppercase transition-colors",
+                  autoAdvance
+                    ? "bg-primary/15 text-primary border-primary/40"
+                    : "bg-background/50 text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <span
+                  className={cn(
+                    "size-1.5 rounded-full",
+                    autoAdvance
+                      ? "bg-primary animate-ping"
+                      : "bg-muted-foreground/50"
+                  )}
+                />
+                <span className="hidden sm:inline">Auto</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={toggleMute}
+                aria-pressed={!isMuted}
+                title={isMuted ? "Unmute sound (M)" : "Mute sound (M)"}
+                className="border-border/70 bg-background/50 text-muted-foreground hover:text-foreground flex h-8 cursor-pointer items-center gap-1.5 rounded-full border px-3 font-mono text-[10px] tracking-wider uppercase transition-colors"
+              >
+                <Icons.volume className="size-3.5" />
+                <span className="hidden sm:inline">
+                  {isMuted ? "Muted" : "SFX On"}
+                </span>
+              </button>
+
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={finish}
+                aria-label="Exit introduction (Esc)"
+                className="text-muted-foreground hover:text-foreground size-8 rounded-full"
+              >
+                <Icons.close className="size-4" />
+              </Button>
+            </div>
+          </header>
         </div>
 
-        {/* Footer: controls, ask input, keyboard hints */}
-        <footer className="border-border/60 space-y-4 border-t px-4 py-4 sm:px-8 sm:py-6">
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {!journey.isTypingComplete && (
-              <Button variant="outline" size="sm" onClick={() => setSkip(true)}>
-                Skip
-              </Button>
-            )}
+        {/* Center Interactive Stage (Swipeable on mobile/touch) */}
+        <motion.div
+          drag={prefersReducedMotion ? false : "x"}
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.14}
+          onDragEnd={handleDragEnd}
+          className="flex flex-1 items-center overflow-y-auto px-4 py-4 sm:px-8 sm:py-6"
+        >
+          <div
+            key={step.id}
+            className="grid w-full items-center gap-6 lg:grid-cols-12 lg:gap-10"
+          >
+            {/* Left 7 Cols: Story & Narration */}
+            <motion.div
+              initial={
+                prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 14 }
+              }
+              animate={
+                prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }
+              }
+              transition={{ type: "spring", stiffness: 320, damping: 28 }}
+              className="flex flex-col justify-center lg:col-span-7"
+            >
+              {/* Chapter Identity Pill */}
+              <div className="mb-4 flex flex-wrap items-center gap-2.5">
+                <div className="border-border/80 bg-card/80 flex items-center gap-2.5 rounded-full border py-1 pr-3.5 pl-1.5 shadow-sm">
+                  <Image
+                    src={step.logo}
+                    alt={step.title}
+                    width={24}
+                    height={24}
+                    className="bg-background size-6 rounded-full object-contain p-0.5"
+                  />
+                  <span className="text-foreground text-xs font-semibold">
+                    {step.title}
+                  </span>
+                  <span className="text-muted-foreground font-mono text-[10px]">
+                    · {step.role}
+                  </span>
+                </div>
 
-            {journey.isTypingComplete &&
-              !journey.isExpanded &&
-              !journey.isLastStep && (
-                <Button variant="outline" size="sm" onClick={revealDetails}>
-                  <Icons.add className="mr-1.5 size-4" />
-                  Details
+                <span className="text-muted-foreground font-mono text-[11px]">
+                  {step.location}
+                </span>
+
+                {step.id === "hello" && (
+                  <button
+                    type="button"
+                    onClick={playNameAudio}
+                    className="border-border/70 bg-background/60 hover:bg-accent text-foreground inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] transition-colors"
+                  >
+                    <Icons.volume className="text-primary size-3" />
+                    Hear my name
+                  </button>
+                )}
+              </div>
+
+              {/* Main Typewriter Narration */}
+              <h2
+                onClick={() => {
+                  if (!isTypingComplete) setSkip(true)
+                }}
+                className="text-foreground cursor-pointer text-2xl leading-[1.22] font-semibold tracking-tight text-balance sm:text-3xl lg:text-[2.25rem]"
+              >
+                <TypewriterText
+                  key={`summary-${step.id}`}
+                  text={step.summary}
+                  skip={skip}
+                  onComplete={journey.completeTyping}
+                  onTick={handleTick}
+                />
+              </h2>
+
+              {/* Expandable Engineering Deep Dive */}
+              <AnimatePresence initial={false}>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="border-primary/40 bg-primary/5 mt-5 rounded-xl border-l-2 p-4">
+                      <p className="text-primary mb-1 font-mono text-[10px] tracking-[0.2em] uppercase">
+                        Architecture & Engineering Deep Dive
+                      </p>
+                      <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
+                        <TypewriterText
+                          key={`details-${step.id}`}
+                          text={step.details}
+                          speed={10}
+                          skip={skip}
+                          onTick={handleTick}
+                        />
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Contextual One-Click AI Prompts */}
+              <div className="mt-6">
+                <p className="text-muted-foreground mb-2 font-mono text-[10px] tracking-[0.2em] uppercase">
+                  Ask Malek&apos;s AI about {step.title}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {step.prompts.map((prompt) => (
+                    <button
+                      key={prompt}
+                      type="button"
+                      onClick={() => handleAsk(prompt)}
+                      className="border-border/80 bg-card/60 hover:bg-accent hover:border-primary/40 text-foreground group flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-left text-xs transition-all"
+                    >
+                      <span className="text-primary font-mono text-[10px]">
+                        ✦
+                      </span>
+                      <span>{prompt}</span>
+                      <Icons.arrowRight className="text-muted-foreground group-hover:text-foreground size-3 transition-transform group-hover:translate-x-0.5" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right 5 Cols: Living Telemetry & Proof Card */}
+            <div className="lg:col-span-5">
+              <JourneyTelemetryCard
+                step={step}
+                stepIndex={stepIndex}
+                onCloseForNavigation={finish}
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Bottom Studio Controls & AI Command Bar */}
+        <footer className="border-border/60 bg-background/60 space-y-3 border-t px-4 py-3.5 backdrop-blur-md sm:px-8 sm:py-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2">
+              {stepIndex > 0 && (
+                <Button variant="outline" size="sm" onClick={goBack}>
+                  <Icons.arrowLeft className="mr-1.5 size-3.5" />
+                  Back
                 </Button>
               )}
 
-            {journey.stepIndex > 0 && (
-              <Button variant="ghost" size="sm" onClick={goBack}>
-                <Icons.arrowLeft className="mr-1.5 size-4" />
-                Back
-              </Button>
-            )}
+              {!isTypingComplete && (
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => setSkip(true)}
+                >
+                  Fast-forward
+                  <kbd className="bg-primary-foreground/20 ml-2 hidden rounded px-1.5 py-0.5 font-mono text-[10px] sm:inline-block">
+                    Space
+                  </kbd>
+                </Button>
+              )}
 
-            {journey.isTypingComplete && !journey.isLastStep && (
-              <Button size="sm" onClick={advance}>
-                Next
-                <Icons.arrowRight className="ml-1.5 size-4" />
-              </Button>
-            )}
+              {isTypingComplete && !isExpanded && (
+                <Button variant="outline" size="sm" onClick={revealDetails}>
+                  <Icons.add className="mr-1.5 size-3.5" />
+                  Deep dive
+                  <kbd className="bg-muted ml-2 hidden rounded px-1.5 py-0.5 font-mono text-[10px] sm:inline-block">
+                    D
+                  </kbd>
+                </Button>
+              )}
 
-            {journey.isTypingComplete && journey.isLastStep && (
-              <Button size="sm" onClick={finish}>
-                Finish
-                <Icons.check className="ml-1.5 size-4" />
-              </Button>
-            )}
+              {isTypingComplete && !isLastStep && (
+                <Button size="sm" onClick={advance}>
+                  Next chapter
+                  <Icons.arrowRight className="ml-1.5 size-3.5" />
+                  <kbd className="bg-primary-foreground/20 ml-2 hidden rounded px-1.5 py-0.5 font-mono text-[10px] sm:inline-block">
+                    Space
+                  </kbd>
+                </Button>
+              )}
 
-            <Button variant="ghost" size="sm" onClick={restart}>
-              <Icons.refresh className="mr-1.5 size-4" />
-              Restart
-            </Button>
+              {isTypingComplete && isLastStep && (
+                <Button size="sm" onClick={finish}>
+                  Explore full portfolio
+                  <Icons.check className="ml-1.5 size-3.5" />
+                </Button>
+              )}
+
+              <Button variant="ghost" size="sm" onClick={restart}>
+                <Icons.refresh className="mr-1.5 size-3.5" />
+                Restart
+              </Button>
+            </div>
+
+            <div className="w-full sm:max-w-sm">
+              <JourneyAskBar inputRef={askInputRef} onAsk={handleAsk} />
+            </div>
           </div>
 
-          <JourneyAskInput onAsk={handleAsk} />
-
-          <p className="text-muted-foreground hidden text-center font-mono text-[10px] uppercase tracking-[0.25em] sm:block">
-            space — fast-forward · ← → — chapters · esc — exit
-          </p>
+          <div className="text-muted-foreground flex items-center justify-between font-mono text-[10px] tracking-[0.2em] uppercase">
+            <span className="sm:hidden">
+              Swipe left/right · Tap text to fast-forward
+            </span>
+            <span className="hidden sm:inline">
+              Space fast-forward / next · 1–9 jump chapters · D deep dive · M
+              sound · A auto-play · Esc exit
+            </span>
+            <span className="tabular-nums">{Math.round(journey.progress)}%</span>
+          </div>
         </footer>
       </div>
-    </div>
+    </motion.div>
   )
 }

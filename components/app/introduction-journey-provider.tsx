@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext } from "react"
+import { AnimatePresence } from "motion/react"
 
 import { INTRODUCTION_SCRIPT } from "@/data/journey-scripts"
 import { useIntroductionJourney } from "@/hooks/use-introduction-journey"
@@ -34,7 +35,9 @@ export function IntroductionJourneyProvider({
   return (
     <IntroductionJourneyContext.Provider value={{ start: journey.start }}>
       {children}
-      {journey.isActive && <IntroductionJourneyOverlay journey={journey} />}
+      <AnimatePresence>
+        {journey.isActive && <IntroductionJourneyOverlay journey={journey} />}
+      </AnimatePresence>
     </IntroductionJourneyContext.Provider>
   )
 }

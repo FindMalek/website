@@ -23,14 +23,16 @@ interface TypewriterTextProps {
   speed?: number
   skip?: boolean
   onComplete?: () => void
+  onTick?: (charIndex: number) => void
   className?: string
 }
 
 export function TypewriterText({
   text,
-  speed = 18,
+  speed = 16,
   skip = false,
   onComplete,
+  onTick,
   className,
 }: TypewriterTextProps) {
   const prefersReducedMotion = useSyncExternalStore(
@@ -63,6 +65,11 @@ export function TypewriterText({
   const completedRef = useRef(false)
   const rafRef = useRef<number | null>(null)
   const lastFrameRef = useRef<number>(0)
+  const onTickRef = useRef(onTick)
+
+  useEffect(() => {
+    onTickRef.current = onTick
+  }, [onTick])
 
   // Animation loop. State resets happen through remounts, so this effect only
   // drives the reveal forward.
@@ -86,6 +93,10 @@ export function TypewriterText({
         lastFrameRef.current = timestamp
         setDisplayedChars((prev) => {
           const next = Math.min(prev + 1, text.length)
+          const nextChar = text[next - 1]
+          if (next > prev && nextChar && nextChar !== " ") {
+            onTickRef.current?.(next)
+          }
           if (next === text.length && !completedRef.current) {
             completedRef.current = true
             onComplete?.()
@@ -112,11 +123,12 @@ export function TypewriterText({
       <span aria-hidden={!shouldRevealInstantly}>{visibleText}</span>
       {/* Screen readers and final DOM always see the full text */}
       <span className="sr-only">{text}</span>
-      {/* Cursor */}
+      {/* Editorial terminal caret */}
       {shownChars < text.length && !shouldRevealInstantly && (
-        <span className="animate-pulse" aria-hidden>
-          |
-        </span>
+        <span
+          className="bg-primary ml-1 inline-block h-[0.88em] w-[2.5px] translate-y-[0.08em] animate-pulse align-baseline"
+          aria-hidden
+        />
       )}
     </span>
   )
