@@ -4,13 +4,8 @@ import { useEffect, useRef, useState } from "react"
 
 import { useChatDock } from "@/providers/chat-provider"
 
-import { cn } from "@/lib/utils"
-
 import { INTRODUCTION_SCRIPT } from "@/data/journey-scripts"
-import {
-  JourneyStep,
-  useIntroductionJourney,
-} from "@/hooks/use-introduction-journey"
+import { useIntroductionJourney } from "@/hooks/use-introduction-journey"
 
 import { TypewriterText } from "@/components/app/typewriter-text"
 import { Button } from "@/components/ui/button"
