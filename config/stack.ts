@@ -39,6 +39,13 @@ export const STACK_SECTIONS: StackSection[] = [
         url: "https://braintrust.dev",
       },
       {
+        title: "Groq",
+        description:
+          "Fast inference API for open and proprietary LLMs, used in production pipelines.",
+        imageUrl: "https://img.logo.dev/groq.com",
+        url: "https://groq.com",
+      },
+      {
         title: "Banani",
         description:
           "AI-powered UI design platform that converts text or screenshots to editable prototypes and code.",
@@ -76,6 +83,13 @@ export const STACK_SECTIONS: StackSection[] = [
           "JavaScript runtime for server-side application development.",
         imageUrl: "https://img.logo.dev/nodejs.org",
         url: "https://nodejs.org",
+      },
+      {
+        title: "Bun",
+        description:
+          "Fast JavaScript runtime, bundler, and package manager used for performance-sensitive tools.",
+        imageUrl: "https://img.logo.dev/bun.sh",
+        url: "https://bun.sh",
       },
     ],
   },
@@ -178,6 +192,13 @@ export const STACK_SECTIONS: StackSection[] = [
         imageUrl: "https://img.logo.dev/pmnd.rs",
         url: "https://docs.pmnd.rs/zustand",
       },
+      {
+        title: "Better Auth",
+        description:
+          "TypeScript-first authentication framework for modern full-stack apps.",
+        imageUrl: "https://img.logo.dev/better-auth.com",
+        url: "https://www.better-auth.com",
+      },
     ],
   },
   {
@@ -208,6 +229,27 @@ export const STACK_SECTIONS: StackSection[] = [
         description: "Version control and collaboration platform for code.",
         imageUrl: "https://img.logo.dev/github.com",
         url: "https://github.com",
+      },
+      {
+        title: "Biome",
+        description:
+          "Fast linter and formatter for JavaScript, TypeScript, and JSON.",
+        imageUrl: "https://img.logo.dev/biomejs.dev",
+        url: "https://biomejs.dev",
+      },
+      {
+        title: "Playwright",
+        description:
+          "End-to-end testing framework for web apps and browsers.",
+        imageUrl: "https://img.logo.dev/playwright.dev",
+        url: "https://playwright.dev",
+      },
+      {
+        title: "Zed",
+        description:
+          "High-performance multiplayer code editor built in Rust.",
+        imageUrl: "https://img.logo.dev/zed.dev",
+        url: "https://zed.dev",
       },
     ],
   },
@@ -351,6 +393,20 @@ export const STACK_SECTIONS: StackSection[] = [
         imageUrl: "https://img.logo.dev/supabase.com",
         url: "https://supabase.com",
       },
+      {
+        title: "SQLite",
+        description:
+          "Embedded SQL database used for local indexes, history, and offline caches.",
+        imageUrl: "https://img.logo.dev/sqlite.org",
+        url: "https://sqlite.org",
+      },
+      {
+        title: "Drizzle ORM",
+        description:
+          "TypeScript ORM with a SQL-like query API for Postgres and SQLite.",
+        imageUrl: "https://img.logo.dev/orm.drizzle.team",
+        url: "https://orm.drizzle.team",
+      },
     ],
   },
   {
@@ -376,6 +432,13 @@ export const STACK_SECTIONS: StackSection[] = [
           "Media center for streaming movies, TV shows, and live TV.",
         imageUrl: "https://img.logo.dev/stremio.com",
         url: "https://www.stremio.com",
+      },
+      {
+        title: "Navidrome",
+        description:
+          "Self-hosted music server and Subsonic-compatible streaming service.",
+        imageUrl: "https://img.logo.dev/navidrome.org",
+        url: "https://www.navidrome.org",
       },
     ],
   },
@@ -418,6 +481,13 @@ export const STACK_SECTIONS: StackSection[] = [
           "Powerful Unix shell with advanced scripting and completion features.",
         imageUrl: "https://img.logo.dev/zsh.org",
         url: "https://zsh.org",
+      },
+      {
+        title: "Tailscale",
+        description:
+          "Zero-config VPN for connecting home lab devices and private services.",
+        imageUrl: "https://img.logo.dev/tailscale.com",
+        url: "https://tailscale.com",
       },
     ],
   },
