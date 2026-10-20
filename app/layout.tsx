@@ -1,4 +1,5 @@
 import "@/styles/globals.css"
+import "@/styles/geist-tokens.css"
 
 import type { Metadata, Viewport } from "next"
 import { ChatProvider } from "@/providers/chat-provider"
