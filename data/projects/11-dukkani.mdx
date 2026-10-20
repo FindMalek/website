@@ -2,7 +2,7 @@
 id: 11
 image: "/project/dukkani.png"
 name: "Dukkani"
-overview: "A mobile-first commerce platform for Tunisia — enabling merchants to launch online stores, manage orders via Telegram, and sell without technical complexity. Think Shopify, but built for the Tunisian market."
+overview: "A mobile-first commerce platform for Tunisian merchants: dashboard, custom storefront, Telegram order notifications, and a full oRPC API. Built as a Turborepo monorepo with Next.js, Prisma, PostgreSQL, and Better Auth."
 status: "published"
 link: "https://dukkani.co"
 href: "/projects/dukkani"
@@ -118,12 +118,14 @@ Dukkani is built as a **modular monorepo** ([pnpm workspaces over `apps/*` and `
 
 - Next.js (App Router)
 - TypeScript
+- Turborepo monorepo with four apps and shared packages
 - ORPC (similar to tRPC), with [one root router](https://github.com/FindMalek/dukkani/blob/3a8b1a3/packages/orpc/src/routers/index.ts#L10-L14) split into dashboard, storefront and web namespaces
 - Prisma + PostgreSQL ([schema split per domain](https://github.com/FindMalek/dukkani/tree/3a8b1a3/packages/db/prisma/schema))
+- Better Auth for authentication
 - Vercel (apps hosting)
 - Cloudflare R2 (object storage, [per-PR prefixes on previews](https://github.com/FindMalek/dukkani/blob/3a8b1a3/packages/storage/src/service.ts#L136-L145))
-- Telegram Bot API
-- Monorepo architecture (multiple apps + shared packages)
+- Telegram Bot API for order notifications
+- Biome for linting and formatting
 - CI with Lighthouse tests for performance & accessibility ([added in #267](https://github.com/FindMalek/dukkani/pull/267), [see how CI works](#how-ci-works))
 - A full preview stack per pull request: four Vercel previews, a Neon database branch, seeded demo data, torn down when the PR closes ([how it works](/blog/a-database-per-pull-request), landed in [#290](https://github.com/FindMalek/dukkani/pull/290))
 
