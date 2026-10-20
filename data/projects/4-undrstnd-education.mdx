@@ -2,61 +2,34 @@
 id: 4
 image: "/project/undrstnd-education.png"
 name: "Undrstnd Education"
-overview: "A revolutionary educational platform combining Google Classroom and ChatGPT features, providing a free, AI-powered solution for teachers and students to manage and interact with course materials."
-link: "https://github.com/undrstnd-labs/education"
+overview: "A university final project: an AI-powered learning platform where students upload course material and ask questions over it. Built with Next.js 14, Prisma, NextAuth, LangChain, and Pinecone."
+link: "https://undrstnd.vercel.app"
 status: "published"
 href: "/projects/undrstnd-education"
-tags: ["AI", "Education", "ChatGPT"]
+tags: ["Next.js", "AI", "RAG", "LangChain", "Pinecone", "Prisma", "Education"]
 ---
 
-### Undrstnd Education: Revolutionizing Education with AI
+# Undrstnd Education
 
-**Undrstnd Education** is a groundbreaking platform designed to address the challenges of standardizing and managing educational content in universities. Developed as my final university project in collaboration with Amine Jguirim, this platform integrates features from Google Classroom and ChatGPT to create a seamless, AI-powered learning experience for both teachers and students.
+Built as my final university project with Amine Jguirim, **Undrstnd Education** is a learning platform that lets teachers create classrooms, upload documents, and lets students ask AI questions grounded in those documents.
 
-#### **Project Inspiration**
+## What it does
 
-The idea for **Undrstnd Education** was born out of a need to standardize and streamline the distribution of educational materials, such as courses and assignments, within universities. Recognizing the inefficiencies in current systems, we set out to create a stand-alone platform that combines the best features of Google Classroom and ChatGPT, making it accessible and free for all users.
+- **Classroom management.** Teachers create classrooms and invite students by university email; students join via a class code. Files can be uploaded, commented on, and downloaded.
+- **RAG over uploaded files.** PDFs are split, embedded, and stored in Pinecone. The chat route runs a similarity search against the file namespace before calling the LLM, so answers cite the course material.
+- **Student uploads.** Students can upload their own files and query them the same way.
 
-#### **Platform Features**
+## Stack
 
-- **Classroom Management:**
+- **Frontend:** Next.js 14 App Router, React, Tailwind CSS, with `[locale]` routing for English and French.
+- **Backend:** TypeScript, Prisma ORM, PostgreSQL.
+- **AI:** LangChain + Pinecone for retrieval; Groq (`mixtral-8x7b-32768`) for generation.
+- **Auth:** NextAuth.
+- **Hosting:** Vercel.
 
-  - Teachers can create virtual classrooms ([`createClassroom`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/classroom.ts#L57-L71)) and invite students using their university emails ([`inviteStudent`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/components/app/feed-classroom-share.tsx#L42-L49) sends the invite, and the allowed domains sit in [`config/universities.ts`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/config/universities.ts)). Students can join automatically through a class code link ([`joinClassroom`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/classroom.ts#L7-L55)), ensuring a seamless onboarding process.
-  - Teachers can upload files and documents ([`createFile`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/post.ts#L83-L99)), while students can react to ([`addReactionPost`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/reaction.ts#L7-L19)), comment on ([`createComment`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/comment.ts#L5-L19)), and [download](https://github.com/undrstnd-labs/education/blob/a2ec2d0/components/shared/download-file-button.tsx) these materials, fostering interactive learning.
+## Outcome
 
-- **AI-Powered Interactions:**
+The project placed first in the university competition. It is no longer actively maintained, but the code and a live demo remain available.
 
-  - The platform uses AI to scan uploaded files ([`vectorizedDocument`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/actions/pinecone.ts#L11-L26) splits the PDF and stores embeddings in Pinecone) and employs Retrieval-Augmented Generation (RAG) to feed the model with context from the files ([the chat route](https://github.com/undrstnd-labs/education/blob/a2ec2d0/app/api/chat/route.ts#L106-L134) runs a similarity search on the file namespace before calling the model). This allows students to chat with the files, asking questions and receiving AI-generated responses based on the content.
-  - Students can also upload their own files ([`File.studentId`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/prisma/schema.prisma#L165-L182), [upload form](https://github.com/undrstnd-labs/education/blob/a2ec2d0/components/app/chat-upload-file.tsx)) and interact with them using the AI features, enhancing their learning experience.
-
-- **Free and Accessible:**
-  - To ensure accessibility, especially for students who cannot afford expensive educational tools, we partnered with Groq. They provided full access to their AI models with no rate limits, allowing us to offer the platform completely free of charge.
-
-#### **Technical Implementation**
-
-The platform is built using a modern tech stack to ensure performance, scalability, and security:
-
-- **Frontend:**
-  - **React and Next.js:** For building dynamic and responsive user interfaces ([Next.js 14](https://github.com/undrstnd-labs/education/blob/a2ec2d0/package.json#L83-L83), App Router with a [`[locale]`](https://github.com/undrstnd-labs/education/blob/a2ec2d0/app/%5Blocale%5D/layout.tsx) segment for English and French).
-  - **TailwindCSS:** For creating a sleek and customizable design ([config](https://github.com/undrstnd-labs/education/blob/a2ec2d0/tailwind.config.ts)).
-- **Backend:**
-  - **TypeScript:** For robust and type-safe code.
-  - **Prisma:** For efficient database management ([schema](https://github.com/undrstnd-labs/education/blob/a2ec2d0/prisma/schema.prisma)).
-  - **AI Models (Groq):** For AI-powered interactions and content generation ([Groq client and `mixtral-8x7b-32768` call](https://github.com/undrstnd-labs/education/blob/a2ec2d0/app/api/chat/route.ts#L10-L132); the chat route landed in [`4642bcc`](https://github.com/undrstnd-labs/education/commit/4642bcc)).
-- **Hosting and Services:**
-  - **Vercel:** For hosting and performance monitoring ([Vercel Analytics](https://github.com/undrstnd-labs/education/blob/a2ec2d0/components/layout/analytics.tsx)).
-  - **PostgreSQL:** For reliable and scalable database solutions ([datasource](https://github.com/undrstnd-labs/education/blob/a2ec2d0/prisma/schema.prisma#L6-L10)).
-  - **GitHub (Codebase, Issues, PRs, Actions):** For version control and collaboration.
-
-#### **Achievements**
-
-- **First Place in University:**
-
-  - The project was awarded first place in our university’s competition, recognizing its innovation and potential impact on education.
-
-- **User-Friendly Design:**
-  - The platform’s intuitive design and AI-powered features received positive feedback from both teachers and students, highlighting its effectiveness in enhancing the learning experience.
-
-#### **Getting Started**
-
-The code for **Undrstnd Education** is on [GitHub](https://github.com/undrstnd-labs/education).
+- **Live demo:** [undrstnd.vercel.app](https://undrstnd.vercel.app)
+- **Source:** [github.com/FindMalek/undrstnd-edu](https://github.com/FindMalek/undrstnd-edu)
