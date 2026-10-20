@@ -42,6 +42,7 @@ export function TypewriterText({
   const shouldRevealInstantly = skip || prefersReducedMotion
 
   // Initialize to the full text when we should reveal instantly; otherwise 0.
+  // Parent passes key={text} so a text change remounts and resets this state.
   const [displayedChars, setDisplayedChars] = useState(() =>
     shouldRevealInstantly ? text.length : 0
   )
@@ -49,13 +50,9 @@ export function TypewriterText({
   const completedRef = useRef(false)
   const rafRef = useRef<number | null>(null)
   const lastFrameRef = useRef<number>(0)
-  const countRef = useRef(displayedChars)
 
-  // Sync the ref whenever displayedChars changes externally (e.g. skip).
-  countRef.current = displayedChars
-
-  // Animation loop. Resetting displayedChars happens through a remount (key=...)
-  // so this effect only has to drive the animation forward.
+  // Animation loop. State resets happen through remounts, so this effect only
+  // drives the reveal forward.
   useEffect(() => {
     if (shouldRevealInstantly) {
       if (!completedRef.current) {
@@ -72,18 +69,19 @@ export function TypewriterText({
       if (!lastFrameRef.current) lastFrameRef.current = timestamp
       const elapsed = timestamp - lastFrameRef.current
 
-      if (elapsed >= speed && countRef.current < text.length) {
+      if (elapsed >= speed) {
         lastFrameRef.current = timestamp
-        countRef.current += 1
-        setDisplayedChars(countRef.current)
+        setDisplayedChars((prev) => {
+          const next = Math.min(prev + 1, text.length)
+          if (next === text.length && !completedRef.current) {
+            completedRef.current = true
+            onComplete?.()
+          }
+          return next
+        })
       }
 
-      if (countRef.current < text.length) {
-        rafRef.current = requestAnimationFrame(animate)
-      } else if (!completedRef.current) {
-        completedRef.current = true
-        onComplete?.()
-      }
+      rafRef.current = requestAnimationFrame(animate)
     }
 
     rafRef.current = requestAnimationFrame(animate)
@@ -96,25 +94,23 @@ export function TypewriterText({
   // When skip flips to true mid-animation, finish in a microtask so we don't
   // synchronously setState inside the effect body.
   useEffect(() => {
-    if (skip && countRef.current < text.length) {
+    if (skip && displayedChars < text.length) {
       let cancelled = false
-      const finish = () => {
+      const id = setTimeout(() => {
         if (cancelled) return
         if (rafRef.current) cancelAnimationFrame(rafRef.current)
-        countRef.current = text.length
         setDisplayedChars(text.length)
         if (!completedRef.current) {
           completedRef.current = true
           onComplete?.()
         }
-      }
-      const id = setTimeout(finish, 0)
+      }, 0)
       return () => {
         cancelled = true
         clearTimeout(id)
       }
     }
-  }, [skip, text.length, onComplete])
+  }, [skip, displayedChars, text.length, onComplete])
 
   const visibleText = text.slice(0, displayedChars)
 
