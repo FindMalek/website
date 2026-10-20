@@ -112,6 +112,19 @@ export function useIntroductionJourney(steps: JourneyStep[]) {
     })
   }, [steps.length])
 
+  const prevStep = useCallback(() => {
+    setState((prev) =>
+      prev.stepIndex > 0
+        ? {
+            ...prev,
+            stepIndex: prev.stepIndex - 1,
+            isExpanded: false,
+            isTypingComplete: false,
+          }
+        : prev
+    )
+  }, [])
+
   const expand = useCallback(() => {
     setState((prev) => ({ ...prev, isExpanded: true, isTypingComplete: true }))
   }, [])
@@ -133,9 +146,12 @@ export function useIntroductionJourney(steps: JourneyStep[]) {
     reset,
     stop,
     next,
+    prev: prevStep,
     expand,
     completeTyping,
   }
 }
 
 export type { JourneyStep }
+
+export type IntroductionJourneyApi = ReturnType<typeof useIntroductionJourney>

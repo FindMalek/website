@@ -5,13 +5,16 @@ export type JourneyScript = {
   details: string
 }
 
-export const INTRODUCTION_SCRIPT: {
-  opening: string
-  steps: JourneyScript[]
-} = {
-  opening:
-    "Hello, I'm Malek — a senior full-stack engineer who builds AI-native products end to end. Let me walk you through what I've shipped, in about two minutes.",
+export const INTRODUCTION_SCRIPT: { steps: JourneyScript[] } = {
   steps: [
+    {
+      id: "hello",
+      title: "Hello",
+      summary:
+        "Hello, I'm Malek — a senior full-stack engineer who builds AI-native products end to end. Let me walk you through what I've shipped, in about two minutes.",
+      details:
+        "I'm based in Monastir, Tunisia, and work remotely with teams in Berlin and the US. Eight chapters ahead — press space to fast-forward at any time.",
+    },
     {
       id: "jobflow",
       title: "Jobflow GmbH",
