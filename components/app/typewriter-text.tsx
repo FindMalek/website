@@ -39,13 +39,26 @@ export function TypewriterText({
     getPrefersReducedMotionServerSnapshot
   )
 
-  const shouldRevealInstantly = skip || prefersReducedMotion
+  // Latch the transient skip so a brief Space press keeps the current text
+  // instance revealed even after the prop returns to false.
+  const [latchedSkip, setLatchedSkip] = useState(skip)
+  useEffect(() => {
+    if (!skip || latchedSkip) return
+    let cancelled = false
+    const id = setTimeout(() => {
+      if (!cancelled) setLatchedSkip(true)
+    }, 0)
+    return () => {
+      cancelled = true
+      clearTimeout(id)
+    }
+  }, [skip, latchedSkip])
 
-  // Initialize to the full text when we should reveal instantly; otherwise 0.
+  const shouldRevealInstantly = latchedSkip || prefersReducedMotion
+
   // Parent passes key={text} so a text change remounts and resets this state.
-  const [displayedChars, setDisplayedChars] = useState(() =>
-    shouldRevealInstantly ? text.length : 0
-  )
+  const [displayedChars, setDisplayedChars] = useState(0)
+  const shownChars = shouldRevealInstantly ? text.length : displayedChars
 
   const completedRef = useRef(false)
   const rafRef = useRef<number | null>(null)
@@ -91,28 +104,7 @@ export function TypewriterText({
     }
   }, [text, speed, shouldRevealInstantly, onComplete])
 
-  // When skip flips to true mid-animation, finish in a microtask so we don't
-  // synchronously setState inside the effect body.
-  useEffect(() => {
-    if (skip && displayedChars < text.length) {
-      let cancelled = false
-      const id = setTimeout(() => {
-        if (cancelled) return
-        if (rafRef.current) cancelAnimationFrame(rafRef.current)
-        setDisplayedChars(text.length)
-        if (!completedRef.current) {
-          completedRef.current = true
-          onComplete?.()
-        }
-      }, 0)
-      return () => {
-        cancelled = true
-        clearTimeout(id)
-      }
-    }
-  }, [skip, displayedChars, text.length, onComplete])
-
-  const visibleText = text.slice(0, displayedChars)
+  const visibleText = text.slice(0, shownChars)
 
   return (
     <span className={cn("relative", className)}>
@@ -121,7 +113,7 @@ export function TypewriterText({
       {/* Screen readers and final DOM always see the full text */}
       <span className="sr-only">{text}</span>
       {/* Cursor */}
-      {displayedChars < text.length && !shouldRevealInstantly && (
+      {shownChars < text.length && !shouldRevealInstantly && (
         <span className="animate-pulse" aria-hidden>
           |
         </span>

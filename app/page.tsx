@@ -25,6 +25,7 @@ import {
   GitHubContributionsFallback,
 } from "@/components/app/github-contributions"
 import { HelloTitle } from "@/components/app/hello-title"
+import { Hero } from "@/components/app/hero"
 import { HeroJourney } from "@/components/app/hero-journey"
 import {
   Panel,
@@ -81,7 +82,7 @@ export default async function Home() {
 
   return (
     <div className="w-full">
-      <HeroJourney />
+      <HeroJourney hero={<Hero />} />
 
       <div className="stripe-divider" />
 
@@ -89,8 +90,14 @@ export default async function Home() {
         <PanelHeader>
           <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
           <PanelDescription>
-            I&apos;m a Design Engineer, Founder, and Product Builder based in 🇹🇳
-            Monastir, Tunisia.
+            I&apos;m a Design Engineer, Founder, and Product Builder based in 🇹🇳{" "}
+            <span className="group cursor-default">
+              Monastir, Tunisia
+              <span className="ml-1 hidden group-hover:inline">
+                (Remote, open to relocation)
+              </span>
+            </span>
+            .
           </PanelDescription>
         </PanelHeader>
 

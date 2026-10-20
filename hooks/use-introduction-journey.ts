@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 type JourneyStep = {
   id: string
@@ -18,37 +18,48 @@ type JourneyState = {
 
 const STORAGE_KEY = "introduction-journey-active"
 
-function loadInitialState(): JourneyState {
-  if (typeof window === "undefined") {
-    return {
-      isActive: false,
-      stepIndex: 0,
-      isExpanded: false,
-      isTypingComplete: false,
-    }
-  }
-
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY)
-    if (raw) {
-      const parsed = JSON.parse(raw) as JourneyState
-      // Always restart on full page reload, but preserve active flag within session.
-      return { ...parsed, stepIndex: 0, isExpanded: false, isTypingComplete: false }
-    }
-  } catch {
-    // ignore
-  }
-
-  return {
-    isActive: false,
-    stepIndex: 0,
-    isExpanded: false,
-    isTypingComplete: false,
-  }
+const DEFAULT_STATE: JourneyState = {
+  isActive: false,
+  stepIndex: 0,
+  isExpanded: false,
+  isTypingComplete: false,
 }
 
 export function useIntroductionJourney(steps: JourneyStep[]) {
-  const [state, setState] = useState<JourneyState>(loadInitialState)
+  // Start from a stable default to avoid hydration mismatches; restore the
+  // validated active flag once the component mounts via a deferred update.
+  const [state, setState] = useState<JourneyState>(DEFAULT_STATE)
+  const didRestoreRef = useRef(false)
+
+  useEffect(() => {
+    if (didRestoreRef.current) return
+    didRestoreRef.current = true
+
+    let cancelled = false
+    const id = setTimeout(() => {
+      if (cancelled) return
+      try {
+        const raw = sessionStorage.getItem(STORAGE_KEY)
+        if (!raw) return
+        const parsed = JSON.parse(raw) as unknown
+        if (
+          parsed &&
+          typeof parsed === "object" &&
+          "isActive" in parsed &&
+          parsed.isActive === true
+        ) {
+          setState({ ...DEFAULT_STATE, isActive: true })
+        }
+      } catch {
+        // ignore corrupted storage
+      }
+    }, 0)
+
+    return () => {
+      cancelled = true
+      clearTimeout(id)
+    }
+  }, [])
 
   useEffect(() => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state))

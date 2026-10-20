@@ -4,21 +4,24 @@ import { useIntroductionJourney } from "@/hooks/use-introduction-journey"
 
 import { INTRODUCTION_SCRIPT } from "@/data/journey-scripts"
 
-import { Hero } from "@/components/app/hero"
 import { IntroductionJourney } from "@/components/app/introduction-journey"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/shared/icons"
 
-export function HeroJourney() {
+interface HeroJourneyProps {
+  hero: React.ReactNode
+}
+
+export function HeroJourney({ hero }: HeroJourneyProps) {
   const journey = useIntroductionJourney(INTRODUCTION_SCRIPT.steps)
 
   if (journey.isActive) {
-    return <IntroductionJourney />
+    return <IntroductionJourney journey={journey} />
   }
 
   return (
     <div className="relative">
-      <Hero />
+      {hero}
       <div className="px-4 pb-6">
         <Button
           variant="outline"

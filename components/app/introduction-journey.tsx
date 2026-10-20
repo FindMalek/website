@@ -107,39 +107,53 @@ function JourneyInput({ onAsk }: { onAsk: (text: string) => void }) {
   )
 }
 
-export function IntroductionJourney() {
-  const journey = useIntroductionJourney(INTRODUCTION_SCRIPT.steps)
+interface IntroductionJourneyProps {
+  journey: ReturnType<typeof useIntroductionJourney>
+}
+
+export function IntroductionJourney({ journey }: IntroductionJourneyProps) {
   const chat = useChatDock()
   const containerRef = useRef<HTMLDivElement>(null)
-  const [spacePressed, setSpacePressed] = useState(false)
+  const [skip, setSkip] = useState(false)
 
-  // Space bar skips current animation, but only while journey is focused
-  // and not when typing in the input.
+  // Reset the transient skip flag whenever the step changes.
   useEffect(() => {
+    let cancelled = false
+    const id = setTimeout(() => {
+      if (!cancelled) setSkip(false)
+    }, 0)
+    return () => {
+      cancelled = true
+      clearTimeout(id)
+    }
+  }, [journey.stepIndex, journey.isExpanded])
+
+  // Space bar fast-forwards the current animation, but only while typing is
+  // incomplete and not when interacting with buttons, links, inputs, etc.
+  useEffect(() => {
+    if (journey.isTypingComplete) return
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code !== "Space") return
 
-      const active = document.activeElement
-      const isTypingInInput =
-        active instanceof HTMLInputElement ||
-        active instanceof HTMLTextAreaElement
+      const target = e.target as HTMLElement | null
+      if (!target) return
 
-      if (isTypingInInput) return
+      const isInteractiveTarget =
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target.isContentEditable ||
+        target.closest("button, a, [role='button']")
+
+      if (isInteractiveTarget) return
 
       e.preventDefault()
-      setSpacePressed(true)
+      setSkip(true)
     }
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [])
-
-  useEffect(() => {
-    if (spacePressed) {
-      const timeout = setTimeout(() => setSpacePressed(false), 50)
-      return () => clearTimeout(timeout)
-    }
-  }, [spacePressed])
+  }, [journey.isTypingComplete])
 
   const handleAsk = (text: string) => {
     // Pause the journey visually while the chat opens.
@@ -157,7 +171,7 @@ export function IntroductionJourney() {
       onClick={() => {
         // Mobile tap-to-skip: tapping the text card completes the animation.
         if (!journey.isTypingComplete) {
-          setSpacePressed(true)
+          setSkip(true)
         }
       }}
       role="region"
@@ -183,7 +197,7 @@ export function IntroductionJourney() {
           <TypewriterText
             key={`${journey.stepIndex}-${journey.isExpanded}`}
             text={currentText}
-            skip={spacePressed}
+            skip={skip}
             onComplete={journey.completeTyping}
           />
         </div>
@@ -193,7 +207,7 @@ export function IntroductionJourney() {
             isTypingComplete={journey.isTypingComplete}
             isExpanded={journey.isExpanded}
             isLastStep={journey.isLastStep}
-            onSkip={() => setSpacePressed(true)}
+            onSkip={() => setSkip(true)}
             onDetails={journey.expand}
             onNext={journey.next}
             onReset={journey.reset}
