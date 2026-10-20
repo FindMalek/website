@@ -1,116 +1,158 @@
 /**
- * Geist-inspired design tokens.
+ * FindMalek × Geist Design System Tokens
  *
- * Pure CSS custom properties only — no Tailwind directives here.
- * globals.css owns `@import "tailwindcss"`, `@custom-variant dark`, and the
- * `@theme inline` mapping; this file only redefines the raw token values
- * that mapping points at. Importing Tailwind again here would emit a second
- * stylesheet whose `dark:` variant falls back to `prefers-color-scheme` and
- * break the class-based theme toggle.
+ * Harmonizes Vercel Geist's 10-step surface/contrast architecture with
+ * FindMalek's cool-slate & cyan-teal identity in perceptual OKLCH space.
  *
- * Activate by importing after globals.css in app/layout.tsx.
+ * Key architectural rules:
+ * 1. Pure CSS custom properties only — never re-import `tailwindcss` here
+ *    so `globals.css` retains sole ownership of `@custom-variant dark`.
+ * 2. Translucent alpha hairlines (`--border`, `--line`) so 200vw full-bleed
+ *    `screen-line-*` and `stripe-divider` utilities blend into the canvas
+ *    instead of drawing harsh opaque lines.
+ * 3. Layered elevation in dark mode: deep carbon-slate canvas (`--ds-bg-100`)
+ *    with subtle elevated surfaces (`--ds-bg-200`) and crisp specular borders.
  */
 
 :root {
   --radius: 0.5rem;
 
-  /* Background / foreground — Geist gray scale */
-  --background: #ffffff;
-  --foreground: #111111;
+  /* Geist 10-step perceptual neutral ramp (Light, cool-tinted 225° hue) */
+  --ds-background-100: oklch(1 0 0);
+  --ds-background-200: oklch(0.988 0.002 220);
+  --ds-gray-100: oklch(0.973 0.003 220);
+  --ds-gray-200: oklch(0.946 0.004 220);
+  --ds-gray-300: oklch(0.912 0.005 220);
+  --ds-gray-400: oklch(0.865 0.007 220);
+  --ds-gray-500: oklch(0.795 0.01 220);
+  --ds-gray-600: oklch(0.685 0.014 220);
+  --ds-gray-700: oklch(0.565 0.018 220);
+  --ds-gray-800: oklch(0.465 0.016 222);
+  --ds-gray-900: oklch(0.355 0.012 225);
+  --ds-gray-1000: oklch(0.148 0.005 228);
 
-  /* Surfaces */
-  --card: #ffffff;
-  --card-foreground: #111111;
-  --popover: #ffffff;
-  --popover-foreground: #111111;
+  /* Semantic surfaces */
+  --background: var(--ds-background-100);
+  --foreground: var(--ds-gray-1000);
 
-  /* Primary: Geist blue */
-  --primary: #0070f3;
-  --primary-foreground: #ffffff;
+  --card: var(--ds-background-100);
+  --card-foreground: var(--ds-gray-1000);
+  --popover: var(--ds-background-100);
+  --popover-foreground: var(--ds-gray-1000);
 
-  /* Secondary: gray-100 */
-  --secondary: #f5f5f5;
-  --secondary-foreground: #111111;
+  /* Signature Cyan-Teal Primary (harmonized with hero & contribution graph) */
+  --primary: oklch(0.52 0.105 223.128);
+  --primary-foreground: oklch(0.985 0.015 205);
 
-  /* Muted */
-  --muted: #fafafa;
-  --muted-foreground: #666666;
+  /* Secondary & Muted */
+  --secondary: var(--ds-gray-100);
+  --secondary-foreground: var(--ds-gray-1000);
 
-  /* Accent: gray-100 hover surface */
-  --accent: #f5f5f5;
-  --accent-foreground: #111111;
+  --muted: var(--ds-gray-100);
+  --muted-foreground: var(--ds-gray-700);
 
-  /* Destructive: Geist red */
-  --destructive: #f31260;
-  --destructive-foreground: #ffffff;
+  /* Interactive hover accent */
+  --accent: var(--ds-gray-100);
+  --accent-foreground: var(--ds-gray-1000);
 
-  /* Borders / rings */
-  --border: #eaeaea;
-  --input: #eaeaea;
-  --ring: #0070f3;
-  --line: #eaeaea;
+  /* Destructive */
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0.01 20);
 
-  /* Charts: Geist blue ramp */
-  --chart-1: #0070f3;
-  --chart-2: #5c9dff;
-  --chart-3: #8eb8ff;
-  --chart-4: #0761d1;
-  --chart-5: #002ea8;
+  /* Translucent architectural hairlines & focus rings */
+  --border: oklch(0.148 0.005 228 / 9%);
+  --input: oklch(0.148 0.005 228 / 12%);
+  --ring: oklch(0.52 0.105 223.128 / 55%);
+  --line: var(--border);
+
+  /* Elevation shadows */
+  --ds-shadow-border: 0 0 0 1px var(--border);
+  --ds-shadow-sm:
+    0 0 0 1px var(--border), 0 1px 2px -1px oklch(0.148 0.005 228 / 6%);
+  --ds-shadow-md:
+    0 0 0 1px var(--border), 0 4px 12px -2px oklch(0.148 0.005 228 / 8%);
+
+  /* Charts */
+  --chart-1: oklch(0.84 0.12 208);
+  --chart-2: oklch(0.715 0.14 215);
+  --chart-3: oklch(0.61 0.125 221);
+  --chart-4: oklch(0.52 0.105 223);
+  --chart-5: oklch(0.44 0.085 225);
 
   /* Sidebar */
-  --sidebar: #fafafa;
-  --sidebar-foreground: #111111;
-  --sidebar-primary: #0070f3;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f5f5f5;
-  --sidebar-accent-foreground: #111111;
-  --sidebar-border: #eaeaea;
-  --sidebar-ring: #0070f3;
+  --sidebar: var(--ds-background-200);
+  --sidebar-foreground: var(--ds-gray-1000);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--ds-gray-100);
+  --sidebar-accent-foreground: var(--ds-gray-1000);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 .dark {
-  /* Vercel-style pure black canvas, layered gray surfaces */
-  --background: #000000;
-  --foreground: #ededed;
+  /* Geist 10-step perceptual neutral ramp (Dark, deep carbon-slate 228° hue) */
+  --ds-background-100: oklch(0.135 0.004 228);
+  --ds-background-200: oklch(0.172 0.006 226);
+  --ds-gray-100: oklch(0.205 0.007 225);
+  --ds-gray-200: oklch(0.242 0.009 224);
+  --ds-gray-300: oklch(0.285 0.011 223);
+  --ds-gray-400: oklch(0.335 0.012 222);
+  --ds-gray-500: oklch(0.425 0.014 220);
+  --ds-gray-600: oklch(0.555 0.016 218);
+  --ds-gray-700: oklch(0.705 0.014 215);
+  --ds-gray-800: oklch(0.795 0.01 212);
+  --ds-gray-900: oklch(0.895 0.005 205);
+  --ds-gray-1000: oklch(0.985 0.002 198);
 
-  --card: #0a0a0a;
-  --card-foreground: #ededed;
-  --popover: #0a0a0a;
-  --popover-foreground: #ededed;
+  --background: var(--ds-background-100);
+  --foreground: var(--ds-gray-1000);
 
-  --primary: #0070f3;
-  --primary-foreground: #ffffff;
+  --card: var(--ds-background-200);
+  --card-foreground: var(--ds-gray-1000);
+  --popover: var(--ds-background-200);
+  --popover-foreground: var(--ds-gray-1000);
 
-  --secondary: #1a1a1a;
-  --secondary-foreground: #ededed;
+  /* Luminous Cyan-Teal Primary for dark surfaces */
+  --primary: oklch(0.62 0.12 221);
+  --primary-foreground: oklch(0.135 0.004 228);
 
-  --muted: #111111;
-  --muted-foreground: #888888;
+  --secondary: var(--ds-gray-200);
+  --secondary-foreground: var(--ds-gray-1000);
 
-  --accent: #1a1a1a;
-  --accent-foreground: #ededed;
+  --muted: var(--ds-gray-100);
+  --muted-foreground: var(--ds-gray-700);
 
-  --destructive: #f31260;
-  --destructive-foreground: #ffffff;
+  --accent: var(--ds-gray-200);
+  --accent-foreground: var(--ds-gray-1000);
 
-  --border: #262626;
-  --input: #333333;
-  --ring: #0070f3;
-  --line: #262626;
+  --destructive: oklch(0.68 0.195 22.5);
+  --destructive-foreground: oklch(0.985 0 0);
 
-  /* Charts: brighter ramp for dark canvas */
-  --chart-1: #5c9dff;
-  --chart-2: #8eb8ff;
-  --chart-3: #0070f3;
-  --chart-4: #b5d4ff;
-  --chart-5: #0761d1;
+  /* Translucent specular hairlines so stripe-divider & screen-line-* stay refined */
+  --border: oklch(1 0 0 / 9.5%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.62 0.12 221 / 55%);
+  --line: var(--border);
 
-  --sidebar: #0a0a0a;
-  --sidebar-foreground: #ededed;
-  --sidebar-primary: #0070f3;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1a1a1a;
-  --sidebar-accent-foreground: #ededed;
-  --sidebar-border: #262626;
-  --sidebar-ring: #0070f3;
+  --ds-shadow-border: 0 0 0 1px var(--border);
+  --ds-shadow-sm:
+    0 0 0 1px var(--border), 0 1px 2px 0 oklch(0 0 0 / 45%);
+  --ds-shadow-md:
+    0 0 0 1px var(--border), 0 8px 24px -4px oklch(0 0 0 / 60%);
+
+  --chart-1: oklch(0.85 0.125 207);
+  --chart-2: oklch(0.73 0.14 215);
+  --chart-3: oklch(0.62 0.125 221);
+  --chart-4: oklch(0.53 0.105 223);
+  --chart-5: oklch(0.45 0.085 225);
+
+  --sidebar: var(--ds-background-200);
+  --sidebar-foreground: var(--ds-gray-1000);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--ds-gray-200);
+  --sidebar-accent-foreground: var(--ds-gray-1000);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
