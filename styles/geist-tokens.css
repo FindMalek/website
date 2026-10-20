@@ -1,119 +1,116 @@
 /**
  * Geist-inspired design tokens.
  *
- * This file is a drop-in replacement for the color/spacing tokens in
- * globals.css. To activate it, import it after globals.css in app/layout.tsx
- * and remove or comment out the existing :root / .dark token blocks.
+ * Pure CSS custom properties only — no Tailwind directives here.
+ * globals.css owns `@import "tailwindcss"`, `@custom-variant dark`, and the
+ * `@theme inline` mapping; this file only redefines the raw token values
+ * that mapping points at. Importing Tailwind again here would emit a second
+ * stylesheet whose `dark:` variant falls back to `prefers-color-scheme` and
+ * break the class-based theme toggle.
  *
- * It is intentionally scoped as a separate file so the switch can be reviewed
- * in isolation before it becomes the default.
+ * Activate by importing after globals.css in app/layout.tsx.
  */
 
-@import "tailwindcss";
-
-@theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 :root {
-  --radius: 0.375rem;
+  --radius: 0.5rem;
 
-  /* Background / foreground */
+  /* Background / foreground — Geist gray scale */
   --background: #ffffff;
-  --foreground: #000000;
+  --foreground: #111111;
 
   /* Surfaces */
   --card: #ffffff;
-  --card-foreground: #000000;
+  --card-foreground: #111111;
   --popover: #ffffff;
-  --popover-foreground: #000000;
+  --popover-foreground: #111111;
 
   /* Primary: Geist blue */
   --primary: #0070f3;
   --primary-foreground: #ffffff;
 
-  /* Secondary: subtle gray */
+  /* Secondary: gray-100 */
   --secondary: #f5f5f5;
-  --secondary-foreground: #000000;
+  --secondary-foreground: #111111;
 
   /* Muted */
   --muted: #fafafa;
   --muted-foreground: #666666;
 
-  /* Accent */
+  /* Accent: gray-100 hover surface */
   --accent: #f5f5f5;
-  --accent-foreground: #000000;
+  --accent-foreground: #111111;
 
-  /* Destructive */
-  --destructive: #ef4444;
+  /* Destructive: Geist red */
+  --destructive: #f31260;
   --destructive-foreground: #ffffff;
 
   /* Borders / rings */
   --border: #eaeaea;
   --input: #eaeaea;
   --ring: #0070f3;
-  --line: var(--border);
+  --line: #eaeaea;
 
-  /* Charts */
+  /* Charts: Geist blue ramp */
   --chart-1: #0070f3;
   --chart-2: #5c9dff;
   --chart-3: #8eb8ff;
   --chart-4: #0761d1;
-  --chart-5: #002570;
+  --chart-5: #002ea8;
 
   /* Sidebar */
   --sidebar: #fafafa;
-  --sidebar-foreground: #000000;
+  --sidebar-foreground: #111111;
   --sidebar-primary: #0070f3;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f5f5f5;
-  --sidebar-accent-foreground: #000000;
+  --sidebar-accent-foreground: #111111;
   --sidebar-border: #eaeaea;
   --sidebar-ring: #0070f3;
 }
 
 .dark {
+  /* Vercel-style pure black canvas, layered gray surfaces */
   --background: #000000;
-  --foreground: #ffffff;
+  --foreground: #ededed;
 
-  --card: #111111;
-  --card-foreground: #ffffff;
-  --popover: #111111;
-  --popover-foreground: #ffffff;
+  --card: #0a0a0a;
+  --card-foreground: #ededed;
+  --popover: #0a0a0a;
+  --popover-foreground: #ededed;
 
   --primary: #0070f3;
   --primary-foreground: #ffffff;
 
-  --secondary: #171717;
-  --secondary-foreground: #ffffff;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ededed;
 
   --muted: #111111;
   --muted-foreground: #888888;
 
-  --accent: #171717;
-  --accent-foreground: #ffffff;
+  --accent: #1a1a1a;
+  --accent-foreground: #ededed;
 
-  --destructive: #ef4444;
+  --destructive: #f31260;
   --destructive-foreground: #ffffff;
 
-  --border: #333333;
+  --border: #262626;
   --input: #333333;
   --ring: #0070f3;
-  --line: var(--border);
+  --line: #262626;
 
-  --chart-1: #0070f3;
-  --chart-2: #5c9dff;
-  --chart-3: #8eb8ff;
-  --chart-4: #0761d1;
-  --chart-5: #002570;
+  /* Charts: brighter ramp for dark canvas */
+  --chart-1: #5c9dff;
+  --chart-2: #8eb8ff;
+  --chart-3: #0070f3;
+  --chart-4: #b5d4ff;
+  --chart-5: #0761d1;
 
-  --sidebar: #111111;
-  --sidebar-foreground: #ffffff;
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #ededed;
   --sidebar-primary: #0070f3;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #171717;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #333333;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: #ededed;
+  --sidebar-border: #262626;
   --sidebar-ring: #0070f3;
 }
