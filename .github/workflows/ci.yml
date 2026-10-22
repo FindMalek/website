@@ -24,7 +24,7 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, the-keep]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
         run: pnpm exec turbo run lint
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, the-keep]
     env:
       SKIP_ENV_VALIDATION: "true"
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
