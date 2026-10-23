@@ -1,3 +1,9 @@
+# Runner: GitHub-hosted by default. To use the self-hosted runner on the-keep,
+# register a runner for THIS repo (runners are per repo, the ones registered to
+# other repos can't take these jobs) and set the repo variable
+#   CI_RUNS_ON = ["self-hosted","the-keep"]
+# Unset the variable to fall back to GitHub-hosted runners at any time.
+#
 # Runs on every push to main and every PR: install once, then lint and build
 # in parallel jobs so a lint failure doesn't hide a build failure.
 #
@@ -24,7 +30,7 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-latest"') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,7 +51,7 @@ jobs:
         run: pnpm exec turbo run lint --filter=@findmalek/website
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-latest"') }}
     env:
       SKIP_ENV_VALIDATION: "true"
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
