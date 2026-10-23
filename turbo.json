@@ -5,6 +5,10 @@
       "outputs": [".next/**", "!.next/cache/**"],
       "env": ["SKIP_ENV_VALIDATION"]
     },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
     "lint": {
       "outputs": []
     }
