@@ -13,6 +13,8 @@
     "preview": "next build && next start",
     "lint": "eslint .",
     "eval:chat": "braintrust eval evals/chatbot.eval.ts --no-send-logs",
+    "eval:journey": "braintrust eval evals/journey-match.eval.ts --no-send-logs",
+    "check:journey": "node scripts/check-journey.mjs",
     "format": "prettier . --write && eslint . --fix"
   },
   "dependencies": {

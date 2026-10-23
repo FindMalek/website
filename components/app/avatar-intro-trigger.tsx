@@ -2,6 +2,7 @@
 
 import { useState, type PointerEvent as ReactPointerEvent } from "react"
 import Image from "next/image"
+import { useInterviewMode } from "@/providers/interview-provider"
 import {
   AnimatePresence,
   motion,
@@ -12,8 +13,6 @@ import {
 
 import { cn } from "@/lib/utils"
 
-import { useIntroductionJourneyStart } from "@/components/app/introduction-journey-provider"
-
 export function AvatarIntroTrigger({
   large = false,
   className,
@@ -21,7 +20,7 @@ export function AvatarIntroTrigger({
   large?: boolean
   className?: string
 }) {
-  const { start } = useIntroductionJourneyStart()
+  const { open: start } = useInterviewMode()
   const prefersReducedMotion = useReducedMotion()
   const [isHovered, setIsHovered] = useState(false)
 
@@ -60,7 +59,8 @@ export function AvatarIntroTrigger({
           y: prefersReducedMotion ? 0 : springY,
         }}
         whileTap={prefersReducedMotion ? undefined : { scale: 0.94 }}
-        aria-label="Play the interactive introduction"
+        aria-label="Open interview mode, a guided introduction"
+        aria-haspopup="dialog"
         className={cn(
           "group pointer-events-auto relative cursor-pointer rounded-full outline-none",
           "focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2"
@@ -169,10 +169,10 @@ export function AvatarIntroTrigger({
 
             <span className="flex flex-col text-left leading-none">
               <span className="text-xs font-medium tracking-tight">
-                want to experience something cool?
+                recruiting? try interview mode
               </span>
               <span className="text-muted-foreground mt-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">
-                click to play
+                click to start
               </span>
             </span>
           </motion.div>

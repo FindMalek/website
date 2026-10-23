@@ -1,0 +1,5 @@
+export const CV_PATH = "/cv.pdf"
+export const CV_DOWNLOAD_PATH = "/cv.pdf?download=1"
+export const CAL_URL = "https://cal.com/findmalek"
+export const CONTACT_EMAIL = "hi@findmalek.com"
+export const SITE_URL = "https://www.findmalek.com"

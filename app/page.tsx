@@ -26,7 +26,6 @@ import {
 } from "@/components/app/github-contributions"
 import { HelloTitle } from "@/components/app/hello-title"
 import { Hero } from "@/components/app/hero"
-import { IntroductionJourneyProvider } from "@/components/app/introduction-journey-provider"
 import {
   Panel,
   PanelContent,
@@ -82,9 +81,7 @@ export default async function Home() {
 
   return (
     <div className="w-full">
-      <IntroductionJourneyProvider>
-        <Hero />
-      </IntroductionJourneyProvider>
+      <Hero />
 
       <div className="stripe-divider" />
 
