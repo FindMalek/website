@@ -8,11 +8,19 @@ import {
   IntroItemIcon,
   IntroItemLink,
 } from "@/components/app/intro-item"
+import { LocationItem } from "@/components/app/location-item"
 import { CopyText } from "@/components/shared/copy-text"
 import { Icons } from "@/components/shared/icons"
 
+// "Monastir, Tunisia (Remote, open to relocation)" -> place + note
+function splitLocation(location: string): { place: string; note?: string } {
+  const match = location.match(/^(.*?)\s*\((.+)\)\s*$/)
+  return match ? { place: match[1], note: match[2] } : { place: location }
+}
+
 export async function AboutFacts() {
   const resumeData = await getResumeData()
+  const { place, note } = splitLocation(resumeData.basics.location)
 
   return (
     <div className="mb-8 grid gap-x-4 gap-y-2.5 sm:grid-cols-2">
@@ -20,7 +28,9 @@ export async function AboutFacts() {
         <IntroItemIcon>
           <Icons.location />
         </IntroItemIcon>
-        <IntroItemContent>{resumeData.basics.location}</IntroItemContent>
+        <IntroItemContent>
+          <LocationItem place={place} note={note} />
+        </IntroItemContent>
       </IntroItem>
 
       <CurrentLocalTimeItem timeZone={TIMEZONE} />
