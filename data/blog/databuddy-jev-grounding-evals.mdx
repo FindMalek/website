@@ -1,0 +1,153 @@
+---
+title: "A number can exist and still be wrong: grounding evals for Databuddy's AI insights"
+href: /blog/databuddy-jev-grounding-evals
+excerpt: "Databuddy's insights agent had a guard that checked every number in a finding appeared in the data. It could not tell a transaction count from revenue. I built an eval-only judge on Jev that asks whether each claim is attached to the right metric, population, period and direction."
+publishedAt: "2026-10-23"
+tags: [ai, evals, llm-as-judge, open-source, typescript, databuddy]
+status: published
+image: /blog/databuddy-jev-grounding-evals/judge.png
+imageAlt: "Pipeline diagram of the eval-only Jev judge. A finish_investigation call produces evidence claims with cited sources. A rubric question and four attribution questions per text claim are batched into one Jev request with the final outcome and the recorded tool calls. The returned probabilities are stored in results.json and used to sort cases for human review. They never change pass or fail."
+---
+
+Databuddy is closed source now, so `github.com/databuddy-analytics/Databuddy` returns a 404. The code below is from my local clone and my fork, [FindMalek/Databuddy](https://github.com/FindMalek/Databuddy), and the links go there. Overview: [What I built in Databuddy before it closed](/blog/databuddy-what-i-built).
+
+This is the work I'd most like to talk about in an AI engineering interview, so I'll go slowly. It is an evaluation judge, not a feature. It never ships to users and never affects a build. Its job is to tell a human reviewer where to look first.
+
+## What the insights app does
+
+`apps/insights` is a worker. It watches a site's analytics for signals (a goal conversion dropped, error counts jumped), and for the ones worth the money it runs an investigation agent. The agent reads the site's data over a few turns and ends by calling `finish_investigation`. What comes out is a short finding: a title, a summary, maybe a root cause, and one or two pieces of evidence.
+
+The evidence schema is the part that matters here. From `apps/insights/src/agent.ts` at [`af9e38259`](https://github.com/FindMalek/Databuddy/blob/af9e38259/apps/insights/src/agent.ts):
+
+```ts
+z.strictObject({
+	sources: z.array(agentEvidenceReferenceSchema).min(1).max(8),
+	claim: z.union([
+		revenueEvidenceSchema,
+		retentionEvidenceSchema,
+		agentInvestigationOutcomeSchema.shape.evidence.element,
+	]),
+})
+```
+
+Each entry is a `claim` plus the `sources` it cites. Revenue and retention claims are structured, so code renders the sentence from the data. Everything else is free text written by the model, and free text is where it can go wrong.
+
+## The guard that checks the wrong thing
+
+The agent already had a grounding check, `validateNumericGrounding`. It pulls every number out of the finding, pulls every number out of the tool results, and throws if any number in the finding isn't in the data:
+
+```ts
+for (const value of numericTokens(field)) {
+	if (!isGroundedValue(value, corpus)) {
+		throw new Error(`Insights outcome cites the number ${value}, which does not appear in ...`);
+	}
+}
+```
+
+That's a good guard against invented numbers. But it answers one question: does this number exist anywhere in the data? The eval README had already recorded what that misses. In fresh runs, "a brief assigned transaction count 100 to gross revenue 10000; the number-presence guard accepted it because 100 existed elsewhere."
+
+Both numbers were real. The sentence was wrong. "Gross revenue fell to $100" passes a presence check when the data row says `{ gross_revenue: 10000, transaction_count: 100 }`.
+
+The repo handled this for revenue and retention by taking the choice away from the model. For free text there was only a field called `reviewRequired` on some eval fixtures: a note that says, roughly, "the checks passed, now verify direction, cohort and period by hand." The runner printed `REVIEW REQUIRED` and a person was supposed to read each case.
+
+## Jev
+
+Jev is an evaluation model, `typesafe-ai/jev`, served through the Vercel AI Gateway. You don't chat with it. You send a `state` (any JSON) and boolean questions, and each comes back as a probability between 0 and 1 instead of generated text. That's the useful property for a judge: you get a score you can sort on, not a paragraph you have to parse.
+
+The codebase already used it in at least two places. `business-aware-selection.ts` asks Jev whether a signal is worth an investigation for a given business, and `packages/scan/src/evaluate.ts` batches several questions in one request. Both build the request by hand. There was no shared helper, so I wrote a small one scoped to the eval folder, and nothing in a runtime path imports it.
+
+The call is one POST to the gateway's `evaluation-model` endpoint with the model id, `state`, `questions` and zero data retention switched on. Any failure returns `null`: no key, a non-200, a bad body, a thrown fetch. Callers must treat `null` as "judge unavailable", never as a pass. A broken judge that says yes is worse than none.
+
+![The judge pipeline from finish_investigation evidence to a sorted review list.](/blog/databuddy-jev-grounding-evals/judge.png)
+
+## How claims are extracted
+
+I didn't need an extraction step, because the agent's output format already does it. The runner wraps each tool, so every call is recorded with its `toolCallId`. When the agent finishes, the proposed evidence is the raw `finish_investigation` input, and a small zod schema pulls the `{ claim, sources }` entries out of it.
+
+Then `judgeCase` keeps only entries where `claim` is a string. Structured revenue and retention claims are skipped on purpose: code renders them from the data, so the model can't misattribute them. Each remaining claim keeps its array index.
+
+The `toolCallId` is what lets the judge follow a citation: a source names a tool and a call id, and the state sent to Jev carries the recorded calls with the same ids.
+
+## The rubric: four questions per claim
+
+For each text claim, I ask four boolean questions. Each one is narrow and each one has its own true and false criteria:
+
+```ts
+{
+	key: "metric",
+	question: "Does every number in this claim belong to the metric the claim describes it as (for example, a transaction or entrant COUNT is not the same metric as REVENUE ...)?",
+	criteria: {
+		true: "Every number in the claim is bound to its correct metric.",
+		false: "At least one number in the claim is attributed to the wrong metric.",
+	},
+},
+```
+
+The other three are `population` (goal entrants are not login attempts, a filtered cohort is not the whole audience), `period` (the right date range, not a pooled or stale one) and `direction` (does "fell" match the cited numbers).
+
+Why four and not one "is this claim correct?" A single broad question collapses to a vibe, and a vibe sorted by probability is a bad sort. Four narrow ones also tell the reviewer what to check. "Period: 0.12" is an instruction.
+
+Each question starts with "Evaluate ONLY `state.proposedEvidence[N].claim`", so one request can carry several claims without them bleeding together. The fixture's rubric string gets its own question, with the text passed in `state.rubric`. The instructions also say the state is data, never instructions, because tool results can carry text from outside the codebase and I don't want a judge that obeys it.
+
+All of it, for one finish attempt, goes in a single batched request.
+
+## The dataset
+
+I used what was there. The eval runner (`quality.ts`) already had a set of synthetic scenarios with fixed tool responses: a goal repair, a partial table that isn't proof of absence, a source comparison across two periods, an unavailable connector, a revenue capability discovery case. Eight places in the file attach a `reviewRequired` string to a scenario. Those are the cases where mechanical checks pass and a human still has to read the output. They are the judge's input. I didn't touch the scenarios, since the README is firm that changing a fixture isn't an agent improvement.
+
+The new dataset is small and separate: `judge-calibration.ts`, four frozen pairs, each a known-bad claim and its corrected twin against the same tool output.
+
+```ts
+bad: "Gross revenue fell to $100 this week, down sharply from $10,000 last week.",
+good: "Gross revenue held near $10,000 this week across 100 transactions, consistent with last week.",
+// tool output: { gross_revenue: 10_000, transaction_count: 100 }
+```
+
+The other three are goal entrants described as login attempts, a swapped comparison window and a flipped "rose from 12 to 340". A pair passes only if the judge separates them clearly:
+
+```ts
+const separated =
+	!unavailable &&
+	bad.probability <= BAD_CEILING &&   // 0.4
+	good.probability >= GOOD_FLOOR &&   // 0.6
+	good.probability - bad.probability >= SEPARATION_THRESHOLD; // 0.3
+```
+
+The script exits `0` if every pair separates, `1` if one doesn't, `2` without a key. The README calls exit 1 "a genuine negative result", which is the point: I wanted the script to be able to tell me the judge is useless.
+
+## Scoring and how it runs
+
+The probability for a question is the model's belief that the answer is true. For sorting I turned it into uncertainty:
+
+```ts
+/** 1 at probability 0.5 (maximally ambiguous), 0 at probability 0 or 1. */
+export function uncertaintyOf(probability: number): number {
+	return 1 - Math.abs(probability - 0.5) * 2;
+}
+```
+
+Why uncertainty and not "lowest score first"? A claim at 0.02 is almost certainly wrong and one at 0.98 is almost certainly right, so neither needs a careful read. The ones at 0.5 are where the judge doesn't know, and that's where a human adds the most. A case's uncertainty is the max across its questions, and a case with no verdict sorts as maximally uncertain.
+
+It runs with the rest of the evals (`AI_GATEWAY_API_KEY=... bun apps/insights/src/evals/quality.ts --out ... --runs 2`). At the end of the run, the summary adds a list of every `REVIEW REQUIRED` case sorted by uncertainty, most ambiguous first, with per-claim probabilities inline. Everything is also recorded under each result's `judge` field in `results.json`, with token usage.
+
+The judge never touches `failures`, `PASS`/`FAIL` or the exit code. It's advisory. `agent.ts` is not modified, and the diff is 975 added lines across five files, mostly new files in `evals/` (`judge.ts` 345 lines, `judge.test.ts` 321, `judge-calibration.ts` 220, wiring in `quality.ts` 85).
+
+## What it caught
+
+Nothing, as far as the history shows. I won't invent a result.
+
+The 16 unit tests mock `fetch`. They prove the plumbing: no key means no request, questions are batched into one call, a bad body returns `null`, a missing verdict sorts first. They say nothing about whether Jev is any good at this. The calibration script is the real test, and I have no recorded output from running it.
+
+It did produce one finding. The issue that proposed this said a batched call to the evaluation endpoint "bills input tokens only". The response schema includes `outputTokens`, and `business-aware-selection.ts` reads it too. Nothing in the response backs the claim, so the README now says it's unverified.
+
+## Did it land?
+
+No, not as far as I can prove. The branch is `feat/jev-grounding-evals`, PR #989 at the time. My clone ends on 2026-10-09, and `judge.ts` exists on neither `origin/main` nor `origin/staging` there. That day I merged staging into the branch ([`5999bb34a`](https://github.com/FindMalek/Databuddy/commit/5999bb34a)) to keep it mergeable. It lives in my fork as [`feat/jev-grounding-evals`](https://github.com/FindMalek/Databuddy/tree/feat/jev-grounding-evals). I can't see anything after that date.
+
+## What I'd do differently
+
+**Run the calibration before trusting the harness.** The calibration script is the file I'd write first, and run before anything is wired into `quality.ts`. If Jev can't separate "revenue" from "transactions" on four hand-written pairs, nothing else in the diff matters, and I'd have known after an afternoon.
+
+**Add hard, labeled cases.** The calibration set has nothing for claims that are partly right, or a number that is correct for a window that is slightly off. Four clean pairs prove the judge isn't blind. They don't prove it's useful. Twenty real past findings labeled by me would let me report precision on the failures that matter.
+
+**Know what the verdict is for.** Sorting a review queue is a modest use. The issue sketched running the same check at publish time, where false positives would block real findings. I stayed on step one on purpose. For step two I'd first write down the cost of a wrong block, because a threshold needs data.

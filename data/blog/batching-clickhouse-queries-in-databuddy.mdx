@@ -9,7 +9,9 @@ image: /blog/batching-clickhouse-queries-in-databuddy/cover.png
 imageAlt: "Cover for \"40 queries for one dashboard\", framing the databuddy.cc landing page in a browser window"
 ---
 
-[Databuddy](https://github.com/databuddy-analytics/Databuddy) is an open-source analytics platform that doesn't track people in creepy ways. I'd been reading through its code for a while, and then I hit `goalsRouter.bulkAnalytics` and stopped.
+Databuddy is an analytics platform that doesn't track people in creepy ways, and it was open source when I wrote this. I'd been reading through its code for a while, and then I hit `goalsRouter.bulkAnalytics` and stopped.
+
+Update: Databuddy is closed source now and the upstream repo returns a 404, so the links below point to the commits in [my fork](https://github.com/FindMalek/Databuddy), and the rest of my work there is in [What I built in Databuddy before it closed](/blog/databuddy-what-i-built).
 
 It's the endpoint behind the goals dashboard. You give it a website and a list of goal IDs, and for each goal it tells you how many visitors completed it. Simple job. The problem was how it did the job.
 
@@ -56,7 +58,7 @@ It's the classic N+1, just dressed up as "concurrent" so it doesn't look like on
 
 That's exactly the kind of thing ClickHouse can answer in a single query with a `GROUP BY`.
 
-I didn't jump straight into a PR. I opened [issue #679](https://github.com/databuddy-analytics/Databuddy/issues/679) first, explaining the root cause and what I planned to do. It's someone else's codebase, so I wanted them to see the plan before a 500-line diff showed up.
+I didn't jump straight into a PR. I opened issue #679 first, explaining the root cause and what I planned to do. It's someone else's codebase, so I wanted them to see the plan before a 500-line diff showed up.
 
 ## The trap in the shared query builder
 
@@ -126,7 +128,7 @@ For a dashboard with mostly unfiltered goals, the query count now scales with th
 
 ## Then the review bot found two holes
 
-I opened [#680](https://github.com/databuddy-analytics/Databuddy/pull/680) and three minutes later the repo's review bot came back with two correctness findings, plus a lint nit. Both findings were real, and both were my fault.
+I opened PR #680 ([merged commit](https://github.com/FindMalek/Databuddy/commit/417c3e33b)) and three minutes later the repo's review bot came back with two correctness findings, plus a lint nit. Both findings were real, and both were my fault.
 
 ![Header of Databuddy pull request #680, "perf(rpc): batch goals bulkAnalytics ClickHouse queries for unfiltered goals", shown as merged into staging with 594 additions and 103 deletions.](/blog/batching-clickhouse-queries-in-databuddy/pr-680.webp)
 
@@ -192,11 +194,11 @@ The final comment said it was verified locally (rpc type check, 228 unit tests, 
 
 Before this one I had two smaller PRs merged.
 
-[#636](https://github.com/databuddy-analytics/Databuddy/pull/636) was a cache bug with a stale TODO on top. All three funnel read paths had caching turned off with `disabled: true, // TODO: Remove this once we have a way to invalidate the cache`. The invalidation function already existed, but `getById` cached under `byId:${id}` while invalidation deleted `byId:${funnelId}:${websiteId}`. The keys never matched. I aligned the key and turned caching back on, and the bot caught that the only workspace auth check was inside the cached function, so a cache hit would skip it. Moving auth ahead of the cache fixed that. Another "I made it faster and quietly made it worse" moment, caught before merge.
+[#636](https://github.com/FindMalek/Databuddy/commit/39824f929) was a cache bug with a stale TODO on top. All three funnel read paths had caching turned off with `disabled: true, // TODO: Remove this once we have a way to invalidate the cache`. The invalidation function already existed, but `getById` cached under `byId:${id}` while invalidation deleted `byId:${funnelId}:${websiteId}`. The keys never matched. I aligned the key and turned caching back on, and the bot caught that the only workspace auth check was inside the cached function, so a cache hit would skip it. Moving auth ahead of the cache fixed that. Another "I made it faster and quietly made it worse" moment, caught before merge.
 
-[#637](https://github.com/databuddy-analytics/Databuddy/pull/637) added a Discord notification provider. The package's `TODO.md` claimed Discord was done, but no code existed. I built it on the same shape as the Slack provider and enforced Discord's embed limits, including the 6000-character total limit I missed on the first pass.
+[#637](https://github.com/FindMalek/Databuddy/commit/febc699c6) added a Discord notification provider. The package's `TODO.md` claimed Discord was done, but no code existed. I built it on the same shape as the Slack provider and enforced Discord's embed limits, including the 6000-character total limit I missed on the first pass.
 
-As I write this, I've got four more open: typed alarm trigger conditions ([#988](https://github.com/databuddy-analytics/Databuddy/pull/988)), an eval-only judge for insight claims ([#989](https://github.com/databuddy-analytics/Databuddy/pull/989)), a deterministic seed script ([#990](https://github.com/databuddy-analytics/Databuddy/pull/990)), and one registry for alarm destination types ([#991](https://github.com/databuddy-analytics/Databuddy/pull/991)).
+As I write this, I've got four more open: typed alarm trigger conditions (#988, [write-up](/blog/databuddy-typed-alarm-triggers)), an eval-only judge for insight claims (#989, [write-up](/blog/databuddy-jev-grounding-evals)), a deterministic seed script (#990, [write-up](/blog/a-deterministic-seed-script-for-databuddy-funnels)), and one registry for alarm destination types (#991, [write-up](/blog/databuddy-alarm-destination-registry)). The commits are in my fork, and the [overview post](/blog/databuddy-what-i-built) has the status of each.
 
 ## What I'd tell myself before the first PR
 

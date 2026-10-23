@@ -16,15 +16,20 @@ export function ProjectContributionCard({
   contribution: Contribution
   info?: OpenSourceProject
 }) {
-  const searchUrl = `${contribution.repo}/pulls?q=${encodeURIComponent(
-    `is:pr is:merged author:${GITHUB_USERNAME}`
-  )}`
+  const { archive } = contribution
+  // An archived repo is a fork: the upstream PR search can't work there and
+  // the fork's own star count says nothing about the project.
+  const href = archive
+    ? contribution.repo
+    : `${contribution.repo}/pulls?q=${encodeURIComponent(
+        `is:pr is:merged author:${GITHUB_USERNAME}`
+      )}`
 
   return (
     <RepoCard
       repoUrl={contribution.repo}
-      href={searchUrl}
-      info={info}
+      href={href}
+      info={archive ? undefined : info}
       showOwnerAvatar
     >
       <div className="mt-3 border-t pt-2.5">
@@ -38,7 +43,10 @@ export function ProjectContributionCard({
               className="flex min-w-0 items-baseline gap-2"
             >
               <a
-                href={`${contribution.repo}/pull/${pullRequest.number}`}
+                href={
+                  pullRequest.url ??
+                  `${contribution.repo}/pull/${pullRequest.number}`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 title={pullRequest.title}
@@ -65,6 +73,19 @@ export function ProjectContributionCard({
             </li>
           ))}
         </ul>
+        {archive && (
+          <p className="text-muted-foreground mt-2 text-xs">
+            {archive.note}{" "}
+            {archive.post && (
+              <Link
+                href={archive.post}
+                className="text-foreground underline underline-offset-2"
+              >
+                Read the overview
+              </Link>
+            )}
+          </p>
+        )}
       </div>
     </RepoCard>
   )

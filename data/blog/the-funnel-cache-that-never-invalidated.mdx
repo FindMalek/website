@@ -1,0 +1,163 @@
+---
+title: "The funnel cache that never invalidated"
+href: /blog/the-funnel-cache-that-never-invalidated
+excerpt: "Databuddy had caching switched off on every funnel read, with a TODO saying why. The invalidation helper was deleting a key nobody ever wrote. Fixing that exposed a worse problem: the permission check lived inside the cache."
+publishedAt: "2026-10-23"
+tags: ["open-source", "redis", "caching", "security", "typescript"]
+status: published
+image: /blog/the-funnel-cache-that-never-invalidated/cover.png
+imageAlt: "Abstract monochrome cover with the title \"The funnel cache that never invalidated\" next to three key boxes, one written, one deleted and dashed, one fixed"
+---
+
+Databuddy went closed source in 2026, so the commits in this post link to [my fork](https://github.com/FindMalek/Databuddy).
+
+This is PR #636, [`39824f929`](https://github.com/FindMalek/Databuddy/commit/39824f929) on my fork. It's a cousin of the goals work I wrote about in [the batching post](/blog/batching-clickhouse-queries-in-databuddy): same kind of mess, a cache that was turned off because nobody trusted it.
+
+## The TODO
+
+All three funnel read paths in `packages/rpc/src/routers/funnels.ts` (`list`, `getById` and `analyticsByLink`) had this line:
+
+```ts
+disabled: true, // TODO: Remove this once we have a way to invalidate the cache
+```
+
+It came in with the funnels feature on 2026-03-24, in [`6093a6904`](https://github.com/FindMalek/Databuddy/commit/6093a6904). So for five months, every funnel read went straight to the database, and the cache layer in front of it was decoration.
+
+Here's the part that bothered me. "A way to invalidate the cache" already existed. There was a helper for exactly that, `invalidateFunnelsCache`, called from the create, update and delete handlers and from the insights router. It was added on 2026-08-14 in [`79767d7d6`](https://github.com/FindMalek/Databuddy/commit/79767d7d6), six days before my fix. Somebody wrote the invalidation, and nobody went back to remove the TODO.
+
+The work was tracked in issue #634. I started by reading the helper.
+
+## Two keys that never met
+
+This is the helper before my fix, in `packages/rpc/src/lib/funnels-cache.ts`:
+
+```ts
+const keys = [`list:${websiteId}`];
+if (funnelId) {
+  keys.push(`byId:${funnelId}:${websiteId}`);
+}
+```
+
+And this is what `getById` wrote to Redis:
+
+```ts
+key: `byId:${input.id}`,
+```
+
+`byId:abc` is written. `byId:abc:site-1` is deleted. Redis does not care that you meant the same thing. Deleting a key that doesn't exist is a perfectly successful operation, so nothing threw and nothing logged. The invalidation ran on every funnel edit and did nothing, every time.
+
+That explains the TODO too. If you turn caching on with this helper, you get stale funnels after every edit, for the length of the TTL (300 seconds for `CACHE_TTL`). Someone presumably saw that, couldn't see why, and turned the cache off instead of finding the typo-shaped bug. Fair. I'd have been tempted too.
+
+The other two paths were fine. `list` was cached under `list:<websiteId>`, which the helper deletes correctly. `analyticsByLink` used a tag, `funnel:<funnelId>`, which the helper also invalidates. Only `getById` had the mismatch, and the other two were switched off anyway for guilt by association.
+
+![Diagram in two parts. Part A shows the key getById writes, byId:funnelId, the key the old helper deleted, byId:funnelId:websiteId, and the corrected key. Part B shows where the permission check sits before and after the second commit.](/blog/the-funnel-cache-that-never-invalidated/key-and-auth.png)
+
+## The first commit
+
+[`13c006a58`](https://github.com/FindMalek/Databuddy/commit/13c006a58) is small. One line in the helper, three `disabled: true` lines removed, plus a test file:
+
+```ts
+// packages/rpc/src/lib/funnels-cache.ts
+-		keys.push(`byId:${funnelId}:${websiteId}`);
++		keys.push(`byId:${funnelId}`);
+```
+
+The source change is four lines: one swapped, three removed. The test file is 111 lines. That ratio is about right for this kind of bug.
+
+The test runs the real `createDrizzleCache` against a fake Redis built from two `Map`s, because Redis is the only external boundary here. It reads a funnel twice and expects the second read to be a cache hit. Then it calls `invalidateFunnelsCache` and expects the next read to run the query again:
+
+```ts
+expect(await readFunnel()).toEqual({ id: funnelId, name: "v1" });
+expect(await readFunnel()).toEqual({ id: funnelId, name: "v1" });
+expect(calls).toBe(1);
+
+await invalidateFunnelsCache("website-1", funnelId);
+
+expect(await readFunnel()).toEqual({ id: funnelId, name: "v2" });
+expect(calls).toBe(2);
+```
+
+Against the old key this fails on the last two lines, because the cache still answers `v1`. There's a second test for the `list` key, since it was cheap and it's the other half of the helper.
+
+## The review bot found the real problem
+
+I pushed it, and the repo's review bot (Greptile) came back with something I hadn't thought about at all. Here's the original `getById`, trimmed:
+
+```ts
+.handler(({ context, input }) =>
+  cache.withCache({
+    key: `byId:${input.id}`,
+    ttl: CACHE_TTL,
+    tables: ["funnelDefinitions"],
+    queryFn: async () => {
+      const funnel = await context.db /* select by id */;
+      if (!funnel) {
+        throw rpcError.notFound("funnel", input.id);
+      }
+
+      await withWorkspace(context, {
+        websiteId: funnel.websiteId,
+        permissions: ["read"],
+      });
+
+      return funnel;
+    },
+  })
+),
+```
+
+The permission check, `withWorkspace`, is inside `queryFn`. And `withCache` returns the cached value without calling `queryFn` at all on a hit. The cache key is `byId:<funnelId>`, with no user and no workspace in it.
+
+Put those together. User A, who has access, opens a funnel. The row lands in Redis. User B, who has no access to that website, asks for the same funnel id. `withCache` finds the row and returns it. The check never runs.
+
+While the cache was disabled, this code was correct. Re-enabling it turned a working check into a hole. That's the sort of bug that a pure "remove the TODO" change walks right into, and I walked into it.
+
+The bot didn't say anything clever. It just read the code in the order it executes, which I hadn't.
+
+## The second commit
+
+[`9c1e36ef9`](https://github.com/FindMalek/Databuddy/commit/9c1e36ef9), nine minutes after the first. The fix is to authorize first, then cache only the row fetch. The `update` and `delete` handlers in the same file already did a two-step version of this, so I copied the shape:
+
+```ts
+.handler(async ({ context, input }) => {
+  const [funnelRef] = await context.db
+    .select({ websiteId: funnelDefinitions.websiteId })
+    .from(funnelDefinitions)
+    .where(
+      and(
+        eq(funnelDefinitions.id, input.id),
+        isNull(funnelDefinitions.deletedAt)
+      )
+    )
+    .limit(1);
+
+  if (!funnelRef) {
+    throw rpcError.notFound("funnel", input.id);
+  }
+
+  await withWorkspace(context, {
+    websiteId: funnelRef.websiteId,
+    permissions: ["read"],
+  });
+
+  return cache.withCache({ key: `byId:${input.id}` /* ... */ });
+}),
+```
+
+So every `getById` now does one small primary key lookup for the `websiteId`, then the permission check, then the cache. The cache still saves the full row fetch. It no longer saves the authorization, which is the one thing a cache must never save.
+
+It costs one extra query per request. I didn't measure how much that costs, and I'm not going to invent a number. It's a single-column select by primary key, and the alternative was a data leak.
+
+The commit also fixed something unrelated that I found while testing. The package's `test` script in `packages/rpc/package.json` lists test files one by one. My new `funnels-cache.test.ts` wasn't in the list. It passed on my machine because plain `bun test` runs every `*.test.ts` file it finds. In CI it would have been skipped, quietly. I added it to the list.
+
+## What merged
+
+The PR merged on 2026-08-25 as [`39824f929`](https://github.com/FindMalek/Databuddy/commit/39824f929). Before that I merged `staging` into the branch once ([`17a9908bc`](https://github.com/FindMalek/Databuddy/commit/17a9908bc)), which touched nothing in the funnel files. The squashed diff is 4 files, +133 and -14.
+
+## What I'd do differently
+
+I'd add a test for the second commit. I didn't. The auth fix has no test of its own, only the review comment and my reading of the code. A test that calls `getById` as a user without access after another user warmed the cache would fail on the first version and pass on the second. That's the test that actually protects the fix, and it's the one I skipped because the cache test felt like the main event.
+
+I'd also stop writing the key string in three places. The router writes `byId:${input.id}`, the helper writes `byId:${funnelId}`, and my test writes `byId:${funnelId}` a third time. The test guards the helper against the string I typed in the test, not against the router. If someone changes the router key tomorrow, my test stays green and the bug is back. One exported `funnelByIdKey(id)` used by all three would make the mismatch impossible to write.
+
+And the TODO. Five months of `disabled: true` was a signal that somebody had hit a real problem and hadn't had time to find the cause. Now when I see a TODO that says "once we have a way to X", I check whether X already exists. Here it did, with a one-line bug.

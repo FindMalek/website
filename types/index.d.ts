@@ -62,10 +62,19 @@ export interface ContributionPullRequest {
   number: number
   title: string
   post?: string
+  // Overrides `${repo}/pull/${number}` when the PR page no longer exists
+  url?: string
+}
+
+export interface ContributionArchive {
+  note: string
+  post?: string
 }
 
 export interface Contribution {
   repo: string
+  // Set when `repo` is a fork that keeps the work of a repo that went private
+  archive?: ContributionArchive
   pullRequests: ContributionPullRequest[]
 }
 

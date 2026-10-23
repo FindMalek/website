@@ -232,28 +232,47 @@ export const REPOSITORIES = [
 // with no listed PRs stays hidden until one lands.
 export const CONTRIBUTIONS: Contribution[] = [
   {
-    repo: "https://github.com/databuddy-analytics/Databuddy",
+    // Databuddy went closed source in 2026, so the upstream repo and its PR
+    // pages return 404. `repo` is my public fork and each PR links to its
+    // commit there.
+    repo: "https://github.com/FindMalek/Databuddy",
+    archive: {
+      note: "Closed source now. The work is kept in my fork.",
+      post: "/blog/databuddy-what-i-built",
+    },
     pullRequests: [
       {
         number: 680,
         title:
           "perf(rpc): batch goals bulkAnalytics ClickHouse queries for unfiltered goals",
         post: "/blog/batching-clickhouse-queries-in-databuddy",
+        url: "https://github.com/FindMalek/Databuddy/commit/417c3e33b",
       },
-      { number: 637, title: "feat(notifications): add Discord provider" },
+      {
+        number: 637,
+        title: "feat(notifications): add Discord provider",
+        post: "/blog/a-discord-provider-for-databuddy-notifications",
+        url: "https://github.com/FindMalek/Databuddy/commit/febc699c6",
+      },
       {
         number: 636,
         title:
           "fix(rpc): align funnel cache invalidation key and re-enable caching",
+        post: "/blog/the-funnel-cache-that-never-invalidated",
+        url: "https://github.com/FindMalek/Databuddy/commit/39824f929",
       },
       {
         number: 988,
         title: "feat(rpc): type and gate alarm trigger conditions",
+        post: "/blog/databuddy-typed-alarm-triggers",
+        url: "https://github.com/FindMalek/Databuddy/commit/53b9f0179",
       },
       {
         number: 1086,
         title:
           "fix(auth): tolerate unreadable dashboard fingerprints at startup",
+        post: "/blog/tolerating-unreadable-dashboard-fingerprints",
+        url: "https://github.com/FindMalek/Databuddy/commit/9e7fa8dc3",
       },
     ],
   },

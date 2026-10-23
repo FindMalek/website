@@ -1,0 +1,152 @@
+---
+title: "A Discord provider for Databuddy, and the 6000 character rule"
+href: /blog/a-discord-provider-for-databuddy-notifications
+excerpt: "Databuddy's TODO said Discord alerts were done. The code said otherwise. I wrote the provider next to the Slack one, then a review bot reminded me that Discord caps the whole embed, not just each piece of it."
+publishedAt: "2026-10-23"
+tags: ["open-source", "notifications", "discord", "typescript", "testing"]
+status: published
+image: /blog/a-discord-provider-for-databuddy-notifications/cover.png
+imageAlt: "Abstract monochrome cover with the title \"Discord alerts and a 6000 character cap\" next to stacked bars sitting above a line labelled 6000"
+---
+
+Databuddy went closed source in 2026, so the commits in this post link to [my fork](https://github.com/FindMalek/Databuddy).
+
+`packages/notifications/TODO.md` had a checklist of channels. Slack, Discord, email, webhook, Microsoft Teams, Telegram and Google Chat were all ticked. But `packages/notifications/src/providers/` held three files: Slack, email and webhook. `NotificationChannel` was a union of exactly those three strings.
+
+So four ticks were lies. This is PR #637 (issue #635), [`febc699c6`](https://github.com/FindMalek/Databuddy/commit/febc699c6) on my fork. I took Discord first and unticked the other three.
+
+## Next to Slack, not above it
+
+The notifications package has a small base class. `BaseProvider` owns the timeout, the retries with backoff, and a `fetchWithTimeout` that goes through the shared SSRF guard (`safeFetch`). A provider only has to turn a `NotificationPayload` into a request. The Slack provider does that with Block Kit. I wanted Discord to look like Slack's sibling, so anyone who knew one could read the other.
+
+The commit message says "mirroring `SlackProvider`", and that's what it is. The config is a webhook URL plus optional `username`, `avatarUrl`, timeout and retries. `send` never throws. It returns a `NotificationResult` with `success: false` and an error string, like the others:
+
+```ts
+if (!res.ok) {
+  const text = await res.text().catch(() => "Unable to read response");
+  throw new Error(
+    `Discord API error: ${res.status} ${res.statusText} - ${text.slice(0, 200)}`
+  );
+}
+```
+
+That's from [`a75cf7223`](https://github.com/FindMalek/Databuddy/commit/a75cf7223), `providers/discord.ts`. The throw happens inside `withRetry`, so a 5xx gets retried if you configured retries, and the final failure comes back as a plain result.
+
+Wiring it in was three small edits. `NotificationChannel` gained `"discord"`, `NotificationClientConfig` gained a `discord` key, and the client constructs the provider if you pass one:
+
+```ts
+if (config.discord) {
+  this.providers.set(
+    "discord",
+    new DiscordProvider(withDefaults(config.discord))
+  );
+}
+```
+
+## The one piece that moved
+
+Slack already had three helpers that Discord needed too. `truncate` cuts a string and ends it with an ellipsis. `isUserFacingMetadata` hides keys like `to`, `template`, `zScore` and anything ending in `Id`. `formatMetadataLabel` turns `dashboardUrl` into "Dashboard Url".
+
+I could have copied them. I moved them to `providers/payload-utils.ts` and made `slack.ts` import them. The diff shows 24 lines leaving `slack.ts` (it gains 5 for the import) and the same 24 arriving in the new file.
+
+That turned out to be the best decision in the PR, and I got lucky. In October, #1084 ([`ced4de2be`](https://github.com/FindMalek/Databuddy/commit/ced4de2be), after an earlier version in [`e9a7f522b`](https://github.com/FindMalek/Databuddy/commit/e9a7f522b)) taught `formatMetadataLabel` to keep acronyms like URL, HTTP, ID, SSL and API in capitals. It adds nine lines to `payload-utils.ts`, and Slack, Discord, email and webhook all pick it up. A copied helper would have needed four edits and someone would have missed one.
+
+## What a Discord alert looks like
+
+Discord webhooks take an `embeds` array. I use exactly one embed per notification:
+
+```ts
+return {
+  title,
+  description,
+  ...(fields.length > 0 && { fields }),
+  ...priorityStyle,
+};
+```
+
+The title is the notification title and the description is the message. Each user-facing metadata entry becomes an inline field, with a prettified label and the value as a string. Priority is the only extra: if it's anything other than `normal`, the embed gets a colour and a footer like `Priority: URGENT`. `low` is grey, `high` is orange and `urgent` is red. A normal alert has neither, so it stays quiet.
+
+Discord has per-piece limits, and I put them at the top of the file as constants:
+
+```ts
+const MAX_TITLE_LENGTH = 256;
+const MAX_DESCRIPTION_LENGTH = 4096;
+const MAX_FIELD_NAME_LENGTH = 256;
+const MAX_FIELD_VALUE_LENGTH = 1024;
+const MAX_FIELDS = 25;
+```
+
+Every string goes through `truncate` with one of those. I wrote tests for them: a 400 character title comes out at 256, a 5000 character message comes out at 4096, and 100 metadata keys come out as 25 fields. I felt good about it. Then I pushed.
+
+## The limit I forgot
+
+The repo's review bot (Greptile) left one comment. Per-piece limits aren't the whole story, because Discord also rejects an embed whose combined text goes over 6000 characters. The count is title, description, every field name and value, and the footer. Each piece can be perfectly legal and the embed still gets refused.
+
+The commit message has the example: 25 fields at the maximum 1024 characters is 25,600 characters of values alone. My own tests had no way to see this, because each one checked a single limit.
+
+![Two bars measured against a 6000 character limit. The first bar shows the output of buildDiscordEmbed with a 16 character title, a 4096 character description and one 1030 character field, 5142 characters in total, with 858 left over. The second bar shows the same embed without a running total, with 25,600 characters of field values pushed past the limit.](/blog/a-discord-provider-for-databuddy-notifications/embed-budget.png)
+
+I ran the function from [`07b65f03a`](https://github.com/FindMalek/Databuddy/commit/07b65f03a) with the same input as the new test to get that picture. Title of 16 characters, a 4096 character description, and 25 fields with 1024 character values. It keeps one field. `Field0` plus its value is 1030, which brings the total to 5142. A second field would land at 6172, so it never gets in.
+
+## How I enforced it
+
+Six minutes after the first commit, the fix. The old version built fields in one `map` chain. I replaced it with a loop that carries a running total:
+
+```ts
+let total =
+  title.length +
+  description.length +
+  (priorityStyle?.footer.text.length ?? 0);
+
+const fields: DiscordEmbedField[] = [];
+for (const [key, value] of Object.entries(payload.metadata)) {
+  if (fields.length >= MAX_FIELDS) {
+    break;
+  }
+  if (!isUserFacingMetadata(key)) {
+    continue;
+  }
+
+  const name = truncate(formatMetadataLabel(key), MAX_FIELD_NAME_LENGTH);
+  const fieldValue = truncate(String(value), MAX_FIELD_VALUE_LENGTH);
+  const fieldLength = name.length + fieldValue.length;
+
+  if (total + fieldLength > MAX_TOTAL_EMBED_LENGTH) {
+    break;
+  }
+
+  fields.push({ inline: true, name, value: fieldValue });
+  total += fieldLength;
+}
+```
+
+Title and description are measured first, along with the footer, because those are fixed once priority is known. Fields are what's left to spend. This only works because the fixed part is bounded: the longest title is 256, the longest description is 4096, and the longest footer is `Priority: URGENT` at 16. That's 4368 at most. A single field is at most 256 plus 1024, which is 1280. So there's always room for at least one field, and the 6000 limit can only ever drop fields. It never has to cut your title.
+
+The test is the one from the commit, and it mirrors the failure. It builds 25 max-size fields, adds up the lengths of everything in the result, and checks two things:
+
+```ts
+expect(embed.fields?.length ?? 0).toBeLessThan(25);
+expect(total).toBeLessThanOrEqual(6000);
+```
+
+Before the fix, the first line fails. The merged PR has 8 tests in all, 5 on `buildDiscordEmbed` and 3 on `DiscordProvider`. The provider tests mock `safeFetch` and check three things: no webhook URL gives a failed result, a 204 gives a successful one with the embed in the request body, and a 404 gives `Discord API error: 404`.
+
+## What I left out on purpose
+
+The commit message lists what it doesn't touch: the alarms database schema, the RPC destination validation in `packages/rpc/src/routers/alarms.ts`, and the dashboard's alarm sheet. Wiring a new channel through alarms end to end is a much bigger change. I wanted the provider to land first, tested and alone, and let the plumbing be its own PR.
+
+In my clone of the repo, which ends on 2026-10-09, I can't find Discord in the RPC package. So I can't tell you it was wired up later. The provider is in, and the same commit unticks Teams, Telegram and Google Chat, so the checklist tells the truth again.
+
+## The bit I'd change
+
+Before the PR merged, a maintainer pushed one more commit onto the branch, [`f74d6f5ab`](https://github.com/FindMalek/Databuddy/commit/f74d6f5ab), "skip empty discord embed fields". It adds one check to my loop:
+
+```ts
+if (!(name && fieldValue)) {
+  continue;
+}
+```
+
+The commit has no body, so I'm guessing at the reason: Discord wants a non-empty name and value for every field, and an empty string in the metadata would presumably get the whole alert refused. I tested the limits Discord documents for length and never tested the empty case, even though `String(value)` on an empty value is an obvious thing to try. Length limits are the ones everyone remembers. The minimums are what bite you.
+
+Also, the loop uses `break` when a field doesn't fit, so a big field early on drops everything after it, even small fields that would still fit. And the alert doesn't say that anything was dropped. A last field reading "and 4 more" would be kind to whoever is reading it at 3am, and I didn't write one.

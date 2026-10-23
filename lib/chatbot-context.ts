@@ -107,9 +107,10 @@ function getOpenSourceContributionsData() {
     repository: contribution.repo,
     mergedPullRequests: contribution.pullRequests.map((pullRequest) => ({
       title: pullRequest.title,
-      url: `${contribution.repo}/pull/${pullRequest.number}`,
+      url: pullRequest.url ?? `${contribution.repo}/pull/${pullRequest.number}`,
       writeUp: pullRequest.post,
     })),
+    note: contribution.archive?.note,
   }))
 }
 
@@ -123,7 +124,7 @@ async function getPersonalData() {
       recognition:
         "#1 open-source contributor in Tunisia on Gitista (https://gitista.com/search/?country=TN&handle=FindMalek)",
       githubActivity:
-        "7,092 GitHub contributions lifetime, 3,057 in the last 12 months (counted 2026-10-18), and 5 merged pull requests in Databuddy, an open-source analytics repo with 1,200+ stars",
+        "7,092 GitHub contributions lifetime, 3,057 in the last 12 months (counted 2026-10-18), and 5 merged pull requests in Databuddy, an analytics platform that has since gone closed source (the work is documented in blog posts and kept in a public fork)",
       companiesFounded: [
         "Undrstnd Labs: co-founder, then CTO (AI inference API)",
         "Endless Byte: co-founder (software agency, clients included Promolab)",

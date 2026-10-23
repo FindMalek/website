@@ -1,0 +1,218 @@
+---
+title: "Alarms that could never fire: typing trigger conditions in Databuddy"
+href: /blog/databuddy-typed-alarm-triggers
+excerpt: "Databuddy let you save traffic spike and error rate alarms that had no code behind them. I typed the trigger conditions with a discriminated union and made the API refuse anything it can't evaluate."
+publishedAt: "2026-10-23"
+tags: [open-source, typescript, zod, api-design, databuddy]
+status: published
+image: /blog/databuddy-typed-alarm-triggers/gate.png
+imageAlt: "Diagram of the alarm write path in Databuddy. A create or update request is resolved against the stored row, gated on whether an evaluator exists for the trigger type, then validated against a per-type schema before it reaches the database. Only uptime passes the gate."
+---
+
+Databuddy is closed source now, so `github.com/databuddy-analytics/Databuddy` returns a 404. Everything in this post comes from my local clone and my fork, [FindMalek/Databuddy](https://github.com/FindMalek/Databuddy), and the links go there. The overview of all my work is in [What I built in Databuddy before it closed](/blog/databuddy-what-i-built).
+
+This one is about alarms. You can create an alarm in Databuddy, pick where it should notify you (Slack, email, webhook) and pick what should trigger it. Three trigger types existed in the schema: `uptime`, `traffic_spike` and `error_rate`.
+
+Only one of them did anything.
+
+## Three trigger types, one evaluator
+
+Here is the enum in `packages/db/src/drizzle/schema/billing.ts`, as it was at the parent of my commits (`392a4fa50`):
+
+```ts
+export const alarmTriggerTypeValues = [
+	"uptime",
+	"traffic_spike",
+	"error_rate",
+] as const;
+```
+
+And here is every place I could find that reads those trigger conditions. The uptime worker, `apps/uptime/src/uptime-transition-alerts.ts`, checks whether the monitor that just changed state is in the alarm's `monitorIds`. The dashboard's alarm sheet and monitor sheet read and write `monitorIds`. That's it. A grep for `traffic_spike` across `apps` and `packages` finds the enum and nothing else.
+
+So a user could open the API, create an alarm with `triggerType: "error_rate"`, get a success response, and wait for an email that no code would ever send. The alarm sat in the table looking healthy.
+
+The input side didn't help. This is what `alarms.create` and `alarms.update` accepted:
+
+```ts
+triggerType: z.enum(alarmTriggerTypeValues),
+triggerConditions: z.record(z.string(), z.unknown()).default({}),
+```
+
+A bag of unknowns. For uptime, the worker does `Array.isArray(monitorIds)` at read time, which tells you how much anyone trusted that bag.
+
+## Two problems, not one
+
+I tried to say what was wrong in one sentence and it came out as two:
+
+1. `triggerConditions` has no shape, so nothing stops `{ monitorIds: "sched_1" }` (a string, not an array) from being saved.
+2. Two of the three trigger types have no evaluator, so saving them is a lie.
+
+The second is the more important one. The first is housekeeping. I fixed both in one PR, [#988](https://github.com/FindMalek/Databuddy/commit/53b9f0179), because the fix for the first one is how you'd express the second.
+
+## A discriminated union keyed on the trigger type
+
+The shape of `triggerConditions` depends on `triggerType`, which is the textbook case for `z.discriminatedUnion`. From `packages/rpc/src/routers/alarms.ts` at [`53b9f0179`](https://github.com/FindMalek/Databuddy/blob/53b9f0179/packages/rpc/src/routers/alarms.ts):
+
+```ts
+const uptimeTriggerConditionsSchema = z.object({
+	monitorIds: z.array(z.string()).default([]),
+});
+
+const trafficSpikeTriggerConditionsSchema = z.object({
+	metric: z.enum(["pageviews", "visitors"]),
+	direction: z.enum(["up", "down", "both"]),
+	window: z.enum(["15m", "1h"]),
+	sensitivity: z.enum(["low", "medium", "high"]),
+	minBaseline: z.number().nonnegative(),
+});
+
+const errorRateTriggerConditionsSchema = z.object({
+	window: z.enum(["15m", "1h"]),
+	thresholdPercent: z.number().min(0).max(100),
+	minSessions: z.number().nonnegative(),
+});
+
+const triggerConditionsSchema = z.discriminatedUnion("triggerType", [
+	z.object({
+		triggerType: z.literal("uptime"),
+		triggerConditions: uptimeTriggerConditionsSchema,
+	}),
+	// traffic_spike and error_rate branches look the same
+]);
+```
+
+Two choices in there are worth explaining.
+
+`monitorIds` defaults to `[]`. The dashboard's alarm sheet creates a fresh uptime alarm with `triggerConditions: {}` and links monitors afterwards. If I'd made the field required, the existing UI would have started failing on create. The default keeps the old call working and still produces the shape the worker expects.
+
+The traffic spike and error rate schemas come from a proposal in issue #958. I didn't invent those fields. They describe what the conditions would be once somebody writes an evaluator. I typed them anyway so the schema documents the whole intended contract, then blocked them separately.
+
+## The gate
+
+Typing the shapes isn't enough, because a perfectly valid `error_rate` alarm is still an alarm that never fires. So there's a second list:
+
+```ts
+const EVALUATED_TRIGGER_TYPES: ReadonlySet<string> = new Set(["uptime"]);
+
+export function parseTriggerConditions(
+	triggerType: string,
+	triggerConditions: Record<string, unknown>
+): Record<string, unknown> {
+	if (!EVALUATED_TRIGGER_TYPES.has(triggerType)) {
+		throw rpcError.badRequest(
+			`Alarms with trigger type "${triggerType}" can't be created or updated yet: there is no evaluator for it, so it would save but never fire. Only "uptime" alarms are supported today (see issue #958).`
+		);
+	}
+
+	const result = triggerConditionsSchema.safeParse({
+		triggerType,
+		triggerConditions,
+	});
+	if (!result.success) {
+		throw rpcError.badRequest(
+			`Invalid trigger conditions for "${triggerType}": ${result.error.issues
+				.map((issue) => issue.message)
+				.join("; ")}`
+		);
+	}
+
+	return result.data.triggerConditions;
+}
+```
+
+The gate runs first, then the schema. When someone writes the traffic spike evaluator, the change to unlock it is one line in that set. The schema is already waiting.
+
+I wrote the error message for the person who hits it, not for me. It says what is wrong, why, and what is supported. A generic "invalid input" would have sent them to read the source.
+
+![The alarm write path: update input, resolveTriggerUpdate, the evaluator gate, the per-type schema, then the write. Unsupported types and malformed conditions both end in a 400.](/blog/databuddy-typed-alarm-triggers/gate.png)
+
+## The part that tripped me up: updates send half a pair
+
+`create` was easy, because it gets both fields. `update` is where it got interesting. The monitor-linking flow in the dashboard only sends `triggerConditions`:
+
+```ts
+await alarmUpdateMutation.mutateAsync({
+	alarmId: alarm.id,
+	triggerConditions: {
+		...alarm.triggerConditions,
+		monitorIds: nextIds,
+	},
+});
+```
+
+No `triggerType` in there. To validate the conditions against a schema, I need to know the type, so it has to come from the stored row. The reverse is also possible: send only `triggerType` and keep the stored conditions. My first version did this inline in the handler. The follow-up commit, [`f427d2a1c`](https://github.com/FindMalek/Databuddy/commit/f427d2a1c), pulled it out into a pure function:
+
+```ts
+export function resolveTriggerUpdate(
+	input: TriggerUpdateInput,
+	current: CurrentTrigger
+):
+	| { triggerConditions: Record<string, unknown>; triggerType?: string }
+	| undefined {
+	if (
+		input.triggerType === undefined &&
+		input.triggerConditions === undefined
+	) {
+		return;
+	}
+
+	const triggerType = input.triggerType ?? current.triggerType;
+	const triggerConditions =
+		input.triggerConditions ?? current.triggerConditions;
+
+	return {
+		triggerConditions: parseTriggerConditions(triggerType, triggerConditions),
+		...(input.triggerType === undefined ? {} : { triggerType }),
+	};
+}
+```
+
+Pulling it out was about testing. A handler that needs a database row, a transaction and an auth context is annoying to test. A function that takes two plain objects is not. The `withResource` call that already loaded the row for the permission check now returns it, so there's no extra query either.
+
+Notice what the early `return` means: an update that touches neither field skips the gate entirely. If an old `traffic_spike` row is already in someone's table, flipping its `enabled` flag still works. That's deliberate. The same goes for the read path. The output schema stays permissive (`z.record(z.string(), z.unknown())`) so rows written before this change remain listable. They can't be created or edited into that shape anymore, but they don't break the alarms page.
+
+A third commit, [`e3d9d07f0`](https://github.com/FindMalek/Databuddy/commit/e3d9d07f0), is ten days later and tiny: build `updateData` with a spread instead of `Object.assign` onto an object I'd just created. Six lines added, seven removed. I mention it because small follow-ups are most of what review looks like in practice.
+
+## The tests
+
+The first commit added 75 lines of tests, one per rule:
+
+```ts
+it("rejects traffic_spike alarms because no evaluator exists yet", () => {
+	let error: unknown;
+	try {
+		parseTriggerConditions("traffic_spike", {
+			metric: "pageviews",
+			direction: "down",
+			window: "15m",
+			sensitivity: "medium",
+			minBaseline: 100,
+		});
+	} catch (caught) {
+		error = caught;
+	}
+
+	expect(error).toMatchObject({
+		code: "BAD_REQUEST",
+		message: expect.stringContaining("traffic_spike"),
+	});
+});
+```
+
+Note the payload is fully valid for that type. The test proves the gate and the schema are separate, because the schema alone would have let it through. The rest cover a valid uptime alarm, the `[]` default, a string `monitorIds`, `error_rate`, and a made-up trigger type.
+
+The follow-up added four tests for `resolveTriggerUpdate`: no trigger fields in the update, only conditions (the monitor-linking case), only type, and a switch from uptime to `traffic_spike` that has to be rejected even though the stored conditions are fine.
+
+## Did it land?
+
+The PR was #988. My local clone ends on 2026-10-09, and at that point neither `origin/main` nor `origin/staging` contained `parseTriggerConditions`, so I can't show you a merge commit. The three commits above are the PR's branch in my fork. My site lists #988 among my merged pull requests, and I got that count after the cutoff, but the clone can't prove it.
+
+## What I'd do differently
+
+**One source of truth for "supported".** `EVALUATED_TRIGGER_TYPES` is a second list that has to agree with the union. If someone adds a branch to the union and forgets the set, the gate keeps blocking it, which fails safe but is confusing. A single table of `{ schema, hasEvaluator }` per type would be better. I ended up doing exactly that for destination types in the [registry refactor](/blog/databuddy-alarm-destination-registry), written the same evening.
+
+**Don't put an issue number in a user-facing error.** "See issue #958" means something to a maintainer. To an API consumer it's a dead end, and now, it's a link to a repo that returns 404.
+
+**Decide what happens to unknown keys.** `z.object` strips keys it doesn't know. So an uptime alarm saved with an extra field loses it silently, which is the same category of problem as the one I was fixing. A `strictObject` would be more honest, with the legacy-row risk I wrote about in the registry post.
+
+**Return a typed value.** `parseTriggerConditions` returns `Record<string, unknown>`, so the compiler still can't tell uptime conditions from the others downstream. The parse result knows more than I let it say.

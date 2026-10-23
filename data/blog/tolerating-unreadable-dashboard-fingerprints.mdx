@@ -1,0 +1,123 @@
+---
+title: "Don't crash the API because a proxy sent HTML"
+href: /blog/tolerating-unreadable-dashboard-fingerprints
+excerpt: "Databuddy's API refuses to boot if its auth secret differs from the dashboard's. That check is good. Except it also refused to boot when the dashboard answered with a 200 that wasn't JSON, which proves nothing about the secret."
+publishedAt: "2026-10-23"
+tags: ["open-source", "authentication", "reliability", "typescript", "testing"]
+status: published
+image: /blog/tolerating-unreadable-dashboard-fingerprints/cover.png
+imageAlt: "Abstract monochrome cover with the title \"A startup check that could take the API down\" next to a stack of bars and the words exit(1) vs warn"
+---
+
+Databuddy went closed source in 2026, so the commits in this post link to [my fork](https://github.com/FindMalek/Databuddy).
+
+One thing up front, because this post is about a PR I can only partly prove. I believe this is PR #1086. My clone of Databuddy has no commit with that number in it. What it has is a branch, `fix/auth-secret-guard-review`, with two commits on top of `main`. Everything below comes from those commits and the ones they sit on.
+
+## Why the check exists
+
+On 2026-09-28 the API got a newly generated `BETTER_AUTH_SECRET` that no longer matched the dashboard's. The dashboard signs session cookies with its secret, and the API has its own. They differed, so every signed-in RPC call returned 401. Every health check stayed green, because nothing about the process was unhealthy.
+
+The fix came the same day from the maintainer, [`231b172b5`](https://github.com/FindMalek/Databuddy/commit/231b172b5). The dashboard serves a fingerprint of its secret at `/api/auth/secret-fingerprint`. It's a one-way value, a truncated HMAC of a fixed string:
+
+```ts
+function fingerprintSecret(secret: string): string {
+  return createHmac("sha256", secret)
+    .update("databuddy:auth-secret-fingerprint")
+    .digest("hex")
+    .slice(0, 16);
+}
+```
+
+In hosted production, the API fetches that fingerprint at boot and compares it to its own. A mismatch throws, the deploy's health check fails, and the previous deploy keeps serving. The commit message says what should happen in the other case too: "An unreachable dashboard or a missing endpoint only logs a warning."
+
+That last sentence is the contract. The check is allowed to be strict about a real mismatch. It must not be strict about anything it can't read.
+
+Twenty minutes later [`2c7176dd8`](https://github.com/FindMalek/Databuddy/commit/2c7176dd8) changed how the check is awaited, because a top-level `await` broke the Docker build (`bun build --compile --bytecode` outputs CommonJS). The check became a promise that every request waits on, and a rejection exits the process:
+
+```ts
+const authSecretCheck = assertAuthSecretMatchesDashboard().catch(
+  (error: unknown) => {
+    console.error(error);
+    process.exit(1);
+  }
+);
+```
+
+Any rejection exits. Remember that.
+
+## The line that breaks the contract
+
+This is the body of the check in `packages/auth/src/auth.ts` at that point, trimmed:
+
+```ts
+const response = await fetch(url, {
+  signal: AbortSignal.timeout(5000),
+}).catch(() => null);
+const body: unknown = response?.ok ? await response.json() : null;
+```
+
+The `fetch` has a `.catch(() => null)`. A network error, a timeout, a refused connection: all become `null`, and the check logs a warning and moves on. That's the contract working.
+
+The next line has no such protection. `response.json()` returns a promise, and it rejects if the body isn't valid JSON. That rejection happens outside the `.catch` on `fetch`, so it travels up to the `.catch` in `index.ts`, which calls `process.exit(1)`.
+
+When does a dashboard answer `200` with a body that isn't JSON? When something in front of it answers instead. A proxy with a maintenance page, a CDN with an interstitial, a platform error page that someone configured with the wrong status. I have no evidence that this ever happened in production, and I'm not going to pretend I do. It's a case the contract already covers ("unreachable") and the code didn't.
+
+And the outcome is the worst one available. The API refuses to boot, which fails the deploy's health check, because a stranger's HTML page couldn't be parsed. We never learned whether the secrets differ. The check meant to stop one kind of outage causes another.
+
+![Flow of the boot check: fetch the fingerprint, check response.ok, parse the JSON, check the fingerprint is a string, compare. Dashed lines mark the paths that only warn. The json parse step is highlighted: before the fix a rejection exits the process, after the fix it takes the same warn path as a missing endpoint.](/blog/tolerating-unreadable-dashboard-fingerprints/boot-check.png)
+
+## The fix
+
+`9e7fa8dc3`, on 2026-10-05. The functional change is one line:
+
+```ts
+const body: { fingerprint?: string } | null = response?.ok
+  ? await response.json().catch(() => null)
+  : null;
+const dashboardFingerprint = body?.fingerprint;
+```
+
+A body that doesn't parse becomes `null`. `null` has no string fingerprint, so the code falls into the same `log.warn({ secretCheck: "skipped" })` branch as an unreachable dashboard. The commit message puts it as "treat it like an unreachable dashboard and only warn."
+
+I also did two tidy-ups in that commit. Neither survived review. In `index.ts` I swapped `console.error(error)` for a structured `log.error` through evlog, which the API already uses elsewhere. And in `auth.ts` I replaced the `unknown` annotation plus a `typeof body === "object" && "fingerprint" in body` check with a typed shape and a `body?.fingerprint`.
+
+## What the maintainer changed back
+
+The branch has a second commit by the maintainer, [`2099347fc`](https://github.com/FindMalek/Databuddy/commit/2099347fc), "preserve startup validation for unreadable fingerprints". It has no message body. Its diff does three things:
+
+- It restores `console.error(error)` and drops the evlog import in `index.ts`.
+- It restores the `unknown` body and the `typeof` check, but keeps my `.json().catch(() => null)`.
+- It adds `packages/auth/src/auth-secret-fingerprint.test.ts`, 96 lines.
+
+I can't tell you why the logging change was reverted, because nothing says. A guess, and only a guess: the path ends in `process.exit(1)`, and a structured logger might not flush before the process dies, where `console.error` is synchronous enough. For the types, my annotation said the dashboard returns `{ fingerprint?: string } | null`. That's a claim about JSON from another service, and nothing checks it. `unknown` plus a check is the honest version. A check for a security-adjacent boot guard shouldn't trust what it parses.
+
+So the net change that survives is smaller than mine: one `.catch(() => null)` and a test. That's a good outcome for a fix to a safety check.
+
+## The test
+
+The test is the more interesting half. It table-drives 11 scenarios against the real `auth.ts`, and each scenario runs in a fresh Bun child process with a mocked `fetch`:
+
+```ts
+{ name: "malformed JSON warns", body: "<html>Unavailable</html>", warns: true },
+{ name: "missing fingerprint warns", body: "{}", warns: true },
+{ name: "non-string fingerprint warns", body: '{"fingerprint":42}', warns: true },
+{ name: "failed fetch warns", fails: true, warns: true },
+{ name: "non-OK response warns", status: 503, body: "unavailable", warns: true },
+{ name: "matching secrets pass", fingerprint: "match" },
+{ name: "mismatched secrets reject", fingerprint: "mismatch", rejects: true },
+{ name: "self-hosted skips the request", selfhost: "true", skips: true },
+```
+
+Three more rows cover a `null` body, a primitive body, and development mode. Each scenario asserts three things: which URLs were requested, which warnings were logged, and whether the check resolved or rejected. The first row is the regression. Run it against the old code and the check rejects with a JSON parse error, so the scenario fails.
+
+A child process sounds heavy for a unit test. I think it was the right call here, because the point is how the real module behaves at boot. The test's own comment says it all: import the real auth in a fresh process, make the service URLs inert, mock `fetch`. Mocking half of the module would have tested the mock.
+
+## Where it ended up
+
+In my clone, `origin/main` and `origin/staging` both end on 2026-10-09, and neither has the `.json().catch` line. The two commits live on the fork branch only. So I can prove that the fix was written and reviewed. I can't prove from the history that it merged as #1086.
+
+## What I'd do differently
+
+The lesson I keep relearning is that a `.catch` on one await doesn't cover the next one. The original author, the maintainer, wrote a careful contract ("unreachable or missing only warns"), put one `.catch` where the network call was, and the next line failed the same way.
+
+I'd also have written the test first, and the whole table of odd inputs, before touching the check. I wrote a one-line fix and called it done. The maintainer's version of the PR has the test, and the test is the part that will still be useful in a year, when someone is tempted to simplify the parsing again.
