@@ -16,8 +16,8 @@
     "name": "Malek Gara-Hellal",
     "headline": "Senior Full-Stack Engineer | AI Products, Automation & LLM Systems",
     "email": "hi@findmalek.com",
-    "phone": "",
-    "location": "Monastir, Tunisia (Remote)",
+    "phone": "+216 52277662",
+    "location": "Monastir, Tunisia (Remote, open to relocation)",
     "website": {
       "url": "https://www.findmalek.com",
       "label": "findmalek.com"
@@ -32,7 +32,7 @@
     "showHeading": true,
     "keepTogether": false,
     "startOnNewPage": false,
-    "content": "<p>Full-stack engineer who ships AI features to production: LLM automation at Jobflow, RAG and multi-agent pipelines at Qorelo, a streaming AI chat flow at 8Returns. Co-founded Undrstnd Labs, and built Dukkani and Sonaraem on my own. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://gitista.com/search/?country=TN&handle=FindMalek\">#1 open-source contributor in Tunisia on Gitista</a>, 7,000+ lifetime GitHub contributions (3,057 in the last 12 months).</p>"
+    "content": "<p>Senior full-stack engineer with 5+ years shipping production software, focused on LLM systems: interview and task pipelines with evals at Jobflow, RAG and multi-agent pipelines at QTech AI (now Qorelo), a streaming AI chat flow at 8Returns. Co-founded Undrstnd Labs and built Dukkani and Sonaraem. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://gitista.com/search/?country=TN&handle=FindMalek\">#1 open-source contributor in Tunisia on Gitista</a>, 7,000+ lifetime GitHub contributions (3,057 in the last 12 months).</p>"
   },
   "sections": {
     "profiles": {
@@ -52,7 +52,7 @@
           "network": "Github",
           "username": "findmalek",
           "website": {
-            "url": "https://go.findmalek.com/gh",
+            "url": "https://github.com/FindMalek",
             "label": "",
             "inlineLink": false
           }
@@ -65,7 +65,7 @@
           "network": "LinkedIn",
           "username": "findmalek",
           "website": {
-            "url": "https://go.findmalek.com/li",
+            "url": "https://www.linkedin.com/in/findmalek/",
             "label": "",
             "inlineLink": false
           }
@@ -98,7 +98,7 @@
             "label": "jobflow.de",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Built the AI pipelines behind interview confirmation and task extraction: refactored the interview analyzer and built the task extractor, scored by eval datasets and rolled out behind a feature flag.</p></li><li><p>Retired the old v1 to v3 pipelines after rollout, deleting about 16,000 lines.</p></li><li><p>Cut the admin user-search estimate from about 90 s to 100 ms on near-production data (about 900x), with a PostGIS geography column and a partial GIST index.</p></li><li><p>Built the Braintrust evaluation and tracing setup for the AI services: fixture datasets, an end-to-end chain eval with an LLM judge, and production traces. Evals also gated a switch to cheaper models for non-sensitive prompts.</p></li><li><p>Extended the CV and cover letter smoke tests to render every template to PDF.</p></li><li><p>332 merged PRs and 315 PRs reviewed, top 10 of 47 contributors by commits.</p></li></ul>",
+          "description": "<ul><li><p>Build the AI pipelines behind <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/work/jobflow#interview-confirmation-and-task-extraction\">interview confirmation and task extraction</a>: refactored the interview analyzer and built the task extractor, scored by eval datasets and rolled out behind a feature flag.</p></li><li><p>Retired the old v1 to v3 pipelines after rollout, <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/work/jobflow#interview-confirmation-and-task-extraction\">deleting about 16,000 lines</a>.</p></li><li><p>Cut the admin user-search estimate <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/work/jobflow#search-that-stopped-being-slow\">from about 90 s to 100 ms</a> on near-production data (about 900x), with a PostGIS geography column and a partial GIST index.</p></li><li><p>Run the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/work/jobflow#evals-and-tracing\">Braintrust evaluation and tracing setup</a> for the AI services: fixture datasets, an end-to-end chain eval with an LLM judge, and production traces. Evals also gated a switch to cheaper models for non-sensitive prompts.</p></li><li><p>Extended the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/work/jobflow#cv-and-cover-letter-rendering\">CV and cover letter smoke tests</a> to render every template to PDF.</p></li><li><p><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/work/jobflow#by-the-numbers\">332 merged PRs and 315 PRs reviewed</a>, top 10 of 47 contributors by commits.</p></li></ul><p></p>",
           "roles": []
         },
         {
@@ -144,7 +144,7 @@
         {
           "id": "8c3f75a7-28e6-448a-9c3f-1246ec9e985d",
           "hidden": false,
-          "company": "Qorelo (formerly QTech AI)",
+          "company": "QTech AI (now Qorelo)",
           "position": "Chief Technology Officer (Self-employed)",
           "location": "Germany (Remote)",
           "period": "April 2025 – July 2025",
@@ -154,11 +154,11 @@
             "present": false
           },
           "website": {
-            "url": "",
-            "label": "",
+            "url": "https://www.qorelo.com/",
+            "label": "qorelo.com",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Built RAG document-processing systems for enterprise clients, and the company's marketing site.</p></li><li><p>Built a support chatbot that parses uploaded PDFs and uses a router agent to pick the knowledge source for each question.</p></li><li><p>Designed a multi-agent pipeline that retrieves and improves its own context from user questions.</p></li></ul>",
+          "description": "<ul><li><p>Built RAG document-processing systems for enterprise clients, and the company's <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/FindMalek/qtech-www\">marketing website</a>.</p></li><li><p>Built a support chatbot that parses uploaded PDFs and uses a router agent to pick the knowledge source for each question.</p></li><li><p>Designed a multi-agent pipeline that retrieves and improves its own context from user questions.</p></li></ul>",
           "roles": []
         },
         {
@@ -178,14 +178,14 @@
             "label": "",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Built an AI inference API compatible with the Vercel AI SDK.</p></li></ul>",
+          "description": "<ul><li><p>Built an <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/FindMalek/undrstnd-dev\">AI inference API</a> compatible with the Vercel AI SDK, and a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/FindMalek/developers-undrstnd\">developer platform</a> around it.</p></li><li><p>Ran 2 events in Tunisia that gave participating teams free platform credits.</p></li></ul>",
           "roles": []
         },
         {
           "id": "cf369019-fc1c-4c0f-b5ea-c016167e552f",
           "hidden": false,
           "company": "Function03 Labs",
-          "position": "UX Engineer, then Blockchain Developer",
+          "position": "UX Engineer, then Blockchain Developer, Contract",
           "location": "San Francisco, USA (Remote)",
           "period": "June 2023 – August 2024",
           "dates": {
@@ -205,7 +205,7 @@
           "id": "66132e66-3183-4b76-a238-625b05a574fd",
           "hidden": false,
           "company": "Hortensia Agency",
-          "position": "Full Stack Developer",
+          "position": "Full Stack Developer, Full-time",
           "location": "Ariana, Tunisia",
           "period": "May 2024 – September 2024",
           "dates": {
@@ -225,7 +225,7 @@
           "id": "e282c9c0-faf5-4ef8-b8bf-9b42385df418",
           "hidden": false,
           "company": "Endless Byte",
-          "position": "Founder",
+          "position": "Co-founder",
           "location": "Monastir, Tunisia",
           "period": "May 2023 – March 2024",
           "dates": {
@@ -245,7 +245,7 @@
           "id": "52923261-27cc-4a19-8c2d-4c1efb9bc235",
           "hidden": false,
           "company": "Digital Army",
-          "position": "Web Developer",
+          "position": "Web Developer, Freelance",
           "location": "Ariana, Tunisia",
           "period": "February 2021 – May 2023",
           "dates": {
@@ -302,7 +302,7 @@
       "hidden": false,
       "showHeading": true,
       "keepTogether": false,
-      "startOnNewPage": true,
+      "startOnNewPage": false,
       "items": [
         {
           "id": "074b2d59-7cc7-43df-8500-bfdb74fd81d9",
@@ -336,7 +336,7 @@
             "label": "dukkani.co",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Multi-tenant storefronts for Instagram and Facebook sellers in Tunisia. 200+ merged PRs, 4 contributors.</p></li></ul>"
+          "description": "<ul><li><p>Multi-tenant storefronts for Instagram and Facebook sellers in Tunisia. 200+ merged PRs, 4 contributors (I hired one and review the PRs). Every pull request gets its own <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/blog/a-database-per-pull-request\">database branch and preview stack</a>.</p></li></ul>"
         },
         {
           "id": "a889c22b-20e2-453b-8846-12226395179f",
@@ -387,7 +387,7 @@
             "label": "github.com/FindMalek/keep-player",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Web music player for self-hosted Navidrome: virtualized lists (about 40 rows mounted for 10,000 songs), typo-tolerant search, offline audio cache, gapless playback. 48 unit test files and 46 e2e specs.</p></li></ul>"
+          "description": "<ul><li><p>Web music player for self-hosted Navidrome: virtualized lists (about 40 rows mounted for a 10,000-song test library), typo-tolerant search, offline audio cache, gapless playback. 48 unit test files and 46 e2e specs.</p></li></ul>"
         },
         {
           "id": "9efc05f3-b353-4aa7-baa0-2b59beaff86b",
@@ -407,6 +407,57 @@
           "description": "<ul><li><p>Live dashboard for my homelab: system, containers, uptime, jobs and activity, streamed every second. The container never runs host commands, a host agent runs only allowlisted jobs. Open source.</p></li></ul>"
         },
         {
+          "id": "2e09d414-427a-45a2-a5ca-d7803f1ee204",
+          "hidden": false,
+          "name": "Syncify",
+          "period": "December 2023 – December 2023",
+          "dates": {
+            "start": "2023-12",
+            "end": "2023-12",
+            "present": false
+          },
+          "website": {
+            "url": "https://github.com/FindMalek/Syncify",
+            "label": "github.com/FindMalek/Syncify",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>Open-source Python tool that downloads Spotify tracks, albums and playlists as MP3 by matching them on YouTube. 29 stars.</p></li></ul>"
+        },
+        {
+          "id": "8c0a8c5a-cd8e-44e1-a62f-6fb01285279e",
+          "hidden": false,
+          "name": "Undrstnd Education",
+          "period": "October 2023 – August 2024",
+          "dates": {
+            "start": "2023-10",
+            "end": "2024-08",
+            "present": false
+          },
+          "website": {
+            "url": "https://github.com/undrstnd-labs/education",
+            "label": "github.com/undrstnd-labs/education",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>AI learning platform that answers from a student's own course material: RAG pipeline on LangChain with Pinecone as the vector store, Next.js, Prisma and NextAuth.</p></li></ul>"
+        },
+        {
+          "id": "a03952aa-7af2-48df-95a0-f099c7509a50",
+          "hidden": false,
+          "name": "findmalek.com",
+          "period": "September 2023 – Present",
+          "dates": {
+            "start": "2023-09",
+            "end": null,
+            "present": true
+          },
+          "website": {
+            "url": "https://github.com/FindMalek/website",
+            "label": "github.com/FindMalek/website",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>This site: a chatbot with tool calls, a 39-question eval suite for it, and case studies linked to the code behind each claim. Next.js, Vercel AI SDK.</p></li></ul>"
+        },
+        {
           "id": "c1cac69d-c116-44a0-9122-3224251d6815",
           "hidden": false,
           "name": "Open source: Databuddy",
@@ -417,11 +468,11 @@
             "present": true
           },
           "website": {
-            "url": "https://github.com/databuddy-analytics/Databuddy/pulls?q=author%3AFindMalek",
-            "label": "github.com/databuddy-analytics",
+            "url": "https://github.com/FindMalek/Databuddy/commits/main/?author=FindMalek",
+            "label": "github.com/FindMalek/Databuddy",
             "inlineLink": true
           },
-          "description": "<ul><li><p>5 merged PRs in a 1,200+ star analytics repo, e.g. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/databuddy-analytics/Databuddy/pull/680\">#680</a> batches goal analytics queries into ClickHouse (+594 / -103).</p></li></ul>"
+          "description": "<ul><li><p>5 merged PRs in the Databuddy analytics platform (1,200+ stars before it went closed source). My commits live in my public fork, e.g. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/FindMalek/Databuddy/commit/417c3e33b\">batching goal analytics queries into ClickHouse</a> (+594 / -103), written up in <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/blog/batching-clickhouse-queries-in-databuddy\">a blog post</a>.</p></li></ul>"
         }
       ]
     },
@@ -474,7 +525,9 @@
             "Multi-agent pipelines",
             "Evals (Braintrust)",
             "LangChain",
-            "Pinecone"
+            "Pinecone",
+            "Tool calling",
+            "Groq"
           ]
         },
         {
@@ -487,11 +540,16 @@
           "level": 0,
           "keywords": [
             "Node.js",
+            "Bun",
             "PostgreSQL",
             "PostGIS",
+            "ClickHouse",
+            "SQLite",
             "Prisma",
             "oRPC",
-            "Ruby on Rails (integrations)"
+            "Ruby on Rails (integrations)",
+            "Drizzle ORM",
+            "Better Auth"
           ]
         },
         {
@@ -505,11 +563,24 @@
           "keywords": [
             "Docker",
             "Dokploy",
+            "Turborepo",
             "Trigger.dev",
             "GitHub Actions",
+            "Playwright",
             "Vercel",
-            "Tailscale"
+            "Tailscale",
+            "Biome"
           ]
+        },
+        {
+          "id": "e91834fa-9cbd-4b7c-b994-3c55efbcf1ef",
+          "hidden": false,
+          "icon": "",
+          "iconColor": "",
+          "name": "Web3",
+          "proficiency": "",
+          "level": 0,
+          "keywords": ["wagmi", "viem", "ethers.js", "RainbowKit"]
         }
       ],
       "keywordLayout": "inline",
@@ -582,12 +653,12 @@
             "label": "",
             "inlineLink": false
           },
-          "description": "<p>Awarded for having the best idea in the ATAST event,</p><p>including a prize of two tickets to Dubai.</p>"
+          "description": "<p>Best idea at the ATAST event.</p>"
         },
         {
           "id": "019c8108-49b3-713f-b401-342ba28c3f5c",
           "hidden": false,
-          "title": "eXtreme winner",
+          "title": "IEEEXtreme 2023",
           "awarder": "IEEE",
           "date": "October 2023",
           "dates": {
@@ -600,7 +671,7 @@
             "label": "",
             "inlineLink": false
           },
-          "description": "<p>Achieved a top position in the prestigious global programming competition, showcasing strong problem-solving and coding skills.</p>"
+          "description": "<p>Top position in the global programming competition.</p>"
         }
       ]
     },
@@ -615,14 +686,69 @@
       "items": []
     },
     "publications": {
-      "title": "",
+      "title": "Publications",
       "icon": "",
       "columns": 1,
       "hidden": false,
       "showHeading": true,
       "keepTogether": false,
       "startOnNewPage": false,
-      "items": []
+      "items": [
+        {
+          "id": "9e12b360-420b-4682-aa52-696789cefa08",
+          "hidden": false,
+          "title": "Every pull request gets its own database",
+          "publisher": "findmalek.com",
+          "date": "September 2026",
+          "dates": {
+            "start": "2026-09",
+            "end": null,
+            "present": false
+          },
+          "website": {
+            "url": "https://www.findmalek.com/blog/a-database-per-pull-request",
+            "label": "findmalek.com/blog/a-database-per-pull-request",
+            "inlineLink": true
+          },
+          "description": ""
+        },
+        {
+          "id": "9f02baa6-559b-4441-93e0-996356b8e527",
+          "hidden": false,
+          "title": "40 queries for one dashboard: batching ClickHouse in Databuddy",
+          "publisher": "findmalek.com",
+          "date": "September 2026",
+          "dates": {
+            "start": "2026-09",
+            "end": null,
+            "present": false
+          },
+          "website": {
+            "url": "https://www.findmalek.com/blog/batching-clickhouse-queries-in-databuddy",
+            "label": "findmalek.com/blog/batching-clickhouse-queries-in-databuddy",
+            "inlineLink": true
+          },
+          "description": ""
+        },
+        {
+          "id": "123498be-9af0-41c1-b349-0efdee62d518",
+          "hidden": false,
+          "title": "Rate limiting an oRPC API with a Map, and everything that Map gets wrong",
+          "publisher": "findmalek.com",
+          "date": "September 2026",
+          "dates": {
+            "start": "2026-09",
+            "end": null,
+            "present": false
+          },
+          "website": {
+            "url": "https://www.findmalek.com/blog/rate-limiting-orpc",
+            "label": "findmalek.com/blog/rate-limiting-orpc",
+            "inlineLink": true
+          },
+          "description": ""
+        }
+      ]
     },
     "volunteer": {
       "title": "",
@@ -658,6 +784,7 @@
             "summary",
             "experience",
             "projects",
+            "publications",
             "education",
             "skills",
             "awards",
@@ -665,8 +792,7 @@
             "interests",
             "volunteer",
             "references",
-            "languages",
-            "publications"
+            "languages"
           ],
           "sidebar": []
         }
@@ -674,7 +800,7 @@
     },
     "page": {
       "gapX": 4,
-      "gapY": 4,
+      "gapY": 3,
       "marginX": 10,
       "marginY": 8,
       "format": "a4",
@@ -699,7 +825,7 @@
       "body": {
         "fontFamily": "Inter",
         "fontWeights": ["400", "600"],
-        "fontSize": 9,
+        "fontSize": 9.5,
         "lineHeight": 1.35
       },
       "heading": {

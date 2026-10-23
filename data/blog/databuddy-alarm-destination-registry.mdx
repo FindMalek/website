@@ -1,0 +1,192 @@
+---
+title: "Four copies of the same list: an alarm destination registry for Databuddy"
+href: /blog/databuddy-alarm-destination-registry
+excerpt: "Slack, email and webhook alarm destinations were defined in four places that had to agree by hand. I collapsed them into one registry, found a header that was saved but never sent, and then changed my own fix."
+publishedAt: "2026-10-23"
+tags: [open-source, typescript, refactoring, zod, databuddy]
+status: published
+image: /blog/databuddy-alarm-destination-registry/registry.png
+imageAlt: "Diagram showing four separate lists of alarm destination types in Databuddy, in the database schema, the RPC layer, the delivery builder and the dashboard form, replaced by one registry file that all four import from, with a drift test that compares the three runtime consumers."
+---
+
+Databuddy is closed source now, so `github.com/databuddy-analytics/Databuddy` returns a 404. The code here comes from my local clone and my fork, [FindMalek/Databuddy](https://github.com/FindMalek/Databuddy), and the links go there. The full list of what I did is in [What I built in Databuddy before it closed](/blog/databuddy-what-i-built).
+
+This one is a refactor, and it did not get merged as far as I can prove. More on that at the end. First, the problem.
+
+## Where the word "webhook" lived
+
+An alarm in Databuddy has destinations. Slack, email or a custom webhook. When I went looking for where those three types were defined, I found four separate answers:
+
+- `packages/db`: a const array of the allowed type strings, for the column.
+- `packages/rpc`: a zod discriminated union, with its own regexes and its own idea of a valid header.
+- `packages/notifications`: a long `if / else if` chain in `buildAlarmNotificationTargets` that turns a stored destination into something that can send.
+- the dashboard alarm sheet: a map of labels, placeholders and icons, plus a hand-written validator per type.
+
+Four copies. Add a fourth destination type and you have to remember all four places. (I'd just [written a Discord provider](/blog/a-discord-provider-for-databuddy-notifications) for the notifications package, so this was not a hypothetical.) Forget one and the failure is quiet: the form lets you pick it, the API rejects it, or the API accepts it and delivery skips it.
+
+I found a real example of that drift before I'd written any code.
+
+## The header that was saved and never sent
+
+Webhook destinations can carry custom headers. The delivery code had a deny list and a CRLF check:
+
+```ts
+const FORBIDDEN_WEBHOOK_HEADERS = new Set([
+	"authorization",
+	"content-length",
+	"content-type",
+	"cookie",
+	"host",
+	"connection",
+	"transfer-encoding",
+	"x-forwarded-for",
+	"x-forwarded-host",
+	"x-original-url",
+	"x-real-ip",
+]);
+```
+
+That's from `packages/notifications/src/alarm-config.ts` before my change, eleven names. At send time, a header named `Content-Type` is dropped. The RPC layer, which runs when you save the alarm, had its own copy with nine names. It was missing `content-type` and `x-original-url`, and it had no CRLF check. So you could save a webhook with `Content-Type: application/xml`, see it in the form afterwards, and every delivery would go out without it. The form promised something the sender wouldn't do.
+
+Not a security hole, since the sender is the strict one. It's the more annoying kind of bug. The system is correct and also lying.
+
+## One file
+
+The fix was to stop having two lists. Commit [`610b74d1e`](https://github.com/FindMalek/Databuddy/commit/610b74d1e) adds `packages/shared/src/alarm-destinations.ts`. It owns the type list, the per-type zod schemas, the forbidden header set and the secret redaction rules. Here is the core of it:
+
+```ts
+export const ALARM_DESTINATION_TYPES = ["slack", "email", "webhook"] as const;
+export type AlarmDestinationType = (typeof ALARM_DESTINATION_TYPES)[number];
+
+export interface AlarmDestinationDefinition<
+	TType extends AlarmDestinationType = AlarmDestinationType,
+> {
+	configSchema: z.ZodType<Record<string, unknown>>;
+	fieldLabel: string;
+	identifierSchema: z.ZodType<string>;
+	label: string;
+	/** Whether the identifier itself is masked on read (false only for email). */
+	maskIdentifier: boolean;
+	placeholder: string;
+	/** Config keys masked on read (see `redactDestinationConfig`). */
+	secretFields: readonly string[];
+	type: TType;
+}
+
+export const ALARM_DESTINATION_REGISTRY: {
+	[TType in AlarmDestinationType]: AlarmDestinationDefinition<TType>;
+} = {
+	slack: {
+		type: "slack",
+		label: "Slack",
+		fieldLabel: "Webhook URL",
+		placeholder: "https://hooks.slack.com/services/...",
+		identifierSchema: z
+			.string()
+			.regex(
+				SLACK_WEBHOOK_PATTERN,
+				"Slack destination must be a hooks.slack.com webhook URL"
+			),
+		configSchema: z.strictObject({}).default({}),
+		secretFields: [],
+		maskIdentifier: true,
+	},
+	// email, webhook
+};
+```
+
+![Four separate lists of destination types replaced by one shared registry, with a drift test comparing the consumers.](/blog/databuddy-alarm-destination-registry/registry.png)
+
+The mapped type on `ALARM_DESTINATION_REGISTRY` does the first half of the job. Add a string to the array and the compiler demands a definition for it. Everything else derives from the registry:
+
+- **DB:** `alarmDestinationTypeValues = ALARM_DESTINATION_TYPES`. One line instead of an array literal.
+- **RPC:** each branch of the discriminated union takes `identifier` and `config` from `ALARM_DESTINATION_REGISTRY.<type>`. The RPC router went from 73 deleted lines to 27 added.
+- **Dashboard:** labels, field labels and placeholders come from the registry. Only the icons stay in the component, since an icon is a UI concern and the shared package shouldn't import React. The hand-written validators are replaced by `identifierSchema.safeParse`, so the form shows the same message the API would.
+- **Redaction:** `redactDestinationConfig(config, secretFields)` masks the values of whatever each type declares as secret. Webhooks declare `headers`. Before, that knowledge lived in one function in the RPC router.
+
+The whole commit is 9 files, 547 added and 198 removed, and most of the additions are the registry and its tests.
+
+The notifications package got the biggest rewrite. The `if` chain became a table of builders:
+
+```ts
+export const ALARM_DESTINATION_BUILDERS: Record<
+	AlarmDestinationType,
+	AlarmDestinationBuilder
+> = {
+	slack: buildSlackTarget,
+	webhook: buildWebhookTarget,
+	email: buildEmailTarget,
+};
+```
+
+Typed as a `Record` over the registry's type union, so a missing builder is a compile error. The three build functions are the old branches moved, not rewritten. The existing `alarm-config.test.ts` passed without edits in this commit, which was my definition of "zero behavior change".
+
+## The test that fails when someone forgets
+
+A compile error only protects you when everyone uses the types. The DB column is `text`, so it can't. I added a drift test in `packages/rpc/src/routers/alarm-destinations.test.ts`:
+
+```ts
+test("DB values, RPC discriminated union, and delivery builder handle the exact same set of types", () => {
+	const canonical = sorted(ALARM_DESTINATION_TYPES);
+
+	const dbTypes = sorted(alarmDestinationTypeValues);
+	const rpcTypes = sorted(
+		destinationSchema.options.map((option) => option.shape.type.value)
+	);
+	const deliveryTypes = sorted(Object.keys(ALARM_DESTINATION_BUILDERS));
+
+	expect(dbTypes).toEqual(canonical);
+	expect(rpcTypes).toEqual(canonical);
+	expect(deliveryTypes).toEqual(canonical);
+});
+```
+
+It lives in the RPC package because that's the only place that can import all three consumers. It also fails if someone hardcodes a type in the RPC union and skips the registry, which a type check can't see.
+
+## Then I changed my own fix
+
+The first commit rejected bad headers. If you tried to save `Content-Type`, you got a validation error. That seemed right: stop pretending.
+
+Twenty minutes later I had the second commit, [`0846f2a23`](https://github.com/FindMalek/Databuddy/commit/0846f2a23), because I'd thought about the update path. An update resubmits every destination's full config, including destinations saved before this validation existed. If one of those has a legacy `Content-Type` header, a hard rejection means the alarm can't be edited at all until someone removes the header by hand, and the form doesn't show them which one. So the schema now filters instead:
+
+```ts
+export const webhookHeadersSchema = z
+	.record(z.string().min(1).max(128), z.string().max(2048))
+	.transform((headers) =>
+		Object.fromEntries(
+			Object.entries(headers)
+				.filter(
+					([name, value]) =>
+						!(
+							isForbiddenWebhookHeaderName(name) ||
+							CRLF_PATTERN.test(name) ||
+							CRLF_PATTERN.test(value)
+						)
+				)
+				.slice(0, MAX_WEBHOOK_HEADERS)
+		)
+	);
+```
+
+One set, one CRLF check, and the same filter runs again at send time as a second gate. Anything dropped on save would have been dropped on delivery anyway, so nothing that used to be delivered stops being delivered. The tests changed from "rejects" to "drops this header and keeps the rest."
+
+There is a cost, and I'll come back to it at the end: the old RPC schema rejected a header like `Authorization` with "Header name is not allowed." The filter now drops it without a word.
+
+The same commit made two more changes:
+
+- **Slack and email config became `strictObject({})`.** Nothing reads config for those two types. Allowing arbitrary keys only meant a secret-looking value could be stored without being masked on read, since redaction only covers declared `secretFields`. Storing nothing closes that.
+- **`Object.hasOwn(builders, dest.type)` before the lookup.** The DB stores the type as plain text. A stored value of `"__proto__"` would resolve an inherited property on the builders object and throw, instead of being skipped. There's a test with a deliberately malformed row, behind a `@ts-expect-error`.
+
+## Did it land?
+
+Not that I can prove. The branch is `refactor/alarm-destination-registry`, and it was PR #991. In my clone, which ends on 2026-10-09, neither `origin/main` nor `origin/staging` has `packages/shared/src/alarm-destinations.ts`. On that day I merged staging into the branch ([`048dce18c`](https://github.com/FindMalek/Databuddy/commit/048dce18c)) to keep it current, which tells you it was still open then and nothing more. I can't see anything after that date, so "not merged as of 2026-10-09" is the honest sentence.
+
+## What I'd do differently
+
+**Strict objects on legacy data.** I closed the Slack and email config gap with `strictObject({})`, and in the same commit used the legacy-data argument to filter headers instead of rejecting them. The two don't fit together. If an old Slack row has a stray key in its config, the first update after this change would fail validation. I never looked at what stored configs look like in production. A plain `z.object({})` would strip the keys instead, and a test with a legacy row would have shown me the problem.
+
+**Silent drops.** Filtering fixed the stuck-alarm case and made a different case worse. Someone who types `Authorization` used to get an error and now gets a saved alarm without the header. The better version rejects new bad input and only filters headers that were already stored. That means telling the two apart, which I didn't want to build, so I didn't.
+
+**Ask for a migration check first.** A refactor that changes what validation accepts needs a look at real data, even a count of rows with unexpected config. Zero behavior change was true for the delivery path. For the save path it wasn't.
+
+**One PR for the registry, one for the header fix.** The refactor and the header drift fix are different kinds of change. A reviewer who wanted the refactor and doubted the fix would have to take both. I bundled them because I found the bug while refactoring, which is a reason that helps me and nobody else.

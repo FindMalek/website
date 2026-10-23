@@ -80,9 +80,11 @@ export function getPostImageUrl(post: Pick<Post, "image">) {
 }
 
 // Root-relative links and images are made absolute so the markdown still
-// resolves when it's pasted into a chat or fetched by an agent.
+// resolves when it's pasted into a chat or fetched by an agent. MDX comments
+// ({/* TODO(...) */}) are author notes, so they never reach that markdown.
 export function getPostMarkdown(post: Post) {
   const body = post.content
+    .replace(/\{\/\*[\s\S]*?\*\/\}\n*/g, "")
     .trim()
     .replace(/(\]\()\/(?!\/)/g, `$1${siteConfig.url}/`)
 

@@ -1,0 +1,147 @@
+---
+title: "A seed script you can run twice"
+href: /blog/a-deterministic-seed-script-for-databuddy-funnels
+excerpt: "Databuddy's db:seed never called faker.seed(), and every event picked its page at random. So demos couldn't be diffed and funnels showed nothing. I added a seed flag and a weighted page-transition table."
+publishedAt: "2026-10-23"
+tags: ["open-source", "testing", "faker", "analytics", "typescript"]
+status: published
+image: /blog/a-deterministic-seed-script-for-databuddy-funnels/cover.png
+imageAlt: "Abstract monochrome cover with the title \"A seed script you can run twice\" next to four boxes joined by arrows, from home to pricing to signup to dashboard"
+---
+
+Databuddy went closed source in 2026, so the commits in this post link to [my fork](https://github.com/FindMalek/Databuddy).
+
+`bun run db:seed` fills a local ClickHouse with fake analytics for a website: page views, exits, outgoing links, errors, web vitals. You give it a website id and an event count. I wanted it to answer two questions for me: can I run it twice and get the same data, and does a funnel built on top of it show anything?
+
+The answer to both was no. This is the PR from the branch `fix/deterministic-seed-funnel-paths`, #990, and the commits are [`1833c9f34`](https://github.com/FindMalek/Databuddy/commit/1833c9f34) and [`a09587e3d`](https://github.com/FindMalek/Databuddy/commit/a09587e3d), 34 minutes apart on 2026-09-29. They have the same title, because the second one grew out of the first.
+
+## Two problems, one script
+
+The first problem is in the commit message, and it's blunt: the script "never called `faker.seed()`". Faker is a pseudo-random generator. Seeded, it walks the same sequence every time. Unseeded, it starts from somewhere new on every run. So two runs with the same arguments produced different users, different sessions, different browsers, different everything. You couldn't diff two screenshots of the dashboard, because the dashboard was showing a different fake company each time.
+
+The second problem is subtler, and it's the one that made funnels useless. This is how every event used to pick its page, from `packages/db/src/seed.ts`:
+
+```ts
+const path = faker.helpers.arrayElement(PATHS);
+```
+
+`PATHS` has 13 entries. Each event rolled its own die, with no memory of the last one. A visitor could go `/settings`, then `/blog`, then `/signup`, then `/contact`. Any step could follow any step. If you built a funnel from `/pricing` to `/signup` on that data, the share of people who completed it was whatever 1 in 13 gives you. Meaningless, and not in a way you'd notice, because the dashboard would happily draw you a funnel with numbers in it.
+
+## Making it repeatable
+
+The fix is a `--seed` flag, defaulting to 42. The detail that matters is where the call goes. Right below the imports, in `packages/db/src/seed.ts`:
+
+```ts
+const positionalArgs = process.argv.slice(2);
+const seedValue = resolveSeedValue(extractFlag(positionalArgs, "seed"));
+
+// Must run before any faker call below so the whole run is reproducible.
+faker.seed(seedValue);
+
+const clientId = positionalArgs[0] || faker.string.uuid();
+```
+
+The script builds `USER_POOL` and `SESSION_POOL` at module level, with a lot of faker calls before any function runs. If `faker.seed` came after them, the pools would be random and only the later events would repeat. The commit message calls this out: the seed is "applied before any faker call, including the module-level `USER_POOL`/`SESSION_POOL` generation."
+
+`extractFlag` pulls `--seed 7` or `--seed=7` out of the argument list before the positional arguments are read, so `db:seed <website-id> 500 --seed 7` still means what it did. A blank or non-numeric value falls back to 42. A side effect I like: even the fallback website id, `faker.string.uuid()`, is now the same each time.
+
+## Giving visitors a direction
+
+For the paths, I wrote a table. Each page lists where a visitor goes next, with weights out of 100. This is a trimmed version from `seed-helpers.ts`:
+
+```ts
+export const PAGE_TRANSITIONS = {
+  "/features": [
+    { path: "/pricing", weight: 40 },
+    { path: "/docs", weight: 20 },
+    { path: "/signup", weight: 10 },
+    // ...
+  ],
+  "/pricing": [
+    { path: "/signup", weight: 45 },
+    { path: "/features", weight: 15 },
+    { path: "/login", weight: 10 },
+    // ...
+  ],
+  "/signup": [
+    { path: "/dashboard", weight: 65 },
+    { path: "/pricing", weight: 15 },
+    { path: "/login", weight: 10 },
+    { path: "/", weight: 10 },
+  ],
+  // ...
+} as const;
+```
+
+There's a second table, `START_TRANSITIONS`, for the first page of a session: `/` gets 35, `/home` gets 15, `/pricing` gets 10, and so on. Picking is a weighted roll through `faker.number.float`, so it uses the same seeded generator and stays repeatable.
+
+To use it, the loop needs to know which page the visitor was just on. Events are generated in session order, one session after another, so the loop only has to remember the previous session id and the previous path:
+
+```ts
+const isNewSession = session.sessionId !== previousSessionId;
+// ...
+const path =
+  !isNewSession && isPageExit && currentPath
+    ? currentPath
+    : nextPath(isNewSession ? undefined : currentPath, PATHS[0] as string);
+previousSessionId = session.sessionId;
+currentPath = path;
+```
+
+A `page_exit` event stays on the page the visitor was looking at, since leaving a page doesn't take you somewhere else. Only a `screen_view` advances the visit. A new session starts from `START_TRANSITIONS`.
+
+![Two panels comparing runs. Before, an unseeded uniform pick gives different page sequences on two runs. After, faker.seed(42) gives identical sequences. Below, the funnel shape: features to pricing at 40, pricing to signup at 45, signup to dashboard at 65.](/blog/a-deterministic-seed-script-for-databuddy-funnels/seed-runs.png)
+
+## What the commit says it measured
+
+The first commit's message says it checked this against a local Postgres and ClickHouse. I'll quote its numbers and not make up better ones:
+
+| Funnel step | Seeded data | Baseline |
+| --- | --- | --- |
+| pricing to signup | 24.9% | 16.8% |
+| signup to dashboard | 21.7% | 12% |
+
+The second commit says that two runs with the same seed came out "byte-identical" in the categorical and behavioural columns, "across 300/300 rows".
+
+I can't tell you how the baseline was measured. The commit doesn't say. If these are funnel conversion rates, they count people across a whole session, which would explain why they sit below the 45 and 65 in the table. Those only describe the very next page.
+
+## The same thing, in a few lines
+
+Because I couldn't rerun ClickHouse for this post, I ran the pure part by itself. I pulled `seed-helpers.ts` from `a09587e3d`, put it next to a copy of faker 10.5.0, and generated 3000 sessions of 5 page views. That's not the script's output, and it's not the dashboard funnel. It's the same table and the same picker, counting how often a view of one page is immediately followed by the other:
+
+| Next page after... | Old way (uniform pick) | New way (weighted table) |
+| --- | --- | --- |
+| `/pricing` is `/signup` | 69 of 933, 7.4% | 837 of 1921, 43.6% |
+| `/signup` is `/dashboard` | 71 of 921, 7.7% | 537 of 815, 65.9% |
+
+And the first sessions from two runs, unseeded and then with seed 42, are the ones in the picture above. Unseeded, the two runs began `/login /about /profile /contact /settings` and `/signup /profile /pricing /contact /`. Seeded, both began `/home /home /login /dashboard /dashboard`. The old numbers sit near 1 in 13 (7.7%), as they should for a uniform pick over 13 pages.
+
+## The other half of the commit
+
+The second commit did two more things.
+
+`created_at` was `Date.now()`, called once per event at generation time. It had nothing to do with when the event happened. It's now the event's own `baseTime`.
+
+And the logic moved out of `seed.ts`, which is a top-level script with nothing exported, into `seed-helpers.ts`, so it could be unit tested. That file is 176 lines, with 88 lines of tests: 10 tests for `extractFlag`, `resolveSeedValue` and `nextPath`. The one I like most checks the funnel shape without a database (trimmed):
+
+```ts
+faker.seed(99);
+for (let i = 0; i < 2000; i++) {
+  if (nextPath("/pricing", "/") === "/signup") signupCount++;
+}
+// /pricing -> /signup is weighted 45 of 100; a uniform pick across the
+// ~6 reachable pages here would land near 17%, not 45%.
+expect(signupCount / samples).toBeGreaterThan(0.35);
+```
+
+## What still isn't deterministic
+
+The commit is honest about this, so I will be too. Session start times come from `faker.date.recent({ days: 30 })`, which counts back from the real current time. So timestamps depend on when you run the script, and only the categorical and behavioural fields repeat. I did that on purpose: seeded data has to land inside the dashboard's default date range no matter when you run it. A fixed date would have made the screenshots repeatable and the dashboard empty by next month.
+
+If you want a byte-for-byte diff, you have to ignore the time columns. I'd rather say that in the commit than hide it.
+
+## What I'd do differently
+
+I'd have added a guard against running it on the wrong database. On 2026-10-01, two days after my commits, the maintainer pushed [`6a2494e71`](https://github.com/FindMalek/Databuddy/commit/6a2494e71), "refuse to seed non-local databases and stop seeding raw IPs". The message says the demo seed had reached production and re-added 24,000 raw IPs after a scrub. I don't know whether anyone ran my version when that happened, and I'm not claiming it was me. But a script that's pleasant to run is also pleasant to run in the wrong place, and I'd made it more pleasant.
+
+Six days after that, [`5f6361065`](https://github.com/FindMalek/Databuddy/commit/5f6361065) (#1081) made `seed.ts` a seeded, deterministic library behind one command, `bun run workspace`, and removed `db:seed` and its "silent random-id fallback". So the entry point I changed is gone. I'm fine with that. The seed flag and the weighted table were the part worth keeping, and the new commit message still calls the result seeded and deterministic.

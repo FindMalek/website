@@ -1,0 +1,83 @@
+---
+title: "What I built in Databuddy before it closed"
+href: /blog/databuddy-what-i-built
+excerpt: "Nine pull requests and branches in Databuddy between August and October 2026, which ones merged, which ones I can't prove merged, and where the code lives now that the repo is closed source."
+publishedAt: "2026-10-23"
+tags: [open-source, databuddy, retrospective]
+status: published
+image: /blog/databuddy-what-i-built/timeline.png
+imageAlt: "Timeline of my Databuddy work from August 20 to October 9, 2026, marking when each pull request was opened, merged or pushed."
+---
+
+Databuddy is an analytics platform that doesn't track people in creepy ways. It started open source. In 2026 it went closed source, and `github.com/databuddy-analytics/Databuddy` now returns a 404.
+
+My work did not go with it. I kept a full local clone and a public fork, [FindMalek/Databuddy](https://github.com/FindMalek/Databuddy). Every commit link in this post and the posts it links to points at that fork. Pull request numbers still refer to the upstream repo, which you can no longer open, so the fork commits are the proof.
+
+One limit up front. My clone's history ends on 2026-10-09. Anything that happened upstream after that day is invisible to me, and where it matters I say so.
+
+![Timeline of my Databuddy work from August 20 to October 9, 2026.](/blog/databuddy-what-i-built/timeline.png)
+
+## The timeline
+
+- **Aug 20.** I opened two small PRs the same evening, a funnel cache bug (#636) and a Discord provider (#637). Four commits in 20 minutes, from 18:22 to 18:42.
+- **Aug 25.** Both were merged, within about 40 minutes of each other.
+- **Aug 27.** I opened the goals dashboard batching PR (#680), after filing issue #679. A fix for two review findings followed 12 minutes later.
+- **Sep 27.** #680 was merged, a month later, after a rebase onto a moved `staging`. 594 lines added, 103 removed.
+- **Sep 29.** In one evening, between 19:39 and 20:19, I committed four branches: typed alarm triggers (#988), a Jev judge for AI insights (#989), a deterministic seed script (#990) and a destination registry (#991).
+- **Oct 5.** A fix for the API exiting at startup when a fingerprint response isn't JSON (#1086).
+- **Oct 9.** I merged `staging` into the open branches to keep them alive, and pushed one more small dashboard fix.
+
+By the numbers from `git log`: 21 non-merge commits of mine across all branches, some of them rebased copies of each other. Three squash-merge commits with my name on them in `origin/main` and `origin/staging`.
+
+## Every PR and branch
+
+| Work                           | PR               | Branch                                  | Status                                                      | Fork commits                                                                                                                                                                                                                                                                                   |
+| ------------------------------ | ---------------- | --------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Funnel cache invalidation      | #636             | `fix/funnels-cache-invalidation`        | merged, #636 (`39824f929`, Aug 25)                          | [`13c006a58`](https://github.com/FindMalek/Databuddy/commit/13c006a58), [`9c1e36ef9`](https://github.com/FindMalek/Databuddy/commit/9c1e36ef9)                                                                                                                                                 |
+| Discord provider               | #637             | `feat/notifications-discord-provider`   | merged, #637 (`febc699c6`, Aug 25)                          | [`a75cf7223`](https://github.com/FindMalek/Databuddy/commit/a75cf7223), [`07b65f03a`](https://github.com/FindMalek/Databuddy/commit/07b65f03a)                                                                                                                                                 |
+| Goals `bulkAnalytics` batching | #680             | `fix/goals-bulk-analytics-n-plus-1`     | merged, #680 (`417c3e33b`, Sep 27)                          | [`ca3b23c9d`](https://github.com/FindMalek/Databuddy/commit/ca3b23c9d), [`dcef46562`](https://github.com/FindMalek/Databuddy/commit/dcef46562), [`41629db55`](https://github.com/FindMalek/Databuddy/commit/41629db55), [`34d9da28f`](https://github.com/FindMalek/Databuddy/commit/34d9da28f) |
+| Typed alarm triggers           | #988             | `feat/typed-alarm-trigger-conditions`   | not merged as of Oct 9, listed as merged on this site later | [`53b9f0179`](https://github.com/FindMalek/Databuddy/commit/53b9f0179), [`f427d2a1c`](https://github.com/FindMalek/Databuddy/commit/f427d2a1c), [`e3d9d07f0`](https://github.com/FindMalek/Databuddy/commit/e3d9d07f0)                                                                         |
+| Jev grounding evals            | #989             | `feat/jev-grounding-evals`              | not merged as of Oct 9                                      | [`af9e38259`](https://github.com/FindMalek/Databuddy/commit/af9e38259), [`5999bb34a`](https://github.com/FindMalek/Databuddy/commit/5999bb34a)                                                                                                                                                 |
+| Deterministic seed script      | #990             | `fix/deterministic-seed-funnel-paths`   | not merged as of Oct 9                                      | [`1833c9f34`](https://github.com/FindMalek/Databuddy/commit/1833c9f34), [`a09587e3d`](https://github.com/FindMalek/Databuddy/commit/a09587e3d)                                                                                                                                                 |
+| Alarm destination registry     | #991             | `refactor/alarm-destination-registry`   | not merged as of Oct 9                                      | [`610b74d1e`](https://github.com/FindMalek/Databuddy/commit/610b74d1e), [`0846f2a23`](https://github.com/FindMalek/Databuddy/commit/0846f2a23), [`048dce18c`](https://github.com/FindMalek/Databuddy/commit/048dce18c)                                                                         |
+| Unreadable fingerprints        | #1086            | `fix/auth-secret-guard-review`          | not merged as of Oct 9, listed as merged on this site later | `9e7fa8dc3`                                                                                                                                                                                                                         |
+| Onboarding plan step flash     | none I can prove | `fix/onboarding-plan-step-reload-flash` | not merged as of Oct 9                                      | [`2dc24d526`](https://github.com/FindMalek/Databuddy/commit/2dc24d526)                                                                                                                                                                                                                         |
+
+"Merged" in that table means I can see the squash-merge commit with the PR number in its subject in the upstream history. "Not merged as of Oct 9" means the code isn't in `origin/main` or `origin/staging` in my clone, and nothing more than that.
+
+Two rows need an honest footnote. This site counts five merged PRs, as of 2026-10-18. My clone shows three merge commits. The other two are #988 and #1086, which I believe merged after the day my clone ends, but I can't show you the commits. If you're checking my claims, that's the gap.
+
+## The posts
+
+I wrote one for each piece of work that had a story.
+
+- [40 queries for one dashboard](/blog/batching-clickhouse-queries-in-databuddy): #680, batching ClickHouse queries, and the two bugs a review bot found in my first version.
+- [The funnel cache that never invalidated](/blog/the-funnel-cache-that-never-invalidated): #636, a cache key that was written one way and deleted another.
+- [A Discord provider and the 6000 character rule](/blog/a-discord-provider-for-databuddy-notifications): #637, a provider the docs claimed existed.
+- [Alarms that could never fire](/blog/databuddy-typed-alarm-triggers): #988, typing trigger conditions and refusing what can't be evaluated.
+- [Four copies of the same list](/blog/databuddy-alarm-destination-registry): #991, one registry for destination types.
+- [A number can exist and still be wrong](/blog/databuddy-jev-grounding-evals): #989, an eval-only judge for AI insight claims.
+- [Don't crash the API because a proxy sent HTML](/blog/tolerating-unreadable-dashboard-fingerprints): #1086, a startup check that exited on a non-JSON body.
+- [A seed script you can run twice](/blog/a-deterministic-seed-script-for-databuddy-funnels): #990, seed data that comes out the same every time.
+
+{/* TODO(malek): section about Iza (Databuddy's founder) showing contributors in a video on X, https://x.com/izadoesdev/status/2113578842388328651. I could not fetch the post (X returns 402) and I have not been told what the video says or shows, so nothing is written here on purpose. To fill this in I need from you: what the video was about, whether you appear in it and how (named, shown, or just part of the group), roughly when it was posted, and one sentence on how it felt. Then write 100-200 words in your voice and delete this comment. Do not publish claims about the video before that. */}
+
+## What I learned
+
+**The small PRs landed and the big evening didn't.** The two PRs I opened on Aug 20 merged in five days. The one I opened a week later took a month, and it needed a rebase. The four I opened in a single evening on Sep 29 were still open ten days after, as far as my history shows. Review is a queue, and four PRs from the same person is four more things for one maintainer. I'd space them out next time.
+
+**Shared code has edges nobody wrote down.** In #680 it was a filter that only applied to step zero and a step number that wrapped at 255. In #636 it was a cache key written one way and deleted another. Every bug I found was in code that was correct for what it was built for. So I read callers before reusing helpers.
+
+**Fail where the lie happens.** The alarm API said "saved" for alarms that could never fire. The webhook form showed headers the sender dropped. In both cases the fix was to put the check at the moment of saving, not later. See the [alarm triggers](/blog/databuddy-typed-alarm-triggers) post.
+
+**Don't trust discipline, add a test that fails.** The [registry](/blog/databuddy-alarm-destination-registry) is one file. The part that keeps it honest is a test that compares three consumers and fails if they disagree.
+
+**A judge needs calibration before anyone believes it.** The [Jev work](/blog/databuddy-jev-grounding-evals) taught me the most and has the least proof: I have no recorded run. If I did it again I'd start from the four known-bad cases and a labeled set, then build the harness.
+
+**Read the review bot.** On #680 both correctness findings were real, and both were mine.
+
+## Where the work lives
+
+The code is in [FindMalek/Databuddy](https://github.com/FindMalek/Databuddy), one branch per PR, and everything above is in the table. It isn't a project, it's an archive of my commits.
+
+The contribution card on the home page used to link to the upstream PRs. Those links are dead, so it now points at the fork and at these posts.
