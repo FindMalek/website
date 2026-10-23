@@ -1,12 +1,35 @@
 # v1/v2/v3 portfolio case study: Turborepo migration plan
 
-Issue: #98. Status: plan only. Running the script restructures the whole repo, so
+Issue: #98. Status: plan only, recommended path is the archive projects below. Running the script restructures the whole repo, so
 it is a separate, deliberate step (see "Ordered plan").
 
 ## Goal
 
 Show how the site evolved by deploying three browseable versions (v1, v2, v3),
 then link them from `data/projects/2-findmalek.mdx`.
+
+## Recommended path (decided 2026-10-23): archive projects, not a monorepo
+
+The simplest way to show v1, v2 and v3 is to leave this repo exactly as it is
+and deploy the two old versions as separate Vercel projects:
+
+1. Create branches from the tags: `git branch archive/v1 v0.4.2` and
+   `git branch archive/v2 v2.0.0`, push them.
+2. In Vercel, add two projects from this same repo (`findmalek-v1`,
+   `findmalek-v2`), set each project's Production Branch to its archive branch.
+3. Add the env vars each version needs (see "Version mapping"). v2 needs nine
+   at build and calls Spotify while prerendering `/about`: either give it real
+   keys, or accept pinning that page to fixtures on the archive branch.
+4. Attach `v1.findmalek.com` and `v2.findmalek.com` (or the subdomain scheme
+   chosen under "Domains").
+5. Link both from `data/projects/2-findmalek.mdx` and the homepage case study.
+
+Why this first: no files move, the production deploy of v3 is untouched (no
+Root Directory change, no CI path changes), each version builds with its own
+lockfile and Next version, and it can be undone by deleting two Vercel
+projects. The monorepo below is a heavier option for later, only worth it if
+one repo with three apps becomes the goal in itself. Do not run the script
+before that decision.
 
 ## Version mapping
 
