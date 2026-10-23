@@ -1,9 +1,9 @@
 "use client"
 
-import { createContext, useContext } from "react"
+import { createContext, useContext, useMemo } from "react"
+import { INTRODUCTION_SCRIPT } from "@/data/journey-scripts"
 import { AnimatePresence } from "motion/react"
 
-import { INTRODUCTION_SCRIPT } from "@/data/journey-scripts"
 import { useIntroductionJourney } from "@/hooks/use-introduction-journey"
 
 import { IntroductionJourneyOverlay } from "@/components/app/introduction-journey"
@@ -31,9 +31,11 @@ export function IntroductionJourneyProvider({
   children: React.ReactNode
 }) {
   const journey = useIntroductionJourney(INTRODUCTION_SCRIPT.steps)
+  const { start } = journey
+  const value = useMemo(() => ({ start }), [start])
 
   return (
-    <IntroductionJourneyContext.Provider value={{ start: journey.start }}>
+    <IntroductionJourneyContext.Provider value={value}>
       {children}
       <AnimatePresence>
         {journey.isActive && <IntroductionJourneyOverlay journey={journey} />}

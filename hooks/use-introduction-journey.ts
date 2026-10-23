@@ -1,7 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
-
+import { useCallback, useState } from "react"
 import type { JourneyScript } from "@/data/journey-scripts"
 
 type JourneyState = {
@@ -11,64 +10,21 @@ type JourneyState = {
   isTypingComplete: boolean
   isMuted: boolean
   autoAdvance: boolean
+  runId: number
 }
-
-const STORAGE_KEY = "introduction-journey-active"
 
 const DEFAULT_STATE: JourneyState = {
   isActive: false,
   stepIndex: 0,
   isExpanded: false,
   isTypingComplete: false,
-  isMuted: false,
+  isMuted: true,
   autoAdvance: false,
+  runId: 0,
 }
 
 export function useIntroductionJourney(steps: JourneyScript[]) {
-  // Start from a stable default to avoid hydration mismatches; restore the
-  // validated active flag once the component mounts via a deferred update.
   const [state, setState] = useState<JourneyState>(DEFAULT_STATE)
-  const [hasRestored, setHasRestored] = useState(false)
-
-  useEffect(() => {
-    const id = setTimeout(() => {
-      try {
-        const raw = sessionStorage.getItem(STORAGE_KEY)
-        if (raw) {
-          const parsed = JSON.parse(raw) as unknown
-          if (
-            parsed &&
-            typeof parsed === "object" &&
-            "isActive" in parsed &&
-            parsed.isActive === true
-          ) {
-            const isMuted =
-              "isMuted" in parsed && typeof parsed.isMuted === "boolean"
-                ? parsed.isMuted
-                : false
-            setState({ ...DEFAULT_STATE, isActive: true, isMuted })
-          }
-        }
-      } catch {
-        // ignore corrupted storage
-      } finally {
-        setHasRestored(true)
-      }
-    }, 0)
-
-    return () => {
-      clearTimeout(id)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!hasRestored) return
-    try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-    } catch {
-      // ignore storage quota errors
-    }
-  }, [state, hasRestored])
 
   const start = useCallback(() => {
     setState((prev) => ({
@@ -84,6 +40,7 @@ export function useIntroductionJourney(steps: JourneyScript[]) {
       isMuted: prev.isMuted,
       autoAdvance: prev.autoAdvance,
       isActive: true,
+      runId: prev.runId + 1,
     }))
   }, [])
 
@@ -130,12 +87,16 @@ export function useIntroductionJourney(steps: JourneyScript[]) {
   const goTo = useCallback(
     (index: number) => {
       if (index < 0 || index >= steps.length) return
-      setState((prev) => ({
-        ...prev,
-        stepIndex: index,
-        isExpanded: false,
-        isTypingComplete: false,
-      }))
+      setState((prev) =>
+        index === prev.stepIndex
+          ? prev
+          : {
+              ...prev,
+              stepIndex: index,
+              isExpanded: false,
+              isTypingComplete: false,
+            }
+      )
     },
     [steps.length]
   )

@@ -125,7 +125,7 @@ export function TypewriterText({
   return (
     <span className={cn("relative", className)}>
       {/* Visible animated text */}
-      <span aria-hidden={!shouldRevealInstantly}>{visibleText}</span>
+      <span aria-hidden>{visibleText}</span>
       {/* Screen readers and final DOM always see the full text */}
       <span className="sr-only">{text}</span>
       {/* Editorial terminal caret */}

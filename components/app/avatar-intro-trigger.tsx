@@ -10,7 +10,6 @@ import {
   useSpring,
 } from "motion/react"
 
-import { playJourneyOpen } from "@/lib/journey-sound"
 import { cn } from "@/lib/utils"
 
 import { useIntroductionJourneyStart } from "@/components/app/introduction-journey-provider"
@@ -46,16 +45,11 @@ export function AvatarIntroTrigger({
     rawY.set(0)
   }
 
-  const handleLaunch = () => {
-    playJourneyOpen()
-    start()
-  }
-
   return (
     <div className={cn("relative inline-flex items-center", className)}>
       <motion.button
         type="button"
-        onClick={handleLaunch}
+        onClick={start}
         onPointerEnter={() => setIsHovered(true)}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
@@ -66,7 +60,7 @@ export function AvatarIntroTrigger({
           y: prefersReducedMotion ? 0 : springY,
         }}
         whileTap={prefersReducedMotion ? undefined : { scale: 0.94 }}
-        aria-label="Want to experience something cool? Play the interactive introduction"
+        aria-label="Play the interactive introduction"
         className={cn(
           "group pointer-events-auto relative cursor-pointer rounded-full outline-none",
           "focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2"
@@ -88,7 +82,9 @@ export function AvatarIntroTrigger({
           className={cn(
             "pointer-events-none absolute -inset-1.5 size-[calc(100%+12px)] transition-transform duration-700",
             !prefersReducedMotion && "animate-[spin_16s_linear_infinite]",
-            isHovered ? "text-primary opacity-100" : "text-primary/50 opacity-75"
+            isHovered
+              ? "text-primary opacity-100"
+              : "text-primary/50 opacity-75"
           )}
         >
           <circle
@@ -123,7 +119,7 @@ export function AvatarIntroTrigger({
         <span
           aria-hidden
           className={cn(
-            "bg-foreground text-background ring-background absolute -right-0.5 -bottom-0.5 flex size-5 items-center justify-center rounded-full shadow-md ring-2 transition-transform duration-300",
+            "bg-foreground text-background ring-background absolute -bottom-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full shadow-md ring-2 transition-transform duration-300",
             "group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-110"
           )}
         >
@@ -158,10 +154,10 @@ export function AvatarIntroTrigger({
                 : { opacity: 0, x: -6, scale: 0.96, filter: "blur(4px)" }
             }
             transition={{ type: "spring", stiffness: 420, damping: 28 }}
-            onClick={handleLaunch}
+            onClick={start}
             className={cn(
-              "bg-popover/95 text-popover-foreground border-border/80 pointer-events-auto absolute top-1/2 left-[calc(100%+0.75rem)] z-50 -translate-y-1/2 cursor-pointer",
-              "flex items-center gap-2.5 rounded-full border px-3.5 py-1.5 shadow-xl backdrop-blur-md whitespace-nowrap"
+              "bg-popover/95 text-popover-foreground border-border/80 pointer-events-auto absolute left-[calc(100%+0.75rem)] top-1/2 z-50 -translate-y-1/2 cursor-pointer",
+              "flex items-center gap-2.5 whitespace-nowrap rounded-full border px-3.5 py-1.5 shadow-xl backdrop-blur-md"
             )}
           >
             {/* Animated mini equalizer bars */}
@@ -175,8 +171,8 @@ export function AvatarIntroTrigger({
               <span className="text-xs font-medium tracking-tight">
                 want to experience something cool?
               </span>
-              <span className="text-muted-foreground mt-0.5 font-mono text-[9px] tracking-[0.2em] uppercase">
-                click to play · 2m intro
+              <span className="text-muted-foreground mt-0.5 font-mono text-[9px] uppercase tracking-[0.2em]">
+                click to play
               </span>
             </span>
           </motion.div>
