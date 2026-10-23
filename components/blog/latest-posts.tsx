@@ -14,7 +14,7 @@ export function LatestPosts({ posts }: { posts: PostSummary[] }) {
           <li key={post.href}>
             <Link
               href={post.href}
-              className="border-foreground/10 hover:bg-muted/50 focus-visible:ring-ring group -mx-2 flex items-center gap-4 rounded-lg border-b px-2 py-3 outline-none transition-colors focus-visible:ring-2 [li:last-child_&]:border-b-0"
+              className="border-foreground/10 hover:bg-muted/50 group -mx-2 flex items-center gap-4 rounded-lg border-b px-2 py-3 transition-colors [li:last-child_&]:border-b-0"
             >
               <PostCover
                 post={post}

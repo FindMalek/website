@@ -1,0 +1,187 @@
+/*
+ * Geist text styles. Apply one class to the parent; nest <strong> for the
+ * Strong treatment. Sizes are in rem so user font scaling still works.
+ * https://vercel.com/geist/typography
+ * The typography page lists class names and usage only. Heading 48/64 values
+ * come from https://vercel.com/design.md; heading 24/20/16 tracking from
+ * https://vercel.com/geist/vercel-brand.css. Remaining values follow the
+ * same pattern and are unverified against a primary source.
+ */
+
+@utility text-heading-72 {
+  font-size: 4.5rem;
+  line-height: 4.5rem;
+  letter-spacing: -0.06em;
+  font-weight: 600;
+}
+@utility text-heading-64 {
+  font-size: 4rem;
+  line-height: 4rem;
+  letter-spacing: -0.06em;
+  font-weight: 600;
+}
+@utility text-heading-56 {
+  font-size: 3.5rem;
+  line-height: 3.5rem;
+  letter-spacing: -0.06em;
+  font-weight: 600;
+}
+@utility text-heading-48 {
+  font-size: 3rem;
+  line-height: 3.5rem;
+  letter-spacing: -0.06em;
+  font-weight: 600;
+}
+@utility text-heading-40 {
+  font-size: 2.5rem;
+  line-height: 3rem;
+  letter-spacing: -0.06em;
+  font-weight: 600;
+}
+@utility text-heading-32 {
+  font-size: 2rem;
+  line-height: 2.5rem;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+}
+@utility text-heading-24 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+}
+@utility text-heading-20 {
+  font-size: 1.25rem;
+  line-height: 1.625rem;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+@utility text-heading-16 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+@utility text-heading-14 {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+@utility text-button-16 {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+@utility text-button-14 {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+@utility text-button-12 {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+}
+
+@utility text-label-20 {
+  font-size: 1.25rem;
+  line-height: 2rem;
+  & strong {
+    font-weight: 600;
+  }
+}
+@utility text-label-18 {
+  font-size: 1.125rem;
+  line-height: 1.25rem;
+  & strong {
+    font-weight: 600;
+  }
+}
+@utility text-label-16 {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  & strong {
+    font-weight: 600;
+  }
+}
+@utility text-label-14 {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  & strong {
+    font-weight: 600;
+  }
+}
+@utility text-label-14-mono {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+@utility text-label-13 {
+  font-size: 0.8125rem;
+  line-height: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+@utility text-label-13-mono {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+@utility text-label-12 {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+@utility text-label-12-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility text-copy-24 {
+  font-size: 1.5rem;
+  line-height: 2.25rem;
+  & strong {
+    font-weight: 600;
+  }
+}
+@utility text-copy-20 {
+  font-size: 1.25rem;
+  line-height: 2.25rem;
+  & strong {
+    font-weight: 600;
+  }
+}
+@utility text-copy-18 {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  & strong {
+    font-weight: 600;
+  }
+}
+@utility text-copy-16 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  & strong {
+    font-weight: 600;
+  }
+}
+@utility text-copy-14 {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  & strong {
+    font-weight: 600;
+  }
+}
+@utility text-copy-13 {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+}
+@utility text-copy-13-mono {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+}

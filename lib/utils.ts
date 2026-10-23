@@ -1,9 +1,25 @@
 import type { UIMessage } from "ai"
 import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { extendTailwindMerge } from "tailwind-merge"
+
+import { ProjectStatus } from "@/types/enum"
 
 import { FEATURED_PROJECT_ORDER } from "@/config/consts"
-import { ProjectStatus } from "@/types/enum"
+
+const GEIST_TEXT_STYLES = [
+  ...[72, 64, 56, 48, 40, 32, 24, 20, 16, 14].map((n) => `heading-${n}`),
+  ...[16, 14, 12].map((n) => `button-${n}`),
+  ...["20", "18", "16", "14", "14-mono", "13", "13-mono", "12", "12-mono"].map(
+    (n) => `label-${n}`
+  ),
+  ...["24", "20", "18", "16", "14", "13", "13-mono"].map((n) => `copy-${n}`),
+]
+
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: { "font-size": [{ text: GEIST_TEXT_STYLES }] },
+  },
+})
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -42,7 +58,9 @@ export function scrollToAnchorSection(href: string, pathname: string) {
   if (!target) return false
 
   const top =
-    target.getBoundingClientRect().top + window.scrollY - STICKY_HEADER_OFFSET_PX
+    target.getBoundingClientRect().top +
+    window.scrollY -
+    STICKY_HEADER_OFFSET_PX
   window.scrollTo({ top, behavior: "smooth" })
   return true
 }

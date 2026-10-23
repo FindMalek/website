@@ -161,7 +161,7 @@ function BlogIndexView({
             autoComplete="off"
             spellCheck={false}
             enterKeyHint="search"
-            className="border-input bg-background placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 w-full rounded-lg border pl-9 pr-10 text-base outline-none transition-[border-color,box-shadow] focus-visible:ring-[3px] sm:text-sm [&::-webkit-search-cancel-button]:hidden"
+            className="border-input bg-background placeholder:text-muted-foreground h-10 w-full rounded-lg border pl-9 pr-10 text-base transition-[border-color,box-shadow] sm:text-sm [&::-webkit-search-cancel-button]:hidden"
           />
           {query ? (
             <button
@@ -171,7 +171,7 @@ function BlogIndexView({
                 inputRef.current?.focus()
               }}
               aria-label="Clear search"
-              className="text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/50 absolute right-1.5 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-md outline-none transition-colors focus-visible:ring-[3px]"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted absolute right-1.5 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-md transition-colors "
             >
               <Icons.close className="size-4" aria-hidden />
             </button>

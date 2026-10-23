@@ -57,7 +57,7 @@ export function ProjectContributionCard({
                   href={pullRequest.post}
                   aria-label="Read the write-up"
                   title="Read the write-up"
-                  className="text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring/50 -mr-1 shrink-0 self-center rounded p-1 outline-none transition-colors focus-visible:ring-[3px]"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted -mr-1 shrink-0 self-center rounded p-1 transition-colors "
                 >
                   <Icons.post className="size-3.5" />
                 </Link>

@@ -42,13 +42,7 @@ export function PanelTitle({
   ...props
 }: React.ComponentProps<"h2">) {
   return (
-    <h2
-      className={cn(
-        "text-balance text-2xl font-bold leading-tight tracking-tight",
-        className
-      )}
-      {...props}
-    />
+    <h2 className={cn("text-heading-24 text-balance", className)} {...props} />
   )
 }
 
@@ -59,7 +53,7 @@ export function PanelTitleSup({
   return (
     <sup
       className={cn(
-        "text-muted-foreground top-[-0.75em] ml-2.5 text-sm font-medium tracking-normal",
+        "text-muted-foreground text-label-14 top-[-0.75em] ml-2.5 font-medium tracking-normal",
         className
       )}
       {...props}
@@ -73,7 +67,7 @@ export function PanelDescription({
 }: React.ComponentProps<"p">) {
   return (
     <p
-      className={cn("text-muted-foreground mt-2 text-base", className)}
+      className={cn("text-muted-foreground text-copy-16 mt-2", className)}
       {...props}
     />
   )

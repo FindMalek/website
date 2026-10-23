@@ -3,7 +3,7 @@ import "@/styles/globals.css"
 import type { Metadata, Viewport } from "next"
 import { ChatProvider } from "@/providers/chat-provider"
 
-import { geistHeading, geistMono, poppins } from "@/config/fonts"
+import { geistMono, geistSans } from "@/config/fonts"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
@@ -80,11 +80,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html
       suppressHydrationWarning
-      className={cn(geistMono.variable, geistHeading.variable)}
+      lang="en"
+      className={cn(geistSans.variable, geistMono.variable)}
     >
       <body
         suppressHydrationWarning
-        className={cn("bg-background font-sans antialiased", poppins)}
+        className="bg-background font-sans antialiased"
       >
         {/* Clip on a wrapper, not <body>: body overflow propagates to the
             viewport, which stays script-scrollable into the full-bleed lines. */}

@@ -87,7 +87,7 @@ export default async function Home() {
 
       <Panel id="about">
         <PanelHeader>
-          <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
+          <HelloTitle className="text-heading-24 text-balance" />
           <PanelDescription>
             I&apos;m a Design Engineer, Founder, and Product Builder based in 🇹🇳
             Monastir, Tunisia.
@@ -96,7 +96,7 @@ export default async function Home() {
 
         <PanelContent>
           <div className="text-foreground mb-8 space-y-4">
-            <p className="text-base leading-relaxed">
+            <p className="text-copy-16">
               Specialized in transforming complex ideas into elegant digital
               solutions through web development, design engineering, and
               entrepreneurial innovation. I craft meaningful projects that blend
@@ -197,7 +197,7 @@ export default async function Home() {
 
       <Panel>
         <PanelHeader>
-          <PanelTitle className="text-lg">
+          <PanelTitle className="text-heading-20">
             Companies I&apos;ve worked with
             <PanelTitleSup>({CLIENTS.length})</PanelTitleSup>
           </PanelTitle>
@@ -238,7 +238,7 @@ export default async function Home() {
             id="open-source"
             className="[scroll-margin-top:var(--header-height,6rem)]"
           >
-            <h3 className="group/title mb-4 mt-12 flex items-center gap-1.5 text-xl font-semibold">
+            <h3 className="group/title text-heading-20 mb-4 mt-12 flex items-center gap-1.5">
               Open Source
               <PanelTitleSup>({openSourceProjects.length})</PanelTitleSup>
               <PanelCopyLinkButton sectionId="open-source" />
@@ -259,7 +259,7 @@ export default async function Home() {
               id="contributions"
               className="[scroll-margin-top:var(--header-height,6rem)]"
             >
-              <h3 className="group/title mb-4 mt-12 flex items-center gap-1.5 text-xl font-semibold">
+              <h3 className="group/title text-heading-20 mb-4 mt-12 flex items-center gap-1.5">
                 Contributing to
                 <PanelTitleSup>({contributions.length})</PanelTitleSup>
                 <PanelCopyLinkButton sectionId="contributions" />
@@ -332,7 +332,7 @@ export default async function Home() {
           />
 
           <div className="border-line mt-8 border-t pt-8">
-            <h3 className="mb-4 text-xl font-semibold">Personal</h3>
+            <h3 className="text-heading-20 mb-4">Personal</h3>
 
             <div className="space-y-8">
               <AboutMusic playlists={playlists.items} />

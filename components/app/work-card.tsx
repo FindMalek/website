@@ -76,8 +76,8 @@ export function WorkCard({ work }: { work: WorkRo }) {
         </div>
 
         <div className="mt-2 flex flex-1 flex-col text-left sm:mt-0 sm:text-left">
-          <h3 className="text-lg font-semibold sm:text-xl">{position}</h3>
-          <p className="text-muted-foreground text-base sm:text-lg">
+          <h3 className="text-heading-16 sm:text-heading-20">{position}</h3>
+          <p className="text-muted-foreground text-copy-14 sm:text-copy-16">
             {company}
           </p>
           <p className="text-muted-foreground mt-3 sm:mt-4">{overview}</p>

@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@import "./geist-tokens.css";
+@import "./geist-type.css";
+
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
@@ -8,8 +11,33 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-mono);
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:
+    var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+  --color-border-strong: var(--border-strong);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-ds-background-200: var(--ds-background-200);
+  --color-ds-gray-100: var(--ds-gray-100);
+  --color-ds-gray-200: var(--ds-gray-200);
+  --color-ds-gray-300: var(--ds-gray-300);
+  --color-ds-gray-400: var(--ds-gray-400);
+  --color-ds-gray-500: var(--ds-gray-500);
+  --color-ds-gray-600: var(--ds-gray-600);
+  --color-ds-gray-700: var(--ds-gray-700);
+  --color-ds-gray-800: var(--ds-gray-800);
+  --color-ds-gray-900: var(--ds-gray-900);
+  --color-ds-gray-1000: var(--ds-gray-1000);
+  --shadow-xs: var(--ds-shadow-small);
+  --shadow-sm: var(--ds-shadow-small);
+  --shadow-md: var(--ds-shadow-medium);
+  --shadow-lg: var(--ds-shadow-large);
+  --shadow-tooltip: var(--ds-shadow-tooltip);
+  --shadow-menu: var(--ds-shadow-menu);
+  --shadow-modal: var(--ds-shadow-modal);
+  --shadow-fullscreen: var(--ds-shadow-fullscreen);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -40,10 +68,10 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 6px;
+  --radius-xl: 12px;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-text-gradient: text-gradient 1.5s linear infinite;
@@ -102,13 +130,9 @@
     }
   }
 
-  --font-heading: var(--font-heading);
-
-  --radius-2xl: calc(var(--radius) * 1.8);
-
-  --radius-3xl: calc(var(--radius) * 2.2);
-
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
+  --radius-4xl: 24px;
 
   --animate-marquee: marquee var(--duration) infinite linear;
   --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
@@ -129,78 +153,6 @@
       transform: translateY(calc(-100% - var(--gap)));
     }
   }
-}
-
-:root {
-  --radius: 0.5rem;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.148 0.004 228.8);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.148 0.004 228.8);
-  --primary: oklch(0.52 0.105 223.128);
-  --primary-foreground: oklch(0.984 0.019 200.873);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.963 0.002 197.1);
-  --muted-foreground: oklch(0.56 0.021 213.5);
-  --accent: oklch(0.963 0.002 197.1);
-  --accent-foreground: oklch(0.218 0.008 223.9);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: hsl(3 91% 88%);
-  --border: oklch(0.925 0.005 214.3);
-  --input: oklch(0.925 0.005 214.3);
-  --ring: oklch(0.723 0.014 214.4);
-  --chart-1: oklch(0.865 0.127 207.078);
-  --chart-2: oklch(0.715 0.143 215.221);
-  --chart-3: oklch(0.609 0.126 221.723);
-  --chart-4: oklch(0.52 0.105 223.128);
-  --chart-5: oklch(0.45 0.085 224.283);
-  --sidebar: oklch(0.987 0.002 197.1);
-  --sidebar-foreground: oklch(0.148 0.004 228.8);
-  --sidebar-primary: oklch(0.609 0.126 221.723);
-  --sidebar-primary-foreground: oklch(0.984 0.019 200.873);
-  --sidebar-accent: oklch(0.963 0.002 197.1);
-  --sidebar-accent-foreground: oklch(0.218 0.008 223.9);
-  --sidebar-border: oklch(0.925 0.005 214.3);
-  --sidebar-ring: oklch(0.723 0.014 214.4);
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.148 0.004 228.8);
-  --line: var(--border);
-}
-
-.dark {
-  --background: oklch(0.148 0.004 228.8);
-  --foreground: oklch(0.987 0.002 197.1);
-  --card: oklch(0.218 0.008 223.9);
-  --card-foreground: oklch(0.987 0.002 197.1);
-  --popover: oklch(0.218 0.008 223.9);
-  --popover-foreground: oklch(0.987 0.002 197.1);
-  --primary: oklch(0.45 0.085 224.283);
-  --primary-foreground: oklch(0.984 0.019 200.873);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.275 0.011 216.9);
-  --muted-foreground: oklch(0.723 0.014 214.4);
-  --accent: oklch(0.275 0.011 216.9);
-  --accent-foreground: oklch(0.987 0.002 197.1);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: hsl(0 0% 100%);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.56 0.021 213.5);
-  --chart-1: oklch(0.865 0.127 207.078);
-  --chart-2: oklch(0.715 0.143 215.221);
-  --chart-3: oklch(0.609 0.126 221.723);
-  --chart-4: oklch(0.52 0.105 223.128);
-  --chart-5: oklch(0.45 0.085 224.283);
-  --sidebar: oklch(0.218 0.008 223.9);
-  --sidebar-foreground: oklch(0.987 0.002 197.1);
-  --sidebar-primary: oklch(0.715 0.143 215.221);
-  --sidebar-primary-foreground: oklch(0.302 0.056 229.695);
-  --sidebar-accent: oklch(0.275 0.011 216.9);
-  --sidebar-accent-foreground: oklch(0.987 0.002 197.1);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.56 0.021 213.5);
 }
 
 @utility screen-line-top {
@@ -244,10 +196,31 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-copy-16;
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+  }
+  /* Geist focus: 2px ring, 2px offset, same on every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  :is(input, textarea, select):focus-visible {
+    outline-offset: 0;
+  }
+  /* Geist: motion only explains state. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -280,7 +253,7 @@
    in sync. Unlayered on purpose: it has to beat the typography plugin's
    own element styles, which live in the utilities layer. */
 .blog-prose {
-  --tw-prose-body: color-mix(in oklch, var(--foreground) 86%, transparent);
+  --tw-prose-body: var(--foreground);
   --tw-prose-headings: var(--foreground);
   --tw-prose-lead: var(--muted-foreground);
   --tw-prose-links: var(--foreground);
@@ -301,16 +274,16 @@
 }
 
 .blog-prose :where(h2, h3, h4) {
-  @apply font-semibold tracking-tight;
+  @apply font-semibold;
   scroll-margin-top: var(--header-height, 6rem);
 }
 
 .blog-prose :where(h2) {
-  @apply mb-4 mt-12 text-[1.375rem] leading-snug;
+  @apply text-heading-24 mb-4 mt-12;
 }
 
 .blog-prose :where(h3) {
-  @apply mb-3 mt-9 text-lg leading-snug;
+  @apply text-heading-20 mb-3 mt-9;
 }
 
 .blog-prose :where(a:not(.heading-anchor)) {
@@ -318,7 +291,7 @@
 }
 
 .blog-prose :where(:not(pre) > code) {
-  @apply bg-muted border-line rounded-md border px-[0.35em] py-[0.1em] text-[0.85em] font-normal;
+  @apply bg-muted border-line text-copy-13-mono rounded-md border px-[0.35em] py-[0.1em] font-normal;
   overflow-wrap: anywhere;
   box-decoration-break: clone;
 }
@@ -329,7 +302,7 @@
 }
 
 .blog-prose :where(pre) {
-  @apply border-line my-0 rounded-lg border px-4 py-3.5 text-[0.8125rem] leading-relaxed;
+  @apply border-line text-copy-13-mono my-0 rounded-md border px-4 py-3.5 leading-relaxed;
   background-color: var(--code-bg);
   overflow-x: auto;
   overscroll-behavior-x: contain;

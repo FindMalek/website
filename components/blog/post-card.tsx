@@ -16,7 +16,7 @@ export function PostCard({
   return (
     <Link
       href={post.href}
-      className="focus-visible:ring-ring/50 group flex h-full flex-col gap-3 rounded-lg outline-none focus-visible:ring-[3px]"
+      className=" group flex h-full flex-col gap-3 rounded-lg "
     >
       <PostCover
         post={post}

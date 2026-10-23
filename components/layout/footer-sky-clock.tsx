@@ -60,7 +60,7 @@ export function FooterSkyClock({ className }: { className?: string }) {
       <span>
         Tunis · <time dateTime={time}>{time}</time>
       </span>
-      <span className="text-muted-foreground/60">{phase}</span>
+      <span className="text-muted-foreground">{phase}</span>
     </span>
   )
 }

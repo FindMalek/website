@@ -75,7 +75,7 @@ export function RepoCard({
           onPointerDown={(event) => {
             isTouchRef.current = event.pointerType === "touch"
           }}
-          className="text-foreground bg-secondary/30 border-foreground/20 hover:border-primary/30 hover:bg-muted/50 focus-visible:ring-ring/50 group flex h-10 min-w-0 items-center justify-between gap-3 rounded-lg border px-3 no-underline outline-none transition-colors duration-300 focus-visible:ring-[3px]"
+          className="text-foreground bg-secondary/30 border-foreground/20 hover:border-primary/30 hover:bg-muted/50 group flex h-10 min-w-0 items-center justify-between gap-3 rounded-lg border px-3 no-underline transition-colors duration-300 "
         >
           <span className="flex min-w-0 items-center gap-2">
             {showOwnerAvatar && (

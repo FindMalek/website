@@ -10,6 +10,9 @@ export interface InputProps
   variant?: "default" | "password"
 }
 
+const INPUT_CLASS =
+  "border-input bg-background placeholder:text-muted-foreground hover:border-border-strong text-copy-14 flex h-10 w-full rounded-md border px-3 py-2 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed disabled:opacity-50"
+
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, variant = "default", ...props }, ref) => {
     const [isVisible, setIsVisible] = React.useState(false)
@@ -22,14 +25,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             type={isVisible ? "text" : "password"}
             className={cn(
-              "border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 pe-9 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+              INPUT_CLASS + " pe-9",
               className
             )}
             ref={ref}
             {...props}
           />
           <button
-            className="text-muted-foreground/80 hover:text-foreground focus-visible:outline-ring/70 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg outline-offset-2 transition-colors focus:z-10 focus-visible:outline focus-visible:outline-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+            className="text-muted-foreground hover:text-foreground absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-colors focus:z-10 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
             type="button"
             onClick={toggleVisibility}
             aria-label={isVisible ? "Hide password" : "Show password"}
@@ -49,7 +52,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          INPUT_CLASS,
           className
         )}
         ref={ref}

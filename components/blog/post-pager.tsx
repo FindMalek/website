@@ -46,7 +46,7 @@ function PagerLink({
       href={post.href}
       rel={isNext ? "next" : "prev"}
       className={cn(
-        "hover:bg-muted/40 focus-visible:ring-ring/50 group flex flex-col gap-1.5 p-4 outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-inset",
+        "hover:bg-muted/40 group flex flex-col gap-1.5 p-4 transition-colors focus-visible:ring-inset",
         isNext && "items-end text-right",
         className
       )}

@@ -127,7 +127,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="screen-line-top screen-line-bottom flex items-center justify-between gap-2 px-2 py-2">
           <Link
             href="/blog"
-            className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 group flex h-8 items-center gap-1.5 rounded-md px-2 text-sm font-medium outline-none transition-colors focus-visible:ring-[3px]"
+            className="text-muted-foreground hover:text-foreground group flex h-8 items-center gap-1.5 rounded-md px-2 text-sm font-medium transition-colors "
           >
             <ArrowLeft
               className="size-4 transition-transform group-hover:-translate-x-0.5"
@@ -149,11 +149,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
 
         <header className="screen-line-top screen-line-bottom mt-4 px-4 pb-6 pt-5">
-          <h1 className="text-balance text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+          <h1 className="text-heading-32 sm:text-heading-40 text-balance">
             {title}
           </h1>
 
-          <p className="text-muted-foreground mt-4 text-pretty text-base leading-relaxed sm:text-lg">
+          <p className="text-muted-foreground text-copy-16 sm:text-copy-18 mt-4 text-pretty">
             {excerpt}
           </p>
 

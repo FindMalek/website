@@ -28,7 +28,7 @@ export function ProjectCard({ project }: { project: ProjectRo }) {
         )}
       >
         <CardHeader className="flex flex-row items-start justify-between space-y-0 px-4 pt-2">
-          <CardTitle className="text-xl font-bold">{project.name}</CardTitle>
+          <CardTitle className="text-heading-20">{project.name}</CardTitle>
           <Badge
             variant="outline"
             className={cn(

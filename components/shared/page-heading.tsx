@@ -39,7 +39,7 @@ export function PageHeading({
           )}
           <h1
             className={cn(
-              "text-2xl font-bold leading-tight sm:text-3xl md:leading-snug xl:text-4xl",
+              "text-heading-24 sm:text-heading-32 xl:text-heading-40",
               headingClassName
             )}
           >

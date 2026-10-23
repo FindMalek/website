@@ -40,7 +40,7 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
       tabIndex={0}
       onClick={() => router.push(href)}
       onKeyDown={handleCardKeyDown}
-      className="border-foreground/10 hover:bg-muted/50 focus-visible:ring-ring group -mx-2 flex cursor-pointer items-center gap-3 rounded-lg border-b px-2 py-3 outline-none transition-colors last:border-b-0 focus-visible:ring-2"
+      className="border-foreground/10 hover:bg-muted/50 group -mx-2 flex cursor-pointer items-center gap-3 rounded-lg border-b px-2 py-3 transition-colors last:border-b-0 "
     >
       <div className="border-border relative size-9 shrink-0 overflow-hidden rounded-md border">
         <Image
