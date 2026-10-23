@@ -3,40 +3,40 @@ export type AboutSegment = string | { text: string; href?: string }
 // Rendered by components/app/about-overview.tsx and sent to the chatbot as plain text.
 export const ABOUT_BIO: AboutSegment[][] = [
   [
-    "Hi, I'm Malek Gara-Hellal. I'm a Design Engineer, Founder, and Product Builder focused on turning ideas into real, scalable systems.",
+    "Hi, I'm Malek Gara-Hellal, a senior full-stack engineer from Monastir, Tunisia. I build AI products and the systems around them: pipelines, evals, search, and the interfaces people use.",
   ],
   [
-    "I founded ",
-    { text: "Undrstnd Labs", href: "https://undrstnd.dev" },
-    ", an AI development and research lab focused on solving real-world problems through thoughtfully designed products. Our work spans education with ",
-    { text: "Undrstnd Education" },
-    " and ",
-    { text: "Undrstnd Developers" },
-    ", and we continue to ship new applications in production.",
+    "Right now I work full-time at ",
+    { text: "Jobflow", href: "/work/jobflow" },
+    ", where I build the AI pipelines that turn recruiter conversations into interview confirmations and tasks, and the eval and tracing setup that keeps them honest.",
   ],
   [
-    "Before that, I founded ",
+    "I co-founded ",
+    { text: "Undrstnd Labs", href: "/work/undrstnd-labs" },
+    ", an AI lab where we built an inference API compatible with the Vercel AI SDK and a developer platform around it. Before that I co-founded ",
     {
       text: "Endless Byte",
       href: "https://www.linkedin.com/company/endless-byte/posts/?feedView=all",
     },
-    ", a web development startup in Tunisia where I worked closely with founders and businesses to ship production-grade web applications, mainly in e-commerce and internal tools.",
+    ", a web agency in Tunisia that shipped e-commerce and internal tools for local businesses.",
   ],
   [
     "I also co-founded ",
     { text: "Artweave", href: "https://www.instagram.com/artweave.originals/" },
-    ", a clothing brand that explored creative direction, branding, and product execution, and was later acquired by Tunisian Design in 2023.",
+    ", a clothing brand that was acquired by Tunisian Design in 2023.",
   ],
   [
-    "More recently, I've been building ",
+    "More recently I've been building ",
     { text: "Dukkani", href: "/projects/dukkani" },
-    ", a product focused on simplifying digital operations for local businesses by combining design, automation, and practical tooling.",
+    ", which gives Instagram and Facebook sellers in Tunisia a storefront, and ",
+    { text: "Sonaraem", href: "/projects/sonaraem" },
+    ", which classifies and clusters a Spotify library with an LLM.",
   ],
   [
-    "My philosophy is simple: I don't build features, I build systems. I focus on creating structures that scale — in code, in products, and in how teams work. I care deeply about maintainability, clarity, and long-term leverage over short-term hacks.",
+    "I like systems that stay maintainable: typed boundaries, evals for anything that involves a model, and previews that clean up after themselves. I write about the details on the blog.",
   ],
   [
-    "My journey hasn't been linear. I started by taking on small freelance work, building and shipping constantly, failing fast, and iterating in public and private. Over time, that evolved into founding products, working with teams, contributing to open-source, and designing systems that survive real usage.",
+    "My path wasn't linear. I started with small freelance work and kept building and shipping, which grew into founding products, working with teams in Berlin and the US, and contributing to open source.",
   ],
 ]
 

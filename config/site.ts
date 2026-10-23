@@ -3,9 +3,9 @@ import { SiteConfig } from "@/types"
 export const TIMEZONE = "Africa/Tunis"
 
 export const siteConfig: SiteConfig = {
-  name: "Malek Gara-Hellal — Design Engineer & Developer, Tunisia",
+  name: "Malek Gara-Hellal — Senior Full-Stack Engineer, AI Products",
   description:
-    "Malek Gara-Hellal is a design engineer and developer based in Tunisia, specialized in web development, design engineering, and creative entrepreneurship. Explore his work and ventures.",
+    "Malek Gara-Hellal is a senior full-stack engineer in Tunisia building AI products: LLM pipelines with evals, search, and full products like Dukkani and Sonaraem. Explore his work, projects and writing.",
   url: "https://www.findmalek.com",
   images: {
     default: "https://www.findmalek.com/og.png",
@@ -28,30 +28,18 @@ export const siteConfig: SiteConfig = {
     github: "https://go.findmalek.com/gh",
   },
   keywords: [
-    "Web Development",
-    "Design Engineering",
-    "Creative Entrepreneurship",
-    "Project Management",
-    "Innovative Solutions",
-    "Business Ventures",
-    "Technology",
-    "Software Development",
-    "Digital Transformation",
-    "Startups",
-    "Tech Entrepreneur",
-    "Innovation",
-    "Product Development",
-    "User Experience",
-    "Agile Methodologies",
-    "MobX",
-    "Zustand",
-    "tRPC",
-    "T3 Stack",
-    "Prisma",
-    "TailwindCSS",
-    "Shadcn",
+    "Senior Full-Stack Engineer",
+    "AI Engineer",
+    "LLM Systems",
+    "RAG",
+    "AI Evals",
+    "TypeScript",
     "Next.js",
     "React",
+    "PostgreSQL",
+    "Open Source",
+    "Remote",
+    "Tunisia",
   ],
 }
 

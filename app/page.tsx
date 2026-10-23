@@ -89,18 +89,18 @@ export default async function Home() {
         <PanelHeader>
           <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
           <PanelDescription>
-            I&apos;m a Design Engineer, Founder, and Product Builder based in 🇹🇳
-            Monastir, Tunisia.
+            I&apos;m a senior full-stack engineer based in 🇹🇳 Monastir, Tunisia,
+            building AI products and the systems behind them.
           </PanelDescription>
         </PanelHeader>
 
         <PanelContent>
           <div className="text-foreground mb-8 space-y-4">
             <p className="text-base leading-relaxed">
-              Specialized in transforming complex ideas into elegant digital
-              solutions through web development, design engineering, and
-              entrepreneurial innovation. I craft meaningful projects that blend
-              creativity with technical precision. View my{" "}
+              I ship LLM features to production, with evals behind them:
+              interview and task pipelines at Jobflow, RAG and multi-agent
+              systems at QTech AI (now Qorelo), and my own products, Dukkani and
+              Sonaraem. See my{" "}
               <Link
                 href="/#work"
                 className="hover:text-primary/80 font-semibold underline underline-offset-4 transition-all duration-200"
@@ -121,7 +121,7 @@ export default async function Home() {
               >
                 STACK
               </Link>{" "}
-              to see how I bring ideas to life.
+              to see how it is built.
             </p>
           </div>
 
