@@ -92,7 +92,7 @@ export default async function Home() {
             I&apos;m a Design Engineer, Founder, and Product Builder based in 🇹🇳{" "}
             <span
               tabIndex={0}
-              className="group decoration-muted-foreground/50 hover:text-foreground inline-flex cursor-default items-baseline underline decoration-dotted underline-offset-4 transition-colors outline-none"
+              className="decoration-muted-foreground/50 hover:text-foreground group inline-flex cursor-default items-baseline underline decoration-dotted underline-offset-4 transition-colors"
             >
               <span>Monastir, Tunisia</span>
               <span className="text-muted-foreground max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 ease-out group-hover:ml-1.5 group-hover:max-w-xs group-hover:opacity-100 group-focus-visible:ml-1.5 group-focus-visible:max-w-xs group-focus-visible:opacity-100">

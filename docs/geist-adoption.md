@@ -6,29 +6,16 @@ The site already uses the Geist Sans font (`--font-geist-sans`) and Tailwind v4 
 
 ## Scope (in order)
 
-1. **Color tokens** — replace `:root`/`.dark` blocks in `styles/globals.css` with the mapping in `styles/geist-tokens.css`.
+1. **Color tokens** — move the `:root`/`.dark` tokens from `styles/globals.css` into `styles/geist-tokens.css`.
 2. **Radius** — move from `0.5rem` to Geist's `0.375rem` (6px) for cards/buttons.
 3. **Components** — update `components/ui/button.tsx`, `components/ui/badge.tsx`, `components/ui/card.tsx`, `components/ui/input.tsx` to match Geist's flatter, border-heavy style.
 4. **Layout spacing** — audit panels for Geist's tighter density.
 5. **Motion** — reduce durations; Geist is very restrained.
 6. **Dark mode** — the token file already includes a dark palette.
 
-## How to activate
+## Status
 
-In `app/layout.tsx`, replace:
-
-```tsx
-import "@/styles/globals.css"
-```
-
-with:
-
-```tsx
-import "@/styles/globals.css"
-import "@/styles/geist-tokens.css"
-```
-
-Then remove the old `:root` and `.dark` token blocks from `globals.css` so they don't override the new tokens.
+Token swap is done: `styles/geist-tokens.css` (custom properties only, no Tailwind import) is imported after `styles/globals.css` in `app/layout.tsx`, and the old `:root`/`.dark` blocks are gone from `globals.css`. Radius stays `0.5rem` until the component pass.
 
 ## Files to touch
 
