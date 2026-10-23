@@ -42,7 +42,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm exec turbo run lint
+        run: pnpm exec turbo run lint --filter=@findmalek/website
 
   build:
     runs-on: ubuntu-latest
@@ -76,4 +76,4 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm exec turbo run build
+        run: pnpm exec turbo run build --filter=@findmalek/website
