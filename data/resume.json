@@ -474,8 +474,7 @@
             "Multi-agent pipelines",
             "Evals (Braintrust)",
             "LangChain",
-            "Pinecone",
-            "Groq"
+            "Pinecone"
           ]
         },
         {
@@ -488,14 +487,10 @@
           "level": 0,
           "keywords": [
             "Node.js",
-            "Bun",
             "PostgreSQL",
             "PostGIS",
-            "SQLite",
             "Prisma",
-            "Drizzle ORM",
             "oRPC",
-            "Better Auth",
             "Ruby on Rails (integrations)"
           ]
         },
@@ -513,9 +508,7 @@
             "Trigger.dev",
             "GitHub Actions",
             "Vercel",
-            "Tailscale",
-            "Playwright",
-            "Biome"
+            "Tailscale"
           ]
         }
       ],

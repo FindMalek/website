@@ -40,8 +40,7 @@ export const STACK_SECTIONS: StackSection[] = [
       },
       {
         title: "Groq",
-        description:
-          "Fast inference API for open and proprietary LLMs, used in production pipelines.",
+        description: "Fast inference API for open LLMs.",
         imageUrl: "https://img.logo.dev/groq.com",
         url: "https://groq.com",
       },
@@ -86,8 +85,7 @@ export const STACK_SECTIONS: StackSection[] = [
       },
       {
         title: "Bun",
-        description:
-          "Fast JavaScript runtime, bundler, and package manager used for performance-sensitive tools.",
+        description: "Fast JavaScript runtime and package manager.",
         imageUrl: "https://img.logo.dev/bun.sh",
         url: "https://bun.sh",
       },
@@ -239,15 +237,13 @@ export const STACK_SECTIONS: StackSection[] = [
       },
       {
         title: "Playwright",
-        description:
-          "End-to-end testing framework for web apps and browsers.",
+        description: "Browser automation and end-to-end testing for web apps.",
         imageUrl: "https://img.logo.dev/playwright.dev",
         url: "https://playwright.dev",
       },
       {
         title: "Zed",
-        description:
-          "High-performance multiplayer code editor built in Rust.",
+        description: "High-performance multiplayer code editor built in Rust.",
         imageUrl: "https://img.logo.dev/zed.dev",
         url: "https://zed.dev",
       },
@@ -395,8 +391,7 @@ export const STACK_SECTIONS: StackSection[] = [
       },
       {
         title: "SQLite",
-        description:
-          "Embedded SQL database used for local indexes, history, and offline caches.",
+        description: "Embedded SQL database.",
         imageUrl: "https://img.logo.dev/sqlite.org",
         url: "https://sqlite.org",
       },
