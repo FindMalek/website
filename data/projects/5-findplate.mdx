@@ -2,74 +2,309 @@
 id: 5
 image: "/project/findplate.png"
 name: "FindPlate"
-overview: "A comprehensive starter template for Next.js projects, featuring production-ready components, landing pages, server actions, and seamless email integration for rapid development."
-status: "published"
-link: "https://plate.findmalek.com"
+overview: "One command, bunx findplate create, generates a production-ready full-stack turborepo and sets up what sits around it: the GitHub repo and project board, agent rules, CI and PR previews. 17 optional modules, 5 design presets, MIT."
+status: "wip"
+link: "https://plate.findmalek.engineer"
 href: "/projects/findplate"
-tags: ["Next.js", "Starter Template", "Server Actions"]
+tags: ["TypeScript", "Turborepo", "CLI", "Next.js", "oRPC", "Open Source"]
 ---
 
-### FindPlate: Accelerating Next.js Project Development
+# FindPlate
 
-**FindPlate** is a robust starter template designed to streamline the setup and development of Next.js projects. Packed with production-ready components, landing pages, and advanced features, this template allows developers to start shipping projects quickly and efficiently.
+FindPlate is a generator. `bunx findplate create` copies a turborepo template, renames it to your project, removes the modules you didn't ask for, and then does the setup work that usually takes a day: agent rules, a first commit, a GitHub repo with a project board and a ruleset, CI, and pull request previews.
 
-#### **Project Inspiration**
+The code is on [GitHub](https://github.com/FindMalek/findplate) and the docs and landing page are at [plate.findmalek.engineer](https://plate.findmalek.engineer). It's MIT licensed. The reason it exists is written up in [Why I built FindPlate](/blog/why-i-built-findplate).
 
-The idea for **FindPlate** was born out of my passion for shipping projects non-stop. Recognizing the need for a comprehensive and efficient starting point for Next.js projects, I created this template to help developers focus on building features rather than setting up the basics.
+This is the second version. The first one was a Next.js starter you clone and then delete from. I kept it on the [`v1` branch](https://github.com/FindMalek/findplate/tree/v1) and rewrote the project as a CLI. The v2 work started with [issue #3](https://github.com/FindMalek/findplate/issues/3), "v2: cli and project template".
 
-#### **Features**
+![FindPlate social card: the name, the line "A production-ready full-stack project, generated in one command", the command bunx findplate create, and 17 modules, 5 presets, MIT.](/project/findplate.png)
 
-- **Production-Ready Components:**
+_The social card from the landing page._
 
-  - The template includes a wide range of pre-built components, such as landing pages ([`marketing-hero`](https://github.com/FindMalek/findplate/blob/466d367/components/app/marketing-hero.tsx), [`marketing-about`](https://github.com/FindMalek/findplate/blob/466d367/components/app/marketing-about.tsx)), FAQ sections ([`marketing-faqs`](https://github.com/FindMalek/findplate/blob/466d367/components/app/marketing-faqs.tsx)), and contact forms, all designed to be production-ready.
+## The problem
 
-- **Server Actions:**
+I ship a lot of projects, and I keep building the same ones. This site has 15 case studies. Three of my repos, [dukkani](/projects/dukkani), [sonaraem](/projects/sonaraem) and `lyterion`, each have an `apps/api` and an `apps/dashboard`, and the same `auth`, `common`, `config`, `db`, `env`, `orpc` and `ui` packages. Five of my repos carry a `pr-auto-assign.yml` workflow. Every time, I rebuilt that structure by hand or copied it from the last repo.
 
-  - Integrated server actions ensure seamless backend functionality, allowing for dynamic and interactive user experiences. The waitlist form posts to [`subscribeAction`](https://github.com/FindMalek/findplate/blob/466d367/actions/subscribe.ts#L8-L27), which stores the email in Postgres and sends the welcome mail.
+v1 didn't fix that. It was one Next.js app with Prisma, Supabase, next-intl and a waitlist form, and you removed what you didn't want after cloning. What I wanted instead: you run one command and everything is set up, even the readme, the GitHub project and the agent rules.
 
-- **Email Integration:**
+## What one command does
 
-  - Utilizing **React-Email** and **Nodemailer**, the template provides robust email integration, enabling developers to set up automated email functionalities with ease: [`sendMail`](https://github.com/FindMalek/findplate/blob/466d367/actions/mail.ts#L21-L77) renders the [React-Email templates](https://github.com/FindMalek/findplate/blob/466d367/components/app/email-whitelist.tsx) and sends them through a Nodemailer transport.
+`create` is a list of steps. Each one is written to `.findplate/state.json` when it finishes, so an interrupted run resumes where it stopped instead of starting over. The steps, in the order [`create.ts`](https://github.com/FindMalek/findplate/blob/4624929/packages/cli/src/commands/create.ts) runs them:
 
-- **SEO and Open Graph Data:**
+<div style={{ overflowX: "auto" }}>
+<svg width="100%" height="auto" style={{ minWidth: 640 }} viewBox="0 0 860 330" role="img" ariaLabelledby="findplate-pipeline-title">
+<title id="findplate-pipeline-title">The findplate create pipeline: generate, agents, skills, install, format, git and github. Each finished step is recorded in .findplate/state.json so a rerun skips it.</title>
+<defs>
+<marker id="fpPipeArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 Z" fill="var(--muted-foreground)" />
+</marker>
+</defs>
+<g fontFamily="ui-sans-serif, system-ui, sans-serif">
+<text x="430" y="30" textAnchor="middle" fontSize="20" fontWeight="700" fill="var(--foreground)">findplate create</text>
+<text x="430" y="50" textAnchor="middle" fontSize="12" fill="var(--muted-foreground)">seven steps, one real run took about 48 seconds</text>
+<rect x="20" y="76" width="108" height="110" rx="10" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="2" />
+<text x="74" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">1 generate</text>
+<text x="74" y="128" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">copy template</text>
+<text x="74" y="144" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">rename, strip</text>
+<text x="74" y="160" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">modules, preset</text>
+<text x="74" y="176" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">write .env</text>
+<line x1="128" y1="131" x2="140" y2="131" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpPipeArrow)" />
+<rect x="142" y="76" width="108" height="110" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="196" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">2 agents</text>
+<text x="196" y="128" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">ruler apply</text>
+<text x="196" y="144" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">5 agents get</text>
+<text x="196" y="160" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">the same rules</text>
+<line x1="250" y1="131" x2="262" y2="131" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpPipeArrow)" />
+<rect x="264" y="76" width="108" height="110" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="318" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">3 skills</text>
+<text x="318" y="128" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">public skill</text>
+<text x="318" y="144" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">packs, per</text>
+<text x="318" y="160" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">enabled module</text>
+<line x1="372" y1="131" x2="384" y2="131" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpPipeArrow)" />
+<rect x="386" y="76" width="108" height="110" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="440" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">4 install</text>
+<text x="440" y="128" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">pnpm install</text>
+<line x1="494" y1="131" x2="506" y2="131" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpPipeArrow)" />
+<rect x="508" y="76" width="108" height="110" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="562" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">5 format</text>
+<text x="562" y="128" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">pnpm check,</text>
+<text x="562" y="144" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">biome fixes</text>
+<text x="562" y="160" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">the output</text>
+<line x1="616" y1="131" x2="628" y2="131" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpPipeArrow)" />
+<rect x="630" y="76" width="96" height="110" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="678" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">6 git</text>
+<text x="678" y="128" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">git init,</text>
+<text x="678" y="144" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">first commit</text>
+<line x1="726" y1="131" x2="738" y2="131" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpPipeArrow)" />
+<rect x="740" y="76" width="100" height="110" rx="10" fill="none" stroke="var(--primary)" strokeWidth="1.5" strokeDasharray="5,4" />
+<text x="790" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">7 github</text>
+<text x="790" y="128" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">repo, board,</text>
+<text x="790" y="144" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">ruleset</text>
+<text x="790" y="166" textAnchor="middle" fontSize="10.5" fontWeight="700" fill="var(--foreground)">opt in</text>
+<path d="M74,186 L74,226 L790,226 L790,186" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeDasharray="4,3" />
+<rect x="250" y="212" width="360" height="52" rx="8" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="430" y="234" textAnchor="middle" fontSize="12.5" fontWeight="700" fill="var(--foreground)">.findplate/state.json</text>
+<text x="430" y="252" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">answers + finished steps. A rerun skips what is done.</text>
+<text x="430" y="296" textAnchor="middle" fontSize="11.5" fill="var(--muted-foreground)">Ctrl+C at a prompt creates nothing. With -y and flags it never prompts.</text>
+</g>
+</svg>
+</div>
 
-  - The template is optimized for search engines and social media sharing, with built-in SEO and Open Graph data to enhance visibility and engagement ([layout metadata](https://github.com/FindMalek/findplate/blob/466d367/app/%5Blocale%5D/layout.tsx#L51-L93), [`robots.ts`](https://github.com/FindMalek/findplate/blob/466d367/app/robots.ts)).
+The first step does most of the work. It copies [`template/`](https://github.com/FindMalek/findplate/tree/4624929/template), rewrites the placeholder scope `@acme` to your project's, strips the modules you turned off, swaps the theme tokens for your preset's, and writes a `.env` with generated secrets and an admin password. `postgresPort` is the first free port from 5432, so the generated compose file doesn't collide with a database you already run.
 
-- **Internationalization (i18n):**
+The output is a plain turborepo. Nothing at runtime imports findplate.
 
-  - Support for multiple languages is included, making it easy to create multilingual applications ([`next-intl` middleware](https://github.com/FindMalek/findplate/blob/466d367/middleware.ts#L5-L8), [message loader](https://github.com/FindMalek/findplate/blob/466d367/lib/i18n.ts#L6-L12), [English](https://github.com/FindMalek/findplate/blob/466d367/locale/en.json) and [French](https://github.com/FindMalek/findplate/blob/466d367/locale/fr.json) messages).
+## What you get
 
-- **Real-Time Updates:**
-  - With **Supabase** integration, the template supports real-time updates and data synchronization, ensuring a dynamic and responsive user experience.
+| Piece | What it is |
+| --- | --- |
+| `apps/web` | the landing page, with a live status window |
+| `apps/dashboard` | better-auth login and an app shell |
+| `apps/api` | oRPC on bun, the only app that touches the database |
+| `apps/docs` | optional fumadocs site about your project |
+| `packages/ui` | shadcn components and the preset's theme tokens |
+| `packages/common` | zod schemas, constants and utils shared by every app |
+| `packages/orpc`, `db`, `auth`, `env` | typed rpc, drizzle on Postgres, better-auth, zod-validated env |
 
-#### **App Architecture**
+## Architecture
 
-The platform is built using a modern tech stack to ensure performance, scalability, and security:
+The one structural rule I took from my own repos: `apps/api` is the only app that touches the database, auth, storage and providers. The web app and the dashboard only talk to it through the typed oRPC client. The one thing a frontend imports from `auth` is `@acme/auth/client`, which talks back to the api.
 
-- **Frontend:**
-  - **React and Next.js:** For building dynamic and responsive user interfaces ([Next.js 14](https://github.com/FindMalek/findplate/blob/466d367/package.json#L75)).
-  - **TailwindCSS and Shadcn:** For creating a sleek and customizable design ([Tailwind config](https://github.com/FindMalek/findplate/blob/466d367/tailwind.config.ts), [`components.json`](https://github.com/FindMalek/findplate/blob/466d367/components.json)).
-  - **NextAuth:** For secure authentication ([session and JWT types](https://github.com/FindMalek/findplate/blob/466d367/types/auth.d.ts)).
-  - **NextI18Next:** For internationalization and multilingual support.
-- **Backend:**
-  - **TypeScript:** For robust and type-safe code.
-  - **Prisma:** For efficient database management ([schema](https://github.com/FindMalek/findplate/blob/466d367/prisma/schema.prisma)).
-  - **Supabase:** For real-time updates and data storage.
-- **Hosting and Services:**
-  - **Supabase (Database, Storage, Realtime):** For reliable and scalable database solutions.
-  - **Vercel (Website, Edge-Config, Analytics, and Metrics):** For hosting and performance monitoring ([Vercel Analytics](https://github.com/FindMalek/findplate/blob/466d367/components/layout/analytics.tsx)).
-  - **GitHub (Codebase, Issues, PRs, Actions):** For version control and collaboration.
-  - **LogSnag (Events):** For monitoring and logging events ([`LogSnagProvider`](https://github.com/FindMalek/findplate/blob/466d367/app/%5Blocale%5D/layout.tsx#L109), [event catalog](https://github.com/FindMalek/findplate/blob/466d367/config/events.ts), added in [`d2d4f09`](https://github.com/FindMalek/findplate/commit/d2d4f09)).
-  - **Nodemailer (Email):** For handling email communications ([transport](https://github.com/FindMalek/findplate/blob/466d367/actions/mail.ts#L25-L34)).
-  - **GitHub Actions (CI/CD):** For continuous integration and deployment.
-  - **Trigger.dev (Background Jobs):** For managing background tasks and jobs.
-  - **Konnect (Payments):** For secure and efficient payment processing.
-  - **Novu (Notifications):** For handling notifications.
-  - **Loops (Marketing Email):** For automated marketing emails ([env wiring](https://github.com/FindMalek/findplate/blob/466d367/env.mjs#L10-L11)).
-  - **Dub (Short URLs):** For creating short and manageable URLs.
+<div style={{ overflowX: "auto" }}>
+<svg width="100%" height="auto" style={{ minWidth: 640 }} viewBox="0 0 860 430" role="img" ariaLabelledby="findplate-arch-title">
+<title id="findplate-arch-title">Generated repo architecture: web, dashboard and docs apps call apps/api through the typed oRPC client; only apps/api imports the db, auth, storage and provider packages.</title>
+<defs>
+<marker id="fpArchArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 Z" fill="var(--muted-foreground)" />
+</marker>
+</defs>
+<g fontFamily="ui-sans-serif, system-ui, sans-serif">
+<text x="430" y="30" textAnchor="middle" fontSize="20" fontWeight="700" fill="var(--foreground)">The generated turborepo</text>
+<text x="430" y="50" textAnchor="middle" fontSize="12" fill="var(--muted-foreground)">frontends call the api, the api calls everything else</text>
+<rect x="30" y="76" width="190" height="64" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="125" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">apps/web</text>
+<text x="125" y="124" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">landing page :3000</text>
+<rect x="335" y="76" width="190" height="64" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="430" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">apps/dashboard</text>
+<text x="430" y="124" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">login, app shell :3002</text>
+<rect x="640" y="76" width="190" height="64" rx="10" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeDasharray="5,4" />
+<text x="735" y="104" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">apps/docs</text>
+<text x="735" y="124" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">optional module</text>
+<line x1="125" y1="140" x2="125" y2="188" stroke="var(--muted-foreground)" strokeWidth="2" />
+<line x1="430" y1="140" x2="430" y2="188" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpArchArrow)" />
+<path d="M125,166 L430,166" fill="none" stroke="var(--muted-foreground)" strokeWidth="2" />
+<text x="560" y="168" fontSize="11" fill="var(--muted-foreground)">typed oRPC client</text>
+<rect x="30" y="190" width="800" height="104" rx="12" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="2" />
+<text x="48" y="216" fontSize="15" fontWeight="700" fill="var(--foreground)">apps/api</text>
+<text x="48" y="236" fontSize="11.5" fill="var(--muted-foreground)">oRPC on bun :3001. The only app that touches db, auth, storage and providers.</text>
+<rect x="48" y="250" width="110" height="32" rx="6" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="103" y="271" textAnchor="middle" fontSize="12" fill="var(--foreground)">@acme/db</text>
+<rect x="170" y="250" width="110" height="32" rx="6" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="225" y="271" textAnchor="middle" fontSize="12" fill="var(--foreground)">@acme/auth</text>
+<rect x="292" y="250" width="110" height="32" rx="6" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="347" y="271" textAnchor="middle" fontSize="12" fill="var(--foreground)">@acme/orpc</text>
+<rect x="414" y="250" width="120" height="32" rx="6" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeDasharray="4,3" />
+<text x="474" y="271" textAnchor="middle" fontSize="12" fill="var(--foreground)">@acme/storage</text>
+<rect x="546" y="250" width="100" height="32" rx="6" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeDasharray="4,3" />
+<text x="596" y="271" textAnchor="middle" fontSize="12" fill="var(--foreground)">@acme/ai</text>
+<rect x="658" y="250" width="160" height="32" rx="6" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeDasharray="4,3" />
+<text x="738" y="271" textAnchor="middle" fontSize="12" fill="var(--foreground)">email, whatsapp, ...</text>
+<line x1="430" y1="294" x2="430" y2="322" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpArchArrow)" />
+<rect x="30" y="324" width="260" height="46" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="160" y="344" textAnchor="middle" fontSize="13" fontWeight="700" fill="var(--foreground)">Postgres</text>
+<text x="160" y="360" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">docker compose, pnpm db:up</text>
+<rect x="480" y="324" width="350" height="46" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="655" y="344" textAnchor="middle" fontSize="13" fontWeight="700" fill="var(--foreground)">S3, mail, chat, LLM providers</text>
+<text x="655" y="360" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">keys optional, a missing key turns the feature off</text>
+<text x="430" y="406" textAnchor="middle" fontSize="11.5" fill="var(--muted-foreground)">Shared by every app: @acme/ui, @acme/common, @acme/env. Dashed boxes are optional modules.</text>
+</g>
+</svg>
+</div>
 
-#### **Getting Started**
+A missing key turns a feature off instead of crashing the app. Storage, AI, email, WhatsApp and Telegram return `null` from their factory and the code that uses them checks for it, so a fresh project always starts.
 
-To get started with **FindPlate**, simply clone the project and start shipping your Next.js application. The template is designed to be production-ready, allowing you to focus on building features and delivering value to your users.
+Tooling is fixed on purpose: pnpm in the project, bun for the api, Biome for format and lint, strict TypeScript, one root `.env`. The [why page](https://plate.findmalek.engineer/docs/why) has the table of choices and the reasons. There's one orm, one auth library, one rpc layer. There's no second option.
 
-You can explore the project’s codebase on [GitHub](https://github.com/FindMalek/findplate) and visit the live website at [FindPlate](https://plate.findmalek.com) to see it in action.
+## The module system
+
+There are 17 modules: `storage`, `ai`, `docs`, `rate-limit`, `email`, `whatsapp`, `webhooks`, `telegram`, `umami`, `openobserve`, `glitchtip`, `infisical`, `langfuse`, `waitlist`, `roadmap`, `status` and `databuddy`. `storage`, `ai`, `docs` and `rate-limit` are on by default. `telegram` requires `webhooks`, `langfuse` requires `ai`, and `create` switches required modules on with the one you picked.
+
+A module is three things: a package, its env keys, and the lines of code that use it. The manifest, [`template/findplate.json`](https://github.com/FindMalek/findplate/blob/4624929/template/findplate.json), lists the paths to delete, the packages to drop from every `package.json` and the pnpm catalog, the keys to ask for, and what it requires. The lines of code are marked in the source with comments:
+
+```ts
+// @findplate:ai
+import { createAi } from "@acme/ai"
+// @end
+```
+
+A trailing `// @findplate:ai` marks a single line. Markers come in four comment styles (`//`, `#`, `{/* */}` and `<!-- -->`) and can't nest. I picked markers over a templating language because the template is real code. It's type-checked and tested in the repo, so a broken template fails my own CI and not someone's first run.
+
+<div style={{ overflowX: "auto" }}>
+<svg width="100%" height="auto" style={{ minWidth: 640 }} viewBox="0 0 860 380" role="img" ariaLabelledby="findplate-marker-title">
+<title id="findplate-marker-title">Marker flow: a template file with @findplate:ai markers goes through stripModules. With ai enabled the lines stay and the markers go; with ai off both the lines and the markers are removed, and blank lines are tidied.</title>
+<defs>
+<marker id="fpMarkArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 Z" fill="var(--muted-foreground)" />
+</marker>
+</defs>
+<g fontFamily="ui-sans-serif, system-ui, sans-serif">
+<text x="430" y="30" textAnchor="middle" fontSize="20" fontWeight="700" fill="var(--foreground)">Markers instead of a templating language</text>
+<text x="430" y="50" textAnchor="middle" fontSize="12" fill="var(--muted-foreground)">the template stays valid TypeScript, so it can be linted and tested as it is</text>
+<rect x="20" y="76" width="262" height="150" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="36" y="100" fontSize="12" fontWeight="700" fill="var(--muted-foreground)">template/…/context.ts</text>
+<g fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="10.5" fill="var(--foreground)">
+<text x="36" y="128">import type &#123; Db &#125; from "@acme/db"</text>
+<text x="36" y="148" fill="var(--foreground)">// @findplate:ai</text>
+<text x="36" y="168">import type &#123; Model &#125; from "ai"</text>
+<text x="36" y="188" fill="var(--foreground)">// @end</text>
+<text x="36" y="208">export type Ctx = &#123; db: Db &#125;</text>
+</g>
+<line x1="280" y1="151" x2="332" y2="151" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpMarkArrow)" />
+<rect x="334" y="116" width="190" height="70" rx="10" fill="var(--primary)" fillOpacity="0.08" stroke="var(--primary)" strokeWidth="2" />
+<text x="429" y="142" textAnchor="middle" fontSize="14" fontWeight="700" fill="var(--foreground)">stripModules</text>
+<text x="429" y="162" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">enabled modules in,</text>
+<text x="429" y="177" textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">source out</text>
+<path d="M524,140 L568,100 L580,100" fill="none" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpMarkArrow)" />
+<path d="M524,162 L568,202 L580,202" fill="none" stroke="var(--muted-foreground)" strokeWidth="2" markerEnd="url(#fpMarkArrow)" />
+<rect x="582" y="76" width="250" height="100" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="600" y="98" fontSize="12" fontWeight="700" fill="var(--foreground)">ai on: lines stay, markers go</text>
+<g fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="11" fill="var(--foreground)">
+<text x="600" y="122">import type &#123; Db &#125; from "@x/db"</text>
+<text x="600" y="140">import type &#123; Model &#125; from "ai"</text>
+<text x="600" y="158">export type Ctx = &#123; db: Db &#125;</text>
+</g>
+<rect x="582" y="186" width="250" height="84" rx="10" fill="var(--card)" stroke="var(--border)" strokeWidth="1.5" />
+<text x="600" y="208" fontSize="12" fontWeight="700" fill="var(--muted-foreground)">ai off: lines and markers go</text>
+<g fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="11" fill="var(--foreground)">
+<text x="600" y="232">import type &#123; Db &#125; from "@x/db"</text>
+<text x="600" y="250">export type Ctx = &#123; db: Db &#125;</text>
+</g>
+<text x="30" y="262" fontSize="11.5" fontWeight="700" fill="var(--foreground)">@acme becomes your scope (here @x) in every file.</text>
+<text x="30" y="280" fontSize="11" fill="var(--muted-foreground)">Dropping a block can leave a doubled blank line or one next to a bracket.</text>
+<text x="30" y="296" fontSize="11" fill="var(--muted-foreground)">tidyBlankLines removes those, because biome would reject them.</text>
+<text x="430" y="346" textAnchor="middle" fontSize="11.5" fill="var(--muted-foreground)">CI then generates every module on its own, all of them together, and none, and checks each one.</text>
+</g>
+</svg>
+</div>
+
+### Adding and updating later
+
+A generated project is not a dead end. The state file records the name, preset, pitch, enabled modules and the template version the project was made from, and two commands use it.
+
+`findplate add ai` regenerates the template with and without the module and applies only the difference: new files, changes in shared files where you haven't edited them, missing keys appended to `.env`. Files you changed are listed, never overwritten, and it refuses to run on a dirty git tree (exit code 3).
+
+`findplate update` renders the template of the recorded version and the newest one, then does a three-way merge per file with `git merge-file`: your file, the old template, the new template. It leaves your edits alone where the template didn't change, and writes conflict markers where both touched the same lines. `findplate doctor` checks the environment (env keys, database, node, pnpm, gh) and exits `1` on a failing check.
+
+## Agents and workflow
+
+Every generated project has one source of rules, [`.ruler/AGENTS.md`](https://github.com/FindMalek/findplate/blob/4624929/template/.ruler/AGENTS.md): the stack, structure, naming, commit format, test style and the oRPC, drizzle and better-auth conventions. [ruler](https://github.com/intellectronica/ruler) turns that into what each coding agent reads: `CLAUDE.md`, `AGENTS.md`, `.cursor/`, `opencode.json` and `.zed/`, for Claude Code, Cursor, opencode, Zed and oh-my-pi. The generated files are committed, so a fresh clone works without ruler. The same config gives each agent the context7, shadcn and Vercel MCP servers.
+
+Seven project skills ship in `.ruler/skills`, for the workflow around a ticket: `dive-ticket`, `plan-ticket`, `ship`, `review-ticket`, `triage-reviews`, `check-touched` and `clean-pr`. They're built around GitHub issues and the project board, and they only commit or push when you invoke `ship`. These are the same commands I use in my own setup, written up in [my dotfiles post](/blog/dotfiles-that-keep-every-agent-on-the-same-rules). `create` also installs public skill packs, and a pack that can't be fetched is skipped with a note.
+
+With `--github`, or a yes at the prompt, `create` also sets up the GitHub side with the `gh` cli:
+
+- the repo, with your pitch as the description, delete branch on merge, and `main` pushed
+- labels (`bug`, `feature`, `task`, `docs`, `blocked`, `p0` to `p2`) and milestones (`Foundation`, `Launch`, `Later`)
+- a project board with the columns Backlog, Ready, In progress, In review and Done
+- repo variables and secrets from your `.env`, sent through stdin so values never show in the plan or the process list
+- a ruleset on `main`: a pull request is required, and `ci` and the PR hygiene check must pass
+
+The plan is plain data in [`plan.ts`](https://github.com/FindMalek/findplate/blob/4624929/packages/cli/src/github/plan.ts). The executor runs it, `--dry-run` prints it, and the tests read it. Every step treats "already exists" as done.
+
+Three of the workflows in the generated repo keep that setup alive: `ci`, `pr-hygiene` (the PR needs an issue link and commits in the `type(scope): subject` format with five words or fewer) and `project-status`, which moves the issue a PR closes to In review and then to Done on merge.
+
+## CI and previews
+
+CI in the findplate repo generates a project and checks it, so a template change can't break `create` without a red build. [`module-matrix.mjs`](https://github.com/FindMalek/findplate/blob/4624929/.github/scripts/module-matrix.mjs) builds the matrix from `template/findplate.json`: one job per module generated alone (with what it requires), one with all modules and one with none. That's 17 + 2 = 19 jobs, and each runs lint, types and tests. On a pull request only the all-modules and minimum jobs also run the build, the rest build on pushes to `main`. A new module needs no CI edit, the matrix picks it up from the manifest. Two more jobs check that the schema has no uncommitted migration drift and run Lighthouse on the generated landing page.
+
+Production deploys from `main` on Vercel (the docs and landing page you can open are that setup). Pull requests don't. The preview workflow is set up so each PR gets its own preview per app on the [Dokploy](https://dokploy.com) server I host, though it has only run against a mock server so far:
+
+- one Dokploy application per app, at `pr-<number>-<app>.<PREVIEW_DOMAIN>`
+- a GitHub deployment per app, so the PR shows **View deployment**
+- one sticky comment, updated in place on every push, in the style of the Vercel bot: app, status (Building, Ready, Failed), preview link, inspect link, and an error excerpt when a build fails
+- cleanup when the PR closes
+
+The logic lives in plain node scripts in [`.github/scripts`](https://github.com/FindMalek/findplate/tree/4624929/template/.github/scripts) with no dependencies. Without the Dokploy settings the workflow exits green and says what is missing. Drafts and forks are skipped, since forks can't read secrets. `findplate provision` can also create the Dokploy projects, S3 buckets, DNS records, Turborepo cache secrets and a nightly `pg_dump` backup workflow.
+
+## Design presets
+
+A preset is a folder in `presets/`: a `preset.json` and a `theme.css` of shadcn tokens. There are five. `monochrome` (black and white, square corners, IBM Plex and JetBrains Mono) is the default and the one this site's look comes from. The others are `clay`, `editorial`, `midnight` and `soft`. The cli lists whatever it finds in the folder, so adding a preset is adding a folder.
+
+The components are shadcn, living in your repo. To change the look later, edit the css variables in `packages/ui` or paste a theme from [shadcn create](https://ui.shadcn.com/create).
+
+## Engineering challenges
+
+The generator is mostly about not breaking, and the real bugs in the history are about that.
+
+**A stripped module has to leave clean code.** Removing a marked block is the easy part. The generated project then gets linted, and Biome rejects a doubled blank line or a blank line right after a bracket. [`tidyBlankLines`](https://github.com/FindMalek/findplate/blob/4624929/packages/cli/src/generate/strip.ts) exists for that. Marker blocks inside an array literal were worse. In `apps/api/src/server.ts` the `glitchtip` and `openobserve` interceptors were marked entries of one array, so what came out depended on which of them were on. [`bbcf387`](https://github.com/FindMalek/findplate/commit/bbcf387) replaced the literal with an empty array and one `interceptors.push(...)` line per module, each with a trailing marker, so every combination produces ordinary code.
+
+**Import order has to survive the strip.** Marked imports in the template were out of Biome's order (`@acme/whatsapp` sat before `@acme/telegram`), so a generated project failed its own lint. I fixed the order in [`2aa0799`](https://github.com/FindMalek/findplate/commit/2aa0799) and [`9da8ded`](https://github.com/FindMalek/findplate/commit/9da8ded). The one-line marker form exists so a line stays attached to its own import when the formatter reorders imports. Step 5 of `create` runs `pnpm check` for the same reason: the first commit shouldn't contain code the project's own linter would change.
+
+**A duplicate key in the catalog.** `pnpm-workspace.yaml` is a catalog of dependency versions that modules add to and strip from. The template's catalog had `@next/env` listed twice at the same version, and [`6464828`](https://github.com/FindMalek/findplate/commit/6464828) is a one-line fix that removes the second. Duplicates are easy to create when several modules each add their own entries.
+
+**The state file made the tree dirty.** `findplate add` and `update` refuse to run on a dirty git tree, so a user can always `git restore .`. After `create` ran its first commit, though, the tree was dirty: the `git` step was marked done in `.findplate/state.json` after the commit, so the state file changed after it. That was [issue #59](https://github.com/FindMalek/findplate/issues/59). The step is now recorded before `git add -A`, so the first commit contains the state that says it happened.
+
+**A related one: where the commit goes.** If the target sits inside another git repository, `git init` plus a commit would commit a new project into the outer repo, for example when you generate into a monorepo. [`68d284e`](https://github.com/FindMalek/findplate/commit/68d284e) skips the step with a note when the directory is already inside a repository.
+
+**The first real GitHub run.** I ran `findplate github` for real against a private throwaway repo (since deleted). It created the repo, labels, milestones, CODEOWNERS, templates, workflows, 10 repo variables, 2 secrets and a project board with the Status columns. It also found two things mocks couldn't. The plan added an https remote while my `gh` is configured for ssh, so the push failed ([issue #78](https://github.com/FindMalek/findplate/issues/78), [PR #79](https://github.com/FindMalek/findplate/pull/79), [`a646ae3`](https://github.com/FindMalek/findplate/commit/a646ae3)): the remote now follows `gh config get git_protocol`. And the ruleset on `main` failed with HTTP 403, because rulesets need a paid plan on private repos. The step reports that and carries on.
+
+**Spinners in a log.** A spinner is great in a terminal and noise in a CI log or an agent transcript. [Issue #61](https://github.com/FindMalek/findplate/issues/61): [`tasks.ts`](https://github.com/FindMalek/findplate/blob/4624929/packages/cli/src/tasks.ts) prints one plain line per step when stdout isn't a terminal. For the same reason every prompt has a flag, so `-y` plus flags never asks anything.
+
+**The v1 to v2 rewrite.** v1 had 75 commits and ran from April 2024 to December 2025, the last being a merge of a React Server Components CVE fix. The tag `v1-final` marks it, and the branch is still there. v2 is a rewrite, not an upgrade: a starter you delete from was the original problem, so polishing v1 wasn't an option. The v2 pull requests landed on October 27 and 28, 35 of them, after the issues were filed on October 17.
+
+## What isn't proven
+
+Most of the tests don't talk to real services. The Dokploy preview workflow, the `provision` calls (Dokploy, S3, DNS), Resend, Telegram and the Kapso WhatsApp module are tested with mocks and fake fetch calls, and I haven't run them against live accounts. Some response shapes of the Dokploy API are assumed in [the docs](https://plate.findmalek.engineer/docs/provision) and live in one function so they're easy to correct. The ruleset on `main` has never run on a repo where it is allowed. A first real run of the rest will probably find something, because the GitHub step did.
+
+Also, as of today, `findplate` is not on npm yet. The release workflow publishes on a version tag, and I haven't pushed one. Until then the cli runs from a clone of the repo: `pnpm install`, then `pnpm dev create ../demo --name demo -y`.
+
+## Status
+
+Work in progress, and public. It's on `0.1.0` in the changelog with 17 modules, 5 presets and 35 merged v2 pull requests. The landing page and docs are live, and the `/docs` section was rebuilt in the landing's boxed brand. What's next is the first npm release, running the provisioning against real services, and fixing the docs pages that still describe the plan rather than the code.
+
+## Links
+
+- [plate.findmalek.engineer](https://plate.findmalek.engineer), the landing page and docs
+- [github.com/FindMalek/findplate](https://github.com/FindMalek/findplate), the code, MIT
+- [Why I built FindPlate](/blog/why-i-built-findplate), the long version of the problem section
+- [`v1` branch](https://github.com/FindMalek/findplate/tree/v1), the starter template that came before
