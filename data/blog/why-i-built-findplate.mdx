@@ -1,0 +1,123 @@
+---
+title: "Why I replaced my starter with a generator"
+href: /blog/why-i-built-findplate
+excerpt: "FindPlate v1 was a Next.js starter you clone and then delete from. v2 is a CLI that generates the repo and also sets up the board, rules, CI and previews around it. Why I made the switch, what went wrong, and what I haven't tested yet."
+publishedAt: "2026-10-28"
+tags: [findplate, cli, turborepo, tooling]
+status: published
+image: /blog/why-i-built-findplate/cover.png
+imageAlt: "Cover for \"Why I replaced my starter with a generator\", with a terminal window showing bunx findplate create and its seven steps."
+---
+
+I have 15 case studies on this site. When I looked at the repos behind three of them, they had the same skeleton, which means I'd built it three times.
+
+[FindPlate](/projects/findplate) is what I made so that day stops happening. You run `bunx findplate create`, and you get a turborepo with a landing page, a dashboard with login and an API. You also get the GitHub repo and board, the rules for your coding agents, CI and pull request previews, all from the same command.
+
+One limit up front. `findplate` is not on npm yet. As I write this, `npm view findplate` returns a 404. The release workflow is there and I haven't pushed a version tag, so today it runs from a clone of the repo. I say more about what's untested near the end.
+
+## The same repo, again
+
+This is what I found when I looked at my own repos. I read `apps` and `packages` with `ls` in three of them, [dukkani](/projects/dukkani), [sonaraem](/projects/sonaraem) and `lyterion`, whose first commits are dated 2025-11-10, 2026-03-04 and 2026-10-12.
+
+![A table of apps and packages across dukkani, sonaraem, lyterion and the FindPlate template. Nine rows match in all four: apps api and dashboard, and the packages auth, common, config, db, env, orpc and ui. The logger, core, tracing and storage packages differ.](/blog/why-i-built-findplate/shape.png)
+
+Each has an `apps/api` and an `apps/dashboard`, and the same seven packages: `auth`, `common`, `config`, `db`, `env`, `orpc` and `ui`. A `pr-auto-assign.yml` workflow sits in five of my repos. Nobody designed that. Each repo got the last one's setup, changed a little, because the last repo was the closest thing to a template I had.
+
+That's the cost I wanted to remove. Not the hard part of a project, the part before it.
+
+## What v1 got wrong
+
+The first FindPlate was a Next.js starter. The [`v1` branch](https://github.com/FindMalek/findplate/tree/v1) has 75 commits, from April 2024 to a React Server Components CVE fix in December 2025. It was one app with Next 14, Prisma, Supabase, next-intl, a waitlist form and a Nodemailer setup.
+
+The problem with a starter is that you don't use it, you edit it. Clone it, rename the things, then delete what you don't need. The deleting is where the time goes. Every feature in it is one more thing to check before it's safe to remove, and the starter has no idea you did.
+
+It also stopped at the code. The repo, the board, the labels, the CI rules, the agent instructions and the preview setup were all outside the template, and those were exactly the things I kept redoing by hand.
+
+I wanted something simpler to say: after you run the command, everything is set up, even the readme, the GitHub project and the agent rules. That's why v2 starts at [issue #3](https://github.com/FindMalek/findplate/issues/3), "v2: cli and project template", and not at the template.
+
+## What I wrote down I wanted
+
+Before building it I listed what I wanted, in this order:
+
+- a great and simple landing page
+- docs, with fumadocs
+- monochrome, boxed and minimal, like [guesswork](/projects/guesswork) and [keep-player](/projects/keep-player)
+- customizable with shadcn create
+- CI, tests and deploy, on Vercel or a self-hosted setup like Dokploy
+- and the one above: best UX and DX, everything set up after the command
+
+Almost all of this ended up in the repo. The look is the `monochrome` preset, which is the default. The docs and landing page live at [plate.findmalek.engineer](https://plate.findmalek.engineer). Production is on Vercel, live at that address. Pull request previews are set up to go to Dokploy: the workflow and scripts exist, but they haven't run against a real Dokploy yet.
+
+![Two columns. By hand: nine setup tasks, from the turborepo to the first commit. One command: bunx findplate create my-app, about 48 seconds for one real run, and a note that Dokploy previews and provisioning have only been tested with mocks.](/blog/why-i-built-findplate/checklist.png)
+
+## What I took from next-forge and create-t3-app
+
+I looked at two projects before starting: [next-forge](https://github.com/vercel/next-forge) and [create-t3-app](https://github.com/t3-oss/create-t3-app).
+
+From next-forge, the shape. A turborepo with several apps and shared packages, in a layout meant to be a real product and not a demo. I'd already been building that layout by hand, so seeing it in a template mostly confirmed it.
+
+From create-t3-app, the interaction. A CLI that asks a few questions and writes the result, and that you can run without answers when you know what you want. Every prompt in `findplate create` has a flag, so `-y` plus flags never asks anything.
+
+Where mine goes a different way:
+
+- **The generator does the setup around the code.** The repo, labels, a project board with the columns Backlog, Ready, In progress, In review and Done, a ruleset on `main`, PR workflows and previews. Neither project does that, as far as I know.
+- **One choice per layer.** One ORM (Drizzle), one auth library (better-auth), one rpc layer (oRPC), one linter (Biome). I didn't want a template with options I can't test. If you want Prisma or tRPC, FindPlate is the wrong tool, and the docs say so.
+- **Removal is a first-class feature.** Optional modules disappear from the output instead of being hidden behind a flag.
+
+## The decisions that mattered
+
+**One api that touches everything.** In `apps/api`, bun runs oRPC, and it's the only app that talks to the database, auth, storage and providers. The landing page and the dashboard call it through the typed client. The one thing the dashboard imports from `auth` is the client, which calls back to the api. Dukkani and sonaraem already had an api app next to a dashboard, and this makes the split a rule you can state in one line: if you're in `apps/web`, you don't import the db package.
+
+**Markers, not a templating language.** The template in `template/` is a real project that's type-checked and tested in the repo. When a module is off, the generator removes lines between comment markers:
+
+```ts
+// @findplate:ai
+import { createAi } from "@acme/ai"
+// @end
+```
+
+A trailing `// @findplate:ai` marks a single line. The alternative was a template with `{{#if ai}}` holes in the source, which can't be linted or compiled until it's rendered. With markers, a broken template fails my own CI and not your first run. The price is that the stripper has to leave clean code behind, and I'll come back to what that cost.
+
+**One CI job per module.** There are 17 modules, and CI generates each of them alone, all of them together and none, so 19 jobs. Each one runs lint, types and tests, and the all-modules and minimum jobs also run the build on pull requests. A matrix script reads `template/findplate.json`, so a new module needs no CI edit. A module that only works when another is switched on declares `requires`, and the matrix generates it with those.
+
+**A state file, so you can come back.** `create` writes `.findplate/state.json` as it goes: your answers and each step that finished. If a run dies halfway, running it again skips what's done. The same file is why two more commands exist. `findplate add ai` regenerates the template with and without a module and applies only the difference, leaving files you edited alone. `findplate update` does a three-way merge against the template of the version you started from, with `git merge-file`, and writes conflict markers where you and the template touched the same lines.
+
+The first plan was that a generated project would never talk to the generator again, and the docs' why page still says that. "Generate, then own it" is still true, and nothing imports findplate at runtime. But the plan meant a template fix could never reach a project that already exists, and `add` and `update` ([#66](https://github.com/FindMalek/findplate/pull/66), [#67](https://github.com/FindMalek/findplate/pull/67)) landed after it.
+
+## What went wrong
+
+The history is mostly small fixes with an honest cause each, and I like those more than the features.
+
+**Stripping a module left code Biome rejects.** Removing a marked block can leave a doubled blank line, or a blank line right after a bracket, and the formatter rejects both. A function called `tidyBlankLines` exists because of that. Markers inside an array literal were worse: in `apps/api/src/server.ts` the `glitchtip` and `openobserve` interceptors were marked entries of one array, so the output depended on which were on. [`bbcf387`](https://github.com/FindMalek/findplate/commit/bbcf387) turned it into an empty array plus one `push` line per module, each with its own marker.
+
+**Imports were out of order.** Marked imports in the template weren't in Biome's order (`@acme/whatsapp` sat before `@acme/telegram`), so a generated project failed its own lint. Two commits called "sort imports" fixed that ([`2aa0799`](https://github.com/FindMalek/findplate/commit/2aa0799), [`9da8ded`](https://github.com/FindMalek/findplate/commit/9da8ded)), and step five of `create` runs `pnpm check` so the first commit doesn't hold code the project's own linter would change.
+
+**The state file dirtied the tree.** `add` and `update` refuse to run on a dirty git tree, so you can always `git restore .`. But right after `create`, the tree was dirty: the `git` step was recorded as done after the first commit was made, so `state.json` changed after it. That was [issue #59](https://github.com/FindMalek/findplate/issues/59). The step is now recorded before `git add -A`, so the first commit contains the state that says it happened.
+
+**A duplicate key.** The pnpm catalog in the template had `@next/env` listed twice at the same version. [`6464828`](https://github.com/FindMalek/findplate/commit/6464828) removes the second one. It's one line, but several modules add their own catalog entries, which is how duplicates appear.
+
+**Spinners in a log.** A spinner is nice in a terminal and noise in a CI log or an agent transcript. [`tasks.ts`](https://github.com/FindMalek/findplate/blob/4624929/packages/cli/src/tasks.ts) prints one plain line per step when stdout isn't a terminal ([issue #61](https://github.com/FindMalek/findplate/issues/61)).
+
+**The first real GitHub run found two things the mocks couldn't.** I ran `findplate github` against a private throwaway repo on my account (since deleted). It created the repo, labels, milestones, CODEOWNERS, issue and PR templates, workflows, 10 repo variables, 2 secrets and a project board with the Status columns. But the first run failed to push: the plan added an https remote, and my `gh` is set up for ssh with no https credentials. [Issue #78](https://github.com/FindMalek/findplate/issues/78) and [PR #79](https://github.com/FindMalek/findplate/pull/79), commit [`a646ae3`](https://github.com/FindMalek/findplate/commit/a646ae3): the remote url now follows `gh config get git_protocol`. The second finding was the ruleset on `main`, which failed with HTTP 403, "Upgrade to GitHub Pro or make this repository public", because rulesets need a paid plan on private repos. The step reports it and carries on.
+
+**Committing into someone else's repo.** If you generate into a folder that's already inside a git repository, a `git init` and a first commit would commit the project into the outer repo. [`68d284e`](https://github.com/FindMalek/findplate/commit/68d284e) skips the step with a note when the target already sits inside a repository.
+
+## What it doesn't do yet
+
+I haven't run some of the parts that talk to the outside world.
+
+- **Dokploy previews and `findplate provision`.** The preview workflow has only run against a mock server, and it skips itself when the `DOKPLOY_*` variables aren't set. The Dokploy projects, S3 buckets and DNS records are tested with mocks too. Some Dokploy API response shapes are assumed in the docs, and I kept them in one function so they're easy to correct.
+- **Email, Telegram and WhatsApp.** The Resend mailer test checks the request it would send. The Telegram bot and the Kapso WhatsApp module are tested the same way, with no real account behind them.
+- **The ruleset on `main`.** It has never run on a repo where it's allowed, since my one real run was on a private repo on a free plan.
+
+What I did measure: one real `create` run took about 48 seconds on my machine, with agent rules, seven skill packs, install, format and the first commit. CI generates and checks the template 19 ways, and runs a migration drift check and Lighthouse on the generated landing page. That tells me the generated code is consistent, not that every integration works.
+
+Some of my own docs lag behind the code too. A few pages still describe things as coming that already exist.
+
+## Who should use it
+
+Use it if you start full-stack TypeScript projects often, you're fine with Next.js, Drizzle, better-auth and oRPC, and you want the repo, board and CI in place before the first feature. Use it if you work with coding agents and want the same rules in every project.
+
+Don't use it if you want a different stack, Prisma, tRPC or Auth.js, because I won't add them. Don't use it if you need payments, teams or billing, which I left out on purpose. And I wouldn't build a project you can't afford to debug on a tool whose Dokploy and provisioning steps have never met a real account.
+
+The code is on [GitHub](https://github.com/FindMalek/findplate), MIT licensed, with the long version of the build in the [case study](/projects/findplate).
