@@ -60,7 +60,7 @@ From create-t3-app, the interaction. A CLI that asks a few questions and writes 
 
 Where mine goes a different way:
 
-- **The generator does the setup around the code.** The repo, labels, a project board with the columns Backlog, Ready, In progress, In review and Done, a ruleset on `main`, PR workflows and previews. Neither project does that, as far as I know.
+- **The generator does the setup around the code.** The repo, labels, a project board with the columns Backlog, Ready, In progress, In review and Done, a ruleset on `main`, PR workflows and previews. That's the part I wanted that I didn't find in either.
 - **One choice per layer.** One ORM (Drizzle), one auth library (better-auth), one rpc layer (oRPC), one linter (Biome). I didn't want a template with options I can't test. If you want Prisma or tRPC, FindPlate is the wrong tool, and the docs say so.
 - **Removal is a first-class feature.** Optional modules disappear from the output instead of being hidden behind a flag.
 

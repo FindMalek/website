@@ -23,7 +23,7 @@ _The social card from the landing page._
 
 ## The problem
 
-I ship a lot of projects, and I keep building the same ones. This site has 15 case studies. Three of my repos, [dukkani](/projects/dukkani), [sonaraem](/projects/sonaraem) and `lyterion`, each have an `apps/api` and an `apps/dashboard`, and the same `auth`, `common`, `config`, `db`, `env`, `orpc` and `ui` packages. Five of my repos carry the same `pr-auto-assign.yml` workflow. Every time, I rebuilt that structure by hand or copied it from the last repo.
+I ship a lot of projects, and I keep building the same ones. This site has 15 case studies. Three of my repos, [dukkani](/projects/dukkani), [sonaraem](/projects/sonaraem) and `lyterion`, each have an `apps/api` and an `apps/dashboard`, and the same `auth`, `common`, `config`, `db`, `env`, `orpc` and `ui` packages. Five of my repos carry a `pr-auto-assign.yml` workflow. Every time, I rebuilt that structure by hand or copied it from the last repo.
 
 v1 didn't fix that. It was one Next.js app with Prisma, Supabase, next-intl and a waitlist form, and you removed what you didn't want after cloning. What I wanted instead: you run one command and everything is set up, even the readme, the GitHub project and the agent rules.
 
