@@ -212,7 +212,7 @@ export const FEATURED_PROJECT_ORDER = [
   "Dukkani",
   "Zero Locker",
   "guesswork",
-  "keep-player",
+  "lodesong",
   "keep-dashboard",
   "Syncify",
 ]
