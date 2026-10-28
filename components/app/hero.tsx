@@ -1,6 +1,8 @@
+import { INTERVIEW_MODE_ENABLED } from "@/config/flags"
 import { siteConfig } from "@/config/site"
 import { getResumeData } from "@/lib/get-resume-data"
 
+import { AvatarIntroTrigger } from "@/components/app/avatar-intro-trigger"
 import { PronounceNameButton } from "@/components/app/pronounce-name-button"
 import { RotatingSubtitle } from "@/components/app/rotating-subtitle"
 import { Avatar } from "@/components/shared/avatar"
@@ -16,7 +18,11 @@ export async function Hero() {
   return (
     <section className="screen-line-bottom px-4 pb-6 pt-12">
       <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-        <Avatar large className="shrink-0" />
+        {INTERVIEW_MODE_ENABLED ? (
+          <AvatarIntroTrigger large className="shrink-0" />
+        ) : (
+          <Avatar large className="shrink-0" />
+        )}
 
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
