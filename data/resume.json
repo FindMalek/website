@@ -375,7 +375,7 @@
         {
           "id": "2468c418-3a93-4dc8-b3fb-2926d0cb70c0",
           "hidden": false,
-          "name": "keep-player",
+          "name": "lodesong",
           "period": "October 2026 – Present",
           "dates": {
             "start": "2026-10",
@@ -383,8 +383,8 @@
             "present": true
           },
           "website": {
-            "url": "https://github.com/FindMalek/keep-player",
-            "label": "github.com/FindMalek/keep-player",
+            "url": "https://github.com/FindMalek/lodesong",
+            "label": "github.com/FindMalek/lodesong",
             "inlineLink": true
           },
           "description": "<ul><li><p>Web music player for self-hosted Navidrome: virtualized lists (about 40 rows mounted for a 10,000-song test library), typo-tolerant search, offline audio cache, gapless playback. 48 unit test files and 46 e2e specs.</p></li></ul>"
