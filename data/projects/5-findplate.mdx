@@ -257,7 +257,7 @@ Three of the workflows in the generated repo keep that setup alive: `ci`, `pr-hy
 
 CI in the findplate repo generates a project and checks it, so a template change can't break `create` without a red build. [`module-matrix.mjs`](https://github.com/FindMalek/findplate/blob/4624929/.github/scripts/module-matrix.mjs) builds the matrix from `template/findplate.json`: one job per module generated alone (with what it requires), one with all modules and one with none. That's 17 + 2 = 19 jobs, and each runs lint, types and tests. On a pull request only the all-modules and minimum jobs also run the build, the rest build on pushes to `main`. A new module needs no CI edit, the matrix picks it up from the manifest. Two more jobs check that the schema has no uncommitted migration drift and run Lighthouse on the generated landing page.
 
-Production deploys from `main` on Vercel (the docs and landing page you can open are that setup). Pull requests don't. The preview workflow is set up so each PR gets its own preview per app on a [Dokploy](https://dokploy.com) server, though it has only run against a mock server so far:
+Production deploys from `main` on Vercel (the docs and landing page you can open are that setup). Pull requests don't. The preview workflow is set up so each PR gets its own preview per app on the [Dokploy](https://dokploy.com) server I host, though it has only run against a mock server so far:
 
 - one Dokploy application per app, at `pr-<number>-<app>.<PREVIEW_DOMAIN>`
 - a GitHub deployment per app, so the PR shows **View deployment**
