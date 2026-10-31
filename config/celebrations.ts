@@ -263,27 +263,6 @@ export const CELEBRATIONS: readonly Celebration[] = [
     ranges: fromTable(HOLI, 1, 1),
   },
   {
-    id: "hanukkah",
-    name: "Hanukkah",
-    greeting: "Happy Hanukkah! 🕎",
-    emoji: "🕎",
-    mode: "offer",
-    countries: ["IL", "US", "CA", "GB", "FR", "AR", "AU"],
-    hue: 250,
-    chroma: 0.15,
-    glow: ["#3b82f6", "#fbbf24", "#60a5fa", "#fde68a"],
-    particles: ["🕎", "✡️", "✨", "🕯️"],
-    motion: "fall",
-    ranges: (year) =>
-      lunarRanges(year, {
-        calendar: "hebrew",
-        month: "Kislev",
-        fromDay: 25,
-        toDay: 30,
-        after: 2,
-      }),
-  },
-  {
     id: "songkran",
     name: "Songkran",
     greeting: "Happy Songkran! 💦",

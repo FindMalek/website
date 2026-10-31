@@ -64,7 +64,7 @@ export function nthWeekdayKey(
   return year * 10000 + month * 100 + 1 + offset + (nth - 1) * 7
 }
 
-// Intl ships the Hijri, Chinese and Hebrew calendars, so these never go stale.
+// Intl ships the Hijri and Chinese calendars, so these never go stale.
 function lunarDays(year: number, calendar: string): LunarDay[] {
   const cacheKey = `${calendar}-${year}`
   const cached = dayCache.get(cacheKey)
@@ -95,7 +95,7 @@ function lunarDays(year: number, calendar: string): LunarDay[] {
 }
 
 interface LunarSpec {
-  calendar: "islamic-umalqura" | "chinese" | "hebrew"
+  calendar: "islamic-umalqura" | "chinese"
   month: string
   fromDay: number
   toDay: number
