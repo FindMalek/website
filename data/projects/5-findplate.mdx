@@ -2,8 +2,8 @@
 id: 5
 image: "/project/findplate.png"
 name: "FindPlate"
-overview: "One command, bunx findplate create, generates a production-ready full-stack turborepo and sets up what sits around it: the GitHub repo and project board, agent rules, CI and PR previews. 17 optional modules, 5 design presets, MIT."
-status: "wip"
+overview: "One command, bunx findplate create, generates a production-ready full-stack turborepo and sets up what sits around it: the GitHub repo and project board, agent rules, CI and PR previews. 33 optional modules, 5 design presets, MIT."
+status: "published"
 link: "https://plate.findmalek.engineer"
 href: "/projects/findplate"
 tags: ["TypeScript", "Turborepo", "CLI", "Next.js", "oRPC", "Open Source"]
@@ -17,9 +17,13 @@ The code is on [GitHub](https://github.com/FindMalek/findplate) and the docs and
 
 This is the second version. The first one was a Next.js starter you clone and then delete from. I kept it on the [`v1` branch](https://github.com/FindMalek/findplate/tree/v1) and rewrote the project as a CLI. The v2 work started with [issue #3](https://github.com/FindMalek/findplate/issues/3), "v2: cli and project template".
 
-![FindPlate social card: the name, the line "A production-ready full-stack project, generated in one command", the command bunx findplate create, and 17 modules, 5 presets, MIT.](/project/findplate.png)
+![FindPlate social card: the name, the line "A production-ready full-stack project, generated in one command", the command bunx findplate create, and 17 modules, 5 presets, MIT. This card is from the first release, the landing page now says 33 modules.](/project/findplate.png)
 
-_The social card from the landing page._
+_The first social card. It still says 17 modules, the count has doubled since._
+
+![The findplate landing page: the headline "A production-ready full-stack project, generated in one command", the command bunx findplate create with bun, pnpm, npm and yarn tabs, and a stats row with 33 optional modules, 5 design presets, 7 agent skills and about 48 seconds to create with install included.](/project/findplate/landing.png)
+
+_The live landing page at plate.findmalek.engineer, as of Nov 2._
 
 ## The problem
 
@@ -167,7 +171,13 @@ Tooling is fixed on purpose: pnpm in the project, bun for the api, Biome for for
 
 ## The module system
 
-There are 17 modules: `storage`, `ai`, `docs`, `rate-limit`, `email`, `whatsapp`, `webhooks`, `telegram`, `umami`, `openobserve`, `glitchtip`, `infisical`, `langfuse`, `waitlist`, `roadmap`, `status` and `databuddy`. `storage`, `ai`, `docs` and `rate-limit` are on by default. `telegram` requires `webhooks`, `langfuse` requires `ai`, and `create` switches required modules on with the one you picked.
+There are 33 modules now. The first release had 17, and the 16 PRs after it added the product and platform pieces I kept rebuilding: `billing` (Stripe or Polar), `orgs`, `audit-log`, `api-keys`, `inbox`, `feedback`, `compliance`, `impersonation`, `search`, `flags`, `cache`, `jobs`, `logger`, `i18n`, `blog` and an Expo `mobile` app. The original ones are still there: `storage`, `ai`, `docs`, `rate-limit`, `webhooks`, `telegram`, `waitlist`, `roadmap`, `status`, `databuddy` and the self-hosted observability set (`umami`, `openobserve`, `glitchtip`, `infisical`, `langfuse`). `storage`, `ai`, `docs` and `rate-limit` are on by default. `telegram` requires `webhooks`, `langfuse` requires `ai`, and `create` switches required modules on with the one you picked.
+
+Three profiles pick them for you: `minimal` (none), `standard` (the four defaults) and `everything`, which leaves out the five that need a server you host yourself, because switching them on would hand you code that does nothing until that server exists.
+
+![The modules page of the docs: a sidebar listing every module, a Profiles section explaining minimal, standard and everything, and an on this page outline.](/project/findplate/modules.png)
+
+_The modules page of the live docs. Every module has its own page with what it adds, its env keys, and how to remove it._
 
 A module is three things: a package, its env keys, and the lines of code that use it. The manifest, [`template/findplate.json`](https://github.com/FindMalek/findplate/blob/4624929/template/findplate.json), lists the paths to delete, the packages to drop from every `package.json` and the pnpm catalog, the keys to ask for, and what it requires. The lines of code are marked in the source with comments:
 
@@ -255,7 +265,13 @@ Three of the workflows in the generated repo keep that setup alive: `ci`, `pr-hy
 
 ## CI and previews
 
-CI in the findplate repo generates a project and checks it, so a template change can't break `create` without a red build. [`module-matrix.mjs`](https://github.com/FindMalek/findplate/blob/4624929/.github/scripts/module-matrix.mjs) builds the matrix from `template/findplate.json`: one job per module generated alone (with what it requires), one with all modules and one with none. That's 17 + 2 = 19 jobs, and each runs lint, types and tests. On a pull request only the all-modules and minimum jobs also run the build, the rest build on pushes to `main`. A new module needs no CI edit, the matrix picks it up from the manifest. Two more jobs check that the schema has no uncommitted migration drift and run Lighthouse on the generated landing page.
+CI in the findplate repo generates a project and checks it, so a template change can't break `create` without a red build. [`module-matrix.mjs`](https://github.com/FindMalek/findplate/blob/4624929/.github/scripts/module-matrix.mjs) builds the matrix from `template/findplate.json`: one job per module generated alone (with what it requires), one with all modules and one with none. That's one job per module plus two, and each runs lint, types and tests. On a pull request only the all-modules and minimum jobs also run the build, the rest build on pushes to `main`. A new module needs no CI edit, the matrix picks it up from the manifest. The [trust page](https://plate.findmalek.engineer/docs/trust) of the docs lists exactly this matrix and a CI badge, so the claim is checkable.
+
+![The trust page of the docs: a passing CI badge and a table of the matrix cells, minimum with no modules, all modules, and one per module.](/project/findplate/trust.png)
+
+_The trust page. It says what the pipeline runs and nothing else._
+
+Two more jobs check that the schema has no uncommitted migration drift and run Lighthouse on the generated landing page.
 
 Production deploys from `main` on Vercel (the docs and landing page you can open are that setup). Pull requests don't. The preview workflow is set up so each PR gets its own preview per app on the [Dokploy](https://dokploy.com) server I host, though it has only run against a mock server so far:
 
@@ -300,7 +316,7 @@ Also, as of today, `findplate` is not on npm yet. The release workflow publishes
 
 ## Status
 
-Work in progress, and public. It's on `0.1.0` in the changelog with 17 modules, 5 presets and 35 merged v2 pull requests. The landing page and docs are live, and the `/docs` section was rebuilt in the landing's boxed brand. What's next is the first npm release, running the provisioning against real services, and fixing the docs pages that still describe the plan rather than the code.
+Done as a project, and public. The repo has 233 commits and 77 merged pull requests, the CLI is on `0.1.0` with 33 modules and 5 presets, and CI runs it on Linux, macOS and Windows. The landing page and docs are live. The one open item is the first npm release: the workflow is ready and waits for a version tag. After that, the provisioning still needs a run against real services.
 
 ## Links
 

@@ -3,7 +3,7 @@ id: 14
 image: "/project/lodesong.png"
 name: "lodesong"
 overview: "A monochrome, square-cornered web music player for Navidrome and any Subsonic server. It streams from my own home lab, with gapless playback, a service worker precache, typo-tolerant search and a keyboard shortcut for everything."
-status: "wip"
+status: "published"
 link: "https://github.com/FindMalek/lodesong"
 href: "/projects/lodesong"
 tags: ["TypeScript", "React", "Bun", "Navidrome", "Self-hosted", "Open Source"]
@@ -21,17 +21,26 @@ _The album page with the queue open. The small arrows next to the time are songs
 
 ## How it grew
 
-The repo has [79 commits](https://github.com/FindMalek/lodesong/commits/main), all from one week.
+The repo has [211 commits](https://github.com/FindMalek/lodesong/commits/main) over 13 working days between Oct 11 and Nov 2, and 15 tagged releases, from `v1.0.0` on Oct 24 to [`v1.11.1`](https://github.com/FindMalek/lodesong/releases/tag/v1.11.1) on Nov 2. Most of the app exists after the first week.
 
 ![Bar chart of commits per day: 1 on Oct 11, 1 on Oct 13, 34 on Oct 14, 25 on Oct 15, 17 on Oct 16 and 1 on Oct 17, with the main features of each day listed under the chart.](/project/lodesong/timeline.png)
 
-_Commits per day, from `git log`._
+_Commits per day for the first week, from `git log`. It kept going after that, see below._
 
 - **Oct 11.** First commit, [`feat(player): initial release`](https://github.com/FindMalek/lodesong/commit/610e5f8418f0ef73b8713964acbd6be90851e17e). A player that talks to Navidrome.
 - **Oct 13.** A [roadmap and a board](https://github.com/FindMalek/lodesong/commit/69b2e2908dcd3a003070fbe111c66580b6893ce5). Nothing else.
 - **Oct 14, 34 commits.** The day it turned into an app. Tailwind and shadcn [tokens](https://github.com/FindMalek/lodesong/commit/078f2b48d178ee8ad1de948e5a0fbed955e3010a), [server-side sessions](https://github.com/FindMalek/lodesong/commit/3d652e886a0ecd8bb5e9442d5f770b46abeed02e), [route splitting](https://github.com/FindMalek/lodesong/commit/81ae5aa0e56ebb2fcc3dd22af7387063271bc502), [TanStack Query with an IndexedDB cache](https://github.com/FindMalek/lodesong/commit/4865aa135432e1ee35b8aaa48a157fdcaa945922), [virtualized lists](https://github.com/FindMalek/lodesong/commit/a35b3d2bf15bfb05f8145bfe9c2b328296a22746), the [queue model](https://github.com/FindMalek/lodesong/commit/63accd28893cddd22282b3da2ccd20093ab94e82), [gapless playback with two decks](https://github.com/FindMalek/lodesong/commit/2599ef59e63ad62ad439a16db0f6563997d1645f), the [service worker precache](https://github.com/FindMalek/lodesong/commit/cb900fe155b93330b6ebafb469d1e436e92cddf7), the [shortcut registry](https://github.com/FindMalek/lodesong/commit/66e0a78ab4f3487c553be374b4d541e7994d62c0), [lyrics](https://github.com/FindMalek/lodesong/commit/1acad8e9266fda588ac3efecc3dd8dac9cd27653), the [FTS5 search index](https://github.com/FindMalek/lodesong/commit/df86f17103688795aa5dffa24fc2d1c12f326fb1), [likes](https://github.com/FindMalek/lodesong/commit/684ee2b3d5337ae7a436a25e7d8aca6460870038), [skeletons](https://github.com/FindMalek/lodesong/commit/49f327e522ff3441c8d0da6b56217ea28ef16b82), a [mini player](https://github.com/FindMalek/lodesong/commit/8446cd6c67576a47bb9c7ff92fda2f55c7d2d870) and the [queue hand-off](https://github.com/FindMalek/lodesong/commit/a65e1750178deabf6599eefdb5345992e68e310f).
 - **Oct 15, 25 commits.** [Playlist editing](https://github.com/FindMalek/lodesong/commit/7fcec9a9548cd80864a81e4c84d9b1979ba019f1), [undo and redo](https://github.com/FindMalek/lodesong/commit/034684f6b8fe303ec81579d5b16fda1ae6ab542f), [right-click menus](https://github.com/FindMalek/lodesong/commit/dbea73d0438ca2794130ea6588a0c57380220475), [listening stats and a recap](https://github.com/FindMalek/lodesong/commit/c608cf9dea822d6e2afe29980a28604e8f187bfb), [endless radio](https://github.com/FindMalek/lodesong/commit/c43572d336f49aec37f29faa879f14d10296353e), [moments](https://github.com/FindMalek/lodesong/commit/e283271c1741a4724765b89b2bfdf7fed250be4b), a [settings page](https://github.com/FindMalek/lodesong/commit/3e0211c3c3ed6cbe1cf51208dd3161f4034d3936), [crossfade](https://github.com/FindMalek/lodesong/commit/7c4fe8e64ca1e3c5c6acda7533201f820f2ea119), [normalization and an equalizer](https://github.com/FindMalek/lodesong/commit/1462529a11083a590be94362357addb0815ab262), [genre pages](https://github.com/FindMalek/lodesong/commit/088e9c1dae37bd3d46bcbe6ff460cbb55e34992e), [stream quality with codec fallback](https://github.com/FindMalek/lodesong/commit/01e346e71e08d136a007bad1cd9162f81b0f6a07), [import from Spotify](https://github.com/FindMalek/lodesong/commit/67a1343925533d5816e8f37fde3c96ed60fbd6f1). A [multi-arch Docker image and release automation](https://github.com/FindMalek/lodesong/commit/5111f484e538dc7dc9239c21798d4d581e99c888) landed the same day.
 - **Oct 16, 17 commits.** [Listen together](https://github.com/FindMalek/lodesong/commit/65acc5c018d1c6bd639a7f6fd07a9fd6b8968ac9), a [library doctor page](https://github.com/FindMalek/lodesong/commit/7e993eb8d84ce2cb7ea3db94205232addb20de36), the [responsive layout](https://github.com/FindMalek/lodesong/commit/08dfe45d156b99896b5ed0b77ab78cf9090f7ab7), [release 0.2.0](https://github.com/FindMalek/lodesong/commit/878928b1b5783f38674ef9c094966655d7743720), the [iPhone silent switch fix](https://github.com/FindMalek/lodesong/commit/c0da4f8a07dd5ff986bae5e81d3ccb6e460d7d5f), a [monorepo split](https://github.com/FindMalek/lodesong/commit/c5445cacddc69bc7c3b9f6740bc628b175641984), the [generated demo library](https://github.com/FindMalek/lodesong/commit/e1c47c48551dd74bd8a08999b2f67be46a63f334), [PR previews](https://github.com/FindMalek/lodesong/commit/d3e2cee11b91e56b05f25eb5ee70973be51782b3) and [release 0.3.0](https://github.com/FindMalek/lodesong/commit/db4685f40be6de5ecd7116a62aef7af4144f79c5).
+
+- **Oct 22 to 26, 105 commits.** [`v1.0.0`](https://github.com/FindMalek/lodesong/releases/tag/v1.0.0) went out on Oct 24 (52 commits that day) and `v1.8.0` on Oct 26. Release-please cut a release for almost every batch of merges, so the changelog is a real list of what shipped.
+- **Oct 28, `v1.9.0`.** The project was called keep-player until now. [PR #380](https://github.com/FindMalek/lodesong/pull/380) renamed it to lodesong, and a [promo video app](https://github.com/FindMalek/lodesong/pull/377) and a radio preview landed with it.
+- **Oct 31, `v1.10.0`.** [Follow artists and new releases](https://github.com/FindMalek/lodesong/pull/398), [custom looks with a live preview](https://github.com/FindMalek/lodesong/pull/390), a [native iPhone shell](https://github.com/FindMalek/lodesong/pull/404) you can install with a free Apple ID, a macOS fleet package, a new landing page and a QA pass ([#409](https://github.com/FindMalek/lodesong/pull/409)) that fixed console errors and a 404 on every import visit.
+- **Nov 2, `v1.11.0` and `v1.11.1`.** [Aura](https://github.com/FindMalek/lodesong/pull/423): the energy, softness and speed of a mix now come from AudioMuse energy, valence and BPM when the server has them, and tags are the fallback. Then a [deploy fix](https://github.com/FindMalek/lodesong/pull/425) so the container always pulls the image.
+
+![The home page of the demo library: a made for you row with four daily mixes, discover weekly, release radar and daylist, then recently added albums under it.](/project/lodesong/home.png)
+
+_Home on the generated demo library, from `v1.11`. The made for you row is built from what I play, with the same rules as Spotify's mixes but only songs I own._
 
 I'm not going to pretend that pace is calm. It's fast, and fast means rough edges. More on those at the end.
 
@@ -165,8 +174,8 @@ My home internet is slow. Streaming from the lab over it is the weakest part, an
 
 The demo library has no real music, only generated tones and flat covers in my screenshots, so how it looks with real album art is something you can't see here. I also haven't measured the gapless swap, or anything over a slow link.
 
-A desktop app is possible. The web version comes first. The plan is boring: fix the obvious bugs, make it quicker on my slow connection, and keep it ugly in exactly the way I like.
+Desktop and phone shells exist now, a macOS app and an iPhone one, but the web player is the one I use every day. I'm calling the project done: it does what I built it for, I use it daily, and what is left is a [roadmap](https://github.com/FindMalek/lodesong/blob/main/docs/ROADMAP.md) of nice-to-haves, not gaps. I'll fix bugs as I hit them and keep it ugly in exactly the way I like.
 
 ## Tests and tooling
 
-The repo has 48 unit test files and 46 Playwright [e2e specs](https://github.com/FindMalek/lodesong/tree/db4685f40be6de5ecd7116a62aef7af4144f79c5/e2e), including accessibility and layout shift checks. CI runs typecheck, lint, a color check, tests, the bundle size budget and the e2e suite against the fake Navidrome. Every pull request gets a preview deployment with the generated demo library.
+The repo has 65 unit test files and 59 Playwright [e2e specs](https://github.com/FindMalek/lodesong/tree/main/e2e), including accessibility and layout shift checks. CI runs typecheck, lint, a color check, tests, the bundle size budget and the e2e suite against the fake Navidrome. Every pull request gets a preview deployment with the generated demo library.
