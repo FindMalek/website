@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" role="img" aria-labelledby="t d" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <title id="t">Message analysis flow</title>
+  <desc id="d">A recruiter and candidate conversation goes into two analyzers. The interview analyzer creates or updates interviews, calendar entries and notifications. The task extractor creates tasks with reminders and closes them when a later message resolves them. Evals and traces watch both analyzers.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <g font-size="14" text-anchor="middle" fill="#f8fafc">
+    <rect x="20" y="125" width="150" height="70" rx="10" fill="#334155"/>
+    <text x="95" y="155">Conversation</text>
+    <text x="95" y="175" font-size="12" fill="#cbd5e1">recruiter and candidate</text>
+
+    <rect x="300" y="40" width="170" height="70" rx="10" fill="#1d4ed8"/>
+    <text x="385" y="70">Interview analyzer</text>
+    <text x="385" y="90" font-size="12" fill="#bfdbfe">confirmed, moved, missed</text>
+
+    <rect x="300" y="210" width="170" height="70" rx="10" fill="#1d4ed8"/>
+    <text x="385" y="240">Task extractor</text>
+    <text x="385" y="260" font-size="12" fill="#bfdbfe">new tasks, resolved tasks</text>
+
+    <rect x="570" y="40" width="170" height="70" rx="10" fill="#334155"/>
+    <text x="655" y="70">Interview</text>
+    <text x="655" y="90" font-size="12" fill="#cbd5e1">calendar and notifications</text>
+
+    <rect x="570" y="210" width="170" height="70" rx="10" fill="#334155"/>
+    <text x="655" y="240">Tasks</text>
+    <text x="655" y="260" font-size="12" fill="#cbd5e1">with reminders</text>
+
+    <rect x="300" y="143" width="170" height="34" rx="17" fill="#7c3aed"/>
+    <text x="385" y="165" font-size="13">Evals and traces</text>
+  </g>
+  <g stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#a)">
+    <path d="M170 150 C235 150 235 75 298 75"/>
+    <path d="M170 170 C235 170 235 245 298 245"/>
+    <path d="M470 75 H568"/>
+    <path d="M470 245 H568"/>
+  </g>
+  <g stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 4" fill="none" marker-end="url(#a)">
+    <path d="M385 143 V112"/>
+    <path d="M385 177 V208"/>
+  </g>
+</svg>

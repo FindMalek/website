@@ -35,6 +35,8 @@ The interview analyzer reads a conversation and decides whether an interview was
 
 The task extractor turns recruiter messages into structured tasks with reminders, and marks a task finished when a later message resolves it. It was built eval first: the PR that introduced the full task shape also introduced the scoring for it.
 
+![High-level flow of the message analysis: a recruiter and candidate conversation goes into an interview analyzer and a task extractor. The interview analyzer drives interviews, calendar entries and notifications. The task extractor drives tasks with reminders. Evals and traces cover both analyzers.](/work/jobflow/message-analysis-flow.svg)
+
 Both pipelines were rolled out behind a feature flag. After the rollout I deleted the retired v1 to v3 code, about 16,000 lines, so there is one pipeline to maintain.
 
 ## Evals and tracing
