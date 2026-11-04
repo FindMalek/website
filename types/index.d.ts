@@ -1,6 +1,6 @@
 import { Popover } from "@headlessui/react"
 
-export * from "./spotify"
+export * from "./music"
 
 export type SiteConfig = {
   name: string
@@ -12,7 +12,6 @@ export type SiteConfig = {
     facebook: string
     instagram: string
     linkedin: string
-    spotify: string
     resume: string
   }
   images: {

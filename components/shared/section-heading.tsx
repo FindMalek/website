@@ -14,7 +14,7 @@ interface Direct {
 interface SectionHeadingProps {
   id?: string
   /**
-   * Section anchor to copy a link to, e.g. "playlists" -> /#playlists.
+   * Section anchor to copy a link to, e.g. "music" -> /#music.
    * Separate from `id` (the actual DOM id) since the enclosing <section>
    * often already owns that id -- setting both here would create a
    * duplicate DOM id.
