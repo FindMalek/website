@@ -30,7 +30,6 @@ import { cn } from "@/lib/utils"
 const PERFORATED_EDGE =
   "radial-gradient(circle at center, transparent 2.6px, black 3.1px) -4px -4px / 8px 8px round, linear-gradient(black, black) center / calc(100% - 7px) calc(100% - 7px) no-repeat"
 
-const STORAGE_KEY = "findmalek:stamps:v1"
 const MAIN_ANCHOR = "main"
 const DRAG_THRESHOLD_PX = 4
 const AUTOSCROLL_EDGE_PX = 64
@@ -81,57 +80,18 @@ type Placements = Record<string, Placement>
 
 const NO_PLACEMENTS: Placements = {}
 
-function isPlacement(value: unknown): value is Placement {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "anchor" in value &&
-    typeof value.anchor === "string" &&
-    "dx" in value &&
-    typeof value.dx === "number" &&
-    "dy" in value &&
-    typeof value.dy === "number" &&
-    "rotate" in value &&
-    typeof value.rotate === "number" &&
-    "postmarkedOn" in value &&
-    typeof value.postmarkedOn === "string"
-  )
-}
-
-function readStoredPlacements(): Placements {
-  try {
-    const parsed: unknown = JSON.parse(
-      window.localStorage.getItem(STORAGE_KEY) ?? "{}"
-    )
-    if (typeof parsed !== "object" || parsed === null) return NO_PLACEMENTS
-    const placements: Placements = {}
-    for (const stamp of ABOUT_STAMPS) {
-      const value: unknown = Reflect.get(parsed, stamp.id)
-      if (isPlacement(value)) placements[stamp.id] = value
-    }
-    return placements
-  } catch {
-    return NO_PLACEMENTS
-  }
-}
-
-// Module-level store so the hint next to the social links and the stamps
-// themselves share one source of truth without a provider around both.
+// Module-level store, in memory only: a peeled stamp stays peeled until the
+// page is refreshed, which puts everything back.
 let placements: Placements | null = null
 const listeners = new Set<() => void>()
 
 function getPlacements(): Placements {
-  placements ??= readStoredPlacements()
+  placements ??= NO_PLACEMENTS
   return placements
 }
 
 function setPlacements(next: Placements) {
   placements = next
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-  } catch {
-    // Private mode or blocked storage: stamps still move, just not remembered.
-  }
   listeners.forEach((listener) => listener())
 }
 
@@ -731,27 +691,5 @@ export function AboutOverviewStamps() {
           document.body
         )}
     </div>
-  )
-}
-
-export function AboutOverviewStampsHint() {
-  const current = usePlacements()
-  const stuckCount = Object.keys(current).length
-
-  if (stuckCount === 0) {
-    return <p className="text-muted-foreground text-xs">The stamps peel off.</p>
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={() => {
-        setPlacements(NO_PLACEMENTS)
-        playStampPeel()
-      }}
-      className="text-muted-foreground hover:text-foreground text-xs underline-offset-4 transition-colors hover:underline"
-    >
-      Put {stuckCount === 1 ? "the stamp" : `all ${stuckCount} stamps`} back
-    </button>
   )
 }

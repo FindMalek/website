@@ -7,7 +7,7 @@ import {
   SiMarkdown,
   SiOpenai,
 } from "@icons-pack/react-simple-icons"
-import { ArrowLeft, ArrowRight, Share } from "lucide-react"
+import { ArrowLeft, ArrowRight, Share } from "@/components/shared/pixel-icons"
 import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"

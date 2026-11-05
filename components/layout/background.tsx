@@ -1,25 +1,11 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
-import { motion, useReducedMotion } from "motion/react"
 
 import { PAGES } from "@/config/consts"
-import { purplePurse } from "@/config/fonts"
 
-function generateSquares(
-  count: number,
-  width: number,
-  height: number
-): Array<{ id: number; pos: [number, number] }> {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    pos: [
-      Math.floor((Math.random() * width) / 100),
-      Math.floor((Math.random() * height) / 100),
-    ] as [number, number],
-  }))
-}
+import { DitherBackdrop } from "@/components/dither/dither-backdrop"
 
 function getPageLabel(pathname: string): string {
   // Check if path has more than one segment (has a dynamic part)
@@ -40,22 +26,18 @@ function getPageLabel(pathname: string): string {
 }
 
 // Distance (px) over which the page label fades out as the footer wordmark
-// rises into view, so the two big serif words never stack on each other.
+// rises into view, so the two big words never stack on each other.
 const LABEL_FADE_DISTANCE = 320
 
-// Squares stay visible in the gutters but drop to a faint trace under the
-// content column, so moving shapes never sit at full weight behind text.
-const SQUARES_MASK =
-  "linear-gradient(to right, black, black calc(50% - 32rem), rgb(0 0 0 / 0.25) calc(50% - 22rem), rgb(0 0 0 / 0.25) calc(50% + 22rem), black calc(50% + 32rem))"
-
+/**
+ * The page's static ground: a dithered nebula and starfield, and a huge mono page label.
+ * Nothing moves here. The old drifting squares and blurred glow blobs are
+ * gone; motion now lives only in deliberate scenes (see the dither design
+ * system rules).
+ */
 export function Background() {
   const pathname = usePathname()
-  const prefersReducedMotion = useReducedMotion()
   const pageLabel = getPageLabel(pathname)
-  const [squares, setSquares] = useState<
-    Array<{ id: number; pos: [number, number] }>
-  >([])
-  const [isMounted, setIsMounted] = useState(false)
   const labelRef = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
@@ -85,121 +67,18 @@ export function Background() {
     }
   }, [pageLabel])
 
-  useEffect(() => {
-    // Square positions depend on window dimensions, which only exist client-side,
-    // so this can't be computed as a lazy useState initializer without a hydration
-    // mismatch -- an effect-driven mount pass is the documented escape hatch here.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsMounted(true)
-    setSquares(generateSquares(20, window.innerWidth, window.innerHeight))
-  }, [])
-
-  const updateSquarePosition = (id: number) => {
-    if (typeof window === "undefined") return
-
-    setSquares((currentSquares) =>
-      currentSquares.map((sq) =>
-        sq.id === id
-          ? {
-              ...sq,
-              pos: [
-                Math.floor((Math.random() * window.innerWidth) / 100),
-                Math.floor((Math.random() * window.innerHeight) / 100),
-              ],
-            }
-          : sq
-      )
-    )
-  }
-
   return (
-    <div className="fixed left-0 top-0 isolate -z-50 h-full w-full overflow-hidden dark:bg-gray-950">
-      <svg
-        className="absolute inset-0 -z-10 h-full w-full stroke-gray-900/10 [mask-image:radial-gradient(110%_120%_at_top_right,white,transparent)] dark:stroke-white/10"
-        aria-hidden="true"
-      >
-        <defs>
-          <pattern
-            id="983e3e4c-de6d-4c3f-8d64-b9761d1534cc"
-            width={100}
-            height={100}
-            x={-1}
-            y={-1}
-            patternUnits="userSpaceOnUse"
-          >
-            <path d="M.5 100V.5H100" fill="none" />
-          </pattern>
-        </defs>
-        <rect
-          width="100%"
-          height="100%"
-          strokeWidth={0}
-          fill="url(#983e3e4c-de6d-4c3f-8d64-b9761d1534cc)"
-        />
-      </svg>
-      {isMounted && !prefersReducedMotion && (
-        <div className="absolute inset-0 -z-10 [mask-image:radial-gradient(110%_120%_at_top_right,white,transparent)]">
-          <svg
-            className="h-full w-full text-gray-900 dark:text-white"
-            style={{ maskImage: SQUARES_MASK, WebkitMaskImage: SQUARES_MASK }}
-            aria-hidden="true"
-          >
-            <g transform="translate(-1 -1)">
-              {squares.map(({ pos: [x, y], id }, index) => (
-                <motion.rect
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.1 }}
-                  transition={{
-                    duration: 8,
-                    repeat: 1,
-                    delay: index * 0.2,
-                    repeatType: "reverse",
-                  }}
-                  onAnimationComplete={() => updateSquarePosition(id)}
-                  key={`${x}-${y}-${index}`}
-                  width={99}
-                  height={99}
-                  x={x * 100 + 1}
-                  y={y * 100 + 1}
-                  fill="currentColor"
-                  strokeWidth="0"
-                />
-              ))}
-            </g>
-          </svg>
-        </div>
-      )}
-      {pageLabel && (
-        <div className={purplePurse.className}>
-          <h1
-            ref={labelRef}
-            className="fixed -bottom-24 -left-10 -z-40 text-[200px] font-bold text-gray-700/[0.06] dark:text-gray-700/10"
-            style={{ userSelect: "none" }}
-          >
-            {pageLabel}
-          </h1>
-        </div>
-      )}
+    <div className="bg-background fixed left-0 top-0 isolate -z-50 h-full w-full overflow-hidden">
+      <DitherBackdrop className="absolute inset-0 -z-10 simple:hidden" />
 
-      <div
-        className="absolute left-[calc(50%-4rem)] top-10 -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)]"
-        aria-hidden="true"
-      >
-        <div
-          className="aspect-[1108/502] w-[69.25rem] bg-gradient-to-r from-[#02ff84] to-[#00a6ff] opacity-10 dark:opacity-20"
-          style={{
-            clipPath:
-              "polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)",
-          }}
-        />
-        <div
-          className="aspect-[200/45] w-[20.25rem] bg-gradient-to-r from-[#3002ff] to-[#00ffff] opacity-10 dark:opacity-20"
-          style={{
-            clipPath:
-              "polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)",
-          }}
-        />
-      </div>
+      {pageLabel && (
+        <h1
+          ref={labelRef}
+          className="text-foreground/5 fixed -bottom-24 -left-10 -z-40 select-none font-mono text-9xl font-bold lowercase"
+        >
+          {pageLabel}
+        </h1>
+      )}
     </div>
   )
 }

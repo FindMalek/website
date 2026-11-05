@@ -8,7 +8,8 @@ import { MobileNavigationType, NavItemType } from "@/types"
 import { NAV_ITEMS } from "@/config/consts"
 import { scrollToAnchorSection } from "@/lib/utils"
 
-import { Icons } from "@/components/shared/icons"
+import { ChevronDownIcon, CloseIcon } from "@/components/dither/pixel-icon"
+import { ModeToggle } from "@/components/shared/mode-toggle"
 
 function MobileNavItem({ href, children }: NavItemType) {
   const pathname = usePathname()
@@ -19,7 +20,7 @@ function MobileNavItem({ href, children }: NavItemType) {
       <Popover.Button
         as={Link}
         href={href}
-        className="block py-2"
+        className="dither-hover block px-2 py-2 lowercase"
         onClick={(e: React.MouseEvent) => {
           close()
           if (scrollToAnchorSection(href, pathname)) e.preventDefault()
@@ -34,9 +35,9 @@ function MobileNavItem({ href, children }: NavItemType) {
 export function HeaderMobile(props: MobileNavigationType) {
   return (
     <Popover {...props}>
-      <Popover.Button className="group flex items-center rounded-full bg-white/50 px-4 py-2 text-sm font-medium text-zinc-950 shadow-lg shadow-zinc-900/15 ring-1 ring-zinc-900/5 backdrop-blur dark:bg-zinc-900/70 dark:text-zinc-200 dark:shadow-zinc-800/5 dark:ring-white/10 dark:hover:ring-white/20">
-        Menu
-        <Icons.chevronDown className="ml-3 h-auto w-2 stroke-zinc-500 group-hover:stroke-zinc-700 dark:group-hover:stroke-zinc-400" />
+      <Popover.Button className="border-foreground/25 bg-background/85 text-foreground dither-hover flex items-center rounded-none border px-3 py-1.5 font-mono text-sm lowercase">
+        menu
+        <ChevronDownIcon className="text-muted-foreground ml-3" />
       </Popover.Button>
       <Transition.Root>
         <Transition.Child
@@ -48,7 +49,7 @@ export function HeaderMobile(props: MobileNavigationType) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Popover.Overlay className="fixed inset-0 z-50 bg-zinc-800/40 backdrop-blur-sm dark:bg-black/80" />
+          <Popover.Overlay className="bg-background/80 fixed inset-0 z-50" />
         </Transition.Child>
         <Transition.Child
           as={Fragment}
@@ -61,18 +62,16 @@ export function HeaderMobile(props: MobileNavigationType) {
         >
           <Popover.Panel
             focus
-            className="fixed inset-x-4 top-8 z-50 origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 sm:left-auto sm:right-4 sm:w-80 dark:bg-zinc-900 dark:ring-zinc-800"
+            className="border-foreground/25 bg-background fixed inset-x-4 top-8 z-50 origin-top rounded-none border p-6 font-mono sm:left-auto sm:right-4 sm:w-80"
           >
             <div className="flex flex-row-reverse items-center justify-between">
               <Popover.Button aria-label="Close menu" className="-m-1 p-1">
-                <Icons.close className="h-6 w-6 text-zinc-500 dark:text-zinc-400" />
+                <CloseIcon className="text-muted-foreground size-5" />
               </Popover.Button>
-              <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                Navigation
-              </h2>
+              <h2 className="text-muted-foreground text-sm lowercase">navigation</h2>
             </div>
             <nav className="mt-6">
-              <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
+              <ul className="divide-foreground/10 -my-2 divide-y text-base">
                 {Object.values(NAV_ITEMS).map((item) => (
                   <MobileNavItem key={item.path} href={item.path}>
                     {item.name}
@@ -80,6 +79,9 @@ export function HeaderMobile(props: MobileNavigationType) {
                 ))}
               </ul>
             </nav>
+            <div className="border-foreground/10 mt-6 flex justify-end border-t pt-4">
+              <ModeToggle />
+            </div>
           </Popover.Panel>
         </Transition.Child>
       </Transition.Root>

@@ -7,6 +7,8 @@ import { NAV_ITEMS } from "@/config/consts"
 import { cn, scrollToAnchorSection } from "@/lib/utils"
 import { useActiveSection } from "@/hooks/use-active-section"
 
+import { ModeToggleCompact } from "@/components/shared/mode-toggle"
+
 function NavItem({ href, children, isActive }: NavItemType) {
   const pathname = usePathname()
 
@@ -18,22 +20,13 @@ function NavItem({ href, children, isActive }: NavItemType) {
           if (scrollToAnchorSection(href, pathname)) e.preventDefault()
         }}
         className={cn(
-          "relative block px-2 py-1.5 text-base transition",
+          "dither-hover relative block px-3 py-1.5 text-sm lowercase transition-colors",
           isActive
-            ? "text-cyan-900 dark:text-cyan-400"
-            : "hover:text-cyan-900 dark:hover:text-cyan-400"
+            ? "dither-active text-foreground"
+            : "text-muted-foreground hover:text-foreground"
         )}
       >
         {children}
-        {isActive && (
-          <span
-            className={cn(
-              "absolute inset-x-1 -bottom-px h-px",
-              "bg-gradient-to-r from-cyan-500/0 via-cyan-500 to-cyan-500/0",
-              "dark:from-cyan-400/0 dark:via-cyan-400/40 dark:to-cyan-400/0"
-            )}
-          />
-        )}
       </Link>
     </li>
   )
@@ -51,14 +44,8 @@ export function HeaderDesktop(props: DesktopNavigationType) {
     <nav {...props}>
       <ul
         className={cn(
-          "flex rounded-full",
-          "bg-white/50 backdrop-blur",
-          "text-zinc-800 dark:text-zinc-200",
-          "shadow-lg shadow-zinc-900/15 dark:shadow-zinc-800/5",
-          "ring-1 ring-zinc-900/5 dark:ring-white/10",
-          "px-2 py-0.5 font-medium",
-          "md:px-3 lg:px-3",
-          "dark:bg-zinc-900/70"
+          "border-foreground/25 bg-background/85 flex rounded-none border",
+          "px-1 py-0.5 font-mono"
         )}
       >
         {Object.values(NAV_ITEMS).map((item) => (
@@ -70,6 +57,9 @@ export function HeaderDesktop(props: DesktopNavigationType) {
             {item.name}
           </NavItem>
         ))}
+        <li className="border-foreground/25 ml-1 flex items-center border-l pl-1">
+          <ModeToggleCompact />
+        </li>
       </ul>
     </nav>
   )

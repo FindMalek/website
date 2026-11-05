@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils"
 
 import { AboutFacts } from "@/components/app/about-facts"
 import { AboutOverviewCardsStack } from "@/components/app/about-overview-cards-stack"
-import { AboutOverviewStampsHint } from "@/components/app/about-overview-stamps"
 import { Icons } from "@/components/shared/icons"
 
 const SOCIAL_LINKS = [
@@ -74,7 +73,6 @@ export function AboutOverview() {
                   </Link>
                 ))}
               </div>
-              <AboutOverviewStampsHint />
             </div>
           </div>
         </div>

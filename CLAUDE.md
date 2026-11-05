@@ -8,3 +8,4 @@ Rules are maintained in `.cursor/rules/` as the single source of truth — all a
 @.cursor/rules/03-worktree-workflow.mdc
 @.cursor/rules/04-issue-authoring.mdc
 @.cursor/rules/05-resume-data-schema.mdc
+@.cursor/rules/06-dither-design-system.mdc

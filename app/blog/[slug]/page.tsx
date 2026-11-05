@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MDXContent } from "@content-collections/mdx/react"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft } from "@/components/shared/pixel-icons"
 
 import { siteConfig } from "@/config/site"
 import {

@@ -31,7 +31,7 @@ import {
   PlusIcon,
   SquareIcon,
   XIcon,
-} from "lucide-react"
+} from "@/components/shared/pixel-icons"
 import { nanoid } from "nanoid"
 
 import { cn } from "@/lib/utils"

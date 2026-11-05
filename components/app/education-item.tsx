@@ -48,7 +48,7 @@ export function EducationItem({ item }: { item: EducationEntry }) {
 
   return (
     <Collapsible className="group/education border-foreground/10 border-b py-4 last:border-b-0">
-      <CollapsibleTrigger className="hover:bg-muted/50 -mx-2 flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors">
+      <CollapsibleTrigger className="dither-hover -mx-2 flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors">
         {header}
 
         <Icons.chevronDown className="text-muted-foreground size-4 shrink-0 transition-transform group-data-[state=open]/education:rotate-180" />

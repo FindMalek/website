@@ -51,7 +51,7 @@ export function ProjectContributionCard({
                 rel="noopener noreferrer"
                 title={pullRequest.title}
                 className={cn(
-                  "hover:bg-muted -mx-1.5 flex min-w-0 flex-1 items-baseline gap-2 rounded px-1.5 py-1 text-xs no-underline transition-colors",
+                  "dither-hover -mx-1.5 flex min-w-0 flex-1 items-baseline gap-2 rounded px-1.5 py-1 text-xs no-underline transition-colors",
                   pullRequest.post && "mr-0"
                 )}
               >

@@ -40,13 +40,13 @@ export function SectionHeading({
     <div
       id={id}
       className={cn(
-        "mb-6 flex items-center justify-between",
+        "mb-4 flex items-center justify-between",
         id && "[scroll-margin-top:var(--header-height,6rem)]",
         className
       )}
     >
       <div>
-        <h2 className="group/title mb-2 flex items-center gap-1.5 text-lg font-semibold">
+        <h2 className="dither-title group/title mb-2 flex items-center gap-1.5 text-lg font-semibold">
           {title}
           {count !== undefined && (
             <sup className="text-muted-foreground top-[-0.75em] ml-2.5 text-xs font-medium tracking-normal">

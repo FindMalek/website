@@ -14,10 +14,11 @@ import {
   sortWorkExperiences,
 } from "@/lib/utils"
 
+import { DitherOcean } from "@/components/dither/dither-ocean"
 import { AboutBooks } from "@/components/app/about-books"
-import { AboutMusic } from "@/components/app/about-music"
+import { AboutListening } from "@/components/app/about-listening"
 import { AboutOverview } from "@/components/app/about-overview"
-import { ClientsMarquee } from "@/components/app/clients-marquee"
+import { ClientsFleet } from "@/components/app/clients-fleet"
 import { CollapsibleList } from "@/components/app/collapsible-list"
 import { EducationItem } from "@/components/app/education-item"
 import {
@@ -43,13 +44,11 @@ import { WorkExperienceItem } from "@/components/app/work-experience-item"
 import { LatestPosts } from "@/components/blog/latest-posts"
 
 import { getMultipleRepoInfo } from "@/actions/github"
-import { getUserPlaylists } from "@/actions/spotify"
 
 const SOURCE_REPO_URL = REPOSITORIES[0]
 const GITHUB_USERNAME = SOURCE_REPO_URL.split("/").at(-2) ?? "findmalek"
 
 export default async function Home() {
-  const playlists = await getUserPlaylists(20, 0)
   const resumeData = await getResumeData()
   const educationItems = resumeData.sections.education.items.filter(
     (item) => !item.hidden
@@ -85,7 +84,14 @@ export default async function Home() {
 
       <div className="stripe-divider" />
 
-      <Panel id="about">
+      <Panel id="about" className="scene-halo isolate">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 simple:hidden"
+        >
+          <DitherOcean variant="section" className="absolute inset-0" />
+        </div>
+
         <PanelHeader>
           <HelloTitle className="text-balance text-2xl font-bold leading-tight tracking-tight" />
           <PanelDescription>
@@ -203,8 +209,8 @@ export default async function Home() {
           </PanelTitle>
         </PanelHeader>
 
-        <PanelContent className="overflow-hidden p-0">
-          <ClientsMarquee />
+        <PanelContent className="p-0">
+          <ClientsFleet />
         </PanelContent>
       </Panel>
 
@@ -335,7 +341,7 @@ export default async function Home() {
             <h3 className="mb-4 text-xl font-semibold">Personal</h3>
 
             <div className="space-y-8">
-              <AboutMusic playlists={playlists.items} />
+              <AboutListening />
 
               <div className="border-line border-t pt-8">
                 <AboutBooks />

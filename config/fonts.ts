@@ -1,14 +1,7 @@
-import { Geist, Geist_Mono, Old_Standard_TT, Poppins } from "next/font/google"
-
-import { cn } from "@/lib/utils"
+import { Geist, Geist_Mono, Old_Standard_TT } from "next/font/google"
 
 export const purplePurse = Old_Standard_TT({
   weight: ["700"],
-  subsets: ["latin"],
-})
-
-export const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
 })
 
@@ -24,9 +17,3 @@ export const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
-
-export const fonts = cn(
-  poppins.className,
-  purplePurse.className,
-  "touch-manipulation font-sans antialiased"
-)

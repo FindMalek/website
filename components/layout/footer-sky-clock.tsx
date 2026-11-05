@@ -40,23 +40,16 @@ export function FooterSkyClock({ className }: { className?: string }) {
   )
   if (minute === null) return null
 
-  const { phase, stops, time } = getTunisSky(new Date(minute * MINUTE))
+  const { phase, time } = getTunisSky(new Date(minute * MINUTE))
 
   return (
     <span
       className={cn(
-        "text-muted-foreground inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em]",
+        "text-muted-foreground inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest",
         className
       )}
     >
-      <span
-        aria-hidden
-        className="size-2 shrink-0 rounded-[1px]"
-        style={{
-          backgroundImage: `linear-gradient(90deg, ${stops.join(", ")})`,
-          boxShadow: `0 0 8px ${stops[1]}66`,
-        }}
-      />
+      <span aria-hidden className="bg-foreground size-2 shrink-0" />
       <span>
         Tunis · <time dateTime={time}>{time}</time>
       </span>

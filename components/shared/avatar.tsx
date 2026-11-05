@@ -3,6 +3,8 @@ import Link from "next/link"
 
 import { AvatarContainerType } from "@/types"
 
+import { DitherImage } from "@/components/dither/dither-image"
+
 import { cn } from "@/lib/utils"
 
 export function AvatarContainer({ className, ...props }: AvatarContainerType) {
@@ -24,10 +26,13 @@ export function AvatarContainer({ className, ...props }: AvatarContainerType) {
 
 export function Avatar({
   large = false,
+  square = false,
   className,
   style,
 }: {
   large?: boolean
+  /** Square, hard-edged and framed: the dither design system's portrait. */
+  square?: boolean
   className?: string
   style?: React.CSSProperties
 }) {
@@ -35,25 +40,33 @@ export function Avatar({
     <Link
       href="/"
       aria-label="Home"
+      data-dither-group
       className={cn(className, "pointer-events-auto")}
       style={style}
     >
-      <Image
-        src={"/about/author.png"}
-        alt="Malek Gara-Hellal avatar"
-        sizes={large ? "4rem" : "2.25rem"}
+      <DitherImage
+        src="/about/author.png"
+        cell={2}
         className={cn(
-          "rounded-full",
+          square ? "border-foreground/30 rounded-none border" : "rounded-full",
           "bg-cyan-800 dark:bg-cyan-400",
-          "object-cover",
-          large
-            ? "size-12 sm:size-12 md:size-16 xl:size-16"
-            : "size-9 sm:size-9 md:size-9 lg:size-10 xl:size-10"
+          square
+            ? "size-20 sm:size-24"
+            : large
+              ? "size-12 sm:size-12 md:size-16 xl:size-16"
+              : "size-9 sm:size-9 md:size-9 lg:size-10 xl:size-10"
         )}
-        width={300}
-        height={300}
-        priority
-      />
+      >
+        <Image
+          src={"/about/author.png"}
+          alt="Malek Gara-Hellal avatar"
+          sizes={square ? "6rem" : large ? "4rem" : "2.25rem"}
+          className={cn("size-full object-cover", !square && "rounded-full")}
+          width={300}
+          height={300}
+          priority
+        />
+      </DitherImage>
     </Link>
   )
 }

@@ -1,20 +1,31 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import dynamic from "next/dynamic"
 import { useChatDock } from "@/providers/chat-provider"
 import { AnimatePresence, motion } from "motion/react"
 
 import { emitChatActivity } from "@/lib/chat-activity"
 import { cn } from "@/lib/utils"
+import { useChatMetrics } from "@/hooks/use-chat-metrics"
 import { useContactChat } from "@/hooks/use-contact-chat"
 
 import { ContactChatBotErrorMessage } from "@/components/app/contact-chat-bot-error-message"
-import { ContactChatMessage } from "@/components/app/contact-chat-message"
 import { ContactSuggestedPrompts } from "@/components/app/contact-suggeted-prompts"
 import { Icons } from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import { PromptInputSubmit } from "@/components/ui/prompt-input"
 import { Textarea } from "@/components/ui/textarea"
+
+// The markdown, code and math renderers behind a message are heavy and only
+// needed once a conversation is open, so they load on demand, not on every page.
+const ContactChatMessage = dynamic(
+  () =>
+    import("@/components/app/contact-chat-message").then(
+      (m) => m.ContactChatMessage
+    ),
+  { ssr: false }
+)
 
 const AT_BOTTOM_THRESHOLD = 24
 
@@ -36,6 +47,7 @@ export function ChatFloatingContainer() {
   } = useContactChat()
 
   const isDocked = dockState === "docked"
+  const metrics = useChatMetrics(messages, isLoading)
 
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
@@ -130,7 +142,7 @@ export function ChatFloatingContainer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-background/70"
           />
         )}
       </AnimatePresence>
@@ -147,11 +159,19 @@ export function ChatFloatingContainer() {
         )}
       >
         {isDocked && (
-          <div className="bg-background/95 relative mb-2 flex max-h-[60vh] flex-col overflow-hidden rounded-2xl border shadow-2xl backdrop-blur">
+          <div className="bg-background relative mb-2 flex max-h-[60vh] flex-col overflow-hidden rounded-none border font-mono">
+            <div className="border-foreground/15 text-muted-foreground flex items-center gap-3 border-b px-3 py-1.5 text-xs">
+              <span aria-hidden="true" className="flex gap-1">
+                {[0, 1, 2].map((i) => (
+                  <span key={i} className="border-foreground/40 size-2 border" />
+                ))}
+              </span>
+              <span className="truncate">visitor@findmalek: ~/chat</span>
+            </div>
             <div
               ref={scrollAreaRef}
               onScroll={checkIsAtBottom}
-              className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto p-4"
+              className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4"
             >
               {messages.map((message) => (
                 <div
@@ -161,17 +181,36 @@ export function ChatFloatingContainer() {
                     else messageRefs.current.delete(message.id)
                   }}
                 >
-                  <ContactChatMessage message={message} />
+                  <ContactChatMessage
+                    message={message}
+                    meta={{ ms: metrics.timings[message.id] }}
+                  />
                 </div>
               ))}
               {(isLoading || isCancelling) && (
-                <div className="bg-muted/50 flex w-fit max-w-[80%] items-center space-x-2 rounded-lg p-3">
-                  <Icons.spinner className="h-4 w-4 animate-spin" />
-                  <p className="animate-text-gradient font-base inline-flex bg-gradient-to-r from-[#535353] via-[#c9c9c9] to-[#535353] bg-[200%_auto] bg-clip-text text-center text-xs text-transparent dark:from-[#ACACAC] dark:via-[#363636] dark:to-[#ACACAC]">
-                    Thinking...
+                <div className="font-mono text-sm">
+                  <p className="text-muted-foreground text-xs">
+                    malek@findmalek:~$ reply
+                  </p>
+                  <p className="border-foreground/20 text-muted-foreground mt-1 flex items-center gap-2 border-l pl-3">
+                    <Icons.spinner className="size-4" />
+                    thinking
+                    <span className="animate-pulse">_</span>
+                    <span className="tabular-nums">{(metrics.liveMs / 1000).toFixed(1)}s</span>
                   </p>
                 </div>
               )}
+            </div>
+
+            <div className="border-foreground/15 text-muted-foreground flex items-center justify-between border-t px-3 py-1 text-xs tabular-nums">
+              <span>
+                {isLoading
+                  ? `running ${(metrics.liveMs / 1000).toFixed(1)}s`
+                  : metrics.lastMs !== null
+                    ? `last reply ${(metrics.lastMs / 1000).toFixed(1)}s`
+                    : "ready"}
+              </span>
+              <span>~{metrics.tokens} tokens</span>
             </div>
 
             {!isAtBottom && (
@@ -181,7 +220,7 @@ export function ChatFloatingContainer() {
                 variant="outline"
                 onClick={scrollToBottom}
                 aria-label="Scroll to bottom"
-                className="bg-background dark:bg-background dark:hover:bg-muted absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full shadow-md"
+                className="bg-background dark:bg-background dark:hover:bg-muted absolute bottom-3 left-1/2 -translate-x-1/2 rounded-none"
               >
                 <Icons.down className="size-4" />
               </Button>
@@ -202,7 +241,7 @@ export function ChatFloatingContainer() {
         )}
 
         {isMessageLimitReached ? (
-          <div className="bg-muted text-muted-foreground rounded-2xl border p-3 text-center text-sm shadow-lg">
+          <div className="bg-muted text-muted-foreground rounded-none border p-3 text-center text-sm">
             Message limit reached for this conversation.
           </div>
         ) : (
@@ -210,7 +249,14 @@ export function ChatFloatingContainer() {
             onSubmit={handleFormSubmit}
             className="pb-[calc(env(safe-area-inset-bottom)+0.5rem)]"
           >
-            <div className="bg-background focus-within:ring-ring/50 relative rounded-2xl border shadow-lg transition-[color,box-shadow] focus-within:ring-[3px]">
+            <div className="bg-background focus-within:border-foreground/60 relative rounded-none border font-mono transition-colors">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute left-3 top-3 select-none text-sm"
+              >
+                <span className="text-chart-1 hidden sm:inline">visitor@findmalek</span>
+                <span className="text-muted-foreground">:~$</span>
+              </span>
               <Textarea
                 ref={inputRef}
                 value={input}
@@ -227,10 +273,10 @@ export function ChatFloatingContainer() {
                     e.currentTarget.form?.requestSubmit()
                   }
                 }}
-                placeholder="Ask me anything..."
+                placeholder="type a message"
                 disabled={isLoading || isCancelling}
                 rows={1}
-                className="max-h-40 min-h-11 resize-none rounded-2xl border-0 py-3 pl-4 pr-12 shadow-none focus-visible:ring-0"
+                className="max-h-40 min-h-11 resize-none rounded-none border-0 bg-transparent py-3 pl-14 pr-12 text-sm shadow-none focus-visible:ring-0 sm:pl-48"
               />
               <PromptInputSubmit
                 status={isLoading ? "streaming" : undefined}

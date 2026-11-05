@@ -13,6 +13,12 @@ export default async function sitemap() {
         changeFrequency: "weekly",
         priority: 1,
       },
+      {
+        url: "https://www.findmalek.com/system",
+        lastModified: currentDate,
+        changeFrequency: "monthly",
+        priority: 0.5,
+      },
     ]
 
     const workUrls = allWorks.map((work) => ({
