@@ -3,10 +3,11 @@ import "@/styles/globals.css"
 import type { Metadata, Viewport } from "next"
 import { ChatProvider } from "@/providers/chat-provider"
 
-import { geistHeading, geistMono, poppins } from "@/config/fonts"
+import { geistHeading, geistMono } from "@/config/fonts"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
+import { MonoAnnouncement } from "@/components/shared/mono-announcement"
 import { ChatFloatingContainer } from "@/components/app/chat-floating-container"
 import { FoldableEasterEgg } from "@/components/app/foldable-easter-egg"
 import { HighlightAskAction } from "@/components/app/highlight-ask-action"
@@ -84,10 +85,16 @@ export default function RootLayout({ children }: RootLayoutProps) {
     >
       <body
         suppressHydrationWarning
-        className={cn("bg-background font-sans antialiased", poppins)}
+        className="bg-background font-sans antialiased"
       >
         {/* Clip on a wrapper, not <body>: body overflow propagates to the
             viewport, which stays script-scrollable into the full-bleed lines. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var d=document.documentElement;localStorage.removeItem('findmalek:mono');if(localStorage.getItem('findmalek:view')==='simple')d.dataset.view='simple'}catch(e){}",
+          }}
+        />
         <div className="overflow-x-clip">
           <div
             className={cn(
@@ -108,6 +115,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   <Background />
                   <Analytics />
                   <Toaster />
+                  <MonoAnnouncement />
                   <TailwindIndicator />
                   <ChatFloatingContainer />
                   <HighlightAskAction />

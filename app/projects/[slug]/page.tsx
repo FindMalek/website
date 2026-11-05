@@ -17,6 +17,7 @@ import { Icons } from "@/components/shared/icons"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
+import { DitherImage } from "@/components/dither/dither-image"
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>
@@ -72,7 +73,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </Link>
 
         <div className="mb-8 pt-2">
-          <div className="border-secondary relative min-h-[120px] w-full overflow-hidden rounded-lg border-2 bg-white md:min-h-[250px]">
+          <DitherImage
+            src={image}
+            reveal
+            className="border-secondary min-h-[120px] w-full rounded-lg border-2 bg-white md:min-h-[250px]"
+          >
             <AspectRatio ratio={16 / 9}>
               <Image
                 src={image}
@@ -82,7 +87,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 priority
               />
             </AspectRatio>
-          </div>
+          </DitherImage>
         </div>
 
         <h1 className="mb-4 text-center text-4xl font-bold">{name}</h1>

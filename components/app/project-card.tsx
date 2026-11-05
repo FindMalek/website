@@ -8,6 +8,7 @@ import {
 import { ProjectRo } from "@/config/schemas"
 import { cn } from "@/lib/utils"
 
+import { DitherImage } from "@/components/dither/dither-image"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -20,7 +21,7 @@ import {
 
 export function ProjectCard({ project }: { project: ProjectRo }) {
   return (
-    <Link href={project.href}>
+    <Link href={project.href} data-dither-group>
       <Card
         className={cn(
           "bg-secondary/30 hover:bg-secondary/60 overflow-hidden rounded-xl border-2 transition-all duration-200",
@@ -43,7 +44,10 @@ export function ProjectCard({ project }: { project: ProjectRo }) {
           <CardDescription className="text-muted-foreground mb-4 pb-4 text-sm">
             {project.overview}
           </CardDescription>
-          <div className="border-secondary relative min-h-[120px] w-full overflow-hidden rounded-lg border-2 bg-white md:min-h-[180px]">
+          <DitherImage
+            src={project.image}
+            className="border-secondary min-h-[120px] w-full rounded-lg border-2 bg-white md:min-h-[180px]"
+          >
             <AspectRatio ratio={16 / 9}>
               <Image
                 src={project.image}
@@ -53,7 +57,7 @@ export function ProjectCard({ project }: { project: ProjectRo }) {
                 sizes="(min-width: 768px) 400px, 100vw"
               />
             </AspectRatio>
-          </div>
+          </DitherImage>
         </CardContent>
       </Card>
     </Link>

@@ -48,6 +48,15 @@ type Celestial = { x: number; y: number; sun: boolean; strength: number }
 
 type Content = { width: number; left: number }
 
+/**
+ * The footer follows the dither system: one ink. The Tunis-sky gradient is
+ * flattened to the page's foreground, so every shade is a grey on dark and an
+ * ink on light, and the piece reads clearly instead of fading into a tint.
+ */
+function monochrome(palette: WordmarkPalette): WordmarkPalette {
+  return { ...palette, brand: palette.brand.map(() => palette.foreground) }
+}
+
 const WORD_RAMP = " .:-=+*%#@"
 const SUN_DISK = "oO@"
 const RAY_CHARS = ["-", "/", "|", "\\"]
@@ -296,6 +305,8 @@ export function FooterWordmark() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
+    // The simple view hides the wordmark; it must not run its own loop either.
+    if (document.documentElement.dataset.view === "simple") return
     const measure = measureRef.current
     const canvas = canvasRef.current
     const ctx = canvas?.getContext("2d")
@@ -311,7 +322,7 @@ export function FooterWordmark() {
 
     let grid: Grid | null = null
     let sky = getTunisSky()
-    let palette: WordmarkPalette = readWordmarkPalette(measure, sky.stops)
+    let palette: WordmarkPalette = monochrome(readWordmarkPalette(measure, sky.stops))
     let celestial: Celestial | null = null
     let wordLight = new Float32Array(0)
     let glitter = 0
@@ -795,12 +806,12 @@ export function FooterWordmark() {
     })
     const sizing = new ResizeObserver(layout)
     const theme = new MutationObserver(() => {
-      palette = readWordmarkPalette(measure, sky.stops)
+      palette = monochrome(readWordmarkPalette(measure, sky.stops))
       layout()
     })
     const skyTimer = window.setInterval(() => {
       sky = getTunisSky()
-      palette = readWordmarkPalette(measure, sky.stops)
+      palette = monochrome(readWordmarkPalette(measure, sky.stops))
       updateCelestial()
       draw(performance.now())
     }, SKY_REFRESH_MS)

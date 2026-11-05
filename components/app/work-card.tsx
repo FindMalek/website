@@ -61,7 +61,7 @@ export function WorkCard({ work }: { work: WorkRo }) {
     <Link
       href={href}
       onMouseMove={onMouseMove}
-      className="border-foreground/20 hover:border-primary/30 hover:bg-muted/50 group relative rounded-2xl border-[1.15px] p-4 transition-all duration-300 sm:p-6"
+      className="border-foreground/20 dither-hover hover:border-primary/40 group relative rounded-2xl border-[1.15px] p-4 transition-all duration-300 sm:p-6"
     >
       <WorkCardPattern mousePosition={mousePosition} />
       <div className="items-left flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">

@@ -1,7 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-
 interface SuggestedPromptsProps {
   onSuggestionClick: (suggestion: string) => void
 }
@@ -19,17 +17,19 @@ export function ContactSuggestedPrompts({
   ]
 
   return (
-    <div className="border-t p-4">
-      <div className="flex flex-wrap justify-center gap-2">
+    <div className="border-t p-4 font-mono">
+      <p className="text-muted-foreground mb-2 text-xs"># try one of these</p>
+      <div className="flex flex-col items-start gap-1">
         {suggestions.map((suggestion, index) => (
-          <Button
+          <button
             key={index}
-            variant="outline"
-            className="rounded-full text-sm"
+            type="button"
+            className="dither-hover text-foreground -mx-1 px-1 text-left text-sm"
             onClick={() => onSuggestionClick(suggestion)}
           >
-            {suggestion}
-          </Button>
+            <span className="text-chart-1 mr-2">$</span>
+            {suggestion.toLowerCase()}
+          </button>
         ))}
       </div>
     </div>

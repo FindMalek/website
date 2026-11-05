@@ -37,6 +37,12 @@ export const PAGES = {
     name: "Stack",
     text: "Explore my tech stack",
   },
+  SYSTEM: {
+    path: "/system",
+    label: "System.",
+    name: "System",
+    text: "Peek at the dither design system",
+  },
   BLOG: {
     path: "/blog",
     label: "Blog.",

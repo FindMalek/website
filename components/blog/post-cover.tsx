@@ -3,6 +3,7 @@ import Image from "next/image"
 import type { PostSummary } from "@/lib/blog"
 import { cn } from "@/lib/utils"
 
+import { DitherImage } from "@/components/dither/dither-image"
 import { Icons } from "@/components/shared/icons"
 
 interface PostCoverProps {
@@ -18,14 +19,14 @@ export function PostCover({
   priority = false,
   className,
 }: PostCoverProps) {
-  return (
-    <div
-      className={cn(
-        "border-line bg-muted/40 relative aspect-[1200/630] overflow-hidden rounded-lg border",
-        className
-      )}
-    >
-      {post.image ? (
+  const frame = cn(
+    "border-line bg-muted/40 relative aspect-[1200/630] overflow-hidden rounded-lg border",
+    className
+  )
+
+  if (post.image) {
+    return (
+      <DitherImage src={post.image} className={frame}>
         <Image
           src={post.image}
           alt={post.imageAlt ?? ""}
@@ -34,14 +35,18 @@ export function PostCover({
           priority={priority}
           className="object-cover"
         />
-      ) : (
-        <div
-          aria-hidden
-          className="text-muted-foreground/50 flex size-full items-center justify-center bg-[repeating-linear-gradient(315deg,var(--line)_0,var(--line)_1px,transparent_0,transparent_50%)] bg-[length:10px_10px]"
-        >
-          <Icons.blog className="size-6" />
-        </div>
-      )}
+      </DitherImage>
+    )
+  }
+
+  return (
+    <div className={frame}>
+      <div
+        aria-hidden
+        className="text-muted-foreground/50 flex size-full items-center justify-center bg-[repeating-linear-gradient(315deg,var(--line)_0,var(--line)_1px,transparent_0,transparent_50%)] bg-[length:10px_10px]"
+      >
+        <Icons.blog className="size-6" />
+      </div>
     </div>
   )
 }

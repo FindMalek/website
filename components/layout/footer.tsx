@@ -3,15 +3,16 @@ import Link from "next/link"
 import { siteConfig } from "@/config/site"
 
 import { FooterSkyClock } from "@/components/layout/footer-sky-clock"
+import { ViewSwitch } from "@/components/shared/view-switch"
 import { FooterWordmark } from "@/components/layout/footer-wordmark"
 import { Icons } from "@/components/shared/icons"
-import { ModeToggle } from "@/components/shared/mode-toggle"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="border-secondary-foreground/20 w-full space-y-4 border-t px-2 py-4">
+    <footer className="w-full space-y-4 px-2 pb-4">
+      <div className="stripe-divider" />
       <div className="container flex items-center gap-4">
         <Link href={siteConfig.links.facebook} target="_blank">
           <Icons.facebook className="text-foreground/80 hover:text-foreground size-4 transition-all duration-200" />
@@ -36,11 +37,11 @@ export function Footer() {
         </p>
         <div className="flex items-center gap-4">
           <FooterSkyClock className="hidden sm:inline-flex" />
-          <ModeToggle />
+          <ViewSwitch />
         </div>
       </div>
 
-      <div className="mb-20 pt-2">
+      <div className="mb-20 pt-2 simple:hidden">
         <FooterWordmark />
       </div>
     </footer>

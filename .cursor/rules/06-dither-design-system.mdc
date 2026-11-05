@@ -1,0 +1,75 @@
+---
+description: The dither / ASCII design system - principles, tokens, components, and performance rules
+alwaysApply: true
+---
+
+# Dither design system
+
+The site is an ASCII dither design system: open, minimalist, organised. Dither is a material, not decoration. Scenes live in open space; content stays plain and aligned to the grid.
+
+## Principles
+
+1. **Tone is a threshold.** Gradients are quantised through a Bayer matrix. No smooth fills where a dither would do.
+2. **Open, not always.** Scenes are placed deliberately (hero, about, section breaks). Most of the page is calm. A scene may sit behind copy only when it is dimmed, the text has a halo (`.scene-halo`, or `.scene-text` for a hero), and anything that must stay clean is marked `data-scene-avoid` so the scene dissolves around it.
+3. **Mono is the voice.** `font-mono` (Geist Mono) for the profile, headings, labels, captions and metadata. Body copy stays readable.
+4. **Static at rest where possible.** Anything that animates pauses off-screen and while scrolling, and has a frozen frame for reduced motion.
+5. **One palette.** README blues in dark, the same ramp as ink on paper in light. Read it from `lib/dither/theme.ts`, never hard-code.
+
+## Tokens (`lib/dither/theme.ts`, `styles/dither.css`)
+
+- `DITHER_DARK` / `DITHER_LIGHT`: bg, plate, 6-step palette, glyph inks. Get one with `ditherTheme(dark)`.
+- `readmeStep(tone, col, row, levels)`: the README-exact 4x4 Bayer quantiser. Use it for every scene.
+- CSS: `--dither-px`, `--dither-m0..m100` (Bayer mask tiles), `.stripe-divider` (static stipple rule), `.dither-title` (title tick), `.dither-veil` (image dissolve), `.scene-text` (halo for text on a scene), `.pixelated`.
+
+## Global look (set once in `styles/globals.css`, do not re-introduce per component)
+
+- Font: `--font-sans` is Geist Mono, so the whole site is mono. Do not add other families.
+- Corners: `--radius` and every `--radius-*` token are 0. Use `rounded-full` only for status dots.
+- Elevation: every `--shadow-*` token is flat. No blur, no glow blobs, no backdrop-blur.
+- Hover: add `dither-hover` (and `dither-active` for selected). Buttons already have it.
+- Page ground: `DitherBackdrop`. Three nebula layers crossfade and drift on 55/80/105s cycles so the clouds slowly change shape, two small galaxies glide across the gutters (xl only), stars breathe at 5fps. All motion is compositor-only CSS. Keep it dim (about 20% overall); it frames the page, it is never the subject.
+- Icons: `components/shared/pixel-icons.tsx` maps the lucide names to pixelarticons (`@nsmr/pixelart-react`), so every shape sits on a pixel grid. Import icons from there, never from `lucide-react`. Add a missing glyph as a `PixelBitmap` (see Star, ArrowUpRight). Brand marks (`Si*`) stay as they are.
+- Theme switch (`components/shared/mode-toggle.tsx`): an icons-only sun | moon segmented control (mobile menu; labels in aria-label/title) and a compact pixel sun/moon button at the end of the nav bar (not in the footer). The active mode is stippled; icons are 7x7 bitmaps at 14px. Always visible, never a faint ghost icon.
+- Chat: a real terminal. Square window dots and a `visitor@findmalek: ~/chat` title, `visitor@findmalek:~$` prompts, replies printed as command output (`malek@findmalek:~$ reply`) with a `[1.8s · ~214 tokens]` footer, and a status bar with last-reply time and a session token estimate (`hooks/use-chat-metrics.ts`). No avatars, bubbles or line counts. The "ask about this" chip is a square `> ask about this` line.
+- Personal sections are compact indexed lists (numbered rows, tiny covers), like the Stack rows.
+- Listening (`AboutListening`): real data from my lodesong player, fetched server-side (`lib/lodesong.ts`, hourly cache) with `LODESONG_URL` and `LODESONG_TOKEN` in `.env.local` and Vercel env. The token must never reach the client; `/api/now-playing` proxies only the public fields. If lodesong is unreachable the block is simply omitted.
+- Small glyph icons (`ArrowUpRight`, `ExternalLink`) are exact 7x7 bitmaps at 14px (2px per cell), so they stay crisp. Draw new ones on a grid whose cell count divides the rendered size.
+
+## Black-and-white mode
+
+Six clicks on the theme switch within 3.5s turns on `html.mono` with a full-screen announcement (`MonoAnnouncement`). It is one-way within a visit (more clicks never undo it) but is NOT saved: a refresh brings the colour back. The layout script also deletes the old `findmalek:mono` key. `:root.mono` and `:root.dark.mono` replace every accent with a neutral, images go greyscale, and canvas scenes get grey palettes because they all read `ditherTheme()` (which checks `isMonochrome()`). New scenes must take their colours from `ditherTheme()`, never hard-code, or they will stay coloured in this mode.
+
+## Stamps
+
+Peeled stamps live in memory only: a refresh puts them back. There is no hint line and no reset button.
+
+## Section headers
+
+Section headers carry no artwork: a title with the stippled tick, a description, a stipple rule. Scenes belong in the hero, About and the clients band only.
+
+## Components (`components/dither/`)
+
+- `DitherGalaxy`: hero. Density field, drag to spin, tap to ignite, pointer lens, a "you live here" marker (clicking it is fatal), shooting stars, and it dissolves around `data-scene-avoid` elements.
+- `DitherFleet`: the companies band: a night sea (no moon, the page sky shows through) with boats that carry each company's logo, dithered, on their sail. Boats are damped springs following the wave height and pitching to its slope (`lib/dither/fleet.ts`), sail slowly, and cycle through every company on narrow screens. Hover names a boat, click visits its site. A screen-reader list sits beside the canvas.
+- `DitherOcean`: README aurora with a school and sharks. Sharks have anatomy (outline that follows the edge, spine, gill slits, eye, dorsal ridge, ribbed fins, forked tail); wakes brighten the dither. `variant="section"` is a tall transparent canvas behind a whole section (About): aurora only as light shafts near the top, sharks dive through the full height. `look` swaps the glyph set.
+- `DitherImage`: dithered portraits and covers that dissolve on hover.
+- Nav (`components/layout/header-*.tsx`): bordered mono rectangle, lowercase, active item stippled (`.dither-active`), hover fill `.dither-hover`, pixel icons. No blur, no shadow, no rounded corners.
+- `SoundIcon` (`pixel-icon.tsx`): pixel icons built on a grid, soft parts dithered.
+- `AsciiText`, `DitherField`: lab pieces (see /system).
+- `useDitherLoop`: the one hook for canvas scenes. Gives sizing, theme-change re-setup, pointer, drag, taps, reduced motion and the shared ticker.
+
+## Building a scene
+
+Pure field functions go in `lib/dither/` (no React). The component wraps `useDitherLoop`, draws a small pixel layer scaled up with `imageSmoothingEnabled = false`, and draws glyphs through `createGlyphAtlas` (sprites, never per-frame `fillText`). Put text over a scene with `.scene-text`.
+
+## Performance rules (non-negotiable)
+
+- Scenes set up lazily: `useDitherLoop` does nothing until the canvas is within 240px of the viewport.
+- Heavy, rarely-needed code loads on demand (the chat markdown stack is `next/dynamic`). Check first-load JS after adding dependencies; it is about 480 KB now.
+- No unused fonts: only Geist and Geist Mono (plus Old Standard TT for the footer wordmark).
+
+- Never write CSS variables or styles on `<html>` from a scroll handler. It invalidates the whole document.
+- One canvas per scene. No full-viewport masked fixed layers. Tall section canvases cap their pixel ratio (`maxDpr`) and only compute expensive fields where they are visible.
+- Slow scenes run at 20fps; only README-faithful bands run at 30.
+- Precompute everything that does not change per frame (see `Galaxy`).
+- Check with a throttled scroll run before shipping a scene; the home page must hold 60fps at 4x CPU throttle.

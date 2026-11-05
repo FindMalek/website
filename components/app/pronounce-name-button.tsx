@@ -1,10 +1,10 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
-import { Icons } from "@/components/shared/icons"
+import { SoundIcon } from "@/components/dither/pixel-icon"
 
 interface PronounceNameButtonProps {
   name: string
@@ -24,6 +24,7 @@ export function PronounceNameButton({
   className,
 }: PronounceNameButtonProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [playing, setPlaying] = useState(false)
 
   const handleClick = () => {
     const audio = audioRef.current
@@ -49,8 +50,15 @@ export function PronounceNameButton({
         className
       )}
     >
-      <audio ref={audioRef} src={AUDIO_SRC} preload="none" />
-      <Icons.volume className="size-4.5" aria-hidden />
+      <audio
+        ref={audioRef}
+        src={AUDIO_SRC}
+        preload="none"
+        onPlay={() => setPlaying(true)}
+        onEnded={() => setPlaying(false)}
+        onPause={() => setPlaying(false)}
+      />
+      <SoundIcon playing={playing} />
     </button>
   )
 }

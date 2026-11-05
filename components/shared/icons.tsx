@@ -101,7 +101,7 @@ import {
   Volume2,
   X,
   ZapIcon,
-} from "lucide-react"
+} from "@/components/shared/pixel-icons"
 import { SiLinkedin } from "react-icons/si"
 
 export type Icon = LucideIcon

@@ -1,0 +1,343 @@
+:root {
+  --dither-px: 2px;
+  --dither-m100: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='1' y='0' width='1' height='1'/%3E%3Crect x='2' y='0' width='1' height='1'/%3E%3Crect x='3' y='0' width='1' height='1'/%3E%3Crect x='0' y='1' width='1' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3Crect x='2' y='1' width='1' height='1'/%3E%3Crect x='3' y='1' width='1' height='1'/%3E%3Crect x='0' y='2' width='1' height='1'/%3E%3Crect x='1' y='2' width='1' height='1'/%3E%3Crect x='2' y='2' width='1' height='1'/%3E%3Crect x='3' y='2' width='1' height='1'/%3E%3Crect x='0' y='3' width='1' height='1'/%3E%3Crect x='1' y='3' width='1' height='1'/%3E%3Crect x='2' y='3' width='1' height='1'/%3E%3Crect x='3' y='3' width='1' height='1'/%3E%3C/svg%3E");
+  --dither-m75: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='1' y='0' width='1' height='1'/%3E%3Crect x='2' y='0' width='1' height='1'/%3E%3Crect x='3' y='0' width='1' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3Crect x='3' y='1' width='1' height='1'/%3E%3Crect x='0' y='2' width='1' height='1'/%3E%3Crect x='1' y='2' width='1' height='1'/%3E%3Crect x='2' y='2' width='1' height='1'/%3E%3Crect x='3' y='2' width='1' height='1'/%3E%3Crect x='1' y='3' width='1' height='1'/%3E%3Crect x='3' y='3' width='1' height='1'/%3E%3C/svg%3E");
+  --dither-m50: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='2' y='0' width='1' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3Crect x='3' y='1' width='1' height='1'/%3E%3Crect x='0' y='2' width='1' height='1'/%3E%3Crect x='2' y='2' width='1' height='1'/%3E%3Crect x='1' y='3' width='1' height='1'/%3E%3Crect x='3' y='3' width='1' height='1'/%3E%3C/svg%3E");
+  --dither-m25: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='2' y='0' width='1' height='1'/%3E%3Crect x='0' y='2' width='1' height='1'/%3E%3Crect x='2' y='2' width='1' height='1'/%3E%3C/svg%3E");
+  --dither-m0: linear-gradient(transparent, transparent);
+}
+
+/* Ordered-dither veil: a Bayer mask tile whose density steps down on hover,
+   dissolving the veil away to reveal what is underneath. No JS involved. */
+.dither-veil {
+  mask-image: var(--dither-m100);
+  mask-size: calc(var(--dither-px) * 4) calc(var(--dither-px) * 4);
+  image-rendering: pixelated;
+  animation: dither-cover 0.4s step-end both;
+}
+
+.dither-host:hover .dither-veil,
+.dither-host:focus-within .dither-veil,
+[data-dither-group]:hover .dither-veil,
+[data-dither-group]:focus-visible .dither-veil {
+  animation-name: dither-dissolve;
+}
+
+@keyframes dither-dissolve {
+  0% { mask-image: var(--dither-m100); }
+  20% { mask-image: var(--dither-m75); }
+  40% { mask-image: var(--dither-m50); }
+  60% { mask-image: var(--dither-m25); }
+  80%, 100% { mask-image: var(--dither-m0); }
+}
+
+@keyframes dither-cover {
+  0% { mask-image: var(--dither-m0); }
+  20% { mask-image: var(--dither-m25); }
+  40% { mask-image: var(--dither-m50); }
+  60% { mask-image: var(--dither-m75); }
+  80%, 100% { mask-image: var(--dither-m100); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dither-veil {
+    animation: none;
+  }
+  .dither-host:hover .dither-veil,
+  .dither-host:focus-within .dither-veil,
+  [data-dither-group]:hover .dither-veil,
+  [data-dither-group]:focus-visible .dither-veil {
+    mask-image: var(--dither-m0);
+  }
+}
+
+/* One-shot entrance: starts covered, dissolves shortly after load, stays clear. */
+.dither-veil.dither-veil-reveal {
+  animation: dither-dissolve 0.9s step-end 0.25s both;
+}
+
+.dither-host:hover .dither-veil.dither-veil-reveal,
+.dither-host:focus-within .dither-veil.dither-veil-reveal {
+  animation: dither-dissolve 0.9s step-end 0.25s both;
+}
+
+/* No hover on touch: dissolve the veil once on load so the real image shows. */
+@media (hover: none) {
+  .dither-veil {
+    animation: dither-dissolve 0.9s step-end 0.4s both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: none) {
+  .dither-veil {
+    animation: none;
+    mask-image: var(--dither-m0);
+  }
+}
+
+/* A small Bayer-dithered gradient tick before section titles. Static. */
+:root {
+  --dither-ramp: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='5' shape-rendering='crispEdges'%3E%3Crect x='4' y='0' width='1' height='1'/%3E%3Crect x='6' y='0' width='1' height='1'/%3E%3Crect x='8' y='0' width='1' height='1'/%3E%3Crect x='10' y='0' width='1' height='1'/%3E%3Crect x='12' y='0' width='1' height='1'/%3E%3Crect x='13' y='0' width='1' height='1'/%3E%3Crect x='14' y='0' width='1' height='1'/%3E%3Crect x='15' y='0' width='1' height='1'/%3E%3Crect x='16' y='0' width='1' height='1'/%3E%3Crect x='17' y='0' width='1' height='1'/%3E%3Crect x='18' y='0' width='1' height='1'/%3E%3Crect x='19' y='0' width='1' height='1'/%3E%3Crect x='9' y='1' width='1' height='1'/%3E%3Crect x='11' y='1' width='1' height='1'/%3E%3Crect x='13' y='1' width='1' height='1'/%3E%3Crect x='15' y='1' width='1' height='1'/%3E%3Crect x='16' y='1' width='1' height='1'/%3E%3Crect x='17' y='1' width='1' height='1'/%3E%3Crect x='18' y='1' width='1' height='1'/%3E%3Crect x='19' y='1' width='1' height='1'/%3E%3Crect x='2' y='2' width='1' height='1'/%3E%3Crect x='4' y='2' width='1' height='1'/%3E%3Crect x='6' y='2' width='1' height='1'/%3E%3Crect x='8' y='2' width='1' height='1'/%3E%3Crect x='10' y='2' width='1' height='1'/%3E%3Crect x='12' y='2' width='1' height='1'/%3E%3Crect x='14' y='2' width='1' height='1'/%3E%3Crect x='15' y='2' width='1' height='1'/%3E%3Crect x='16' y='2' width='1' height='1'/%3E%3Crect x='17' y='2' width='1' height='1'/%3E%3Crect x='18' y='2' width='1' height='1'/%3E%3Crect x='19' y='2' width='1' height='1'/%3E%3Crect x='7' y='3' width='1' height='1'/%3E%3Crect x='9' y='3' width='1' height='1'/%3E%3Crect x='11' y='3' width='1' height='1'/%3E%3Crect x='13' y='3' width='1' height='1'/%3E%3Crect x='15' y='3' width='1' height='1'/%3E%3Crect x='17' y='3' width='1' height='1'/%3E%3Crect x='18' y='3' width='1' height='1'/%3E%3Crect x='19' y='3' width='1' height='1'/%3E%3Crect x='4' y='4' width='1' height='1'/%3E%3Crect x='6' y='4' width='1' height='1'/%3E%3Crect x='8' y='4' width='1' height='1'/%3E%3Crect x='10' y='4' width='1' height='1'/%3E%3Crect x='12' y='4' width='1' height='1'/%3E%3Crect x='13' y='4' width='1' height='1'/%3E%3Crect x='14' y='4' width='1' height='1'/%3E%3Crect x='15' y='4' width='1' height='1'/%3E%3Crect x='16' y='4' width='1' height='1'/%3E%3Crect x='17' y='4' width='1' height='1'/%3E%3Crect x='18' y='4' width='1' height='1'/%3E%3Crect x='19' y='4' width='1' height='1'/%3E%3C/svg%3E");
+}
+
+.dither-title::before {
+  content: "";
+  display: inline-block;
+  width: 1.25rem;
+  height: 0.3125rem;
+  margin-right: 0.6rem;
+  vertical-align: middle;
+  background: var(--chart-2);
+  mask-image: var(--dither-ramp);
+  mask-size: 100% 100%;
+  image-rendering: pixelated;
+}
+
+/* Pixel icons: while playing, the dithered waves step on and off in turn. */
+.pixel-icon[data-playing] .pixel-wave-near {
+  animation: pixel-wave 0.8s steps(1) infinite;
+}
+
+.pixel-icon[data-playing] .pixel-wave-far {
+  animation: pixel-wave 0.8s steps(1) 0.4s infinite;
+}
+
+@keyframes pixel-wave {
+  0% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-icon[data-playing] .pixel-wave-near,
+  .pixel-icon[data-playing] .pixel-wave-far {
+    animation: none;
+  }
+}
+
+/* Text that sits on top of a scene: a halo in the page colour keeps it legible
+   without a box. */
+.scene-text {
+  --muted-foreground: color-mix(in oklab, var(--foreground) 94%, transparent);
+  text-shadow:
+    0 0 8px var(--background),
+    0 0 3px var(--background);
+}
+
+/* Hover and active fills: the element's own colour stipples in. Layered so
+   utilities (absolute, fixed...) still win on position. */
+@layer components {
+  .dither-hover {
+    position: relative;
+    isolation: isolate;
+  }
+}
+
+.dither-hover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: color-mix(in oklab, currentColor 18%, transparent);
+  mask-image: var(--dither-m0);
+  mask-size: calc(var(--dither-px) * 4) calc(var(--dither-px) * 4);
+  image-rendering: pixelated;
+}
+
+.dither-hover:hover::after,
+.dither-hover:focus-visible::after {
+  animation: dither-fill 0.28s step-end both;
+}
+
+.dither-active::after,
+.dither-active:hover::after {
+  animation: none;
+  background: color-mix(in oklab, var(--chart-2) 42%, transparent);
+  mask-image: var(--dither-m50);
+}
+
+@keyframes dither-fill {
+  0% { mask-image: var(--dither-m25); }
+  50% { mask-image: var(--dither-m50); }
+  100% { mask-image: var(--dither-m75); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dither-hover:hover::after,
+  .dither-hover:focus-visible::after {
+    animation: none;
+    mask-image: var(--dither-m50);
+  }
+}
+
+/* Gradient-clipped text (transparent fill) would be darkened by text-shadow,
+   so it gets a drop-shadow filter for its halo instead. */
+.scene-text .animate-shine {
+  text-shadow: none;
+  filter: drop-shadow(0 0 5px var(--background));
+}
+
+/* Body copy over a scene: a halo only, so the text hierarchy stays as it is. */
+.scene-halo {
+  text-shadow:
+    0 0 8px var(--background),
+    0 0 3px var(--background);
+}
+
+/* On a light page the halo is not needed and only washes gradient text out. */
+:root:not(.dark) .scene-text .animate-shine {
+  filter: none;
+}
+
+/* ASCII spinner: the character itself steps through a density ramp. */
+.glyph-spinner::before {
+  content: "*";
+  animation: glyph-cycle 0.9s steps(1) infinite;
+}
+
+@keyframes glyph-cycle {
+  0% { content: "."; }
+  12% { content: ":"; }
+  25% { content: "-"; }
+  37% { content: "="; }
+  50% { content: "+"; }
+  62% { content: "*"; }
+  75% { content: "#"; }
+  87% { content: "%"; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyph-spinner::before {
+    animation: none;
+  }
+}
+
+/* Pixel icons must never be smoothed. */
+svg {
+  shape-rendering: crispEdges;
+}
+
+/* A bar drawn as a Bayer stipple, for ranked lists. */
+.dither-bar {
+  background: var(--chart-2);
+  mask-image: var(--dither-m75);
+  mask-size: calc(var(--dither-px) * 4) calc(var(--dither-px) * 4);
+  image-rendering: pixelated;
+}
+
+/* Page background motion: compositor-only, no JS. Each nebula layer fades in and
+   out and drifts on its own cycle (negative delays start them mid-way), so the
+   clouds slowly change shape. The galaxies glide across the gutters. */
+.nebula-a,
+.nebula-b,
+.nebula-c {
+  will-change: transform, opacity;
+}
+
+.nebula-a { animation: neb-fade 55s ease-in-out -10s infinite alternate, neb-drift-a 140s ease-in-out infinite alternate; }
+.nebula-b { animation: neb-fade 80s ease-in-out -45s infinite alternate, neb-drift-b 170s ease-in-out infinite alternate; }
+.nebula-c { animation: neb-fade 105s ease-in-out -70s infinite alternate, neb-drift-c 200s ease-in-out infinite alternate; }
+
+.galaxy-a { animation: galaxy-drift-a 300s ease-in-out infinite alternate; }
+.galaxy-b { animation: galaxy-drift-b 360s ease-in-out -120s infinite alternate; }
+
+@keyframes neb-fade {
+  from { opacity: 0.12; }
+  to { opacity: 1; }
+}
+
+@keyframes neb-drift-a {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-40px, 18px, 0); }
+}
+
+@keyframes neb-drift-b {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(34px, -22px, 0); }
+}
+
+@keyframes neb-drift-c {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-22px, -30px, 0); }
+}
+
+@keyframes galaxy-drift-a {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(70px, 40px, 0); }
+}
+
+@keyframes galaxy-drift-b {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-60px, -36px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nebula-a, .nebula-b, .nebula-c, .galaxy-a, .galaxy-b {
+    animation: none;
+  }
+}
+
+/* Holding the theme switch (it opens the plain version): the stipple fills in over the hold. */
+.dither-hover[data-holding]::after {
+  animation: dither-hold 0.9s steps(1) both;
+}
+
+@keyframes dither-hold {
+  0% { mask-image: var(--dither-m25); }
+  35% { mask-image: var(--dither-m50); }
+  70%, 100% { mask-image: var(--dither-m100); }
+}
+
+/* The black-and-white announcement: a flash-in, a colour offset that collapses to grey. */
+.mono-announce {
+  animation: mono-in 0.35s steps(4) both;
+}
+
+.mono-announce-out {
+  animation: mono-out 0.7s steps(5) both;
+}
+
+.mono-announce-title {
+  text-shadow: 4px 3px 0 var(--chart-3);
+  animation: mono-title 3s steps(1) both;
+}
+
+.mono-announce-sub {
+  animation: mono-sub 3s ease-out both;
+}
+
+@keyframes mono-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes mono-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes mono-title {
+  0%, 38% { text-shadow: 4px 3px 0 var(--chart-3); }
+  42%, 100% { text-shadow: 4px 3px 0 #555; }
+}
+
+@keyframes mono-sub {
+  0%, 25% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mono-announce,
+  .mono-announce-out,
+  .mono-announce-title,
+  .mono-announce-sub {
+    animation: none;
+  }
+}
+
+/* Simple view: every animation stops. Scenes are hidden and skip their setup entirely. */
+[data-view="simple"] *,
+[data-view="simple"] *::before,
+[data-view="simple"] *::after {
+  animation: none !important;
+}

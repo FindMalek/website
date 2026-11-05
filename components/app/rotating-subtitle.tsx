@@ -3,9 +3,17 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 
+import { cn } from "@/lib/utils"
+
 const ROTATE_INTERVAL_MS = 4000
 
-export function RotatingSubtitle({ lines }: { lines: string[] }) {
+export function RotatingSubtitle({
+  lines,
+  className,
+}: {
+  lines: string[]
+  className?: string
+}) {
   const [index, setIndex] = useState(0)
   const prefersReducedMotion = useReducedMotion()
 
@@ -18,11 +26,11 @@ export function RotatingSubtitle({ lines }: { lines: string[] }) {
   }, [lines.length, prefersReducedMotion])
 
   if (prefersReducedMotion) {
-    return <p className="text-muted-foreground text-base">{lines[0]}</p>
+    return <p className={cn("text-muted-foreground text-base", className)}>{lines[0]}</p>
   }
 
   return (
-    <p className="text-muted-foreground grid text-base">
+    <p className={cn("text-muted-foreground grid text-base", className)}>
       {/*
        * Invisible sizer stack: every line placed in the same grid cell
        * (col-start-1 row-start-1) makes the row's auto height the max of

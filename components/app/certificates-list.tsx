@@ -11,7 +11,7 @@ export function CertificatesList() {
           href={certificate.image}
           target="_blank"
           rel="noopener noreferrer"
-          className="border-foreground/10 hover:bg-muted/50 group block overflow-hidden rounded-lg border transition-colors"
+          className="dither-hover border-foreground/10 group block overflow-hidden rounded-lg border transition-colors"
         >
           <Image
             src={certificate.image}

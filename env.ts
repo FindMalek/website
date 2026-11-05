@@ -12,6 +12,8 @@ export const env = createEnv({
     GITHUB_TOKEN: z.string().min(1).startsWith("github_pat_"),
     GROQ_API_KEY: z.string().min(1).startsWith("gsk_"),
     RESEND_API_KEY: z.string().min(1).startsWith("re_"),
+    LODESONG_URL: z.string().url().optional(),
+    LODESONG_TOKEN: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -28,5 +30,7 @@ export const env = createEnv({
     NEXT_PUBLIC_LOGO_DEV_TOKEN: process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN,
     GROQ_API_KEY: process.env.GROQ_API_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    LODESONG_URL: process.env.LODESONG_URL,
+    LODESONG_TOKEN: process.env.LODESONG_TOKEN,
   },
 })

@@ -21,7 +21,7 @@ const DIRECTION_DELTA_THRESHOLD = 5
 export function ScrollToTop() {
   const pathname = usePathname()
   const { dockState } = useChatDock()
-  const [scrollY, setScrollY] = useState(0)
+  const [pastFold, setPastFold] = useState(false)
   const [isScrollingUp, setIsScrollingUp] = useState(false)
   const lastScrollY = useRef(0)
 
@@ -37,7 +37,7 @@ export function ScrollToTop() {
         lastScrollY.current = currentY
       }
 
-      setScrollY(currentY)
+      setPastFold(currentY >= APPEAR_AT)
       ticking = false
     }
 
@@ -52,7 +52,7 @@ export function ScrollToTop() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  if (pathname !== "/" || dockState === "docked" || scrollY < APPEAR_AT) {
+  if (pathname !== "/" || dockState === "docked" || !pastFold) {
     return null
   }
 
@@ -62,7 +62,7 @@ export function ScrollToTop() {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Back to top"
       className={cn(
-        "bg-background fixed bottom-20 right-4 z-30 flex size-8 items-center justify-center rounded-full border shadow-md transition-opacity duration-300 md:right-6",
+        "bg-background fixed bottom-20 right-4 z-30 flex size-8 items-center justify-center rounded-none border transition-opacity duration-300 md:right-6",
         isScrollingUp
           ? "opacity-70 hover:opacity-100"
           : "pointer-events-none opacity-0 md:pointer-events-auto md:opacity-15 md:hover:opacity-60"

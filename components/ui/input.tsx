@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff } from "@/components/shared/pixel-icons"
 
 import { cn } from "@/lib/utils"
 

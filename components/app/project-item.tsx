@@ -40,7 +40,7 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
       tabIndex={0}
       onClick={() => router.push(href)}
       onKeyDown={handleCardKeyDown}
-      className="border-foreground/10 hover:bg-muted/50 focus-visible:ring-ring group -mx-2 flex cursor-pointer items-center gap-3 rounded-lg border-b px-2 py-3 outline-none transition-colors last:border-b-0 focus-visible:ring-2"
+      className="dither-hover border-foreground/10 focus-visible:ring-ring group -mx-2 flex cursor-pointer items-center gap-3 rounded-lg border-b px-2 py-3 outline-none transition-colors last:border-b-0 focus-visible:ring-2"
     >
       <div className="border-border relative size-9 shrink-0 overflow-hidden rounded-md border">
         <Image
@@ -61,13 +61,13 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
               <span className="relative flex size-2 shrink-0">
                 <span
                   className={cn(
-                    "absolute inline-flex h-full w-full animate-ping rounded-full opacity-60",
+                    "absolute inline-flex h-full w-full animate-ping rounded-none opacity-60",
                     STATUS_DOT_COLOR[status]
                   )}
                 />
                 <span
                   className={cn(
-                    "relative inline-flex size-2 rounded-full",
+                    "relative inline-flex size-2 rounded-none",
                     STATUS_DOT_COLOR[status]
                   )}
                 />
@@ -108,7 +108,7 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
               onClick={(e) => e.stopPropagation()}
               className="text-muted-foreground hover:text-foreground relative z-10 shrink-0 transition-colors"
             >
-              <Icons.externalLink className="size-4" />
+              <Icons.externalLink />
             </Link>
           </TooltipTrigger>
           <TooltipContent>
@@ -117,7 +117,7 @@ export function ProjectItem({ project }: { project: ProjectRo }) {
         </Tooltip>
       )}
 
-      <Icons.arrowUpRight className="text-muted-foreground size-4 shrink-0" />
+      <Icons.arrowUpRight className="text-muted-foreground shrink-0" />
     </div>
   )
 }

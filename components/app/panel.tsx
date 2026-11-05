@@ -44,7 +44,7 @@ export function PanelTitle({
   return (
     <h2
       className={cn(
-        "text-balance text-2xl font-bold leading-tight tracking-tight",
+        "dither-title text-balance font-mono text-2xl font-bold leading-tight tracking-tight",
         className
       )}
       {...props}
