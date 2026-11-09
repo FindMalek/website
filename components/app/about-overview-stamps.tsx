@@ -692,7 +692,3 @@ export function AboutOverviewStamps() {
     </div>
   )
 }
-
-export function AboutOverviewStampsHint() {
-  return <p className="text-muted-foreground text-xs">The stamps peel off.</p>
-}
