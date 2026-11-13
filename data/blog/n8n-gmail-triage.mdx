@@ -23,6 +23,7 @@ I didn't want a new mail client or my own mail server. Gmail is fine at being Gm
 - When Vercel says I'm close to my storage limit, old preview deployments get cleaned.
 - Job alert emails put their job links on one calendar event.
 - When a recruiter replies or rejects me, I get a draft reply to review. Never a sent one.
+- Anything I've read leaves the inbox by itself, so what's left is only what still needs me.
 - And when I see something it got wrong, I can teach it without opening a laptop.
 
 ## The setup
@@ -98,7 +99,7 @@ Then I went live in two steps. Rules and protected senders act for real. The mod
 const act = live && (d.source !== 'llm' || llmLive);
 ```
 
-The model has made 14 decisions so far. Its 7 "hide this" calls (three promos and four GitHub app-permission requests) were all right, which is encouraging but is a sample of seven. Two of those patterns have since become plain rules, so the model doesn't need to see them again. `llm_live` is still off.
+The model made 14 decisions in dry run. Its 7 "hide this" calls (three promos and four GitHub app-permission requests) were all right, which is encouraging but is a sample of seven. Two of those patterns have since become plain rules, so the model doesn't need to see them again. Then I wanted an empty inbox more than I wanted a bigger sample, so I switched `llm_live` on. The safety net is still there: under 0.8 confidence, the mail stays.
 
 ## Teaching it without a laptop
 
@@ -115,7 +116,7 @@ The message itself is still handled, but no rule is created. Otherwise one `ai/m
 
 ## Nine workflows
 
-![Diagram of the nine n8n workflows in three groups. Sort: 01 Sort new emails every two minutes, 02 Learn from my keep and mute labels every five minutes, and 05 Nightly inbox cleanup at 03:00. Act on what was sorted: 07 Add job links to calendar, 03 Clean old Vercel previews and 08 Unsubscribe from marketing, the last two still in dry run. Help me: 04 Draft replies to recruiters, 06 Morning email digest and 00 Alert me when a workflow fails. Below them sit the shared Postgres tables and the five outside services.](/blog/n8n-gmail-triage/workflows.png)
+![Diagram of the nine n8n workflows in three groups. Sort: 01 Sort new emails every two minutes, 02 Learn from my keep and mute labels every five minutes, and 05 Read mail leaves the inbox every ten minutes. Act on what was sorted: 07 Add job links to calendar, 03 Clean old Vercel previews and 08 Unsubscribe from marketing, the last two still in dry run. Help me: 04 Draft replies to recruiters, 06 Morning email digest and 00 Alert me when a workflow fails. Below them sit the shared Postgres tables and the five outside services.](/blog/n8n-gmail-triage/workflows.png)
 
 They never call each other. Each workflow leaves its result in Postgres or as a Gmail label, and the next one picks it up on its own schedule. That keeps each one small enough to read in one go.
 
@@ -128,7 +129,7 @@ n8n workflows are only as readable as their names, so each one has a plain name 
 | 02 Learn from my keep and mute labels | Turns `ai/keep` and `ai/mute` into rules |
 | 03 Clean old Vercel previews | Deletes old previews after a Vercel limit email |
 | 04 Draft replies to recruiters | Writes drafts for human rejections and replies |
-| 05 Nightly inbox cleanup | At 03:00, read important mail leaves the inbox |
+| 05 Read mail leaves the inbox | Every 10 minutes, anything I've read moves out |
 | 06 Morning email digest | At 07:30, one email summarizing the night |
 | 07 Add job links to calendar | Pulls job links from alerts onto one event |
 | 08 Unsubscribe from marketing | One-click unsubscribes with strict checks |
@@ -173,7 +174,6 @@ At 07:30 one email arrives with what happened overnight. The model writes only t
 
 ## What's still open
 
-- The model's decisions are still in dry run. I'll turn them on at around 50 reviewed decisions.
 - The Vercel cleanup is a dry run.
 - The unsubscribe workflow exists and passes 125 local tests, but it hasn't unsubscribed anyone. It only does one-click unsubscribes, checks the host through public DNS-over-HTTPS and rejects private addresses, and needs a DKIM pass. No sender qualifies yet. One known gap: n8n resolves the host again when it sends, so a hostile DNS server could answer differently. A firewall rule on the n8n container would close that, and I haven't added it.
 - Backups sit on the same disk as the data.
