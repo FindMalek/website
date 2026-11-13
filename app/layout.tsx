@@ -12,6 +12,7 @@ import { FoldableEasterEgg } from "@/components/app/foldable-easter-egg"
 import { HighlightAskAction } from "@/components/app/highlight-ask-action"
 import { ScrollToTop } from "@/components/app/scroll-to-top"
 import { Analytics } from "@/components/layout/analytics"
+import { CelebrationDecor } from "@/components/layout/celebration-decor"
 import { Background } from "@/components/layout/background"
 import { Footer } from "@/components/layout/footer"
 import { Header } from "@/components/layout/header"
@@ -106,6 +107,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 globals.css, this wraps everything else that isn't. */}
                 <div className="print:hidden">
                   <Background />
+                  <CelebrationDecor />
                   <Analytics />
                   <Toaster />
                   <TailwindIndicator />
