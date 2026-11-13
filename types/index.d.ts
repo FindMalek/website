@@ -142,6 +142,13 @@ export interface PageContext {
   route: string
   section: "work" | "education" | "projects" | "stack" | "about" | null
   slug?: string
+  journey?: JourneyPageContext
+}
+
+export interface JourneyPageContext {
+  persona: string
+  cardId: string | null
+  matchSummary?: string
 }
 
 export interface ContactEmailIntroductionProps {

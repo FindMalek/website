@@ -21,11 +21,17 @@ function normalize(text: string): string {
 
 type ChatResult = { text: string; tools: string[] }
 
-async function askChatbot(question: string): Promise<ChatResult> {
+type ChatInput = Pick<ChatEvalCase, "pageContext"> & { question: string }
+
+async function askChatbot({
+  question,
+  pageContext,
+}: ChatInput): Promise<ChatResult> {
   const res = await fetch(`${BASE_URL}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      pageContext,
       messages: [
         {
           id: "eval-1",
@@ -63,7 +69,7 @@ async function askChatbot(question: string): Promise<ChatResult> {
 Eval("findmalek-chatbot", {
   data: () =>
     CHAT_EVAL_CASES.map((testCase) => ({
-      input: testCase.input,
+      input: { question: testCase.input, pageContext: testCase.pageContext },
       expected: testCase,
       metadata: { tag: testCase.tag },
     })),
