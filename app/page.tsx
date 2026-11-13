@@ -7,6 +7,7 @@ import { STACK_SECTIONS } from "@/config/stack"
 import { getVisiblePosts, toPostSummary } from "@/lib/blog"
 import { getCachedContributions } from "@/lib/get-cached-contributions"
 import { getResumeData } from "@/lib/get-resume-data"
+import { getMusicSnapshot } from "@/lib/navidrome"
 import {
   groupWorkByCompany,
   sortProjectsByStars,
@@ -43,13 +44,12 @@ import { WorkExperienceItem } from "@/components/app/work-experience-item"
 import { LatestPosts } from "@/components/blog/latest-posts"
 
 import { getMultipleRepoInfo } from "@/actions/github"
-import { getUserPlaylists } from "@/actions/spotify"
 
 const SOURCE_REPO_URL = REPOSITORIES[0]
 const GITHUB_USERNAME = SOURCE_REPO_URL.split("/").at(-2) ?? "findmalek"
 
 export default async function Home() {
-  const playlists = await getUserPlaylists(20, 0)
+  const music = await getMusicSnapshot()
   const resumeData = await getResumeData()
   const educationItems = resumeData.sections.education.items.filter(
     (item) => !item.hidden
@@ -335,7 +335,7 @@ export default async function Home() {
             <h3 className="mb-4 text-xl font-semibold">Personal</h3>
 
             <div className="space-y-8">
-              <AboutMusic playlists={playlists.items} />
+              <AboutMusic music={music} />
 
               <div className="border-line border-t pt-8">
                 <AboutBooks />

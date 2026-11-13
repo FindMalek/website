@@ -1,80 +1,56 @@
-"use client"
+import type { MusicSnapshot } from "@/types"
 
-import { useState } from "react"
-import Link from "next/link"
-
-import { SpotifyPlaylist } from "@/types"
-
-import { siteConfig } from "@/config/site"
-
+import { NowPlaying } from "@/components/app/now-playing"
 import { Icons } from "@/components/shared/icons"
 import { SectionHeading } from "@/components/shared/section-heading"
-import { Button } from "@/components/ui/button"
 
-export function AboutMusic({ playlists }: { playlists: SpotifyPlaylist[] }) {
-  const [displayCount, setDisplayCount] = useState(12)
-
-  const handleShowMore = () => {
-    setDisplayCount((prev) => Math.min(prev + 12, playlists.length))
-  }
+export function AboutMusic({ music }: { music: MusicSnapshot | null }) {
+  const maxWeight = Math.max(...(music?.genres.map((g) => g.weight) ?? [1]))
 
   return (
     <section
-      id="playlists"
+      id="music"
       className="[scroll-margin-top:var(--header-height,6rem)]"
     >
       <SectionHeading
         title="Music"
-        count={playlists.length}
-        copyLinkSectionId="playlists"
-        description="I love listening to music and creating playlists"
+        copyLinkSectionId="music"
+        description="I stopped renting my library, it plays from my own server now"
         direct={{
-          href: siteConfig.links.spotify,
-          text: "View profile",
-          icon: <Icons.spotify className="size-6" />,
+          href: "/projects/lodesong",
+          text: "Built with lodesong",
+          icon: <Icons.arrowUpRight className="size-5" />,
         }}
       />
 
-      <div className="grid grid-cols-6 gap-3">
-        {playlists.slice(0, displayCount).map((playlist) => (
-          <Link
-            key={playlist.id}
-            href={playlist.external_urls.spotify}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col gap-2"
-          >
-            <div className="bg-secondary relative aspect-square overflow-hidden rounded-lg">
-              {/* This is for Vercel crazy image optimization pricing */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={playlist.images[0]?.url || "/placeholder.svg"}
-                alt={playlist.name}
-                width={300}
-                height={300}
-                className="h-full w-full object-cover transition-transform group-hover:scale-105"
-              />
-            </div>
+      {music ? (
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+          <div className="sm:w-72 sm:shrink-0">
+            <NowPlaying initial={music.track} />
+          </div>
 
-            <span className="line-clamp-1 text-sm font-medium">
-              {playlist.name}
-            </span>
-          </Link>
-        ))}
-      </div>
-
-      {displayCount < playlists.length && (
-        <div className="mt-4 flex justify-center">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="min-w-32 gap-2"
-            onClick={handleShowMore}
-          >
-            Show more
-            <Icons.down className="size-4" />
-          </Button>
+          {music.genres.length > 0 && (
+            <ul className="flex flex-1 flex-col gap-2.5">
+              {music.genres.map((genre) => (
+                <li key={genre.name} className="flex items-center gap-3">
+                  <span className="w-28 shrink-0 truncate text-sm">
+                    {genre.name}
+                  </span>
+                  <div className="bg-secondary h-2 flex-1 overflow-hidden rounded-full">
+                    <div
+                      className="bg-primary h-full rounded-full"
+                      style={{ width: `${(genre.weight / maxWeight) * 100}%` }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
+      ) : (
+        <p className="text-muted-foreground text-sm">
+          My server is asleep right now, check back later.
+        </p>
       )}
     </section>
   )

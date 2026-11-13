@@ -6,7 +6,6 @@ import {
   SiGoogle,
   SiInstagram,
   SiPrisma,
-  SiSpotify,
   SiX,
 } from "@icons-pack/react-simple-icons"
 import {
@@ -232,7 +231,6 @@ export const Icons = {
   facebook: SiFacebook,
   instagram: SiInstagram,
   moveRight: MoveRight,
-  spotify: SiSpotify,
   file: FileBoxIcon,
   arrowLeft: ArrowLeft,
   star: Star,
