@@ -14,8 +14,7 @@ import {
   getVisiblePosts,
 } from "@/lib/blog"
 import { getResumeData, type ResumeData } from "@/lib/get-resume-data"
-
-import { getUserPlaylists } from "@/actions/spotify"
+import { getMusicSnapshot } from "@/lib/navidrome"
 
 type Project = (typeof allProjects)[number]
 type Work = (typeof allWorks)[number]
@@ -115,7 +114,7 @@ function getOpenSourceContributionsData() {
 }
 
 async function getPersonalData() {
-  const playlists = await getUserPlaylists(20, 0)
+  const music = await getMusicSnapshot()
 
   return {
     bio: ABOUT_BIO.map(aboutSegmentsToText),
@@ -147,11 +146,10 @@ async function getPersonalData() {
       })),
     },
     music: {
-      spotifyProfile: siteConfig.links.spotify,
-      playlists: playlists.items.map((playlist) => ({
-        name: playlist.name,
-        url: playlist.external_urls.spotify,
-      })),
+      description:
+        "I stopped using Spotify and play everything from my own Navidrome server through lodesong, a web player I built",
+      lodesongUrl: "https://github.com/FindMalek/lodesong",
+      topGenres: music?.genres.map((genre) => genre.name) ?? [],
     },
     companiesIveWorkedWith: CLIENTS.map((client) =>
       client.href ? `${client.name} (${client.href})` : client.name

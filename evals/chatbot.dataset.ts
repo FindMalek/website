@@ -30,7 +30,7 @@ export const CHAT_EVAL_CASES: ChatEvalCase[] = [
   {
     tag: "personal",
     input: "what music do you listen to?",
-    include: ["spotify"],
+    include: ["lodesong"],
   },
   {
     tag: "personal",

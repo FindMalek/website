@@ -7,9 +7,6 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 40, 48, 64, 96, 128, 256],
     remotePatterns: [
       { protocol: "https", hostname: "www.findmalek.com" },
-      { protocol: "https", hostname: "image-cdn-fa.spotifycdn.com" },
-      { protocol: "https", hostname: "image-cdn-ak.spotifycdn.co" },
-      { protocol: "https", hostname: "image-cdn-ak.spotifycdn.com" },
       { protocol: "https", hostname: "mosaic.scdn.co" },
       { protocol: "https", hostname: "i.scdn.co" },
       { protocol: "https", hostname: "img.logo.dev" },
