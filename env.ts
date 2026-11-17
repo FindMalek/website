@@ -1,6 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs"
 import { z } from "zod/v3"
 
+import { aiModelSchema } from "@/config/ai"
+
 export const env = createEnv({
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   server: {
@@ -10,7 +12,10 @@ export const env = createEnv({
     SPOTIFY_USER_ID: z.string().min(1),
     SPOTIFY_REDIRECT_URI: z.string().url().optional(),
     GITHUB_TOKEN: z.string().min(1).startsWith("github_pat_"),
-    GROQ_API_KEY: z.string().min(1).startsWith("gsk_"),
+    AI_MODEL: aiModelSchema,
+    ANTHROPIC_API_KEY: z.string().min(1).optional(),
+    GROQ_API_KEY: z.string().min(1).optional(),
+    OPENAI_API_KEY: z.string().min(1).optional(),
     RESEND_API_KEY: z.string().min(1).startsWith("re_"),
   },
   client: {
@@ -26,7 +31,10 @@ export const env = createEnv({
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
     NEXT_PUBLIC_LOGO_DEV_TOKEN: process.env.NEXT_PUBLIC_LOGO_DEV_TOKEN,
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+    AI_MODEL: process.env.AI_MODEL,
     GROQ_API_KEY: process.env.GROQ_API_KEY,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
   },
 })

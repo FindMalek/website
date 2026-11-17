@@ -7,12 +7,11 @@ import { ABOUT_BIO, aboutSegmentsToText } from "@/config/about"
 import { BOOKS, CLIENTS, CONTRIBUTIONS, OVERVIEW_CARDS } from "@/config/consts"
 import { siteConfig, TIMEZONE } from "@/config/site"
 import { STACK_SECTIONS } from "@/config/stack"
+import { getPostMarkdown, getPostUrl, getVisiblePosts } from "@/lib/blog"
 import {
-  getPostBySlug,
-  getPostMarkdown,
-  getPostUrl,
-  getVisiblePosts,
-} from "@/lib/blog"
+  searchKnowledgeDocuments,
+  type KnowledgeDocument,
+} from "@/lib/chatbot-search"
 import { getResumeData, type ResumeData } from "@/lib/get-resume-data"
 
 import { getUserPlaylists } from "@/actions/spotify"
@@ -77,6 +76,7 @@ function getLanguagesData(resumeData: ResumeData) {
 
 function getWorkExperienceData() {
   return allWorks
+    .slice()
     .sort((a: Work, b: Work) => a.id - b.id)
     .map((job: Work) => ({
       position: job.position,
@@ -86,16 +86,22 @@ function getWorkExperienceData() {
       location: job.location,
       period: `${job.startDate} - ${job.endDate}`,
       overview: job.overview,
+      skills: job.skills,
+      caseStudy: `${siteConfig.url}${job.href}`,
       link: job.link,
     }))
 }
 
 function getProjectsData() {
   return allProjects
+    .filter((project: Project) => project.status !== "draft")
     .sort((a: Project, b: Project) => a.id - b.id)
     .map((project: Project) => ({
       name: project.name,
       overview: project.overview,
+      status: project.status,
+      tags: project.tags,
+      caseStudy: `${siteConfig.url}${project.href}`,
       link: project.link,
     }))
 }
@@ -114,9 +120,7 @@ function getOpenSourceContributionsData() {
   }))
 }
 
-async function getPersonalData() {
-  const playlists = await getUserPlaylists(20, 0)
-
+function getPersonalData() {
   return {
     bio: ABOUT_BIO.map(aboutSegmentsToText),
     facts: {
@@ -146,13 +150,6 @@ async function getPersonalData() {
         link: book.link,
       })),
     },
-    music: {
-      spotifyProfile: siteConfig.links.spotify,
-      playlists: playlists.items.map((playlist) => ({
-        name: playlist.name,
-        url: playlist.external_urls.spotify,
-      })),
-    },
     companiesIveWorkedWith: CLIENTS.map((client) =>
       client.href ? `${client.name} (${client.href})` : client.name
     ),
@@ -169,13 +166,9 @@ function getTechStackData() {
   }))
 }
 
-/**
- * Describes what the visitor is currently looking at, in a form the model
- * can naturally reference ("I see you're checking out my Zero Locker case
- * study..."). Undefined when no page context was sent (e.g. an older
- * client, or a direct API call).
- */
-function describePageContext(pageContext?: PageContext): string | undefined {
+export function describePageContext(
+  pageContext?: PageContext
+): string | undefined {
   if (!pageContext) return undefined
 
   if (pageContext.route === "/blog") {
@@ -183,26 +176,28 @@ function describePageContext(pageContext?: PageContext): string | undefined {
   }
 
   if (pageContext.route.startsWith("/blog/") && pageContext.slug) {
-    const post = getPostBySlug(pageContext.slug)
+    const post = getVisiblePosts().find(
+      (post) => post.status === "published" && post.href === pageContext.route
+    )
     if (post) {
-      return `The visitor is currently reading my blog post "${post.title}". Answer questions about it from its full text below, and quote it rather than guessing.\n\n${getPostMarkdown(post)}`
+      return `The visitor is reading my blog post "${post.title}" (${getPostUrl(post)}). Use searchPortfolio with topic blog to retrieve passages relevant to their question.`
     }
   }
 
   if (pageContext.slug) {
     const work = allWorks.find((w: Work) => w.href === pageContext.route)
     if (work) {
-      return `The visitor is currently reading the case study for the ${work.position} role at ${work.company}.`
+      return `The visitor is reading the case study for my ${work.position} role at ${work.company}. Use searchPortfolio with topic work for details.`
     }
 
     const project = allProjects.find(
-      (p: Project) => p.href === pageContext.route
+      (p: Project) => p.href === pageContext.route && p.status !== "draft"
     )
     if (project) {
-      return `The visitor is currently reading the case study for the "${project.name}" project.`
+      return `The visitor is reading the case study for "${project.name}". Use searchPortfolio with topic projects for details.`
     }
 
-    return `The visitor is currently reading a case study page (${pageContext.slug}).`
+    return "The visitor is on a page that is not in the published knowledge index. Do not guess its contents."
   }
 
   if (pageContext.section) {
@@ -212,19 +207,14 @@ function describePageContext(pageContext?: PageContext): string | undefined {
   return "The visitor is currently viewing the top of the homepage (hero section)."
 }
 
-/**
- * Generates the complete context for the chatbot using LLML
- * Transforms structured data into VibeXML optimized for AI attention
- */
-export async function generateChatbotContext(pageContext?: PageContext) {
+export async function generateChatbotContext() {
   const resumeData = await getResumeData()
-
+  const personal = getPersonalData()
   const context = {
     professionalBackground: {
-      summary: stripHtml(resumeData.summary.content),
+      summary: stripHtml(resumeData.summary.content).slice(0, 1200),
       contact: {
         email: resumeData.basics.email,
-        phone: resumeData.basics.phone,
         location: resumeData.basics.location,
         website: resumeData.basics.website.url,
         linkedin: "https://www.linkedin.com/in/findmalek/",
@@ -232,26 +222,163 @@ export async function generateChatbotContext(pageContext?: PageContext) {
         twitter: "https://x.com/foundmalek",
         birthdate: "July 31, 2001",
       },
-      education: getEducationData(resumeData),
-      experience: getExperienceData(resumeData),
-      awards: getAwardsData(resumeData),
-      skills: getSkillsData(resumeData),
+      experience: getExperienceData(resumeData).map((role) => ({
+        position: role.position,
+        company: role.company,
+        period: role.period,
+        location: role.location,
+      })),
       languages: getLanguagesData(resumeData),
     },
-    workExperience: getWorkExperienceData(),
-    projects: getProjectsData(),
-    openSourceContributions: getOpenSourceContributionsData(),
-    blogPosts: getVisiblePosts().map((post) => ({
-      title: post.title,
-      url: getPostUrl(post),
-      excerpt: post.excerpt,
+    workExperience: getWorkExperienceData().map((work) => ({
+      ...work,
+      overview: work.overview.slice(0, 250),
     })),
-    techStack: getTechStackData(),
-    personal: await getPersonalData(),
-    ...(describePageContext(pageContext)
-      ? { currentContext: describePageContext(pageContext) }
-      : {}),
+    projects: getProjectsData().map((project) => ({
+      ...project,
+      overview: project.overview.slice(0, 250),
+    })),
+    blogPosts: getVisiblePosts()
+      .filter((post) => post.status === "published")
+      .map((post) => ({
+        title: post.title,
+        url: getPostUrl(post),
+        tags: post.tags,
+      })),
+    personal: {
+      bio: personal.bio,
+      facts: personal.facts,
+      bookCount: BOOKS.length,
+      spotifyProfile: siteConfig.links.spotify,
+    },
+    availableDetails: KNOWLEDGE_TOPICS,
   }
 
   return llml(context)
+}
+
+export const KNOWLEDGE_TOPICS = [
+  "projects",
+  "work",
+  "blog",
+  "about",
+  "books",
+  "music",
+  "resume",
+  "stack",
+  "contributions",
+] as const
+
+export async function searchPortfolio(
+  query: string,
+  topics: (typeof KNOWLEDGE_TOPICS)[number][]
+) {
+  const documents: KnowledgeDocument[] = []
+  const add = (title: string, url: string, data: unknown) => {
+    documents.push({ title, url, content: llml(data) })
+  }
+
+  if (topics.includes("projects")) {
+    for (const project of allProjects.filter(
+      (project) => project.status !== "draft"
+    )) {
+      documents.push({
+        title: project.name,
+        url: `${siteConfig.url}${project.href}`,
+        keywords: project.tags,
+        content: `${project.overview}\n\n${project.content}`,
+      })
+    }
+  }
+  if (topics.includes("work")) {
+    for (const work of allWorks) {
+      documents.push({
+        title: `${work.company} — ${work.position}`,
+        url: `${siteConfig.url}${work.href}`,
+        keywords: work.skills,
+        content: `${work.overview}\n\n${work.content}`,
+      })
+    }
+  }
+  if (topics.includes("blog")) {
+    for (const post of getVisiblePosts().filter(
+      (post) => post.status === "published"
+    )) {
+      documents.push({
+        title: post.title,
+        url: getPostUrl(post),
+        keywords: post.tags,
+        content: getPostMarkdown(post),
+      })
+    }
+  }
+  const personal = getPersonalData()
+  if (topics.includes("about")) {
+    add(
+      "About Malek: biography, companies, photos and stories",
+      `${siteConfig.url}/#about`,
+      {
+        bio: personal.bio,
+        facts: personal.facts,
+        photosAndStories: personal.photosAndStories,
+        companiesIveWorkedWith: personal.companiesIveWorkedWith,
+      }
+    )
+  }
+  if (topics.includes("books")) {
+    add(
+      "Books and reading list",
+      `${siteConfig.url}/#about`,
+      personal.readingList
+    )
+  }
+  if (topics.includes("music")) {
+    const playlists = await getUserPlaylists(20, 0)
+    add("Music and Spotify playlists", siteConfig.links.spotify, {
+      spotifyProfile: siteConfig.links.spotify,
+      playlists: playlists.items.map((playlist) => ({
+        name: playlist.name,
+        url: playlist.external_urls.spotify,
+      })),
+      note: playlists.items.length
+        ? undefined
+        : "Playlist details are unavailable; do not invent names or genres.",
+    })
+  }
+  if (topics.includes("resume")) {
+    const resume = await getResumeData()
+    add(
+      "Resume CV: profile, skills, languages, education and awards",
+      siteConfig.links.resume,
+      {
+        summary: stripHtml(resume.summary.content),
+        skills: getSkillsData(resume),
+        languages: getLanguagesData(resume),
+        education: getEducationData(resume),
+        awards: getAwardsData(resume),
+      }
+    )
+    for (const role of getExperienceData(resume)) {
+      add(`${role.company} ${role.position}`, siteConfig.links.resume, role)
+    }
+  }
+  if (topics.includes("stack")) {
+    for (const section of getTechStackData()) {
+      add(`Tech stack: ${section.section}`, `${siteConfig.url}/#stack`, section)
+    }
+  }
+  if (topics.includes("contributions")) {
+    for (const contribution of getOpenSourceContributionsData()) {
+      add(
+        `Open source contributions: ${contribution.repository}`,
+        contribution.repository,
+        contribution
+      )
+    }
+  }
+
+  return {
+    matches: searchKnowledgeDocuments(documents, query),
+    note: "These are relevant excerpts, not complete documents. Use only stated facts; try more specific keywords or another topic if needed.",
+  }
 }

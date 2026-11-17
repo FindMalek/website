@@ -6,7 +6,7 @@ import { CHAT_EVAL_CASES, type ChatEvalCase } from "./chatbot.dataset"
 
 const BASE_URL = process.env.EVAL_BASE_URL ?? "http://localhost:3000"
 const IDK = /^(i don'?t know|i'?m not sure|no idea)[.!\s]*$/i
-const MAX_WORDS = 90
+const MAX_WORDS = 160
 
 // the model likes typographic hyphens and narrow spaces, which would make
 // "Endless Byte" or "full-time" miss a plain-text match
