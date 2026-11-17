@@ -2,8 +2,9 @@ import type { UIMessage } from "ai"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-import { FEATURED_PROJECT_ORDER } from "@/config/consts"
 import { ProjectStatus } from "@/types/enum"
+
+import { FEATURED_PROJECT_ORDER } from "@/config/consts"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -42,7 +43,9 @@ export function scrollToAnchorSection(href: string, pathname: string) {
   if (!target) return false
 
   const top =
-    target.getBoundingClientRect().top + window.scrollY - STICKY_HEADER_OFFSET_PX
+    target.getBoundingClientRect().top +
+    window.scrollY -
+    STICKY_HEADER_OFFSET_PX
   window.scrollTo({ top, behavior: "smooth" })
   return true
 }
@@ -232,7 +235,7 @@ export function sanitizeMessages(messages: UIMessage[]): UIMessage[] {
           textPart(
             hasContextReset
               ? "Let's start with a completely new topic. How can I help you now?"
-              : "I'm ready to help you with something else."
+              : text || "The previous action was cancelled."
           ),
         ],
       }

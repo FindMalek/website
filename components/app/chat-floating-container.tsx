@@ -5,9 +5,11 @@ import { useChatDock } from "@/providers/chat-provider"
 import { AnimatePresence, motion } from "motion/react"
 
 import { emitChatActivity } from "@/lib/chat-activity"
+import { getChatActivityLabel } from "@/lib/chatbot-activity"
 import { cn } from "@/lib/utils"
 import { useContactChat } from "@/hooks/use-contact-chat"
 
+import { ChatActivityStatus } from "@/components/app/chat-activity-status"
 import { ContactChatBotErrorMessage } from "@/components/app/contact-chat-bot-error-message"
 import { ContactChatMessage } from "@/components/app/contact-chat-message"
 import { ContactSuggestedPrompts } from "@/components/app/contact-suggeted-prompts"
@@ -33,9 +35,15 @@ export function ChatFloatingContainer() {
     inputRef,
     handleFormSubmit,
     isMessageLimitReached,
+    chatContext,
   } = useContactChat()
 
   const isDocked = dockState === "docked"
+  const activityLabel = getChatActivityLabel(
+    messages,
+    chatContext.status,
+    isCancelling
+  )
 
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
@@ -164,14 +172,7 @@ export function ChatFloatingContainer() {
                   <ContactChatMessage message={message} />
                 </div>
               ))}
-              {(isLoading || isCancelling) && (
-                <div className="bg-muted/50 flex w-fit max-w-[80%] items-center space-x-2 rounded-lg p-3">
-                  <Icons.spinner className="h-4 w-4 animate-spin" />
-                  <p className="animate-text-gradient font-base inline-flex bg-gradient-to-r from-[#535353] via-[#c9c9c9] to-[#535353] bg-[200%_auto] bg-clip-text text-center text-xs text-transparent dark:from-[#ACACAC] dark:via-[#363636] dark:to-[#ACACAC]">
-                    Thinking...
-                  </p>
-                </div>
-              )}
+              <ChatActivityStatus label={activityLabel} />
             </div>
 
             {!isAtBottom && (

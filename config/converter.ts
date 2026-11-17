@@ -49,6 +49,8 @@ export const convertToolName = (name: ToolName) => {
       return "View Resume"
     case "getTodayDate":
       return "Get Today's Date"
+    case "searchPortfolio":
+      return "Portfolio Notes"
   }
 }
 

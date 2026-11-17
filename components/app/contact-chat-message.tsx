@@ -2,12 +2,11 @@
 
 import type { UIMessage } from "ai"
 
-import { ToolName } from "@/types/enum"
-
-import { convertToolName } from "@/config/converter"
+import { getToolActivityLabel } from "@/lib/chatbot-activity"
 import { ToolCallLike } from "@/lib/tool-helpers"
 import { cn, getMessageText } from "@/lib/utils"
 
+import { ChatActivityStatus } from "@/components/app/chat-activity-status"
 import { ContactToolEmailForm } from "@/components/app/contact-tool-email-form"
 import { ContactToolMeetingScheduler } from "@/components/app/contact-tool-meeting-scheduler"
 import { ContactToolPricingEstimator } from "@/components/app/contact-tool-pricing-estimator"
@@ -40,15 +39,33 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
   const text = getMessageText(message)
 
   const renderToolCall = (part: ToolPart) => {
-    const toolName = part.type.slice("tool-".length) as ToolName
+    const toolName = part.type.slice("tool-".length)
     const { state, toolCallId, input, output } = part
 
-    if (state === "input-streaming") {
+    if (state === "output-error") {
       return (
-        <div className="text-muted-foreground flex items-center space-x-2 text-sm">
-          <Icons.spinner className="h-4 w-4 animate-spin" />
-          <span>Preparing {convertToolName(toolName)}...</span>
+        <div className="text-destructive text-xs" role="status">
+          Couldn&apos;t complete this action. You can try again or email
+          hi@findmalek.com.
         </div>
+      )
+    }
+
+    const isServerTool = [
+      "searchPortfolio",
+      "getResume",
+      "getTodayDate",
+    ].includes(toolName)
+    if (
+      state === "input-streaming" ||
+      (isServerTool && state === "input-available")
+    ) {
+      return <ChatActivityStatus label={getToolActivityLabel(toolName)} />
+    }
+
+    if (part.type === "tool-searchPortfolio" && state === "output-available") {
+      return (
+        <p className="text-muted-foreground text-xs">Portfolio notes checked</p>
       )
     }
 
@@ -69,17 +86,11 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
         case "getResume":
           return <ContactToolResumeGenerator toolCall={toolCall} />
         case "getTodayDate":
-          // getTodayDate is handled server-side, no UI needed
-          return null
+          return <p className="text-muted-foreground text-xs">Date checked</p>
         default:
           return (
             <div className="text-muted-foreground text-sm">
-              {state === "input-available" &&
-                `Processing ${convertToolName(toolName)}...`}
-              {state === "output-available" &&
-                `${convertToolName(toolName)} completed`}
-              {state === "output-error" &&
-                `${convertToolName(toolName)} failed`}
+              {getToolActivityLabel(toolName, state === "output-available")}
             </div>
           )
       }
@@ -87,7 +98,7 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
       console.error(`Error rendering tool ${toolName}:`, error)
       return (
         <div className="text-destructive text-sm">
-          Error displaying {convertToolName(toolName)}. Please try again.
+          Could not display this action. Please try again.
         </div>
       )
     }
@@ -113,23 +124,26 @@ export function ContactChatMessage({ message }: ChatMessageProps) {
         )}
       </div>
 
-      <Message from={message.role} className="max-w-[80%]">
-        {text.length > 0 && (
-          <MessageContent>
-            {isUser ? text : <MessageResponse>{text}</MessageResponse>}
-          </MessageContent>
-        )}
-
-        {message.parts.map((part, index) => {
-          if (part.type.startsWith("tool-")) {
-            return (
-              <div key={index} className="w-full">
-                {renderToolCall(part as ToolPart)}
-              </div>
-            )
-          }
-          return null
-        })}
+      <Message from={message.role} className="max-w-[85%]">
+        {isUser && text.length > 0 && <MessageContent>{text}</MessageContent>}
+        {!isUser &&
+          message.parts.map((part, index) => {
+            if (part.type === "text" && part.text.length > 0) {
+              return (
+                <MessageContent key={index}>
+                  <MessageResponse>{part.text}</MessageResponse>
+                </MessageContent>
+              )
+            }
+            if (part.type.startsWith("tool-")) {
+              return (
+                <div key={index} className="w-full">
+                  {renderToolCall(part as ToolPart)}
+                </div>
+              )
+            }
+            return null
+          })}
       </Message>
     </div>
   )

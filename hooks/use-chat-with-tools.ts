@@ -4,6 +4,8 @@ import { DefaultChatTransport, type UIMessage } from "ai"
 
 import { PageContext } from "@/types"
 
+import { trimChatHistory } from "@/lib/chatbot-history"
+
 const WELCOME_MESSAGE: UIMessage = {
   id: "welcome-message",
   role: "assistant",
@@ -39,6 +41,9 @@ export function useChatWithTools(pageContext?: PageContext) {
     messages: [WELCOME_MESSAGE],
     transport: new DefaultChatTransport({
       api: "/api/chat",
+      prepareSendMessagesRequest: ({ messages, body }) => ({
+        body: { ...body, messages: trimChatHistory(messages) },
+      }),
     }),
   })
 
