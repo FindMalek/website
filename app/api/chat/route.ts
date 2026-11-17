@@ -16,6 +16,7 @@ import {
   searchPortfolio,
   stripHtml,
 } from "@/lib/chatbot-context"
+import { buildChatPrompt } from "@/lib/chatbot-prompt"
 import { parseChatRequest } from "@/lib/chatbot-request"
 import { getResumeData } from "@/lib/get-resume-data"
 import { sanitizeMessages } from "@/lib/utils"
@@ -105,28 +106,12 @@ export async function POST(req: Request) {
 
     const result = streamText({
       model: selected.model,
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt,
-          ...(selected.provider === "anthropic"
-            ? {
-                providerOptions: {
-                  anthropic: { cacheControl: { type: "ephemeral" } },
-                },
-              }
-            : {}),
-        },
-        ...(pageContext
-          ? [
-              {
-                role: "system" as const,
-                content: llml({ currentPage: pageContext }),
-              },
-            ]
-          : []),
-        ...messages,
-      ],
+      ...buildChatPrompt(
+        systemPrompt,
+        pageContext ? llml({ currentPage: pageContext }) : undefined,
+        selected.provider,
+        messages
+      ),
       maxOutputTokens: 600,
       maxRetries: 0,
       abortSignal: req.signal,

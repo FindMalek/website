@@ -112,7 +112,7 @@ controls are configured by these code changes. Check the grant's expiry date too
 The local request/retrieval/activity tests run without paid model calls:
 
 ```sh
-pnpm exec esbuild evals/chatbot-request.test.ts evals/chatbot-behavior.test.ts --bundle --platform=node --outdir=.next/chat-tests
+pnpm exec esbuild evals/chatbot-request.test.ts evals/chatbot-behavior.test.ts evals/chatbot-prompt.test.ts --bundle --platform=node --outdir=.next/chat-tests
 node --test .next/chat-tests/*.js
 ```
 
