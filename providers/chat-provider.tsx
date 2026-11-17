@@ -10,6 +10,7 @@ import {
   useState,
 } from "react"
 import { usePathname } from "next/navigation"
+import { useInterviewMode } from "@/providers/interview-provider"
 
 import { PageContext } from "@/types"
 
@@ -41,6 +42,7 @@ interface ChatDockContextValue {
   closeChat: () => void
   /** Pre-fills the input as a draft without sending it. */
   seedInput: (text: string) => void
+  sendText: (text: string) => void
 }
 
 const ChatDockContext = createContext<ChatDockContextValue | null>(null)
@@ -63,14 +65,17 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     "about",
   ])
 
+  const { isOpen: interviewOpen, context: journey } = useInterviewMode()
+
   const pageContext = useMemo<PageContext>(() => {
     const slugMatch = pathname.match(/^\/(?:work|projects|blog)\/(.+)$/)
     return {
       route: pathname,
       section: activeSection,
       slug: slugMatch?.[1],
+      journey: interviewOpen && journey ? journey : undefined,
     }
-  }, [pathname, activeSection])
+  }, [pathname, activeSection, interviewOpen, journey])
 
   const chat = useChatWithTools(pageContext)
   const [dockState, setDockState] = useState<DockState>("idle")
@@ -88,11 +93,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   // reopens it, with the full existing history intact since messages state
   // lives in the one shared chat instance and is never cleared on close.
   useEffect(() => {
-    if (chat.messages.length > previousMessageCount.current) {
+    if (chat.messages.length > previousMessageCount.current && !interviewOpen) {
       setDockState("docked")
     }
     previousMessageCount.current = chat.messages.length
-  }, [chat.messages.length])
+  }, [chat.messages.length, interviewOpen])
 
   const replyRef = useRef({
     id: "",
@@ -144,9 +149,16 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     [chat]
   )
 
+  const sendText = useCallback(
+    (text: string) => {
+      chat.sendMessage({ text }, { body: { pageContext } })
+    },
+    [chat, pageContext]
+  )
+
   return (
     <ChatDockContext.Provider
-      value={{ chat, dockState, openChat, closeChat, seedInput }}
+      value={{ chat, dockState, openChat, closeChat, seedInput, sendText }}
     >
       {children}
     </ChatDockContext.Provider>

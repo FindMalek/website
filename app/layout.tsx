@@ -2,7 +2,9 @@ import "@/styles/globals.css"
 
 import type { Metadata, Viewport } from "next"
 import { ChatProvider } from "@/providers/chat-provider"
+import { InterviewProvider } from "@/providers/interview-provider"
 
+import { INTERVIEW_MODE_ENABLED } from "@/config/flags"
 import { geistHeading, geistMono, poppins } from "@/config/fonts"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
@@ -10,6 +12,7 @@ import { cn } from "@/lib/utils"
 import { ChatFloatingContainer } from "@/components/app/chat-floating-container"
 import { FoldableEasterEgg } from "@/components/app/foldable-easter-egg"
 import { HighlightAskAction } from "@/components/app/highlight-ask-action"
+import { InterviewSheet } from "@/components/app/interview-mode/interview-sheet"
 import { ScrollToTop } from "@/components/app/scroll-to-top"
 import { Analytics } from "@/components/layout/analytics"
 import { Background } from "@/components/layout/background"
@@ -79,6 +82,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html
+      lang="en"
       suppressHydrationWarning
       className={cn(geistMono.variable, geistHeading.variable)}
     >
@@ -97,27 +101,30 @@ export default function RootLayout({ children }: RootLayoutProps) {
             )}
           >
             <LayoutWrapper>
-              <ChatProvider>
-                <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
-                {/* Site chrome has no place on a printed/PDF'd page (e.g. /resume) --
+              <InterviewProvider>
+                <ChatProvider>
+                  <Header />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                  {/* Site chrome has no place on a printed/PDF'd page (e.g. /resume) --
                 Header/Footer are covered by the tag-selector print rule in
                 globals.css, this wraps everything else that isn't. */}
-                <div className="print:hidden">
-                  <Background />
-                  <Analytics />
-                  <Toaster />
-                  <TailwindIndicator />
-                  <ChatFloatingContainer />
-                  <HighlightAskAction />
-                  <ScrollToTop />
-                  {/* Device Posture API is Chromium/Samsung-Internet-only (no
+                  <div className="print:hidden">
+                    <Background />
+                    <Analytics />
+                    <Toaster />
+                    <TailwindIndicator />
+                    <ChatFloatingContainer />
+                    {INTERVIEW_MODE_ENABLED && <InterviewSheet />}
+                    <HighlightAskAction />
+                    <ScrollToTop />
+                    {/* Device Posture API is Chromium/Samsung-Internet-only (no
                   WebKit support) -- no-ops everywhere else, including any
                   real iPhone. See hooks/use-device-posture.ts. */}
-                  <FoldableEasterEgg />
-                </div>
-              </ChatProvider>
+                    <FoldableEasterEgg />
+                  </div>
+                </ChatProvider>
+              </InterviewProvider>
             </LayoutWrapper>
           </div>
         </div>
