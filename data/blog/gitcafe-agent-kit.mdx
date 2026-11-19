@@ -1,0 +1,117 @@
+---
+title: "What GitCafe is missing for coding agents, with working code"
+href: /blog/gitcafe-agent-kit
+excerpt: "I ran coding agents against GitCafe's public surface, built four small fixes (an API slicer, a Turborepo cache, a rate-limit guard and an issue runner) and wrote down what I could and couldn't reproduce."
+publishedAt: "2026-11-19"
+tags: ["gitcafe", "agents", "turborepo", "openapi", "ci"]
+status: published
+image: /blog/gitcafe-agent-kit/cover.png
+imageAlt: 'Cover for "What GitCafe is missing for agents", showing three results: a CI build going from 2.6 seconds to 11 milliseconds with a remote cache, API tokens going from 523K to 15K, and 28 of 28 requests unthrottled'
+---
+
+GitCafe is a young Git forge built for agents. It has a CLI, an MCP server, a REST API and docs that agents can read without signing in. It also says openly that it's behind GitHub today.
+
+I wanted to know where an agent actually trips. So I spent a day driving it only through what GitCafe publishes: the OpenAPI spec, the `cafe` CLI, MCP, the docs and `llms.txt`. For every gap I found, I built a small fix and tested it on my own account. Anything I couldn't reproduce, I left out or marked.
+
+The code is public on [GitCafe](https://git.cafe/findmalek/gitcafe-agent-kit) and mirrored on [GitHub](https://github.com/FindMalek/gitcafe-agent-kit). Every claim below has exact repro steps in `FINDINGS.md` in that repo.
+
+## Ground rules
+
+I read the acceptable use policy first. It bans evading rate limits and generating excessive automated traffic. So every load test here is tiny: the biggest one is 28 requests. I used a free account, and the only test writes went to a private throwaway repo I made for this.
+
+## The API spec is too big to load
+
+`https://git.cafe/api/openapi/json` is 2,092,751 characters. That's 547 operations, plus 72 webhook events, and about 523K tokens if you count characters divided by four. No agent can load that.
+
+The operation ids don't help either. They're built from the path. The longest one is 73 characters:
+
+```text
+getApiReposByOwnerByRepoWebhooksByWebhookIdDeliveriesByDeliveryIdAttempts
+```
+
+SDK and MCP generators turn operation ids into tool names, and names like that are hard for a model to pick from. I wrote a slicer that renames them from the method and path, so `getApiReposByOwnerByRepoPullsByPr` becomes `getPullRequest`, and `deleteApiReposByOwnerByRepoIssuesByIssueLock` becomes `unlockIssue`. All 547 are unique.
+
+![Before and after: a 73 character operation id next to listWebhookDeliveryAttempts, and the tokens an agent has to load: 523K for the full spec, 15K for the index, 6K for a median operation](/blog/gitcafe-agent-kit/before-after.png "Token counts are characters divided by four, not a tokenizer.")
+
+It writes three things: one file per tag, one file per operation, and a 59K character index with one line per operation. An agent reads the index (about 15K tokens), picks an id, and loads only that operation with the schemas it needs (a median of about 6K tokens).
+
+A few things I checked, because a renamer that breaks the spec is worse than no renamer:
+
+- All 547 single-operation files and all 23 tag slices pass a validator, and so does the original spec.
+- The ids are pinned in a lockfile. A later spec update can't rename one you already use.
+- I called `listPullRequests` on the live API and the response matches the slice.
+
+One honest limit: `listPullRequests` is still about 11K tokens, because the response schemas are deep. Slicing doesn't change that.
+
+## CI has no cache
+
+GitCafe's docs say it plainly: `actions/cache` is "Not yet. No cache service." Artifacts aren't supported either. For a monorepo, that means every CI run builds everything.
+
+Turborepo has a documented remote cache API, so I built a server for it. It's about 180 lines of Node with no dependencies, plus a 160 line S3 client. It stores artifacts on disk or in S3 or R2, and separates teams by `TURBO_TEAM`.
+
+I tested it with the real `turbo` 2.11.11, not a mock. The first run is a miss and uploads. Then I wipe the local cache and run again:
+
+![A terminal recording of two turbo runs. The first is a cache miss and takes 2.643 seconds. After deleting the local cache, the second run is a cache hit and takes 11 milliseconds.](/blog/gitcafe-agent-kit/cache-demo.gif "2.6 s cold, 11 ms from the remote cache. Real turbo against the server in the repo.")
+
+The restored files were byte-identical. A wrong token degrades to a warning instead of failing the build. Artifact signing works too: with `remoteCache.signature` on, an artifact signed with a different key is treated as a miss.
+
+One detail that cost me a minute: the published Turborepo spec lists `/artifacts/...`, but real clients call `/v8/artifacts/...`. Their docs say so, but the spec file doesn't.
+
+For workflows I wrote a `gitcafe-cache` action. It saves and restores paths to S3 or R2 with the same `key` and `restore-keys` idea as `actions/cache`. The AWS request signing is about 35 lines of `node:crypto`, and I checked it against the example in AWS's own docs. I ran the whole save and restore cycle against a local S3 that checks signatures: miss, save, exact hit, prefix fallback, bad credentials, and no credentials. Without credentials it warns and does nothing, so it can't break a build.
+
+What I did **not** verify is the action on a real GitCafe runner. Hosted runners are only for organizations GitCafe admits. On my account, `cafe ci enable` said `Admitted: No`, and a test workflow stayed `Queued` with nothing to run it. So I can't tell you how `actions/cache` fails there, only that the docs say it isn't supported.
+
+## One budget for every credential
+
+The rate limit docs are clear about two things. Every credential on an account shares one budget (1,000 requests per 60 seconds on the free plan, times your plan multiplier). And "the API does not report how many requests remain."
+
+I confirmed the second one. Success responses carry `ratelimit-policy: "api";q=1000;w=60` and no remaining count, on every one of my requests. It's by design, not a bug. But it means one runaway agent can use up the budget for all your other agents, and none of them can see it coming.
+
+So I wrote a client-side guard. Each agent gets a share of the budget. It sends one probe request, learns the real quota from `RateLimit-Policy`, and never sends more than `share × quota` requests in any window. On a 429 it pauses everything for `Retry-After`, and backs off further if it happens again.
+
+My first version was a token bucket, and a test caught the problem. A bucket that holds 10 and refills 10 per minute can send about 20 in the first minute. GitCafe documents a sliding window, so I switched to a sliding-window log that matches it. An agent with 10% of the budget now never exceeds 10% in any window.
+
+The benchmark: two agents, 14 requests each, each limited to 1% of the budget. All 28 returned 200, and each agent peaked at exactly 10 in any 60 seconds. That's under 3% of one minute's budget, which is why I could run it without worrying about the policy.
+
+I didn't test a real 429. Causing one on purpose would break the policy I'd just read. That path is covered by unit tests only.
+
+## Turning an issue into a stack
+
+GitCafe has stacked pull requests, `cafe stack submit --dry-run`, and issue assignment. It doesn't have a way to go from "issue" to "reviewed stack" in one step. I stitched one together from documented commands only:
+
+1. Read the issue and refuse if it's closed or assigned to someone else.
+2. Assign it to the agent's account, then read it back to make sure nobody else got there first.
+3. Make a git worktree on a new branch.
+4. Run the agent in it.
+5. Run `cafe stack submit --dry-run`. Stop there unless I pass `--submit`.
+6. Submit, link the pull requests to the issue, and comment with the agent, model, run id, commits and pull requests.
+
+It ran end to end twice on a private repo. The first real run also found a bug that my fake `cafe` in the tests had hidden. To find the pull request numbers, I'd guessed at the shape of the submit output, and picked up a stray `number`. The comment said `#3, #2` when only `#2` existed. Now it lists pull requests by their branch name (`cafe/<name>/<n>`) and only reports links that worked. I left the wrong comment on that test issue as a reminder.
+
+The claim step is best effort. GitCafe has no lease, so two agents can both assign themselves. That's a gap worth a real feature.
+
+## What I couldn't reproduce
+
+My notes going in had two more complaints. Neither held up, so I'm leaving them out of the findings:
+
+- **"The docs say MCP can't commit, but `commit_changes` does."** I searched all 54 pages in `llms.txt`. The MCP page says `commit_changes` can create branches, and the live tool list agrees. No page says otherwise today.
+- **"Link header and next cursor disagree."** A live `GET /api/repos` returns both a `Link: rel="next"` header and a `next` field in the body, with the same cursor.
+
+## Smaller things that are real
+
+- The CLI only runs under Bun. Under Node it dies with `ReferenceError: Bun is not defined`. Plenty of agent sandboxes ship Node, not Bun.
+- `cafe stack submit --help` fails with "unknown command", while `cafe stack submit -h` works. An agent that discovers flags with `--help` gets an error.
+- `create_issue` has no idempotency key, on MCP or REST. A retry after an unknown outcome can create a duplicate issue.
+- `cafe repo create` makes a public repo unless you pass `--private`. The raw API defaults to private.
+
+## What's still open
+
+- The cache action hasn't run on a real GitCafe runner, and I only tested S3 storage against a local server, not R2 itself.
+- The issue runner has only submitted one-commit stacks.
+- Credential silos (an MCP token doesn't work on REST) are in the docs, but proving them needs a browser consent step, so I didn't test them. Same for one agent starving another: I only have one credential.
+
+## The takeaway
+
+Most of what an agent needs from a forge is a number it can read and a name it can pick. A remaining-quota header, a tool name that says what it does, a spec it can load in pieces. The rest of what I built was small once the gap was clear: the cache server is under 200 lines, and the guard fits in one file.
+
+If you want to try any of it, the repo is at [git.cafe/findmalek/gitcafe-agent-kit](https://git.cafe/findmalek/gitcafe-agent-kit), with exact repro steps for each claim above.
