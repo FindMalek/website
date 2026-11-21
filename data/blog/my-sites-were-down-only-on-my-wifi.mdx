@@ -1,0 +1,86 @@
+---
+title: "My sites were down, but only on my wifi"
+href: /blog/my-sites-were-down-only-on-my-wifi
+excerpt: "Uptime Kuma showed everything red, my laptop couldn't load a single site, and the server was perfectly fine. A short story about hairpin NAT and a one-line DNS rewrite."
+publishedAt: "2026-11-19"
+tags: [homelab, dns, adguard, traefik, self-hosting]
+status: draft
+---
+
+Last night everything on my home server looked down at once. Dokploy, photos, albums, drive, the vault. Uptime Kuma had them all at around 87% for the last 24 hours, which is about three hours of nothing.
+
+I opened one of the sites on my laptop and it just timed out. So that's that, I thought. Something is broken.
+
+It wasn't.
+
+## The box was fine
+
+I run everything on one machine at home, called `the-keep`. Dokploy deploys the apps, Traefik routes `*.findmalek.engineer` to them, AdGuard Home does DNS and Uptime Kuma watches it all.
+
+So first I checked the machine itself. It had been up for four days with a load around 1. Disk and memory were fine. Every service in the Docker swarm was at its desired replica count.
+
+Then I asked Traefik directly from the box:
+
+```sh
+curl -sk --resolve photos.findmalek.engineer:443:127.0.0.1 https://photos.findmalek.engineer
+```
+
+`200`. Same for the vault. The firewall allowed 80 and 443, and DNS pointed at my real public IP. Everything on the server side was green, and every site still timed out from my laptop.
+
+## Then I tried cellular
+
+I took my phone, turned wifi off and opened `photos.findmalek.engineer`.
+
+It loaded. Instantly.
+
+My first test on cellular had failed, but I'd done it wrong, probably still on wifi. So the sites were up for the whole internet and down for exactly one place: the inside of my own house.
+
+## Hairpin NAT
+
+When my laptop asks for `photos.findmalek.engineer`, DNS gives it my public IP. The request leaves the laptop, hits the router, and now the router has to notice that the destination is its own public address and turn the packet back into the network, towards the server. That trick is called hairpin NAT, or NAT loopback.
+
+Plenty of routers don't do it. Mine is an ISP-supplied fibre gateway. Its admin page is literally titled "GPON Home Gateway", so I'm not going to be changing firmware on it.
+
+It also explains Uptime Kuma. It runs on the same box and probes the public URLs, so from its point of view my sites are on the wrong side of the same broken loop. Some of that 87% was probably real, some of it was Kuma failing to reach its own front door. I haven't pulled the monitor history apart to tell which is which, so I'm not going to pretend I know.
+
+## The fix is to stop going through the router
+
+The sites only fail because the name resolves to an address that the router can't loop back to. So I made the name resolve to the server's LAN address when I'm at home.
+
+AdGuard Home already ran as my DNS server, so this was one DNS rewrite:
+
+```yaml
+rewrites:
+  - domain: '*.findmalek.engineer'
+    answer: 192.168.1.81
+    enabled: true
+```
+
+You can also add it in the UI under Filters, DNS rewrites. Devices that use AdGuard now get the LAN address for every site, and the request never touches the router's public side. Away from home nothing changes, because the public DNS record is still the public IP.
+
+I checked it by asking AdGuard directly:
+
+```sh
+dig +short photos.findmalek.engineer @192.168.1.81
+# 192.168.1.81
+```
+
+And `github.com` still resolves normally through it, so I hadn't broken ordinary DNS.
+
+## A command that did nothing
+
+The first time I pasted the fix into my SSH session, nothing happened. The `sed` line was long enough that the terminal wrapped it, and the last line had no newline at the end, so `docker restart` never ran. The config file still said `rewrites: []`.
+
+I only noticed because I looked at the file afterwards instead of trusting that a paste works. Now I check the file or run the `dig` before I say it's done.
+
+## The part I haven't done yet
+
+None of this helps a device until it actually uses AdGuard for DNS. My laptop still uses the router's, which is `192.168.1.254`. The router should hand out the server as its DNS, with `1.1.1.1` as a second entry in case the box is down. On this gateway that setting might be hidden or locked by the ISP, in which case I'll set it per device.
+
+It comes with a bonus. Every device that uses AdGuard also gets its ad and tracker blocking, TVs and phones included.
+
+## Tailscale for everything else
+
+The box is already on my tailnet, along with my phone and laptop. For anything I don't want on the public internet, like SSH and the dashboard, that's the way in. The public sites stay public.
+
+It means that when something looks down again, I can check from three places: the box itself, my phone on cellular, and my phone through Tailscale. If the first two say fine and only the wifi says broken, it's the house.
