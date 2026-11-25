@@ -89,6 +89,18 @@ export const STACK_SECTIONS: StackSection[] = [
         imageUrl: "https://img.logo.dev/bun.sh",
         url: "https://bun.sh",
       },
+      {
+        title: "Go",
+        description: "Compiled language for fast, concurrent backend services.",
+        imageUrl: "https://img.logo.dev/go.dev",
+        url: "https://go.dev",
+      },
+      {
+        title: "Ruby on Rails",
+        description: "Full-stack Ruby framework, used on the 8Returns backend.",
+        imageUrl: "https://img.logo.dev/rubyonrails.org",
+        url: "https://rubyonrails.org",
+      },
     ],
   },
   {
@@ -521,6 +533,13 @@ export const STACK_SECTIONS: StackSection[] = [
           "OpenTelemetry-native platform for logging, monitoring, and incident management.",
         imageUrl: "https://img.logo.dev/betterstack.com",
         url: "https://betterstack.com",
+      },
+      {
+        title: "Datadog",
+        description:
+          "Monitoring and observability platform for metrics, traces, and logs.",
+        imageUrl: "https://img.logo.dev/datadoghq.com",
+        url: "https://www.datadoghq.com",
       },
     ],
   },
