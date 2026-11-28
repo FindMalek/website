@@ -1,0 +1,222 @@
+---
+id: 17
+image: "/project/ritorno.png"
+name: "ritorno"
+overview: "Loyalty and guest relationships for small hotels in Tunisia. A guest scans a QR code, says yes to WhatsApp or email, and the hotel can welcome them, send a birthday offer, ask how the stay went and hear about a bad one the same day. English, French and Arabic, right to left included."
+status: "published"
+link: "https://github.com/FindMalek/ritorno"
+href: "/projects/ritorno"
+tags:
+  [
+    "TypeScript",
+    "Next.js",
+    "Bun",
+    "oRPC",
+    "Drizzle",
+    "PostgreSQL",
+    "Turborepo",
+    "WhatsApp",
+    "i18n",
+  ]
+---
+
+# ritorno
+
+A small hotel in Tunisia doesn't own its guests. Booking.com or the tour operator does. The hotel gets a name on a reservation, the guest leaves, and nobody ever talks to them again. Ritorno is my answer to that. A guest scans a QR code in the room or at the restaurant table, leaves a name and a phone, and says yes or no to WhatsApp and to email, one by one. From there the hotel can welcome them, send a birthday offer, fill the low season, and ask how the stay went.
+
+It's my latest project and the one I'm proudest of, mostly because of the landing page. The code is on [GitHub](https://github.com/FindMalek/ritorno) and the landing runs at [ritorno.findmalek.engineer](https://ritorno.findmalek.engineer). The dashboard needs a hotel account, so every dashboard screenshot below comes from the repo's demo seed on my machine: four made up hotels and about 1,400 fake guests with phone numbers from ranges no operator holds.
+
+![The Ritorno landing page hero: a dithered blue pixel sky with white pixel clouds around a cleared center, the headline Every guest, welcomed back by name in a serif italic with welcomed in blue, and two pill buttons, Request a demo and See how it works.](/project/ritorno/hero.webp)
+
+_The hero, live on production. The sky is drawn from a seed, not an image file._
+
+## What it does
+
+The idea is recognition, not points. No card, no tiers. Perks are plain offers with a code and a QR the guest shows at the desk.
+
+- **Capture.** Every hotel gets QR codes per spot: a room, the front desk, a restaurant table. The guest page asks for a name, a phone and, separately, consent for WhatsApp and for email. Both toggles start off. Staff can also quick add a guest at the desk or import a CSV.
+- **Messages.** A welcome right after sign up, a birthday offer on the day, holiday messages the hotel switches on, and campaigns to a segment, for example last summer's guests when the low season comes. WhatsApp goes through named templates, email through branded hotel templates. Every message has an unsubscribe link or a STOP line.
+- **After the stay.** A short survey goes out 24 hours after check out. A score at or under the hotel's threshold (6 out of 10 by default, [`survey.ts`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/common/src/survey.ts)) emails the manager and lands in an unhappy guests inbox. Then, if the hotel has set its Google link, the thank you screen shows a "Share on Google" button. To every guest, whatever the score. The docs say it plainly: never gated by score.
+- **Recognition.** A returning guest is flagged at the front desk with what the team noted last time.
+
+![Three phones side by side with the guest sign up page of the demo hotel Sunset Bay Resort in English, French and Arabic: the hotel name, a welcome drink perk, name and phone fields and the consent toggles.](/project/ritorno/capture-mobile.webp)
+
+_The page a guest lands on after scanning, in the three languages. The Arabic one flips the whole layout. Local demo seed._
+
+Every hotel is one organization, and its branding is configuration, not code. A hotel's colors become `--primary` and `--brand-accent` on guest pages and emails only, with a black or white foreground picked for contrast ([#154](https://github.com/FindMalek/ritorno/pull/154)). The dashboard itself stays ink.
+
+## The landing page
+
+This is the part I care about most. I wrote a short brief in [issue #214](https://github.com/FindMalek/ritorno/issues/214): a pixel cloud sky, a big italic headline, a floating pill nav, a black pill CTA, then a real product shot and a bento section. The brand primitives came first, in [#246](https://github.com/FindMalek/ritorno/pull/246), then the page in [#250](https://github.com/FindMalek/ritorno/pull/250).
+
+![The dithered sky over the hero, with the pixel clouds shifting one cell at a time while the headline stays still.](/project/ritorno/sky.gif)
+
+_The clouds step one cell every 900 ms. Recorded on production._
+
+### The sky
+
+`PixelSky` ([`pixel-sky.tsx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/ui/src/brand/pixel-sky.tsx), [`pixel-sky-grid.ts`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/ui/src/brand/pixel-sky-grid.ts)) is a grid of square cells, 8 px on a phone and 12 px above. A seeded two octave value noise picks one of four sky bands per cell, deep blue at the top to haze at the bottom, and band edges get a checker of both colors so it reads as dithering. A second noise layer becomes white cloud in 2x2 blocks. Any string as `seed` gives another sky, always the same one.
+
+Then there's the clear center. The headline block carries `data-sky-clear`, and from 768 px up the sky measures that box and clears a superellipse 3.5% around it, feathered by the same checker. On a phone it falls back to an ellipse. That's why the text always sits on white, in every language and at every width, without me tuning a mask per breakpoint.
+
+How it loads matters more than how it looks:
+
+- The server renders a 160x90 PNG poster, about 1.5 KB, inlined as a data URL with `image-rendering: pixelated`. The sky paints with the HTML.
+- [`pixel-sky-canvas.tsx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/ui/src/brand/pixel-sky-canvas.tsx) is the only client part, with no dependencies. After `requestIdleCallback` it redraws the grid into a canvas one pixel per cell and fades it in. Each cloud step is one `putImageData` of a few thousand pixels.
+- The drift stops offscreen (`IntersectionObserver`), on hidden tabs, and never starts under `prefers-reduced-motion` or `saveData`.
+
+The sky is art, so it's `aria-hidden` and it doesn't mirror in Arabic.
+
+![Three phones with the landing hero in English, French and Arabic. The French headline reads Chaque client, reconnu à son retour, the Arabic one is set in an upright Naskh with the emphasis word in blue.](/project/ritorno/landing-mobile.webp)
+
+_The hero on a phone in the three languages. Same sky seed, different cleared shape around each headline._
+
+### Type
+
+Geist for the UI, Newsreader italic for the display voice in English and French. Arabic doesn't have a real italic, and I didn't want a fake slant, so `font-display` switches to an upright Noto Naskh Arabic at 600 under `:lang(ar)`, with `font-synthesis: none` so the browser never invents one. Arabic emphasis is weight or blue, never italic ([`design-system.mdx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/design-system.mdx)). `font-sans` also switches on `lang`, so Arabic body text gets Noto Sans Arabic first and taller line heights.
+
+The `Display` component ([`display.tsx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/ui/src/brand/display.tsx)) has a `reveal` prop: each word rises 8 px and unblurs, with a stagger of at most 60 ms that shrinks so a long line still finishes inside the budget. It's CSS only. The global reduced motion rule renders the words in place.
+
+### One guest's journey
+
+My first "how it works" was six equal cards with connector lines, and it was weak. [Issue #252](https://github.com/FindMalek/ritorno/issues/252) rebuilt it as one story: Amira, room 12, from the QR scan to her second stay. Inputs on the left, her stay as a live checklist in the middle, outcomes on the right ([#258](https://github.com/FindMalek/ritorno/pull/258)).
+
+![The how it works section scrolling into view. The checklist in the middle card ticks its nine steps one by one, from joined with the room QR code to Google review invite sent, while a progress bar under it fills.](/project/ritorno/journey.gif)
+
+_The checklist ticks once it scrolls into view. Recorded on production._
+
+The details I like in [`journey-checklist.tsx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/web/components/landing/journey-checklist.tsx):
+
+- The server renders the list **finished**. No JS, a crawler or reduced motion all get the full story.
+- On the client, a layout effect resets it to empty only if the list is still below the fold. If you land with it on screen, nothing flickers.
+- Once 35% of it is visible, it ticks a step every 420 ms. The current step pulses blue, a progress bar scales under it (`origin-left`, `rtl:origin-right`) and a caption updates with `aria-live="off"` so screen readers aren't spammed.
+- Times sit in `<bdi dir="ltr">`, so `14:02` stays `14:02` inside Arabic text.
+
+The hairlines between the columns are one SVG behind the cards. The columns are `1fr 1.2fr 1fr` with 6% gaps, so every card center and gap middle is a fixed fraction of the grid, and the paths are written in those numbers ([`how-it-works.tsx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/web/components/landing/how-it-works.tsx)). The opaque cards hide the lines, so only the bits in the gaps show. No measuring, no resize listener.
+
+![The how it works section: inputs on the left (QR code in the room, at the desk or the table, staff quick add), the hub card for Amira Ben Salah with nine timestamped steps, and outcomes on the right (manager alert, a Google review, back for a second stay) over a corner of pixel sky.](/project/ritorno/how-it-works.webp)
+
+_The finished state, which is also what the server sends._
+
+### Product shot, bento, footer
+
+The product shot under the hero is not a screenshot. `BrowserFrame` and `PhoneFrame` ([`device-frame.tsx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/ui/src/brand/device-frame.tsx)) wrap JSX mockups with fixture data, so they follow the page's language and direction and never go stale. The frames render their children `inert` with `role="img"` and a translated label, so nobody tabs into a fake button.
+
+![The product shot: a browser frame with a dashboard mockup for the demo hotel Dar Zitouna (guests 1,284, returning 212, survey score 4.6 and a list of latest guests) and a phone frame overlapping it with the guest sign up form.](/project/ritorno/product-shot.webp)
+
+_Mockups in device frames, built from components, not images._
+
+![Three feature cards on a grey panel: know who is back, with a returning guest card; consent and data you own, with a consent log of WhatsApp yes and email no; and offers that bring them back, with a welcome drink offer code.](/project/ritorno/features.webp)
+
+_Each card shows the actual thing it talks about._
+
+The footer ends with a giant embossed wordmark. It's the same color as the canvas, so it only shows through a white top highlight and layered ink shadows, and a blurred band of blue under it. Both CSS only. In Arabic the columns flip and the wordmark doesn't.
+
+![The Arabic footer: link columns in Arabic laid out right to left, and under them a huge embossed Ritorno wordmark in serif italic fading into a soft blue band.](/project/ritorno/footer-ar.webp)
+
+_The footer on `/ar`._
+
+### Tokens
+
+Light only. One blue (`#0a84ff`), ink for every action, no dark mode and no per component token ([`theme.css`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/ui/src/styles/theme.css), [`globals.css`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/ui/src/styles/globals.css)). Brand blue is for icons and text from 24 px up, never a button. Small blue text is `blue-600` or `blue-700` so it passes contrast. Status is never color only. Motion has four durations (120, 200, 400, 600 ms) and two curves, every tappable thing is 44 px with a `coarse:` variant for touch, and radii go from 10 px on inputs to 40 px on the phone frame. The components are shadcn on Base UI with the RTL migration, and every brand component has a docs page with live examples ([`brand-components.mdx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/brand-components.mdx)).
+
+### It was slow at first
+
+The first version of the redesign failed its own budget. Lighthouse CI on [#250](https://github.com/FindMalek/ritorno/pull/250) gave an LCP of 7.2 s against a 2.5 s budget, 344 KB of script against 300 KB, and a performance score of 0.70 ([#251](https://github.com/FindMalek/ritorno/issues/251)). The headline was the LCP element, and the word reveal started it at opacity 0 while the serif was still loading.
+
+The fix in [#253](https://github.com/FindMalek/ritorno/pull/253) was small. The hero headline lost `reveal` (it stays on section titles), the phone menu sheet of the pill nav became a lazy chunk loaded on first tap, and the error reporting SDK, about 150 KB gzipped, now loads only when a DSN is set and only once the page is idle. Done meant Lighthouse CI passing on `/` and `/ar`.
+
+## The dashboard
+
+`apps/dashboard` is what the hotel uses every day, on a desktop at the desk or on a phone. The home page is "needs you now": unhappy guests with call, WhatsApp and email buttons and a mark contacted.
+
+![The dashboard home for the demo hotel Sunset Bay Resort: Hello Karim, a search box, and a needs you now list of guests with low survey scores, their comment and call, WhatsApp, email and mark contacted buttons.](/project/ritorno/dashboard-home.webp)
+
+_Home, signed in as the demo owner of Sunset Bay Resort. Local seed data._
+
+![The guests list with filter chips for returning, email, WhatsApp, profile, no consent and language, and a table of guests with phone, consent chips, language, source and date added.](/project/ritorno/dashboard-guests.webp)
+
+_Guests, filterable by consent, language and how they joined. The phones are from ranges no operator holds._
+
+`⌘K` searches guests from anywhere ([#401](https://github.com/FindMalek/ritorno/pull/401)).
+
+![The guests page with the command palette open, sophie being typed, five matching guests listed, then the first one opened.](/project/ritorno/palette.gif)
+
+_Type a name, enter, you're on the guest. Local seed data._
+
+![The unhappy guests inbox: five new, one contacted and 21 resolved, with each guest's score, comment and status.](/project/ritorno/dashboard-feedback.webp)
+
+_Unhappy guests from the post-stay survey, as a small inbox ([#284](https://github.com/FindMalek/ritorno/pull/284))._
+
+![The campaigns list with drafts, scheduled and done tabs, each campaign's channel, audience, results and date.](/project/ritorno/dashboard-campaigns.webp)
+
+_Campaigns. Duplicate and unschedule came in [#412](https://github.com/FindMalek/ritorno/pull/412)._
+
+In Arabic the sidebar moves to the right and the whole shell mirrors. That comes from logical classes everywhere (`ms-`, `pe-`, `start-`, `text-start`, never `ml-` or `left-`) and `rtl:rotate-180` on arrows ([`i18n.mdx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/i18n.mdx)). Digits stay Western on purpose.
+
+![The metrics page in Arabic, right to left: a stacked bar chart of guests captured per week by room QR, table QR, front desk QR and staff, and reach tiles for WhatsApp consent 78%, email consent 53%, 277 messages delivered and 34 failed.](/project/ritorno/dashboard-metrics-ar.webp)
+
+_Metrics in Arabic. Local seed data._
+
+![Three phones with the dashboard at phone width: home with the needs you now list, the guests list, and metrics, each with a bottom tab bar and a round add button.](/project/ritorno/dashboard-mobile.webp)
+
+_At phone width the sidebar becomes a bottom bar with a center add button._
+
+There's also a view only demo account for sales meetings ([#315](https://github.com/FindMalek/ritorno/pull/315)): the api and auth refuse every write and every export from it, so a hotel owner can hold the phone without breaking anything.
+
+## How it fits together
+
+```text
+ritorno/
+├─ apps/
+│  ├─ web/        landing, guest pages (QR capture, survey, unsubscribe, offers)
+│  ├─ dashboard/  the hotel app and the platform admin
+│  ├─ api/        oRPC on Bun, plus a worker for scheduled jobs
+│  ├─ docs/       docs site with the decisions
+│  ├─ email/      email templates and their dev preview
+│  └─ e2e/        Playwright
+└─ packages/
+   ├─ ui  common  orpc  db  auth  env  config  i18n
+   └─ jobs  notification  webhooks  storage  compliance  logger  ai
+```
+
+`apps/api` is the only thing that touches the database, auth and the providers. The web app and the dashboard call it through typed `@ritorno/orpc` clients. Schemas live once in `@ritorno/common`, the database is Drizzle on Postgres, and auth is better-auth.
+
+**One hotel, one organization.** A hotel is a better-auth organization with owner, manager and staff roles. Every guest row and every query carries the hotel id, and there's a test for it on both sides: an [isolation test](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/orpc/src/routers/tests/isolation.test.ts) on the router and an [e2e spec](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/e2e/tests/isolation.spec.ts). Storage follows the same line, one bucket prefix per hotel.
+
+**Consent is an append-only log.** `guest_consents` holds the current answer per guest and channel. `consent_events` is the proof: guest, hotel, channel, yes or no, source, the version of the wording they saw, a salted hash of the ip (never the ip) and which staff member made the change, if any ([`guests.ts`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/db/src/schema/guests.ts)). The api never updates a row there. A change of mind is a new row. An editable record isn't proof, and Tunisian law 2004-63 asks for clear consent ([decision record](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/decisions/consent-log-append-only.mdx)). The one exception is a guest asking to be deleted: that's a hard delete, and the audit log keeps a row without personal data.
+
+**Every message goes through one function.** `sendToGuest` ([`messages.ts`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/orpc/src/lib/messages.ts)) loads the guest inside the hotel, reads the current consent for the channel, and with no consent writes a `skipped_no_consent` row and stops. Email goes out through Resend as the hotel's name with a one tap unsubscribe header, WhatsApp through Kapso with a named template in the guest's language. The `messages` table has no recipient column and a real send keeps no body. Providers only send for real in production with `MESSAGING_LIVE=true`. Everywhere else, previews and staging included, the row stores a preview and the dashboard shows "not sent" with a button to read it.
+
+Status webhooks only move a message forward (`queued`, `sent`, `delivered`), and a late `sent` can't undo `delivered`. Inbound WhatsApp is read for one thing: a message that is, as a whole, a stop word in any of the three languages (`stop`, `arrêt`, `إيقاف`, `توقف`). "Don't stop" does nothing.
+
+**Scheduling.** Automations are pg-boss jobs run by a separate worker container. Birthday and holiday jobs run every minute but only send between 09:00 and 20:59 in the hotel's own timezone. Every automatic send first claims a row in `automation_sends`, unique per guest, kind, period and channel, so a retry or a second worker sends nothing twice. A failure that can't have sent anything (a 429, a refused connection) is tried up to three times ([`automations.ts`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/orpc/src/lib/automations.ts)).
+
+**Languages.** `@ritorno/i18n` owns English, French and Arabic. The landing takes the language from the url (`/`, `/fr`, `/ar`), the dashboard from a cookie or the browser. A missing key falls back to English instead of crashing. The Open Graph card is drawn per language, and the Arabic one lays words out one at a time because satori reorders wrapped right to left text.
+
+**Deploy.** Staging and production run on Dokploy, one copy of the same compose file per environment ([`docker-compose.deploy.yml`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/docker-compose.deploy.yml)): Postgres, the api (which runs migrations on start), the worker (which waits for them), web, dashboard, docs and a backup service with a restore test ([#244](https://github.com/FindMalek/ritorno/pull/244)). Every PR gets its own preview for the apps it changed, and the rest links to staging ([#176](https://github.com/FindMalek/ritorno/pull/176)).
+
+## How I worked
+
+The repo has [169 commits](https://github.com/FindMalek/ritorno/commits/main) over four days, Nov 24 to Nov 27: 32, 35, 77 and 25. It started as a scaffold called le-hoetel and got its name in [#226](https://github.com/FindMalek/ritorno/pull/226). There are 178 pull requests, 167 merged, and 247 issues, 76 still open.
+
+Before most of the code, I wrote the docs: the business context, the plan, the pitch playbook, and 15 short decision records, each with a why and a why not. A few of them: [hotel equals organization](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/decisions/hotel-is-organization.mdx), [email and WhatsApp first](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/decisions/email-and-whatsapp-first.mdx), [recognition over points](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/decisions/recognition-over-points.mdx), [unsubscribe links are signed tokens](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/decisions/unsubscribe-links-are-signed-tokens.mdx). The rule is that a PR that changes behavior updates the docs in the same PR.
+
+One issue is one branch is one PR. Every issue and PR carries a milestone, priority, area, type and size label, and a CI check fails the PR when one is missing. PR titles are `type(scope): subject` because they become the commits on `main`, and release-please cuts versions from them. Every merge to `main` deploys staging. Once staging reports the new commit healthy, release-please opens a release PR, and merging that tags the version and deploys production ([`releases.mdx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/releases.mdx)). That gave 11 releases, [`v0.1.0`](https://github.com/FindMalek/ritorno/releases/tag/v0.1.0) to [`v0.6.0`](https://github.com/FindMalek/ritorno/releases/tag/v0.6.0), all on Nov 26 and 27. Hoteliers get their own release notes on a public [roadmap page](https://ritorno.findmalek.engineer/roadmap) in the three languages, written by hand, and CI fails if a version has no notes.
+
+CI runs lint, types, 96 unit and integration test files on a real Postgres, Playwright on mobile and desktop in all three languages, axe and Lighthouse budgets ([#188](https://github.com/FindMalek/ritorno/pull/188)), web vitals budgets ([#307](https://github.com/FindMalek/ritorno/pull/307)), a translation key check and a docs check.
+
+## What broke
+
+The worst bugs were all about consent, which is the one thing this product can't get wrong.
+
+- **Rescanning wiped a returning guest.** The capture toggles start off, and a merge from a QR source could override consent. So a guest who scanned again without ticking anything withdrew their own consent and lost their profile, and anyone who knew the phone number could do it to them ([#201](https://github.com/FindMalek/ritorno/issues/201)). Now a merge from a public QR page can only add consent and fill empty fields. Withdrawal stays on unsubscribe, STOP and staff ([#231](https://github.com/FindMalek/ritorno/pull/231)).
+- **An old CSV could message the whole list.** Importing queued a welcome per consented row, and the survey fell back to the creation date without a check out date. An old list would get a burst of welcomes and then a thank you for staying. Imports skip both now ([#235](https://github.com/FindMalek/ritorno/pull/235)).
+- **A CSV could undo an unsubscribe.** Re-importing a list that said yes put consent back for a guest who had sent STOP. An import now keeps a withdrawal and reports the row as skipped ([#242](https://github.com/FindMalek/ritorno/pull/242)).
+- **STOP without a phone number.** With WhatsApp usernames, Kapso can send only a business scoped user id, and the handler returned early when the phone was missing. That STOP was dropped. I found it by reading the code, not from a real payload, and fixed it in [#391](https://github.com/FindMalek/ritorno/pull/391).
+
+And one that was just embarrassing: the preview deploys posted their passwords in public PR comments, on a public repo. [#240](https://github.com/FindMalek/ritorno/pull/240) stopped that.
+
+## What is still rough
+
+Ritorno is not in a hotel yet. The `v1.0.0` milestone in the docs is the pilot launch, and it hasn't happened. The prices in the docs are guesses I haven't tested with a single owner. The WhatsApp guest templates are still waiting on Meta's review ([#277](https://github.com/FindMalek/ritorno/pull/277)), so live WhatsApp sending isn't proven end to end. And four days is fast: 28 of the commits are `fix(...)`, and 76 issues are still open.
