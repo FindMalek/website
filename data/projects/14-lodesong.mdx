@@ -57,7 +57,7 @@ I'm not going to pretend that pace is calm. It's fast, and fast means rough edge
 
 ![Diagram: a browser talks to the lodesong server, which proxies the Subsonic API of Navidrome on the home lab. The Arpeggi iOS app talks to the same Navidrome.](/project/lodesong-architecture.png)
 
-_Browser, a small Bun server, Navidrome. Arpeggi on my iPhone talks to the same Navidrome._
+_Browser, a small Bun server, Navidrome. This is from before the iPhone app, when Arpeggi on my phone talked to the same Navidrome._
 
 Navidrome runs on my home lab, an old i5 with 32GB of RAM, deployed with Dokploy. lodesong runs next to it as one container. CI publishes the image to GitHub's registry for amd64 and arm64 ([`Dockerfile`](https://github.com/FindMalek/lodesong/blob/db4685f40be6de5ecd7116a62aef7af4144f79c5/Dockerfile), [`ci.yml`](https://github.com/FindMalek/lodesong/blob/db4685f40be6de5ecd7116a62aef7af4144f79c5/.github/workflows/ci.yml)).
 
