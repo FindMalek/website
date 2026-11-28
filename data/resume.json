@@ -102,6 +102,26 @@
           "roles": []
         },
         {
+          "id": "f1f2f459-b0a8-4f89-8a82-d8bfbd5efa0d",
+          "hidden": false,
+          "company": "Ceraghit Creation",
+          "position": "Full-Stack Engineer, Freelance",
+          "location": "Tunisia (Remote)",
+          "period": "October 2026 – November 2026",
+          "dates": {
+            "start": "2026-10",
+            "end": "2026-11",
+            "present": false
+          },
+          "website": {
+            "url": "https://ceraghit.com",
+            "label": "ceraghit.com",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p>Built the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/projects/ceraghit\">online shop for a ceramics studio</a>: storefront in French, English and Arabic (right to left), a phone-first owner dashboard and the oRPC API behind both.</p></li><li><p>Each piece has a dinar and a euro price set by the owner, never converted. Cash on delivery in Tunisia, bank transfer from abroad, confirmed in the dashboard.</p></li><li><p>Production on Vercel, Neon PostgreSQL and Cloudflare R2. Staging runs on my homelab, and every pull request gets its own preview with its own database and demo data.</p></li><li><p>Traces, logs and metrics go to OpenObserve over OpenTelemetry, errors to GlitchTip. 262 merged PRs.</p></li></ul>",
+          "roles": []
+        },
+        {
           "id": "d0d445f1-20a6-4e73-8ce5-aaf9e5508b53",
           "hidden": false,
           "company": "8Returns",
@@ -356,31 +376,48 @@
           "description": "<ul><li><p>zsh autosuggestions ranked by an AI model instead of prefix matching. Open source.</p></li></ul>"
         },
         {
+          "id": "b0a96f76-cbfd-4d37-9107-07790792b36c",
+          "hidden": false,
+          "name": "Ritorno",
+          "period": "November 2026 – Present",
+          "dates": {
+            "start": "2026-11",
+            "end": null,
+            "present": true
+          },
+          "website": {
+            "url": "https://github.com/FindMalek/ritorno",
+            "label": "github.com/FindMalek/ritorno",
+            "inlineLink": true
+          },
+          "description": "<ul><li><p><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/projects/ritorno\">Loyalty and guest relationships for hotels</a> in Tunisia. A guest scans a QR code, gives consent per channel, and the hotel reaches them over WhatsApp and email in French, Arabic or English.</p></li><li><p>Consent lives in an append-only log, every message has an unsubscribe. Every merge deploys staging, every PR gets a preview. 167 merged PRs.</p></li></ul>"
+        },
+        {
           "id": "2468c418-3a93-4dc8-b3fb-2926d0cb70c0",
           "hidden": false,
           "name": "lodesong",
-          "period": "October 2026 – Present",
+          "period": "October 2026 – November 2026",
           "dates": {
             "start": "2026-10",
-            "end": null,
-            "present": true
+            "end": "2026-11",
+            "present": false
           },
           "website": {
             "url": "https://github.com/FindMalek/lodesong",
             "label": "github.com/FindMalek/lodesong",
             "inlineLink": true
           },
-          "description": "<ul><li><p>Web music player for self-hosted Navidrome: virtualized lists (about 40 rows mounted for a 10,000-song test library), typo-tolerant search, offline audio cache, gapless playback. 48 unit test files and 46 e2e specs.</p></li></ul>"
+          "description": "<ul><li><p><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://www.findmalek.com/projects/lodesong\">Web music player</a> for self-hosted Navidrome: virtualized lists (about 40 rows mounted for a 10,000-song test library), typo-tolerant search, offline audio cache, gapless playback. 48 unit test files and 46 e2e specs.</p></li><li><p>Native iPhone app (a SwiftUI shell that keeps playing with the screen locked), plus Mac, Android, Linux and Windows apps around the same player.</p></li><li><p>Opt-in diagnostics: errors go to your own GlitchTip, logs to OpenObserve, never song titles or tokens.</p></li></ul>"
         },
         {
           "id": "9efc05f3-b353-4aa7-baa0-2b59beaff86b",
           "hidden": false,
           "name": "keep-dashboard",
-          "period": "October 2026 – Present",
+          "period": "October 2026 – November 2026",
           "dates": {
             "start": "2026-10",
-            "end": null,
-            "present": true
+            "end": "2026-11",
+            "present": false
           },
           "website": {
             "url": "https://github.com/FindMalek/keep-dashboard",
@@ -542,7 +579,11 @@
             "Vercel",
             "Tailscale",
             "Biome",
-            "Datadog"
+            "Datadog",
+            "OpenTelemetry",
+            "GlitchTip",
+            "OpenObserve",
+            "Cloudflare R2"
           ]
         },
         {

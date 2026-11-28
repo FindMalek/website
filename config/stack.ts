@@ -541,6 +541,20 @@ export const STACK_SECTIONS: StackSection[] = [
         imageUrl: "https://img.logo.dev/datadoghq.com",
         url: "https://www.datadoghq.com",
       },
+      {
+        title: "GlitchTip",
+        description:
+          "Self-hosted, Sentry-compatible error tracking. Errors from Ceraghit and lodesong land here.",
+        imageUrl: "https://img.logo.dev/glitchtip.com",
+        url: "https://glitchtip.com",
+      },
+      {
+        title: "OpenObserve",
+        description:
+          "Self-hosted store for logs, traces, and metrics, fed over OpenTelemetry.",
+        imageUrl: "https://img.logo.dev/openobserve.ai",
+        url: "https://openobserve.ai",
+      },
     ],
   },
   {
