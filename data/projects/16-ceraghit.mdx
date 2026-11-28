@@ -39,7 +39,7 @@ _The same piece seen from abroad. Same product row, the second price the owner t
 
 ![Switching the footer language from French to Arabic: the page reloads right to left with the Arabic title and buttons.](/project/ceraghit/language-switch.gif)
 
-_The footer switch, French to Arabic._
+_The footer switch, French to Arabic, local run with the demo seed._
 
 ![The home page in Arabic on desktop: the layout is mirrored, the title and buttons on the right, the photo on the left.](/project/ceraghit/home-ar.webp)
 
@@ -59,7 +59,7 @@ I did build a card gateway, Konnect, a Tunisian one, with webhook tests ([#248](
 
 ![Adding the Medusa bas-relief to the cart: the button is clicked and a cart drawer slides in with the piece and the subtotal.](/project/ceraghit/add-to-cart.gif)
 
-_Add to cart on the staging copy._
+_Add to cart, local run with the demo seed._
 
 **Photos are compressed on the phone.** The studio plan on Cloudflare R2 is 2.5 GB. The dashboard turns every photo into WebP, 2400 px on the long side, quality 0.86, before the upload goes straight to the bucket ([#68](https://github.com/FindMalek/ceraghit/pull/68)). Safari's canvas can't encode WebP, so there it lazy loads a wasm encoder and Chrome never downloads it ([#405](https://github.com/FindMalek/ceraghit/pull/405)). Every file is a row in `uploads`, the dashboard shows the usage, and an upload past the quota is refused. A daily job ([#280](https://github.com/FindMalek/ceraghit/pull/280)) deletes uploads never confirmed after 48 hours, and library photos nothing uses after 30 days, with a warning for the last 7. At most 200 files per run.
 
