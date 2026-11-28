@@ -371,3 +371,49 @@
 .dark .shiki span {
   color: var(--shiki-dark);
 }
+
+/* Seasonal themes: the provider sets --cel-h/--cel-c/--glow-* on <html>,
+   so one block re-tints every token for any celebration. */
+html[data-celebration] {
+  --background: oklch(0.99 0.008 var(--cel-h));
+  --primary: oklch(0.55 var(--cel-c) var(--cel-h));
+  --ring: oklch(0.7 calc(var(--cel-c) * 0.6) var(--cel-h));
+  --accent: oklch(0.96 0.03 var(--cel-h));
+  --muted: oklch(0.96 0.02 var(--cel-h));
+  --border: oklch(0.91 0.03 var(--cel-h));
+}
+
+html.dark[data-celebration] {
+  --background: oklch(0.16 0.03 var(--cel-h));
+  --card: oklch(0.21 0.035 var(--cel-h));
+  --primary: oklch(0.72 var(--cel-c) var(--cel-h));
+  --primary-foreground: oklch(0.15 0.02 var(--cel-h));
+  --ring: oklch(0.6 calc(var(--cel-c) * 0.6) var(--cel-h));
+  --accent: oklch(0.28 0.05 var(--cel-h));
+  --muted: oklch(0.27 0.04 var(--cel-h));
+  --border: oklch(1 0 0 / 12%);
+}
+
+@keyframes celebration-fall {
+  from {
+    transform: translate(0, -10vh);
+  }
+  to {
+    transform: translate(var(--drift, 0px), 110vh);
+  }
+}
+
+@keyframes celebration-rise {
+  from {
+    transform: translate(0, 110vh);
+  }
+  to {
+    transform: translate(var(--drift, 0px), -10vh);
+  }
+}
+
+@media print {
+  [data-celebration] .fixed {
+    display: none !important;
+  }
+}
