@@ -24,7 +24,7 @@ tags:
 
 A small hotel in Tunisia doesn't own its guests. Booking.com or the tour operator does. The hotel gets a name on a reservation, the guest leaves, and nobody ever talks to them again. Ritorno is my answer to that. A guest scans a QR code in the room or at the restaurant table, leaves a name and a phone, and says yes or no to WhatsApp and to email, one by one. From there the hotel can welcome them, send a birthday offer, fill the low season, and ask how the stay went.
 
-It's my latest project and the one I'm proudest of, mostly because of the landing page. The code is on [GitHub](https://github.com/FindMalek/ritorno) and the landing runs at [ritorno.findmalek.engineer](https://ritorno.findmalek.engineer). The dashboard needs a hotel account, so every dashboard screenshot below comes from the repo's demo seed on my machine: four made up hotels and about 1,400 fake guests with phone numbers that can't ring anyone.
+It's my latest project and the one I'm proudest of, mostly because of the landing page. The code is on [GitHub](https://github.com/FindMalek/ritorno) and the landing runs at [ritorno.findmalek.engineer](https://ritorno.findmalek.engineer). The dashboard needs a hotel account, so every dashboard screenshot below comes from the repo's demo seed on my machine: four made up hotels and about 1,400 fake guests with phone numbers from ranges no operator holds.
 
 ![The Ritorno landing page hero: a dithered blue pixel sky with white pixel clouds around a cleared center, the headline Every guest, welcomed back by name in a serif italic with welcomed in blue, and two pill buttons, Request a demo and See how it works.](/project/ritorno/hero.webp)
 
@@ -136,7 +136,7 @@ _Home, signed in as the demo owner of Sunset Bay Resort. Local seed data._
 
 ![The guests list with filter chips for returning, email, WhatsApp, profile, no consent and language, and a table of guests with phone, consent chips, language, source and date added.](/project/ritorno/dashboard-guests.webp)
 
-_Guests, filterable by consent, language and how they joined. The phones are from ranges that can't ring anyone._
+_Guests, filterable by consent, language and how they joined. The phones are from ranges no operator holds._
 
 `⌘K` searches guests from anywhere ([#401](https://github.com/FindMalek/ritorno/pull/401)).
 
@@ -190,7 +190,7 @@ ritorno/
 
 Status webhooks only move a message forward (`queued`, `sent`, `delivered`), and a late `sent` can't undo `delivered`. Inbound WhatsApp is read for one thing: a message that is, as a whole, a stop word in any of the three languages (`stop`, `arrêt`, `إيقاف`, `توقف`). "Don't stop" does nothing.
 
-**Scheduling.** Automations are pg-boss jobs run by a separate worker container. Birthday and holiday jobs run every minute but only send between 09:00 and 20:59 in the hotel's own timezone. Every automatic send first claims a row in `automation_sends`, unique per guest, kind, period and channel, so a retry or a second worker sends nothing twice. A failure that can't have sent anything (a 429, a refused connection) is retried up to three times, 2 then 4 seconds apart ([`automations.ts`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/orpc/src/lib/automations.ts)).
+**Scheduling.** Automations are pg-boss jobs run by a separate worker container. Birthday and holiday jobs run every minute but only send between 09:00 and 20:59 in the hotel's own timezone. Every automatic send first claims a row in `automation_sends`, unique per guest, kind, period and channel, so a retry or a second worker sends nothing twice. A failure that can't have sent anything (a 429, a refused connection) is tried up to three times ([`automations.ts`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/packages/orpc/src/lib/automations.ts)).
 
 **Languages.** `@ritorno/i18n` owns English, French and Arabic. The landing takes the language from the url (`/`, `/fr`, `/ar`), the dashboard from a cookie or the browser. A missing key falls back to English instead of crashing. The Open Graph card is drawn per language, and the Arabic one lays words out one at a time because satori reorders wrapped right to left text.
 
@@ -204,7 +204,7 @@ Before most of the code, I wrote the docs: the business context, the plan, the p
 
 One issue is one branch is one PR. Every issue and PR carries a milestone, priority, area, type and size label, and a CI check fails the PR when one is missing. PR titles are `type(scope): subject` because they become the commits on `main`, and release-please cuts versions from them. Every merge to `main` deploys staging. Once staging reports the new commit healthy, release-please opens a release PR, and merging that tags the version and deploys production ([`releases.mdx`](https://github.com/FindMalek/ritorno/blob/f2f6eacd6a05848908cae0a5ff12ea1acc3445ee/apps/docs/content/docs/releases.mdx)). That gave 11 releases, [`v0.1.0`](https://github.com/FindMalek/ritorno/releases/tag/v0.1.0) to [`v0.6.0`](https://github.com/FindMalek/ritorno/releases/tag/v0.6.0), all on Nov 26 and 27. Hoteliers get their own release notes on a public [roadmap page](https://ritorno.findmalek.engineer/roadmap) in the three languages, written by hand, and CI fails if a version has no notes.
 
-CI runs lint, types, 106 unit and integration test files on a real Postgres, Playwright on mobile and desktop in all three languages, axe and Lighthouse budgets ([#188](https://github.com/FindMalek/ritorno/pull/188)), web vitals budgets ([#307](https://github.com/FindMalek/ritorno/pull/307)), a translation key check and a docs check.
+CI runs lint, types, 96 unit and integration test files on a real Postgres, Playwright on mobile and desktop in all three languages, axe and Lighthouse budgets ([#188](https://github.com/FindMalek/ritorno/pull/188)), web vitals budgets ([#307](https://github.com/FindMalek/ritorno/pull/307)), a translation key check and a docs check.
 
 ## What broke
 
