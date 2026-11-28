@@ -38,6 +38,15 @@ _Commits per day for the first week, from `git log`. It kept going after that, s
 - **Oct 31, `v1.10.0`.** [Follow artists and new releases](https://github.com/FindMalek/lodesong/pull/398), [custom looks with a live preview](https://github.com/FindMalek/lodesong/pull/390), a [native iPhone shell](https://github.com/FindMalek/lodesong/pull/404) you can install with a free Apple ID, a macOS fleet package, a new landing page and a QA pass ([#409](https://github.com/FindMalek/lodesong/pull/409)) that fixed console errors and a 404 on every import visit.
 - **Nov 2, `v1.11.0` and `v1.11.1`.** [Aura](https://github.com/FindMalek/lodesong/pull/423): the energy, softness and speed of a mix now come from AudioMuse energy, valence and BPM when the server has them, and tags are the fallback. Then a [deploy fix](https://github.com/FindMalek/lodesong/pull/425) so the container always pulls the image.
 
+It didn't stop at `v1.11.1`. From there to [`v2.1.0`](https://github.com/FindMalek/lodesong/releases/tag/v2.1.0) on Nov 27 there are 184 more commits over 15 days and 15 more releases. The repo is at 397 commits on `main` now.
+
+- **Nov 2 to 4, `v1.12.0` to `v1.14.0`.** A reworked home, shells for [Android](https://github.com/FindMalek/lodesong/pull/451) and for [Linux and Windows](https://github.com/FindMalek/lodesong/pull/464), an [AltStore source](https://github.com/FindMalek/lodesong/pull/446) for the iPhone app, a [device checklist](https://github.com/FindMalek/lodesong/pull/465) and [auto stream quality](https://github.com/FindMalek/lodesong/pull/478).
+- **Nov 7 to 8, `v1.15.0` to `v1.17.0`.** Mixes got scoring and a discovery lane, [real playlist folders](https://github.com/FindMalek/lodesong/pull/491), dithered covers and [share cards](https://github.com/FindMalek/lodesong/pull/489). I also set up [Remotion](https://github.com/FindMalek/lodesong/pull/507) to make a launch video in code.
+- **Nov 9 to 19, `v1.18.0` to `v1.21.0`.** Mostly that video, shot by shot, up to the [launch film](https://github.com/FindMalek/lodesong/pull/574). The public demo now [signs you in by itself](https://github.com/FindMalek/lodesong/pull/562).
+- **Nov 20 to 22, `v1.22.0` and `v1.22.1`.** A [phone player bar](https://github.com/FindMalek/lodesong/pull/639) with 44px controls, and [errors and logs](https://github.com/FindMalek/lodesong/pull/668) going to my own GlitchTip and OpenObserve.
+- **Nov 26, `v2.0.0`.** The [native iPhone app](https://github.com/FindMalek/lodesong/pull/685). 28 iOS PRs merged that day.
+- **Nov 27, `v2.1.0`.** [Traces](https://github.com/FindMalek/lodesong/pull/742) and [metrics](https://github.com/FindMalek/lodesong/pull/747) to OpenObserve, and a [fix for slow covers](https://github.com/FindMalek/lodesong/pull/741).
+
 ![The home page of the demo library: a made for you row with four daily mixes, discover weekly, release radar and daylist, then recently added albums under it.](/project/lodesong/home.png)
 
 _Home on the generated demo library, from `v1.11`. The made for you row is built from what I play, with the same rules as Spotify's mixes but only songs I own._
@@ -108,7 +117,7 @@ The service worker is the part I'd have found hardest to get right, so here is w
 - When the audio element asks for a cached song, the worker serves it and honors `Range` by slicing the stored file into a `206`. That is why seeking in a cached song is instant and why it plays with the network off.
 - If the next song is due in under 45 seconds and still isn't cached, the idle deck loads it from the network and the worker drops its own copy, so the song isn't downloaded twice.
 
-What is and isn't cached matters. Only the original stream is. A transcoded stream, the lower quality you can pick in settings, is never cached. The default cap is 2 GiB, least recently used songs go first until the cache is at 90%, and songs I keep offline (pinned albums and playlists) stay. Covers are cache-first with the newest 2,000 kept. The app shell is cached too, so the app opens offline, but a library page I never visited has nothing to show. The repo's [offline test](https://github.com/FindMalek/lodesong/blob/db4685f40be6de5ecd7116a62aef7af4144f79c5/e2e/offline.e2e.ts) plays three precached songs and seeks inside one with the network off.
+What is and isn't cached matters. Only the original stream is. A transcoded stream, the lower quality you can pick in settings, is never cached. The default cap is 2 GiB, least recently used songs go first until the cache is at 90%, and songs I keep offline (pinned albums and playlists) stay. Covers are cache-first with the newest 2,000 kept (10,000 since the cover fix below). The app shell is cached too, so the app opens offline, but a library page I never visited has nothing to show. The repo's [offline test](https://github.com/FindMalek/lodesong/blob/db4685f40be6de5ecd7116a62aef7af4144f79c5/e2e/offline.e2e.ts) plays three precached songs and seeks inside one with the network off.
 
 ![An album with the first song playing and arrows next to the time of tracks 2, 3, 4, 6, 8 and 9, which are saved for offline.](/project/lodesong/album-offline.webp)
 
@@ -160,7 +169,57 @@ _Ten bands, plus 12 dB either way._
 
 _The responsive layout follows the window down to 320px._
 
-On my iPhone I use Arpeggi against the same Navidrome. lodesong only uses standard Subsonic data for sync: the play queue, stars, ratings, playlists and scrobbles.
+For a while I used Arpeggi on my iPhone against the same Navidrome. lodesong only uses standard Subsonic data for sync: the play queue, stars, ratings, playlists and scrobbles.
+
+## The iPhone app
+
+Now I use lodesong's own iPhone app every day. It started on Oct 31 as a [web view shell](https://github.com/FindMalek/lodesong/pull/404): SwiftUI around a `WKWebView`, with the playback audio session so music keeps going with the screen locked. On Nov 26 I [replaced it](https://github.com/FindMalek/lodesong/pull/685) with a native SwiftUI app for iOS 26 ([`apps/ios`](https://github.com/FindMalek/lodesong/tree/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/apps/ios)).
+
+![Three iPhone screens of the lodesong app side by side on a light grey background: home with up next and recently played, the now playing screen with the cover and player controls, and synced lyrics with the current line in red.](/project/lodesong/ios-phones.webp)
+
+_Home, now playing and lyrics, in the iPhone simulator against the repo's fake Navidrome. The mock serves grey squares, so a debug flag paints these made-up covers and fakes the queue._
+
+It talks to the lodesong server, not to Navidrome. The library is stored in SQLite on the phone and synced when the app opens, so browsing doesn't wait on the network. Playlists and albums I download follow their changes. Lyrics, search by lyrics, editing playlists, a queue, and [playing on another device](https://github.com/FindMalek/lodesong/pull/722) all came in the same release.
+
+![Screen recording in the simulator: an album page, a tap on play, the mini player switches song, the now playing screen opens, then the lyrics.](/project/lodesong/ios-play-lyrics.gif)
+
+_Real taps from a UI test on the demo library: play an album, open now playing, open lyrics._
+
+**Installing it.** I don't pay Apple 99 USD a year, and the app is not in the App Store. It installs with [SideStore](https://sidestore.io) and a free Apple ID, and [`docs/ios.md`](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/docs/ios.md) has the steps. A computer puts SideStore on the phone once, then SideStore signs lodesong with my Apple ID. Every release attaches `lodesong-ios.ipa` and an `altstore.json` feed ([#446](https://github.com/FindMalek/lodesong/pull/446)), so the source URL below shows updates in SideStore:
+
+```
+https://github.com/FindMalek/lodesong/releases/latest/download/altstore.json
+```
+
+There is also a [beta source](https://github.com/FindMalek/lodesong/pull/720) that publishes a build for every iOS change merged to `main`, without a tag or a release.
+
+The catch with a free Apple ID is that the signature lasts 7 days. SideStore refreshes it, but the app can't tell it was refreshed. So settings show the days left, the phone warns me 2 days and 1 day before, and there is an `I Refreshed Today` button to move the date on ([#700](https://github.com/FindMalek/lodesong/pull/700)).
+
+**Testing it.** CI runs `swift test` and builds the app for the simulator and as an unsigned IPA. Anything a simulator can't show goes in [`docs/ios-device-checklist.md`](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/docs/ios-device-checklist.md), a numbered list of what to do on a real phone and what should happen ([#465](https://github.com/FindMalek/lodesong/pull/465)). Most iOS PRs say plainly what wasn't tried on a phone.
+
+## Seeing what breaks
+
+Until Nov 22 I only knew about a bug when I hit it. [PR #668](https://github.com/FindMalek/lodesong/pull/668) sends errors to my own [GlitchTip](https://glitchtip.com) and server warnings and errors to my own [OpenObserve](https://openobserve.ai) (o2). Both already ran on the home lab. Nothing third party.
+
+- The player never holds a DSN or a token. It posts to `/api/diagnostics` and the server forwards it.
+- URLs lose their query string and token-like values are scrubbed. No song titles or server addresses.
+- It's off unless `GLITCHTIP_DSN` or `O2_URL` is set, `DIAGNOSTICS=off` turns it off for the server, and each device has its own switch in settings.
+
+On Nov 27 two more went in. [Traces](https://github.com/FindMalek/lodesong/pull/742): a small OTLP exporter with no new dependency, a span per request named by route, child spans for outgoing calls and background jobs, and the same `trace_id` on log lines and GlitchTip events. The player sends a `traceparent`, so a player error opens the server trace behind it. [Metrics](https://github.com/FindMalek/lodesong/pull/747): request, upstream and job times, cover cache hits, cover miss time, queue depth and memory. Labels are fixed names, never ids or URLs. The o2 dashboard is in the repo as [`docs/openobserve/dashboard.json`](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/docs/openobserve/dashboard.json).
+
+Usage analytics in Umami is still [an open issue](https://github.com/FindMalek/lodesong/issues/656). Umami is hosted, lodesong doesn't send it anything yet.
+
+### Slow covers
+
+Album covers started loading super slow. The cause was in the service worker. Every cover it fetched was saved to a `covers-v1` cache, and then, before answering, it listed the whole cache to drop anything past 2,000 covers. Once the cache was full, every new cover waited on that scan. In a WebKit benchmark from the [PR](https://github.com/FindMalek/lodesong/pull/741), 30 covers took about 4.7 s with the scan and 12 ms without it.
+
+The fix, [`4455cfb`](https://github.com/FindMalek/lodesong/commit/4455cfbb8fa907adbc97a6646fa0b11a8f5d43e8), moved it to [`cover-cache.ts`](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/apps/player/src/lib/cover-cache.ts):
+
+- the cover is returned as soon as it arrives, and the cache write happens in `waitUntil`
+- the cache is only listed on every 200th write, and trimmed down to 90%
+- the limit went from 2,000 to 10,000
+
+I didn't time the new code in the PR. The next steps are open issues: [keep recently seen covers](https://github.com/FindMalek/lodesong/issues/743) instead of the oldest saved, [placeholders](https://github.com/FindMalek/lodesong/issues/744), [fetching covers before they scroll in](https://github.com/FindMalek/lodesong/issues/745) and [making sizes ahead of time](https://github.com/FindMalek/lodesong/issues/746).
 
 ## What broke
 
@@ -174,8 +233,18 @@ My home internet is slow. Streaming from the lab over it is the weakest part, an
 
 The demo library has no real music, only generated tones and flat covers in my screenshots, so how it looks with real album art is something you can't see here. I also haven't measured the gapless swap, or anything over a slow link.
 
-Desktop and phone shells exist now, a macOS app and an iPhone one, but the web player is the one I use every day. I'm calling the project done: it does what I built it for, I use it daily, and what is left is a [roadmap](https://github.com/FindMalek/lodesong/blob/main/docs/ROADMAP.md) of nice-to-haves, not gaps. I'll fix bugs as I hit them and keep it ugly in exactly the way I like.
+There are apps for macOS, Windows, Linux, Android and iPhone now. I use the web player at my desk and the iPhone app on the go, every day. I'm calling the project done: it does what I built it for, I use it daily, and what is left is a [roadmap](https://github.com/FindMalek/lodesong/blob/main/docs/ROADMAP.md) of nice-to-haves, not gaps. I'll fix bugs as I hit them and keep it ugly in exactly the way I like.
 
 ## Tests and tooling
 
-The repo has 65 unit test files and 59 Playwright [e2e specs](https://github.com/FindMalek/lodesong/tree/main/e2e), including accessibility and layout shift checks. CI runs typecheck, lint, a color check, tests, the bundle size budget and the e2e suite against the fake Navidrome. Every pull request gets a preview deployment with the generated demo library.
+The repo has 129 unit test files, 80 Playwright [e2e specs](https://github.com/FindMalek/lodesong/tree/main/e2e) and 17 Swift test files for the iPhone app. The e2e specs include accessibility and layout shift checks. CI runs typecheck, lint, a color check, tests, the bundle size budget and the e2e suite against the fake Navidrome. Every pull request gets a preview deployment with the generated demo library.
+
+## How a change ships
+
+I work alone on it, but every change still goes through a PR. 386 of them are merged so far, 153 of those after Nov 2.
+
+- **One issue, one PR.** That is the first rule in [`CONTRIBUTING.md`](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/CONTRIBUTING.md). I branch with `gh issue develop`, and the PR body says what was checked and what wasn't.
+- **A pre-commit hook.** [lefthook](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/lefthook.yml) runs Biome, oxlint and the color check on staged files only, in a few seconds. `react-doctor` runs too but never blocks. Typecheck, tests and e2e stay in CI.
+- **CI on every PR.** [`ci.yml`](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/.github/workflows/ci.yml) runs the checks above and Lighthouse, and a PR that touches `apps/ios` also runs the [iOS workflow](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/.github/workflows/ios.yml). `main` only takes green PRs.
+- **A preview per PR.** [`preview.yml`](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/.github/workflows/preview.yml) builds one image per PR on GitHub's runners, deploys it as its own app on Dokploy and keeps one sticky comment with the link. Merges don't deploy, so the preview is where I see a change running before a release.
+- **Squash merges, then release-please.** Each PR lands as one commit with a `type(scope): subject` title. [release-please](https://github.com/FindMalek/lodesong/blob/6cc09aaf6fde1c52e885254a6e0c97855d1eb6cb/release-please-config.json) turns those titles into the [changelog](https://github.com/FindMalek/lodesong/blob/main/CHANGELOG.md) and a release PR. Merging that PR tags the version, and CI builds the image and the iPhone, Android, desktop and macOS apps, then deploys.
