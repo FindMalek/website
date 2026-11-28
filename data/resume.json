@@ -107,11 +107,11 @@
           "company": "Ceraghit Creation",
           "position": "Full-Stack Engineer, Freelance",
           "location": "Tunisia (Remote)",
-          "period": "October 2026 – Present",
+          "period": "October 2026 – November 2026",
           "dates": {
             "start": "2026-10",
-            "end": null,
-            "present": true
+            "end": "2026-11",
+            "present": false
           },
           "website": {
             "url": "https://ceraghit.com",
@@ -396,11 +396,11 @@
           "id": "2468c418-3a93-4dc8-b3fb-2926d0cb70c0",
           "hidden": false,
           "name": "lodesong",
-          "period": "October 2026 – Present",
+          "period": "October 2026 – November 2026",
           "dates": {
             "start": "2026-10",
-            "end": null,
-            "present": true
+            "end": "2026-11",
+            "present": false
           },
           "website": {
             "url": "https://github.com/FindMalek/lodesong",
@@ -413,11 +413,11 @@
           "id": "9efc05f3-b353-4aa7-baa0-2b59beaff86b",
           "hidden": false,
           "name": "keep-dashboard",
-          "period": "October 2026 – Present",
+          "period": "October 2026 – November 2026",
           "dates": {
             "start": "2026-10",
-            "end": null,
-            "present": true
+            "end": "2026-11",
+            "present": false
           },
           "website": {
             "url": "https://github.com/FindMalek/keep-dashboard",
