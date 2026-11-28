@@ -1,0 +1,176 @@
+---
+id: 16
+image: "/project/ceraghit.webp"
+name: "ceraghit"
+overview: "An online shop I built as a freelancer for Ceraghit Creation, a ceramics studio in Tunisia. A storefront in French, English and Arabic, an owner dashboard made for a phone, an api with a REST mirror, and a full preview environment for every pull request."
+status: "published"
+link: "https://github.com/FindMalek/ceraghit"
+href: "/projects/ceraghit"
+tags: ["TypeScript", "Next.js", "oRPC", "PostgreSQL", "Drizzle", "Freelance", "Open Source"]
+startDate: "October, 2026"
+endDate: "November, 2026"
+---
+
+# ceraghit
+
+Ceraghit Creation is the ceramics studio of Sabri Ghit in Tunisia. Terracotta sculptures and objects, modelled by hand: curda seca tiles, votive lamps, bas-reliefs, unique pieces. He sells to people in Tunisia and to people abroad, and he runs everything from his phone. That was the brief.
+
+So the repo is three apps. A storefront in French, English and Arabic. An owner dashboard that works on a phone. An api behind both. The code is public on [GitHub](https://github.com/FindMalek/ceraghit), the shop is at [ceraghit.com](https://ceraghit.com), and a copy with demo data runs on my home lab at [ceraghit.findmalek.engineer](https://ceraghit.findmalek.engineer). Every screenshot here comes from that demo copy or from a local run with the demo seed. No real customer is in any of them.
+
+![The Ceraghit storefront home page on desktop: a dark page with the studio medallion, Collection 2027 in script, the Ceraghit title, two buttons and a photo of a green glazed votive lamp.](/project/ceraghit/home.webp)
+
+_The home page in French, on the staging copy._
+
+## What the shop does
+
+A few product decisions shaped most of the code. They all came from how the studio actually sells.
+
+**Two currencies, one product.** Every piece has a price in dinars and a price in euros. The owner sets both. The code never converts one into the other and never adds them up. In the database it's `priceTnd` in millimes and `priceEur` in cents, both required, and an order keeps the currency it was paid in. Visitors in Tunisia see dinars, everyone else sees euros, based on their country. There is no currency switch on purpose ([#66](https://github.com/FindMalek/ceraghit/pull/66)). Production ignores the currency cookie, local and previews read it so I can test both.
+
+![The Medusa bas-relief product page on desktop, priced 410 DT, with a photo gallery on the left and material, technique and dimensions on the right.](/project/ceraghit/product.webp)
+
+_A product page from Tunisia. Price in dinars._
+
+![The same Medusa product page in English, priced 120 euros.](/project/ceraghit/product-eur.webp)
+
+_The same piece seen from abroad. Same product row, the second price the owner typed, not a conversion._
+
+**Language follows the device.** The storefront reads `Accept-Language`: French, English or Arabic, anything else gets French. A switch in the footer overrides it ([#81](https://github.com/FindMalek/ceraghit/pull/81)). Arabic is right to left. A test ([`messages-parity.test.ts`](https://github.com/FindMalek/ceraghit/blob/main/apps/web/test/messages-parity.test.ts)) keeps the three languages about the same length, so a layout that fits French doesn't break in Arabic.
+
+![Switching the footer language from French to Arabic: the page reloads right to left with the Arabic title and buttons.](/project/ceraghit/language-switch.gif)
+
+_The footer switch, French to Arabic._
+
+![The home page in Arabic on desktop: the layout is mirrored, the title and buttons on the right, the photo on the left.](/project/ceraghit/home-ar.webp)
+
+_The whole page mirrors, not only the text._
+
+![Three phones side by side showing the Arabic home page, the shop categories and an Arabic product page.](/project/ceraghit/phones-ar.webp)
+
+_Arabic on a phone. The category names stay in French here because the demo catalogue only fills French. In the database every text is `fr` required, `en` and `ar` optional._
+
+**Cash on delivery in Tunisia, a bank transfer abroad.** There is no card payment in production. Stripe doesn't support Tunisia, Polar and Paddle are for digital goods, Gumroad has no cart or stock ([`docs/payments.md`](https://github.com/FindMalek/ceraghit/blob/main/docs/payments.md)). So Tunisia pays cash on delivery, in dinars only. Other countries pay by bank transfer: the account is on the order page and in the confirmation email, and the owner marks the order paid when the money arrives. Payoneer links work the same way, by hand. The owner turns each method on or off in the dashboard ([#204](https://github.com/FindMalek/ceraghit/pull/204)), and the page refuses a save that leaves Tunisia or abroad with no way to pay.
+
+![The checkout page from France, in euros: the delivery address form, a summary with a total of 286.5 euros, and bank transfer as the only payment method.](/project/ceraghit/checkout-transfer.webp)
+
+_Checkout from France. Bank transfer is the only option abroad, with the delivery price for 7.5 kg to Europe._
+
+I did build a card gateway, Konnect, a Tunisian one, with webhook tests ([#248](https://github.com/FindMalek/ceraghit/pull/248), [#251](https://github.com/FindMalek/ceraghit/pull/251)). Then I removed it ([#506](https://github.com/FindMalek/ceraghit/pull/506)). Now the api refuses to boot in production with `ONLINE_PAYMENTS=true`, and local, previews and tests use a demo gateway. A paid status only ever comes from the gateway (it re-asks it, the return page is only a hint) or from the owner, through `markPaidManually`, which is audited ([#250](https://github.com/FindMalek/ceraghit/pull/250)).
+
+![Adding the Medusa bas-relief to the cart: the button is clicked and a cart drawer slides in with the piece and the subtotal.](/project/ceraghit/add-to-cart.gif)
+
+_Add to cart on the staging copy._
+
+**Photos are compressed on the phone.** The studio plan on Cloudflare R2 is 2.5 GB. The dashboard turns every photo into WebP, 2400 px on the long side, quality 0.86, before the upload goes straight to the bucket ([#68](https://github.com/FindMalek/ceraghit/pull/68)). Safari's canvas can't encode WebP, so there it lazy loads a wasm encoder and Chrome never downloads it ([#405](https://github.com/FindMalek/ceraghit/pull/405)). Every file is a row in `uploads`, the dashboard shows the usage, and an upload past the quota is refused. A daily job ([#280](https://github.com/FindMalek/ceraghit/pull/280)) deletes uploads never confirmed after 48 hours, and library photos nothing uses after 30 days, with a warning for the last 7. At most 200 files per run.
+
+**Every page has its own social card.** Home, shop, collection, product, studio, legal pages: each one gets a generated 1200x630 Open Graph image, in all three languages ([#89](https://github.com/FindMalek/ceraghit/pull/89)). Product cards show the photo, the reference and both prices. Arabic uses Tajawal, because the renderer can't read the shaping tables of Amiri, the font the site uses.
+
+![Three phones side by side: the home page, the Medusa product page and the cart with one piece at 410 DT.](/project/ceraghit/phones.webp)
+
+_The storefront on a phone: home, product, cart._
+
+## The dashboard
+
+The owner is not a developer and he's on his phone. The dashboard is phone first, with a tab bar and badges ([#86](https://github.com/FindMalek/ceraghit/pull/86), [#99](https://github.com/FindMalek/ceraghit/pull/99)), call and WhatsApp buttons on every order ([#88](https://github.com/FindMalek/ceraghit/pull/88)), sales per currency, a media library, CSV export, invoices with numbering and a bank block ([#242](https://github.com/FindMalek/ceraghit/pull/242)), an onboarding wizard, and a help page with tutorial videos. Everything in it is in French.
+
+![Three phones side by side: the dashboard overview with sales in dinars and euros, the orders list, and an order waiting for a bank transfer with a Mark paid button.](/project/ceraghit/dashboard-phones.webp)
+
+_Local run with the demo seed. Sales per currency, orders, and a transfer order that expires if nothing arrives._
+
+![On a phone, the owner opens a pending transfer order, taps Mark paid, picks the method in a confirmation sheet and confirms. The order moves to paid.](/project/ceraghit/dashboard-mark-paid.gif)
+
+_Confirming a transfer by hand. This is the one path to paid that doesn't come from a gateway, and it's audited._
+
+## How it fits together
+
+It's a pnpm and Turborepo monorepo:
+
+- `apps/web`: the storefront, Next.js 16.
+- `apps/dashboard`: the owner dashboard, Next.js 16.
+- `apps/api`: oRPC on Bun, Drizzle and Postgres.
+- `apps/jobs`: the scheduler, a Trigger.dev project on a self-hosted instance. It only calls the api.
+- `packages/*`: `db`, `orpc`, `sdk`, `ui`, `logger`, `errors`.
+
+Production is three Vercel projects, Neon Postgres and Cloudflare R2. The browser never calls the api directly: each app has an `/api` proxy, and the proxy only forwards its own namespace ([`packages/sdk/src/proxy.ts`](https://github.com/FindMalek/ceraghit/blob/main/packages/sdk/src/proxy.ts)). The storefront can't reach an admin procedure, even by hand.
+
+The api answers on a few routes ([`apps/api/src/server.ts`](https://github.com/FindMalek/ceraghit/blob/main/apps/api/src/server.ts)):
+
+- `/rpc/*`: oRPC, what the two apps use.
+- `/v1/*`: the same procedures as REST, with OpenAPI docs at `/v1/docs` and the spec at `/v1/openapi.json`. Both are a 404 in production and open on staging and previews, for example [api.ceraghit.findmalek.engineer/v1/docs](https://api.ceraghit.findmalek.engineer/v1/docs).
+- `/cron/<name>`: scheduled jobs, behind a bearer secret, each run written to `job_runs`.
+- `/files/<key>`: a redirect to the CDN or a signed url for an uploaded photo.
+- `/health`: database, payment mode and environment, for uptime checks and the deploy smoke test.
+
+The procedures are split in two routers. The public one, what a visitor can call: `catalog`, `orders`, `requests` (unique piece requests with photos) and `site`. The admin one, every procedure built on `adminProcedure`: `auth`, `account`, `ai`, `overview`, `products`, `categories`, `orders`, `invoices`, `integrations`, `jobs`, `mail`, `requests`, `locations`, `settings`, `shipping`, `uploads`, `media`, `site`, `help`, `profile` and `setup`. Every procedure declares its route, input and output with Zod, so the REST docs come from the same code.
+
+Jobs are plain `POST /cron/<name>` calls: release stock held by abandoned checkouts every hour, retry failed emails every 30 minutes, the photo cleanup every night, Aramex tracking every 3 hours, a monthly AI quota rollover ([`docs/deploy.md`](https://github.com/FindMalek/ceraghit/blob/main/docs/deploy.md)). The dashboard shows the last run of each one and warns when one is stale. Traces, logs and metrics go to OpenObserve and errors to GlitchTip, both self-hosted ([#293](https://github.com/FindMalek/ceraghit/pull/293), [#425](https://github.com/FindMalek/ceraghit/pull/425)).
+
+## Security
+
+The repo is public and it handles orders, bank details and the owner's login. What's in the code:
+
+- **Login.** Passwords are hashed with scrypt. A session is a random token stored as a SHA-256 hash, valid 14 days, in an http-only cookie ([`auth.ts`](https://github.com/FindMalek/ceraghit/blob/main/packages/orpc/src/lib/auth.ts)). A failed attempt is counted before the slow hash check, so parallel guesses can't slip past the lock.
+- **Rate limits** live in a Postgres table shared by every api instance: 5 failed logins per 15 minutes per address and 10 per hour per email, 10 orders per 10 minutes, 5 unique piece requests per hour, 12 photo uploads per 10 minutes.
+- **Headers.** A nonce based CSP on both apps, enforcing, not report only, HSTS in production, `nosniff` and `no-referrer` on every api answer ([#223](https://github.com/FindMalek/ceraghit/pull/223)).
+- **Input.** Every procedure validates its input with Zod and throws an error with a message safe for a visitor. Prices and payment status are never taken from the request. A cart line is priced from the product row in the database, and extra price or status fields in a new order are ignored.
+- **Secrets the owner types in.** Aramex and Groq keys entered in the dashboard are encrypted with AES-256-GCM, with the provider name as authenticated data, so a ciphertext copied to another provider won't decrypt ([#272](https://github.com/FindMalek/ceraghit/pull/272), [`docs/secrets.md`](https://github.com/FindMalek/ceraghit/blob/main/docs/secrets.md)). They are write-only: the dashboard only gets back whether a field is set, and for a long value a hint with its last 4 characters.
+- **Environments never mix.** The api checks its config at boot and refuses to start in production with card payments on, demo data, a mail catcher, no R2 bucket, no proxy secret or a fake Aramex.
+
+And there are end to end tests for it ([`test/e2e/specs/security`](https://github.com/FindMalek/ceraghit/tree/main/test/e2e/specs/security)): every admin route answers 401 to a visitor and to a forged cookie, each app's proxy only forwards its own namespace, an order is only readable with its own token, public api answers and pages are scanned for bank details, secrets and bearer tokens, the upload endpoints refuse what isn't a small image, the api refuses to boot with each bad production config, and forged price and payment requests change nothing ([`forged-requests.e2e.ts`](https://github.com/FindMalek/ceraghit/blob/main/test/e2e/specs/checkout/forged-requests.e2e.ts)).
+
+## Three environments, and one per pull request
+
+**Production** ships on every merge to `main` ([`deploy.yml`](https://github.com/FindMalek/ceraghit/blob/main/.github/workflows/deploy.yml)). First it migrates Neon, then builds and deploys the three Vercel projects, then a smoke test checks that `/health` says `production` with online payments off. Vercel's Git integration is disconnected, so nothing else can deploy. Migrations must work with the previous release, because a Vercel rollback keeps the new schema: additive only, and a CI check blocks drops, renames and type changes. Only one open PR may carry a migration.
+
+**Staging** runs `main` on my home lab, in Dokploy, with its own Postgres and the demo data ([#40](https://github.com/FindMalek/ceraghit/pull/40)). It's deployed by hand only ([#64](https://github.com/FindMalek/ceraghit/pull/64)), uses the demo gateway and isn't indexed.
+
+**Every pull request** gets its own copy of everything on the home lab ([`preview.yml`](https://github.com/FindMalek/ceraghit/blob/main/.github/workflows/preview.yml)): storefront at `pr-<n>.ceraghit.findmalek.engineer`, dashboard, api, a Postgres seeded with the demo catalogue and orders, and a Mailpit that keeps every email the preview sends. A sticky comment on the PR has the links, the dashboard login and the database url. The images are only rebuilt for the apps the PR touches, the others are retagged from `main` ([#216](https://github.com/FindMalek/ceraghit/pull/216)). Closing the PR deletes the apps, the database and the uploads.
+
+## How I worked
+
+One issue, one branch, one PR, squash merged. A PR only merges when:
+
+- CI is green: format, lint, types, unit tests, build, the migrations check, a dependency audit and a license check ([#219](https://github.com/FindMalek/ceraghit/pull/219)).
+- The Playwright suite passes. It runs every flow in French, English and Arabic, on desktop Chromium and on an iPhone in WebKit, split in four storefront shards and a dashboard chain ([#354](https://github.com/FindMalek/ceraghit/pull/354)). It also runs every night, and a red night opens an issue.
+- The body has screenshots of what I tested, desktop and mobile. A check fails the PR without them ([#213](https://github.com/FindMalek/ceraghit/pull/213)). A script pushes them to an orphan `pr-assets` branch so they never touch `main`.
+- Every review thread is resolved. CodeRabbit reviews every PR, and a wrong comment gets a reply with the reason before it's resolved.
+
+Lighthouse runs against production every Monday, as a warning, and a `web-vitals` e2e spec has budgets per page. The repo has 75 Playwright spec files and 143 unit test files.
+
+The release is written down in [`docs/release.md`](https://github.com/FindMalek/ceraghit/blob/main/docs/release.md). Production already deploys on merge, so going live is a series of switches the owner flips, each one reversible: keys, domains, email, the real catalogue, then Aramex when the contract arrives. The owner also has a guide in French ([`docs/handover.md`](https://github.com/FindMalek/ceraghit/blob/main/docs/handover.md)) and I have a runbook.
+
+## What broke
+
+**Spoofable rate limits on previews.** The login lockout keyed on the first entry of `x-forwarded-for`. Vercel overwrites that header, so production was fine. My home lab's Traefik appends to it, so on previews a client could write its own address and get a fresh bucket on every try. Now the api uses an address signed by its own proxy, or the entry its edge appended counted from the right, or the socket ([#381](https://github.com/FindMalek/ceraghit/pull/381)). A test rotates spoofed addresses from one peer and still hits the lock.
+
+**Two migrators racing.** Package tests run in parallel against one Postgres, and two of them ran migrations at once: `CREATE TYPE "currency"` failed on a unique index. Migrations and the seed now take an advisory lock on their own connection ([#368](https://github.com/FindMalek/ceraghit/pull/368)). The new test failed 3 runs out of 3 without the lock.
+
+**The api wouldn't run on Vercel.** Node couldn't resolve the extensionless TypeScript imports. I bundle the api into one file with esbuild now, and each Vercel project has its root set to its app ([#76](https://github.com/FindMalek/ceraghit/pull/76)).
+
+**Builds that needed the internet.** `next/font/google` downloads fonts at build time, and a CI build failed on it. The five brand fonts are self-hosted now, and the proof is a build with the network blocked ([#255](https://github.com/FindMalek/ceraghit/pull/255)).
+
+**A backup that failed quietly.** The first scheduled backup failed with `age: unknown recipient type ""` because its settings weren't there yet, and nobody was told. Now it lists every missing setting before dumping anything, and a failed run opens a `backup failed` issue ([#396](https://github.com/FindMalek/ceraghit/pull/396)).
+
+**Running out of Vercel CPU.** The Hobby plan gives 4 hours of active CPU a month for the whole team, and the shop had used 3h36 in a month. Public reads are cached 10 minutes and dropped when the owner saves something, the api loads React Email, the AI SDK and telemetry only when it needs them (import time went from 126 ms to 58 ms on my machine), and polling runs less often ([#422](https://github.com/FindMalek/ceraghit/pull/422)). The real CPU drop isn't measured yet.
+
+**A slow product page on a phone.** Median mobile LCP in the spec was 5,116 ms. I profiled it on a throttled Pixel 7: the main photo was requested first, but it shared the pipe with the hidden gallery photos, the thumbnails, related products far below the fold and a 29 KB logo shown at 36 px. Now only the first photo loads with the page, `sizes` matches the real layout, and the logo is a 4 KB copy. About 3.5 s after, on a quiet machine ([#404](https://github.com/FindMalek/ceraghit/pull/404)).
+
+**A flaky test.** The hero carousel test advanced a fake clock that kept ticking, so on a slow page the five seconds passed before the assertion. The clock is paused now and the test waits for a `data-hydrated` flag set by the same effect that starts the timer ([#254](https://github.com/FindMalek/ceraghit/pull/254)). 60 runs out of 60 passed.
+
+## How it grew
+
+263 commits on `main` between Oct 22 and Nov 27, and 252 merged PRs of mine, plus 10 from Dependabot.
+
+- **Oct 22.** [`chore(repo): scaffold shop`](https://github.com/FindMalek/ceraghit/commit/cc02368a33ad49481e1fc269d683bb5a9b235a7a), then legal pages, the sitemap, CSV export and product variants the same day.
+- **Oct 23 and 24.** CI on my home lab runners, then back to GitHub's for tests and housekeeping ([#49](https://github.com/FindMalek/ceraghit/pull/49)), with builds and previews staying home. Permanent staging ([#40](https://github.com/FindMalek/ceraghit/pull/40)) and English and Arabic ([#43](https://github.com/FindMalek/ceraghit/pull/43)).
+- **Oct 27.** Cash on delivery, order emails and invoices ([#52](https://github.com/FindMalek/ceraghit/pull/52)).
+- **Nov 5 and 6.** Checkout down to cash on delivery and transfer, currency by country, photo compression and storage tracking, the first production deploy to Vercel, the phone first dashboard and the social cards.
+- **Nov 15, 57 commits.** The busiest day: payment settings, the shop profile, the Playwright harness and its first suites, security headers, shared rate limits, Mailpit, audited manual payments, the screenshot check on PRs.
+- **Nov 16.** The media library and its cleanup job, the secrets vault, manual shipping and the Aramex client, AI translation of product texts, Trigger.dev schedules.
+- **Nov 18 to 22, about 100 commits.** Observability, backups and uptime, the security e2e specs, Aramex shipments, pickups and tracking, Payoneer links, the LCP fix, the owner guide, the runbook and the release plan.
+- **Nov 23 to 25.** The tutorial videos for the owner, recorded from scripted journeys, and a bank account per currency ([#502](https://github.com/FindMalek/ceraghit/pull/502)).
+- **Nov 26 and 27.** GlitchTip, Konnect removed, the Vercel CPU cuts.
+
+## What is still open
+
+The release has steps only the client can do: the real catalogue with his prices and stock, the Aramex contract and keys, his Payoneer account. Shipping is manual until then, and the Aramex side was built against the sandbox, so some of its values are still guesses written down in [`docs/aramex.md`](https://github.com/FindMalek/ceraghit/blob/main/docs/aramex.md) waiting for the rep's answers. The mobile LCP budget for the product page is 4 s, not the 3.5 s I wanted, and that's an open issue too ([#414](https://github.com/FindMalek/ceraghit/issues/414)).
